@@ -1,0 +1,561 @@
+import BigNumber from 'bignumber.js'
+import { useEffect, useMemo, useState } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import useRefresh from 'hooks/useRefresh'
+import { getWeb3NoAccount, getTimestampDiff, getBalanceNumber } from 'utils'
+import {
+  fetchFarmsPublicDataAsync,
+  fetchExpeditionUserDataAsync,
+  fetchExpeditionsPublicDataAsync,
+  setBlock,
+} from './actions'
+import { State, Farm, Expedition, Block, ElevationInfo, ReferralsState, PriceableTokenSymbol } from './types'
+import { Elevation, ElevationUnlockRound, elevationUtils, ExpeditionConfig, FarmConfig, ForceElevationRetired } from '../config/constants/types'
+import { fetchPricesAsync } from './prices'
+import {
+  fetchElevationHelperInfoAsync,
+  fetchElevationsPublicDataAsync,
+  fetchSummitEcosystemEnabledAsync,
+} from './summitEcosystem'
+import { useLocation } from 'react-router-dom'
+import { getFarmConfigs } from 'config/constants/farms'
+import { fetchReferralsDataAsync } from './referrals'
+import { getExpeditionConfigs, getSummitLpSymbol } from 'config/constants'
+import useTheme from 'hooks/useTheme'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
+
+const ZERO = new BigNumber(0)
+
+export const useMediaQuery = (query) => {
+  const [matches, setMatches] = useState(false)
+
+  useEffect(() => {
+    const media = window.matchMedia(query)
+    if (media.matches !== matches) {
+      setMatches(media.matches)
+    }
+    const listener = () => {
+      setMatches(media.matches)
+    }
+    media.addListener(listener)
+    return () => media.removeListener(listener)
+  }, [matches, query])
+
+  return matches
+}
+
+export const useChainId = () => {
+  return useSelector((state: State) => state.summitEcosystem.chainId)
+}
+export const useFarmConfigs = () => {
+  const chainId = useChainId()
+  const [farmConfigs, setFarmConfigs] = useState<FarmConfig[]>(getFarmConfigs())
+  useEffect(() => {
+    setFarmConfigs(getFarmConfigs())
+  }, [chainId, setFarmConfigs])
+  return farmConfigs
+}
+export const useExpeditionConfigs = () => {
+  const chainId = useChainId()
+  const [expeditionConfigs, setExpeditionConfigs] = useState<ExpeditionConfig[]>(getExpeditionConfigs())
+  useEffect(() => {
+    setExpeditionConfigs(getExpeditionConfigs())
+  }, [chainId, setExpeditionConfigs])
+  return expeditionConfigs
+}
+
+export const useFetchPublicData = () => {
+  const dispatch = useDispatch()
+  const { slowRefresh } = useRefresh()
+  useEffect(() => {
+    dispatch(fetchFarmsPublicDataAsync())
+    dispatch(fetchExpeditionsPublicDataAsync())
+    dispatch(fetchElevationsPublicDataAsync())
+    dispatch(fetchElevationHelperInfoAsync())
+  }, [dispatch, slowRefresh])
+
+  useEffect(() => {
+    const web3 = getWeb3NoAccount()
+    const interval = setInterval(async () => {
+      const blockNumber = await web3.eth.getBlockNumber()
+      dispatch(setBlock(blockNumber))
+    }, 6000)
+
+    return () => clearInterval(interval)
+  }, [dispatch])
+}
+export const useCurrentTimestamp = (): number => {
+  const [timestamp, setTimestamp] = useState<number>(Math.floor(Date.now() / 1000))
+  useEffect(() => {
+    setTimestamp(Math.floor(Date.now() / 1000))
+    const interval = setInterval(() => {
+      setTimestamp(Math.floor(Date.now() / 1000))
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [])
+  return timestamp
+}
+
+// Farms
+
+export const useFarms = (): Farm[] => {
+  const selectorFarms = useSelector((state: State) => state.farms.data)
+  return selectorFarms
+}
+
+export const useFarmFromPid = (pid): Farm => {
+  const farm = useSelector((state: State) => state.farms.data.find((f) => f.pid === pid))
+  return farm
+}
+
+export const useElevationUserRoundInfo = (elevation: Elevation) => {
+  return useSelector((state: State) => elevation === Elevation.EXPEDITION ? {} : state.farms.elevationData[elevationUtils.toInt(elevation || Elevation.OASIS)])
+}
+
+// Expeditions
+
+export const useExpeditions = (
+  account,
+): {
+  expeditions: Expedition[]
+  summitAllowance: BigNumber
+  summitLpAllowance: BigNumber
+  summitBalance: BigNumber
+  summitLpBalance: BigNumber
+} => {
+  const { fastRefresh } = useRefresh()
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (account) {
+      dispatch(fetchExpeditionUserDataAsync(account))
+    }
+  }, [account, dispatch, fastRefresh])
+
+  const expeditions: Expedition[] = useSelector((state: State) => state.expeditions.data)
+  const summitAllowance = useSelector((state: State) => state.expeditions.summitAllowance)
+  const summitBalance = useSelector((state: State) => state.expeditions.summitBalance)
+  const summitLpAllowance = useSelector((state: State) => state.expeditions.summitLpAllowance)
+  const summitLpBalance = useSelector((state: State) => state.expeditions.summitLpBalance)
+  return {
+    expeditions,
+    summitAllowance,
+    summitBalance,
+    summitLpAllowance,
+    summitLpBalance,
+  }
+}
+
+export const useExpeditionFromPid = (pid): Expedition => {
+  const expedition = useSelector((state: State) => state.expeditions.data.find((p) => p.pid === pid))
+  return expedition
+}
+
+export const useExpeditionUser = (pid) => {
+  const expedition = useExpeditionFromPid(pid)
+  return (
+    expedition.userData || {
+      stakedSummit: ZERO,
+      stakedSummitLp: ZERO,
+      earnedReward: ZERO,
+      effectiveStakedSummit: ZERO,
+      hypotheticalWinReward: ZERO,
+    }
+  )
+}
+
+// Prices
+export const usePricesPerToken = () => {
+  return useSelector((state: State) => state.prices.pricesPerToken)
+}
+export const useNativeTokenPrice = (): BigNumber => {
+  const pricesPerToken = usePricesPerToken()
+  return useMemo(() => pricesPerToken != null && pricesPerToken[PriceableTokenSymbol.wFTM] ? pricesPerToken[PriceableTokenSymbol.wFTM] : new BigNumber(2.5), [pricesPerToken])
+}
+
+export const useSummitPrice = (): BigNumber => {
+  const pricesPerToken = usePricesPerToken()
+  return useMemo(() => pricesPerToken != null && pricesPerToken[PriceableTokenSymbol.SUMMIT] ? pricesPerToken[PriceableTokenSymbol.SUMMIT] : new BigNumber(1), [pricesPerToken])
+}
+
+export const useRolloverRewards = () => {
+  const rolloverRewardInNativeToken = useSelector((state: State) => state.summitEcosystem.rolloverRewardInNativeToken)
+  const summitPrice = useSummitPrice()
+  const nativePrice = useNativeTokenPrice()
+
+  return {
+    rolloverRewardInNativeToken,
+    rolloverRewardInSummit: rolloverRewardInNativeToken.div(summitPrice.dividedBy(nativePrice)),
+  }
+}
+export const useTotalValue = (elevation?: Elevation): BigNumber => {
+  const farms = useFarms()
+  const pricesPerToken = usePricesPerToken()
+
+  return useMemo(
+    () => farms
+      .filter((farm) => elevation == null ? true : farm.elevation === elevation)
+      .reduce((accumValue, farm) => {
+        return accumValue.plus((farm.lpSupply || new BigNumber(0)).div(new BigNumber(10).pow(farm.tokenDecimals || 18)).times(pricesPerToken != null && pricesPerToken[farm.symbol] ? pricesPerToken[farm.symbol] : new BigNumber(1)))
+      }, new BigNumber(0)),
+    [farms, pricesPerToken, elevation]
+  )
+}
+
+export const useExpeditionPotTotalValue = (): number => {
+  const { account } = useWallet()
+  const { expeditions } = useExpeditions(account)
+  const pricesPerToken = usePricesPerToken()
+  const expeditionPotTotalValue = useSelector((state: State) => state.summitEcosystem.expeditionPotTotalValue)
+
+  return useMemo(
+    () => {
+      const expeditionsRewards = expeditions.reduce((acc, expedition) => {
+        const rewardsRemaining = getBalanceNumber(expedition.rewardsRemaining || new BigNumber(0), expedition.rewardToken.decimals)
+        const expeditionTokenPrice = (pricesPerToken != null && pricesPerToken[expedition.rewardToken.symbol] ? pricesPerToken[expedition.rewardToken.symbol].toNumber() : 1)
+        const rewardsDisbursed = expedition.disbursedOffset || 0
+        const rewardsBonusRemaining = expedition.bonusRewardsRemaining || 0
+        return acc + ((rewardsRemaining - rewardsDisbursed + rewardsBonusRemaining) * expeditionTokenPrice)
+      }, 0)
+      return (expeditionsRewards || 0) + expeditionPotTotalValue
+    },
+    [expeditions, expeditionPotTotalValue, pricesPerToken]
+  )
+}
+
+export const useExpeditionDisbursedValue = (): number => {
+  const { account } = useWallet()
+  const { expeditions } = useExpeditions(account)
+  const pricesPerToken = usePricesPerToken()
+
+  return useMemo(
+    () => {
+      const expeditionsRewards = expeditions.reduce((acc, expedition) => {
+        const expeditionTokenPrice = (pricesPerToken != null && pricesPerToken[expedition.rewardToken.symbol] ? pricesPerToken[expedition.rewardToken.symbol].toNumber() : 1)
+        const emissionsDisbursed = getBalanceNumber((expedition.totalEmission || new BigNumber(0)).minus(expedition.rewardsRemaining || new BigNumber(0)), expedition.rewardToken.decimals)
+        return acc + ((expedition.disbursedOffset + emissionsDisbursed) * expeditionTokenPrice)
+      }, 0)
+      return expeditionsRewards
+    },
+    [expeditions, pricesPerToken]
+  )
+}
+
+// Prices
+export const useFetchPriceList = () => {
+  const { slowRefresh } = useRefresh()
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(fetchPricesAsync())
+  }, [dispatch, slowRefresh])
+}
+
+// Block
+export const useBlock = (): Block => {
+  return useSelector((state: State) => state.block)
+}
+
+// SummitEcosystem
+export const useFetchSummitEnabled = () => {
+  const { fastRefresh } = useRefresh()
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(fetchSummitEcosystemEnabledAsync())
+  }, [dispatch, fastRefresh])
+}
+
+export const useSummitEnabled = () => useSelector((state: State) => state.summitEcosystem.summitEnabled)
+
+export const useReferralBurnTimestamp = (): number => {
+  return useSelector((state: State) => state.summitEcosystem.referralBurnTimestamp)
+}
+export const useReferralBurnTimeRemaining = (): number => {
+  const referralBurnTimestamp = useReferralBurnTimestamp()
+  const currentTimestamp = useCurrentTimestamp()
+
+  return useMemo(() => getTimestampDiff(currentTimestamp, referralBurnTimestamp), [
+    referralBurnTimestamp,
+    currentTimestamp,
+  ])
+}
+
+export const useElevationsInfo = (): Map<Elevation, ElevationInfo> => {
+  return useSelector((state: State) => state.summitEcosystem.elevationsInfo)
+}
+export const useElevationInfo = (elevation: Elevation): ElevationInfo | null => {
+  return useSelector(
+    (state: State) =>
+      state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(elevation)] || null,
+  )
+}
+
+export const useSingleFarmSelected = (): number | null => {
+  const location = useLocation()
+  const farmConfigs = useFarmConfigs()
+
+  return useMemo(() => {
+    const pathSplit = location.pathname.split('/')
+    const elev = pathSplit[1]
+    const lpLabel = pathSplit[2]
+    if (lpLabel == null) return null
+    return (
+      farmConfigs.find(
+        (farm) => farm.elevation === (elev.toUpperCase() as Elevation) && `${farm.symbol.toLowerCase()}` === lpLabel,
+      )?.pid || null
+    )
+  }, [location, farmConfigs])
+}
+export const useSelectedElevation = (): Elevation | null => {
+  const location = useLocation()
+
+  return useMemo(() => {
+    const keyPath = location.pathname.split('/')[1]
+    switch (keyPath) {
+      case 'oasis':
+        return Elevation.OASIS
+      case 'plains':
+        return Elevation.PLAINS
+      case 'mesa':
+        return Elevation.MESA
+      case 'summit':
+        return Elevation.SUMMIT
+      case 'expedition':
+        return Elevation.EXPEDITION
+      default:
+        return null
+    }
+  }, [location])
+}
+export const useSelectedElevationInfo = (): ElevationInfo | null => {
+  const elevation = useSelectedElevation()
+  return useElevationInfo(elevation)
+}
+export const useElevationTotems = (): Map<Elevation, number | null> => {
+  return useSelector((state: State) => state.summitEcosystem.totems)
+}
+export const useElevationTotem = (elevation: Elevation): number | null => {
+  return useSelector((state: State) => state.summitEcosystem.totems[elevationUtils.toInt(elevation)])
+}
+export const useElevationTotemsLockedIn = (): boolean[] => {
+  return useSelector((state: State) => state.summitEcosystem.totemsLockedIn)
+}
+export const useElevationTotemLockedIn = (elevation: Elevation): boolean => {
+  return useSelector((state: State) => {
+    return state.summitEcosystem.totemsLockedIn[elevationUtils.toInt(elevation)] || false
+  })
+}
+export const useElevationUnlockTimestamp = (elevation: Elevation): number => {
+  const elevationInfo = useElevationInfo(elevation)
+
+  return useMemo(() => elevationInfo?.unlockTimestamp || 1641028149, [elevationInfo])
+}
+export const useElevationRoundNumber = (elevation: Elevation): number | undefined => {
+  const elevationInfo = useElevationInfo(elevation)
+
+  return useMemo(() => elevationInfo?.roundNumber, [elevationInfo])
+}
+export const useElevationRoundNumbers = (): Array<number | null> => {
+  const plainsRound = useSelector(
+    (state: State) =>
+      state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(Elevation.PLAINS)]?.roundNumber,
+  )
+  const mesaRound = useSelector(
+    (state: State) =>
+      state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(Elevation.MESA)]?.roundNumber,
+  )
+  const summitRound = useSelector(
+    (state: State) =>
+      state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(Elevation.SUMMIT)]?.roundNumber,
+  )
+  const expeditionRound = useSelector(
+    (state: State) =>
+      state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(Elevation.EXPEDITION)]
+        ?.roundNumber,
+  )
+
+  return useMemo(() => [-1, plainsRound, mesaRound, summitRound, expeditionRound], [
+    plainsRound,
+    mesaRound,
+    summitRound,
+    expeditionRound,
+  ])
+}
+export const useElevationLocked = (elevation: Elevation): boolean => {
+  const elevationRoundNumber = useElevationRoundNumber(elevation)
+
+  return useMemo(() => false || (elevation === Elevation.OASIS ? false : elevationRoundNumber < ElevationUnlockRound[elevation]), [
+    elevationRoundNumber,
+    elevation,
+  ])
+}
+export const useElevationsLocked = (): boolean[] => {
+  const elevationRoundNumbers = useElevationRoundNumbers()
+
+  return useMemo(
+    () =>
+      elevationUtils.all.map((elevation, index) =>
+        elevation === Elevation.OASIS ? false : elevationRoundNumbers[index] < ElevationUnlockRound[elevation],
+      ),
+    [elevationRoundNumbers],
+  )
+}
+export const useElevationRoundTimeRemaining = (): number => {
+  const elevationInfo = useSelectedElevationInfo()
+  const elevation = useSelectedElevation()
+  const currentTimestamp = useCurrentTimestamp()
+  const elevationUnlockTimestamp = useElevationUnlockTimestamp(elevation)
+
+  return useMemo(() => (elevationInfo == null ? 0 : getTimestampDiff(currentTimestamp, Math.max(elevationUnlockTimestamp, elevationInfo.roundEndTimestamp))), [
+    elevationInfo,
+    currentTimestamp,
+    elevationUnlockTimestamp,
+  ])
+}
+export const useIsElevationLockedUntilRollover = (): boolean => {
+  const timeRemaining = useElevationRoundTimeRemaining()
+  const elevation = useSelectedElevation()
+  return timeRemaining <= 60 && elevation !== Elevation.OASIS
+}
+
+// EXPEDITION
+export const useExpeditionDivider = (): number => {
+  return useSelector((state: State) => state.summitEcosystem.expeditionDivider)
+}
+export const usePendingExpeditionTx = (): boolean => {
+  return useSelector((state: State) => state.summitEcosystem.pendingExpeditionTx)
+}
+
+// ELEVATE
+const baseSisterFarms = {
+  [Elevation.OASIS]: null,
+  [Elevation.PLAINS]: null,
+  [Elevation.MESA]: null,
+  [Elevation.SUMMIT]: null,
+  [Elevation.EXPEDITION]: null,
+}
+export interface SisterFarms {
+  [Elevation.OASIS]?: Farm
+  [Elevation.PLAINS]?: Farm
+  [Elevation.MESA]?: Farm
+  [Elevation.SUMMIT]?: Farm
+  [Elevation.EXPEDITION]?: Expedition
+}
+export const useSisterFarmsAndExpeditions = (symbol: string, forcedExpeditionPid?: number): SisterFarms => {
+  const farms = useFarms()
+  const expeditions: Expedition[] = useSelector((state: State) => state.expeditions.data)
+
+  return useMemo(() => {
+    const sisterFarms = baseSisterFarms
+    farms.forEach((farm) => {
+      if (farm.symbol !== symbol || !farm.launched) return
+      sisterFarms[farm.elevation] = farm
+    })
+    if (symbol === 'SUMMIT' || symbol === getSummitLpSymbol()) {
+      const forcedExpedition = expeditions.find((expedition) => expedition.live && expedition.pid === forcedExpeditionPid)
+      const activeExpedition = expeditions.find((expedition) => expedition.live && expedition.launched)
+      if (forcedExpedition != null) {
+        sisterFarms[Elevation.EXPEDITION] = forcedExpedition
+      } else {
+        sisterFarms[Elevation.EXPEDITION] = activeExpedition
+      }
+    }
+    return sisterFarms
+  }, [farms, expeditions, symbol, forcedExpeditionPid])
+}
+const baseSisterFarmsAvailable = {
+  [Elevation.OASIS]: false,
+  [Elevation.PLAINS]: false,
+  [Elevation.MESA]: false,
+  [Elevation.SUMMIT]: false,
+  [Elevation.EXPEDITION]: false,
+}
+export const useAvailableSisterElevations = (symbol: string, forcedExpeditionPid?: number) => {
+  const sisterFarmsAndExpeditions = useSisterFarmsAndExpeditions(symbol, forcedExpeditionPid)
+
+  return useMemo(() => {
+    const sisterFarmsAvailable = baseSisterFarmsAvailable
+    elevationUtils.all.forEach((elevation) => {
+      sisterFarmsAvailable[elevation] = sisterFarmsAndExpeditions[elevation] != null
+    })
+    return sisterFarmsAvailable
+  }, [sisterFarmsAndExpeditions])
+}
+
+// Referrals
+export const useReferrals = (account): ReferralsState => {
+  const { fastRefresh } = useRefresh()
+  const dispatch = useDispatch()
+  useEffect(() => {
+    if (account) {
+      dispatch(fetchReferralsDataAsync(account))
+    }
+  }, [account, dispatch, fastRefresh])
+
+  return useSelector((state: State) => state.referrals)
+}
+
+// HISTORICAL WINNERS
+export const useTotemHistoricalData = (
+  elevation: Elevation,
+): { recentWinners: number[]; recentWinningsMultipliers: number[]; winsAccum: number[] } => {
+  const elevationInfo = useElevationInfo(elevation)
+  return useMemo(() => {
+    if (elevationInfo == null || elevation === Elevation.OASIS)
+      return {
+        recentWinners: [],
+        recentWinningsMultipliers: [],
+        winsAccum: [],
+      }
+      
+    return {
+      recentWinners: elevationInfo.prevWinners.slice(0, Math.min(10, elevationInfo.roundNumber + 1)),
+      recentWinningsMultipliers: elevationInfo.prevWinningsMultipliers.slice(
+        0,
+        Math.min(6, elevationInfo.roundNumber + 1),
+      ),
+      winsAccum: elevationInfo.totemWinAcc,
+    }
+  }, [elevationInfo, elevation])
+}
+
+export const useElevationWinningTotem = (elevation: Elevation) => {
+  const elevationLocked = useElevationLocked(elevation)
+  const winningTotem = useSelector(
+    (state: State) =>
+      state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(elevation)]?.prevWinners[0],
+  )
+  const roundNumber = useElevationRoundNumber(elevation)
+
+  return useMemo(() => {
+    if ((elevation !== Elevation.OASIS && elevation !== Elevation.EXPEDITION && ForceElevationRetired) || elevationLocked || roundNumber <= 1 || elevation === Elevation.OASIS || winningTotem == null) return -1
+    return winningTotem
+  }, [elevation, elevationLocked, winningTotem, roundNumber])
+}
+
+
+export const useWinningTotems = () => {
+  const plainsTotem = useElevationWinningTotem(Elevation.PLAINS)
+  const mesaTotem = useElevationWinningTotem(Elevation.MESA)
+  const summitTotem = useElevationWinningTotem(Elevation.SUMMIT)
+  const expeditionTotem = useElevationWinningTotem(Elevation.EXPEDITION)
+
+  return useMemo(() => [-1, plainsTotem, mesaTotem, summitTotem, expeditionTotem], [
+    plainsTotem,
+    mesaTotem,
+    summitTotem,
+    expeditionTotem,
+  ])
+}
+
+export const useSelectedElevationWinningTotem = () => {
+  const elevation = useSelectedElevation()
+  return  useElevationWinningTotem(elevation)
+}
+
+// THEME
+export const usePageForcedDarkMode = () => {
+  const elevation = useSelectedElevation()
+  const { setPageForcedDark } = useTheme()
+
+  useEffect(() => setPageForcedDark(elevation === Elevation.EXPEDITION), [elevation, setPageForcedDark])
+}
