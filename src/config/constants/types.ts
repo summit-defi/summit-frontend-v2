@@ -1,7 +1,5 @@
 /* eslint camelcase: 0 */
-import BigNumber from 'bignumber.js'
 import { PriceableToken, TokenAssetType } from 'state/types'
-import { BscTestnetTokenSymbol } from './chainFarms/bsc_testnet/tokens'
 
 export const ForceElevationRetired = true
 
@@ -277,13 +275,6 @@ export const elevationUtils = {
   },
 }
 
-export enum QuoteToken {
-  BNB = 'BNB',
-  SUMMIT = 'SUMMIT',
-  BUSD = 'BUSD',
-  UST = 'UST',
-}
-
 export interface Address {
   56?: string // bsc
   97?: string // bsc testnet
@@ -302,8 +293,6 @@ export interface ElevationExistsAndLive {
   exists: boolean
   live: boolean
 }
-
-export type TokenSymbol = BscTestnetTokenSymbol
 
 export interface ElevationsExistAndLive {
   [Elevation.OASIS]: ElevationExistsAndLive
@@ -340,6 +329,7 @@ export interface MultiElevFarmConfig extends MultiElevAllocationConfig, Priceabl
 }
 
 export interface FarmConfig extends PriceableToken {
+  farmToken: string
   elevation: Elevation
   
   allocation: number

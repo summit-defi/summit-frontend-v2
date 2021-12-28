@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { getPriceableTokens } from 'config/constants'
-import { TokenPriceType, PriceableToken } from 'state/types'
+import { TokenAssetType, PriceableToken } from 'state/types'
 import {
   retryableMulticall,
   abi,
@@ -63,22 +63,22 @@ export const fetchPricesV2 = async () => {
 
 
   const {
-    [TokenPriceType.SingleAsset]: singleAssetPriceables,
-    [TokenPriceType.LP]: lpPriceables,
-    [TokenPriceType.Stablecoin]: stablecoinPriceables,
-    [TokenPriceType.WrappedNative]: wrappedNativePriceables,
-    [TokenPriceType.Balancer2Pool]: balancer2PoolPriceables,
-    [TokenPriceType.BalancerMultiPool]: balancerMultiPoolPriceables,
+    [TokenAssetType.SingleAsset]: singleAssetPriceables,
+    [TokenAssetType.LP]: lpPriceables,
+    [TokenAssetType.Stablecoin]: stablecoinPriceables,
+    [TokenAssetType.WrappedNative]: wrappedNativePriceables,
+    [TokenAssetType.Balancer2Pool]: balancer2PoolPriceables,
+    [TokenAssetType.BalancerMultiPool]: balancerMultiPoolPriceables,
   } = priceableTokens.reduce((acc, priceableToken) => {
-    acc[priceableToken.type].push(priceableToken)
+    acc[priceableToken.assetType].push(priceableToken)
     return acc
   }, {
-    [TokenPriceType.SingleAsset]: [] as PriceableToken[],
-    [TokenPriceType.LP]: [] as PriceableToken[],
-    [TokenPriceType.Stablecoin]: [] as PriceableToken[],
-    [TokenPriceType.WrappedNative]: [] as PriceableToken[],
-    [TokenPriceType.Balancer2Pool]: [] as PriceableToken[],
-    [TokenPriceType.BalancerMultiPool]: [] as PriceableToken[],
+    [TokenAssetType.SingleAsset]: [] as PriceableToken[],
+    [TokenAssetType.LP]: [] as PriceableToken[],
+    [TokenAssetType.Stablecoin]: [] as PriceableToken[],
+    [TokenAssetType.WrappedNative]: [] as PriceableToken[],
+    [TokenAssetType.Balancer2Pool]: [] as PriceableToken[],
+    [TokenAssetType.BalancerMultiPool]: [] as PriceableToken[],
   })
 
   // SINGLE ASSETS AND LPS
@@ -119,7 +119,7 @@ export const fetchPricesV2 = async () => {
       tokenDecimals,
     ]: any[] = priceableResChunks[index]
 
-    if (fetchableToken.type === TokenPriceType.LP) {
+    if (fetchableToken.assetType === TokenAssetType.LP) {
       // LP
       const fullNativeAmountInLp = new BigNumber(nativeBalanceInLp).times(2)
       const fullValueInLp = nativePrice.times(fullNativeAmountInLp)

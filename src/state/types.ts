@@ -10,8 +10,8 @@ export const NamedChainId = {
 
 export interface PriceableToken {
   symbol: string
-  type: TokenPriceType
-  decimals
+  assetType: TokenAssetType
+  decimals: number
   tokenAddress?: string
   lpAddress?: string
   containingTokens?: string[]
@@ -19,13 +19,6 @@ export interface PriceableToken {
 }
 
 export enum TokenAssetType {
-  SingleAsset,
-  LP,
-  Balancer2Pool,
-  Balancer3Pool,
-}
-
-export enum TokenPriceType {
   Stablecoin,
   SingleAsset,
   LP,
@@ -35,7 +28,6 @@ export enum TokenPriceType {
 }
 
 export interface FarmUserData {
-  pid: number
   allowance: BigNumber
   tokenBalance: BigNumber
   stakedBalance: BigNumber
@@ -44,7 +36,7 @@ export interface FarmUserData {
   roundYieldContributed: BigNumber
 }
 export interface Farm extends FarmConfig {
-  lpSupply?: BigNumber
+  supply?: BigNumber
   launched?: boolean
   userData?: FarmUserData
   summitPerYear?: BigNumber
@@ -82,9 +74,9 @@ export interface Expedition {
 
 // Slices states
 export interface ElevationFarmsData {
-  userEarned: BigNumber
-  userVesting: BigNumber
-  userYieldContributed: BigNumber
+  claimable: BigNumber
+  yieldContributed: BigNumber
+  potentialWinnings: BigNumber
   roundRewards: BigNumber
   totemsRoundRewards: BigNumber[]
 }

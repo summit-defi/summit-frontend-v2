@@ -5,7 +5,7 @@ import { Image, Flex, Text, HighlightedText, Heading, TokenSymbolImage, useModal
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import useStake from 'hooks/useStake'
 import useWithdraw from 'hooks/useWithdraw'
-import { useHarvest } from 'hooks/useHarvest'
+import { useClaimPool } from 'hooks/useHarvest'
 import { Expedition } from 'state/types'
 import { FCard } from 'views/ElevationFarms/components/FCard'
 import SummitButton from 'uikit/components/Button/SummitButton'

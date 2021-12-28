@@ -3,13 +3,13 @@ import { Flex, Text, HighlightedText } from 'uikit'
 import { Elevation } from 'config/constants/types'
 import { getBalanceNumber } from 'utils'
 import CardValue from 'views/Home/components/CardValue'
-import { useCrossCompound, useHarvest } from 'hooks/useHarvest'
+import { useClaimPool } from 'hooks/useHarvest'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
 
 interface Props {
-  pid: number
+  farmToken: string
   earnedReward: BigNumber
   elevation: Elevation
   disabled: boolean
@@ -47,18 +47,17 @@ const Divider = styled.div`
   width: 100%;
 `
 
-const FarmCardUserHarvest: React.FC<Props> = ({ pid, earnedReward, elevation, setPending }) => {
+const FarmCardUserHarvest: React.FC<Props> = ({ farmToken, earnedReward, elevation, setPending }) => {
   const rawEarned = getBalanceNumber(earnedReward)
   const earnLabel = 'SUMMIT'
 
   // HARVEST BUTTON
-  const { onHarvest, pending: harvestPending } = useHarvest(pid)
-  const { onCrossCompound, pending: crossCompoundPending } = useCrossCompound(pid)
+  const { onHarvest, pending: harvestPending } = useClaimPool(farmToken, elevation)
   const nothingToClaim = !earnedReward || earnedReward.isEqualTo(0)
 
   useEffect(() => {
-    setPending(harvestPending || crossCompoundPending)
-  }, [harvestPending, crossCompoundPending, setPending])
+    setPending(harvestPending)
+  }, [harvestPending, setPending])
 
   return (
     <>
@@ -74,32 +73,15 @@ const FarmCardUserHarvest: React.FC<Props> = ({ pid, earnedReward, elevation, se
         </MobileHorizontalFlex>
 
         <Flex flexDirection="column">
-          <Flex>
-            <SummitButton
-              elevation={elevation}
-              isLoading={harvestPending}
-              disabled={nothingToClaim}
-              mr="8px"
-              onClick={onHarvest}
-            >
-              HARVEST
-            </SummitButton>
-            <SummitButton
-              elevation={elevation}
-              isLoading={crossCompoundPending}
-              disabled={nothingToClaim}
-              onClick={onCrossCompound}
-            >
-              CROSS
-              <br />
-              COMPOUND*
-            </SummitButton>
-          </Flex>
-          <Text fontSize="13px" mt="8px" bold monospace>
-            * Cross Compound: Harvest earned SUMMIT and
-            <br />
-            deposit in SUMMIT farm at this elevation
-          </Text>
+          <SummitButton
+            elevation={elevation}
+            isLoading={harvestPending}
+            disabled={nothingToClaim}
+            mr="8px"
+            onClick={onHarvest}
+          >
+            HARVEST
+          </SummitButton>
         </Flex>
       </MobileVerticalFlex>
       <Divider />

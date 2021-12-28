@@ -11,14 +11,14 @@ import { isNumber } from 'lodash'
 import { RewardsWillBeHarvestedType, useRewardsWillBeHarvestedModal } from '../RewardsWillBeHarvestedModal'
 
 interface Props {
-  pid: number
+  farmToken: string
+  elevation: Elevation
   symbol: string
   elevationLocked: boolean
   stakedBalance: BigNumber
-  tokenDecimals: number
+  decimals: number
   earnedReward: BigNumber
   withdrawalFee: number
-  elevation: Elevation
   disabled: boolean
   setPending: (boolean) => void
 }
@@ -34,19 +34,19 @@ const CenteredSummitButton = styled(SummitButton)`
 `
 
 const FarmCardUserWithdraw: React.FC<Props> = ({
-  pid,
+  farmToken,
+  elevation,
   symbol,
   elevationLocked,
   stakedBalance,
-  tokenDecimals,
+  decimals,
   withdrawalFee,
   earnedReward,
-  elevation,
   disabled,
   setPending,
 }) => {
   // WITHDRAW ACTION
-  const { onWithdraw, pending: withdrawPending } = useWithdraw(elevation, pid)
+  const { onWithdraw, pending: withdrawPending } = useWithdraw(farmToken, elevation)
 
 
   // REWARDS WILL BE HARVESTED MODAL
@@ -61,8 +61,8 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
   const [withdrawVal, setWithdrawVal] = useState('')
   const [invalidWithdraw, setInvalidWithdrawVal] = useState(false)
   const fullWithdrawBalance = useMemo(() => {
-    return getFullDisplayBalance(stakedBalance || new BigNumber(0), tokenDecimals)
-  }, [stakedBalance, tokenDecimals])
+    return getFullDisplayBalance(stakedBalance || new BigNumber(0), decimals)
+  }, [stakedBalance, decimals])
 
   const validWithdrawVal = (testVal, stakedBal) => {
     return (
@@ -85,9 +85,9 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
 
   const handleWithdraw = useCallback(() => {
     presentRewardsWillBeHarvestedModal({
-      transactionToConfirm: () => onWithdraw(symbol, withdrawVal, '0', tokenDecimals)
+      transactionToConfirm: () => onWithdraw(symbol, withdrawVal, decimals)
     })
-  }, [symbol, withdrawVal, onWithdraw, presentRewardsWillBeHarvestedModal, tokenDecimals])
+  }, [symbol, withdrawVal, onWithdraw, presentRewardsWillBeHarvestedModal, decimals])
 
   return (
     <Flex flexDirection="column" justifyContent="flex-start" alignItems="flex-start">

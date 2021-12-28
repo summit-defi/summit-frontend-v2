@@ -3,23 +3,26 @@ import { createSlice } from '@reduxjs/toolkit'
 import { getFarmConfigs } from 'config/constants/farms'
 import { fetchFarms } from './fetchFarms'
 import {
-  fetchFarmEarnedAndVestingRewards,
+  fetchPoolClaimableRewards,
   fetchFarmUserAllowances,
   fetchFarmUserBalances,
-  fetchFarmRoundYieldContributed,
   fetchFarmUserStakedBalances,
   fetchElevationsRoundRewards,
+  fetchElevClaimableRewards,
+  fetchElevPotentialWinnings,
+  fetchPoolYieldContributed,
 } from './fetchFarmUser'
 import { FarmsState, Farm } from '../types'
 import { groupByAndMap } from 'utils'
 import BigNumber from 'bignumber.js'
-import { Elevation } from 'config/constants/types'
+import { Elevation, elevationUtils } from 'config/constants/types'
+import { farmId } from 'utils/farmId'
 
 const BN_ZERO = new BigNumber(0)
 const EMPTY_ELEVATION_FARMS_DATA = {
-  userEarned: BN_ZERO,
-  userVesting: BN_ZERO,
-  userYieldContributed: BN_ZERO,
+  claimable: BN_ZERO,
+  yieldContributed: BN_ZERO,
+  potentialWinnings: BN_ZERO,
   roundRewards: BN_ZERO,
   totemsRoundRewards: [],
 }
@@ -41,7 +44,7 @@ export const farmsSlice = createSlice({
     setFarmsPublicData: (state, action) => {
       const liveFarmsData: Farm[] = action.payload
       state.data = state.data.map((farm) => {
-        return { ...farm, ...liveFarmsData[farm.pid] }
+        return { ...farm, ...liveFarmsData[farmId(farm)] }
       })
     },
     setFarmUserData: (state, action) => {
@@ -49,18 +52,18 @@ export const farmsSlice = createSlice({
       state.data = state.data.map((farm) => {
         return {
           ...farm,
-          userData: farmsUserData[farm.pid],
+          userData: farmsUserData[farmId(farm)],
         }
       })
     },
     setElevationFarmsData: (state, action) => {
-      const { elevationEarnedAndVesting, elevationTotemRoundRewards, elevationRoundYieldContributed } = action.payload
-      state.elevationData = [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT].map((elevation) => ({
-        userEarned: elevationEarnedAndVesting[elevation].earned as BigNumber,
-        userVesting: elevationEarnedAndVesting[elevation].vesting as BigNumber,
-        userYieldContributed: elevationRoundYieldContributed[elevation] as BigNumber,
-        roundRewards: elevationTotemRoundRewards[elevation].roundRewards as BigNumber,
-        totemsRoundRewards: elevationTotemRoundRewards[elevation].totemRoundRewards as BigNumber[],
+      const { elevClaimableRewards, elevPotentialWinnings, elevRoundRewards } = action.payload
+      state.elevationData = elevationUtils.all.map((elevation) => ({
+        claimable: elevClaimableRewards[elevation] as BigNumber,
+        yieldContributed: elevPotentialWinnings[elevation].yieldContributed as BigNumber,
+        potentialWinnings: elevPotentialWinnings[elevation].potentialWinnings as BigNumber,
+        roundRewards: elevRoundRewards[elevation].roundRewards as BigNumber,
+        totemsRoundRewards: elevRoundRewards[elevation].totemRoundRewards as BigNumber[],
       }))
     },
   },
@@ -81,47 +84,40 @@ export const fetchFarmUserDataAsync = (account) => async (dispatch) => {
     allowances,
     tokenBalances,
     stakedBalances,
-    earnedAndVesting,
-    elevationTotemRoundRewards,
-    yieldContributed,
+    poolClaimableRewards,
+    poolYieldContributed,
+    elevClaimableRewards,
+    elevPotentialWinnings,
+    elevRoundRewards,
   ] = await Promise.all([
     await fetchFarmUserAllowances(account, farmConfigs),
     await fetchFarmUserBalances(account, farmConfigs),
     await fetchFarmUserStakedBalances(account, farmConfigs),
-    await fetchFarmEarnedAndVestingRewards(account, farmConfigs),
+    await fetchPoolClaimableRewards(account, farmConfigs),
+    await fetchPoolYieldContributed(account, farmConfigs),
+    await fetchElevClaimableRewards(account),
+    await fetchElevPotentialWinnings(account),
     await fetchElevationsRoundRewards(farmConfigs),
-    await fetchFarmRoundYieldContributed(account, farmConfigs),
   ])
-
-  if (
-    allowances == null ||
-    tokenBalances == null ||
-    stakedBalances == null ||
-    earnedAndVesting == null ||
-    elevationTotemRoundRewards == null ||
-    yieldContributed == null
-  )
-    return
-
-  const { farmEarnedAndVesting, elevationEarnedAndVesting } = earnedAndVesting
-  const { roundYieldContributed, elevationRoundYieldContributed } = yieldContributed
 
   const farmsUserData = groupByAndMap(
     farmConfigs,
-    (farm) => farm.pid,
-    (farm) => ({
-      allowance: allowances[farm.pid],
-      tokenBalance: tokenBalances[farm.pid],
-      stakedBalance: stakedBalances[farm.pid],
-      earnedReward: farmEarnedAndVesting[farm.pid].earned,
-      vestingReward: farmEarnedAndVesting[farm.pid].vesting,
-      roundYieldContributed: roundYieldContributed[farm.pid],
-    }),
+    (farm) => farmId(farm),
+    (farm) => {
+      const id = farmId(farm)
+      return {
+        allowance: allowances[id] || BN_ZERO,
+        tokenBalance: tokenBalances[id] || BN_ZERO,
+        stakedBalance: stakedBalances[id] || BN_ZERO,
+        claimable: poolClaimableRewards[id] || BN_ZERO,
+        yieldContributed: poolYieldContributed[id] || BN_ZERO,
+      }
+    },
   )
 
   dispatch(setFarmUserData({ farmsUserData }))
   dispatch(
-    setElevationFarmsData({ elevationEarnedAndVesting, elevationTotemRoundRewards, elevationRoundYieldContributed }),
+    setElevationFarmsData({ elevClaimableRewards, elevPotentialWinnings, elevRoundRewards }),
   )
 }
 

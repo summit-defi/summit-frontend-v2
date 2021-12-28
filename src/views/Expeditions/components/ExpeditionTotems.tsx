@@ -1,8 +1,8 @@
 import BigNumber from 'bignumber.js'
 import { Elevation } from 'config/constants/types'
 import React, { useEffect, useState } from 'react'
-import { usePendingExpeditionTx, usePricesPerToken, useSelectedElevationWinningTotem } from 'state/hooks'
-import { Expedition, PriceableTokenSymbol } from 'state/types'
+import { usePendingExpeditionTx, useSelectedElevationWinningTotem, useSummitPrice } from 'state/hooks'
+import { Expedition } from 'state/types'
 import styled, { keyframes } from 'styled-components'
 import { Flex, Spinner, Text } from 'uikit'
 import useSelectTotemModal from 'uikit/widgets/SelectTotemModal/useSelectTotemModal'
@@ -156,9 +156,8 @@ const deityValueText = (expedition, totem, deityDivider, summitPrice, bull) => {
 const ExpeditionTotems: React.FC<Props> = ({ totem, deityDivider, expedition }) => {
   const [expeditionTotem, setExpeditionTotem] = useState(null)
   const prevRoundWinningDeity = useSelectedElevationWinningTotem()
-  const pricesPerToken = usePricesPerToken()
   const pendingExpeditionTx = usePendingExpeditionTx()
-  const summitPrice = pricesPerToken && pricesPerToken[PriceableTokenSymbol.SUMMIT] ? pricesPerToken[PriceableTokenSymbol.SUMMIT] : new BigNumber(1)
+  const summitPrice = useSummitPrice()
 
   useEffect(() => {
     if (expeditionTotem != null) {

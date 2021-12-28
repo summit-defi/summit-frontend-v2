@@ -6,7 +6,7 @@ import { Expedition } from 'state/types'
 import { Elevation } from 'config/constants/types'
 import CardValue from 'views/Home/components/CardValue'
 import BigNumber from 'bignumber.js'
-import { useHarvest } from 'hooks/useHarvest'
+import { useClaimPool } from 'hooks/useHarvest'
 import SummitButton from 'uikit/components/Button/SummitButton'
 
 const InfoSection = styled.div`
@@ -45,7 +45,7 @@ const ExpeditionWinnings: React.FC<HarvestProps> = ({ expedition }) => {
   const winnings = (earnedReward || new BigNumber(0))
 
   const rawWinnings = getBalanceNumber(winnings, rewardToken.decimals)
-  const { onHarvest, pending: harvestPending } = useHarvest(pid)
+  const { onHarvest, pending: harvestPending } = useClaimPool(pid)
 
   if (rawWinnings === 0) return null
 

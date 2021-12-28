@@ -1,16 +1,17 @@
 import BigNumber from 'bignumber.js'
-import { Elevation, FarmConfig, ForceElevationRetired } from 'config/constants/types'
+import { Elevation, elevationUtils, FarmConfig, ForceElevationRetired } from 'config/constants/types'
 import {
   getCartographerAddress,
   retryableMulticall,
   abi,
   groupByAndMap,
   getCartographerOasisAddress,
-  getCartographerElevationAddress,
+  getSubCartographerAddress,
 } from 'utils'
+import { farmId } from 'utils/farmId'
 
 const getFarmTokens = (farms: FarmConfig[]) => {
-  return [...new Set<string>(farms.map((farm) => (farm.isTokenOnly ? farm.tokenAddress : farm.lpAddress)))]
+  return [...new Set<string>(farms.map((farm) => farm.farmToken))]
 }
 
 export const fetchFarmUserAllowances = async (account: string, farmConfigs: FarmConfig[]) => {
@@ -30,8 +31,8 @@ export const fetchFarmUserAllowances = async (account: string, farmConfigs: Farm
 
   return groupByAndMap(
     farmConfigs,
-    (farm) => farm.pid,
-    (farm) => tokenAllowances[farm.isTokenOnly ? farm.tokenAddress : farm.lpAddress],
+    (farm) => farmId(farm),
+    (farm) => tokenAllowances[farm.farmToken],
   )
 }
 
@@ -53,32 +54,33 @@ export const fetchFarmUserBalances = async (account, farmConfigs: FarmConfig[]) 
 
   return groupByAndMap(
     farmConfigs,
-    (farm) => farm.pid,
-    (farm) => tokenBalances[farm.isTokenOnly ? farm.tokenAddress : farm.lpAddress],
+    (farm) => farmId(farm),
+    (farm) => tokenBalances[farm.farmToken],
   )
 }
 
 export const fetchFarmUserStakedBalances = async (account: string, farmConfigs: FarmConfig[]) => {
-  const { oasisPids, elevationPids } = farmConfigs.reduce(
-    (accum, farm) => ({
-      oasisPids: farm.elevation === Elevation.OASIS ? [...accum.oasisPids, farm.pid] : accum.oasisPids,
-      elevationPids: farm.elevation !== Elevation.OASIS ? [...accum.elevationPids, farm.pid] : accum.elevationPids,
-    }),
-    { oasisPids: [], elevationPids: [] },
-  )
-  const oasisCalls = oasisPids.map((oasisPid) => {
-    return {
-      address: getCartographerOasisAddress(),
-      name: 'userInfo',
-      params: [oasisPid, account],
-    }
-  })
+    // TODO: check if this can handle everything being called with the same abi
 
-  const elevationCalls = elevationPids.map((elevationPid) => {
-    return {
-      address: getCartographerElevationAddress(),
-      name: 'userInfo',
-      params: [elevationPid, account],
+  const cartOasisAddress = await getCartographerOasisAddress()
+
+  let oasisIds = []
+  let elevationIds = []
+  let oasisCalls = []
+  let elevationCalls = []
+  farmConfigs.forEach((farm) => {
+    if (farm.elevation === Elevation.OASIS) {
+        oasisCalls.push({
+        address: cartOasisAddress,
+        name: 'userInfo',
+        params: [farm.farmToken, account]
+      })
+    } else {
+      elevationCalls.push({
+        address: getSubCartographerAddress(farm.elevation),
+        name: 'userInfo',
+        params: [farm.farmToken, account]
+      })
     }
   })
 
@@ -87,118 +89,90 @@ export const fetchFarmUserStakedBalances = async (account: string, farmConfigs: 
     await retryableMulticall(abi.cartographerElevation, elevationCalls, 'fetchFarmUserStakedBalances_cartElev'),
   ])
 
-  const pids = [...oasisPids, ...elevationPids]
+  const ids = [...oasisIds, ...elevationIds]
   const res = [...oasisRes, ...elevationRes]
   return groupByAndMap(
-    pids,
-    (pid) => pid,
+    ids,
+    (id) => id,
     (_, index) => new BigNumber(res[index].staked._hex),
   )
 }
 
-export const fetchFarmEarnedAndVestingRewards = async (account: string, farmConfigs: FarmConfig[]) => {
-  const { oasisPids, elevationPids } = farmConfigs.reduce(
-    (accum, farm) => ({
-      oasisPids: farm.elevation === Elevation.OASIS ? [...accum.oasisPids, farm.pid] : accum.oasisPids,
-      elevationPids: farm.elevation !== Elevation.OASIS ? [...accum.elevationPids, farm.pid] : accum.elevationPids,
-    }),
-    { oasisPids: [], elevationPids: [] },
-  )
-  const oasisCalls = oasisPids.map((oasisPid) => ({
-    address: getCartographerAddress(),
-    name: 'rewards',
-    params: [oasisPid, account],
-  }))
-  const elevationCalls = elevationPids.map((elevationPid) => ({
-    address: getCartographerAddress(),
-    name: 'rewards',
-    params: [elevationPid, account],
+export const fetchPoolClaimableRewards = async (account: string, farmConfigs: FarmConfig[]) => {
+  const calls = farmConfigs.map((farm) => ({
+    address: getSubCartographerAddress(farm.elevation),
+    name: 'poolClaimableRewards',
+    params: [farm.farmToken, account]
   }))
 
-  const oasisRes = await retryableMulticall(abi.cartographer, oasisCalls, 'fetchFarmUserEarnedAndVesting')
-  const elevationRes = await retryableMulticall(abi.cartographer, elevationCalls, 'fetchFarmUserEarnedAndVesting')
-
-  // Accumulate earned and vesting for each elevation
-  return [...oasisPids, ...elevationPids].reduce(
-    (acc, pid, farmIndex) => {
-      if (farmIndex >= oasisPids.length) {
-        return {
-          ...acc,
-          farmEarnedAndVesting: {
-            ...acc.farmEarnedAndVesting,
-            [pid]: {
-              earned: new BigNumber(0),
-              vesting: new BigNumber(0),
-            },
-          },
-        }
-      }
-      const res = farmIndex >= oasisPids.length ? elevationRes[farmIndex - oasisPids.length] : oasisRes[farmIndex]
-      const [earned, vesting] = res == null ? [new BigNumber(0), new BigNumber(0)] : [
-        new BigNumber(res[0]._hex),
-        new BigNumber(res[1]._hex)
-      ]
-      return {
-        farmEarnedAndVesting: {
-          ...acc.farmEarnedAndVesting,
-          [pid]: {
-            earned,
-            vesting,
-          },
-        },
-        elevationEarnedAndVesting: {
-          ...acc.elevationEarnedAndVesting,
-          [Elevation.OASIS]: {
-            earned: (acc.elevationEarnedAndVesting[Elevation.OASIS]?.earned || new BigNumber(0)).plus(earned),
-            vesting: (acc.elevationEarnedAndVesting[Elevation.OASIS]?.vesting || new BigNumber(0)).plus(vesting),
-          },
-        },
-      }
-    },
-    { farmEarnedAndVesting: {}, elevationEarnedAndVesting: {
-        [Elevation.PLAINS]: {
-          earned: new BigNumber(0),
-          vesting: new BigNumber(0),
-        },
-        [Elevation.MESA]: {
-          earned: new BigNumber(0),
-          vesting: new BigNumber(0),
-        },
-        [Elevation.SUMMIT]: {
-          earned: new BigNumber(0),
-          vesting: new BigNumber(0),
-        },
-      } 
-    },
+  const res = await retryableMulticall(abi.cartographerOasis, calls, 'fetchPoolClaimableRewards')
+  
+  return groupByAndMap(
+    farmConfigs,
+    (farm) => farmId(farm),
+    (farm, index) => res == null ? new BigNumber(0) : new BigNumber(res[index]._hex)
   )
 }
 
-export const fetchFarmRoundYieldContributed = async (account, farmConfigs: FarmConfig[]) => {
-  const calls = farmConfigs.map((farmConfig) => ({
-    address: getCartographerAddress(),
-    name: 'hypotheticalRewards',
-    params: [farmConfig.pid, account],
+export const fetchPoolYieldContributed = async (account: string, farmConfigs: FarmConfig[]) => {
+  const elevationFarms = farmConfigs.filter((farmConfig) => farmConfig.elevation !== Elevation.OASIS)
+
+  const calls = elevationFarms.map((farm) => ({
+    address: getSubCartographerAddress(farm.elevation),
+    name: 'poolYieldContributed',
+    params: [farm.farmToken, account]
   }))
 
-  const res = await retryableMulticall(abi.cartographer, calls, 'fetchFarmUserYieldContributed')
+  const res = await retryableMulticall(abi.cartographerOasis, calls, 'fetchPoolYieldContributed')
+  
+  return groupByAndMap(
+    elevationFarms,
+    (farm) => farmId(farm),
+    (farm, index) => {
+      if (res == null) return new BigNumber(0)
+      return new BigNumber(res[index]._hex)
+    }
+  )
+}
 
-  return farmConfigs.reduce(
-    (acc, farm, farmIndex) => {
-      const yieldContributed = (farm.elevation !== Elevation.OASIS && ForceElevationRetired) || res == null ? new BigNumber(0) : new BigNumber(res[farmIndex][0]._hex)
-      return {
-        roundYieldContributed: {
-          ...acc.roundYieldContributed,
-          [farm.pid]: yieldContributed,
-        },
-        elevationRoundYieldContributed: {
-          ...acc.elevationRoundYieldContributed,
-          [farm.elevation]: (acc.elevationRoundYieldContributed[farm.elevation] || new BigNumber(0)).plus(
-            yieldContributed,
-          ),
-        },
+export const fetchElevClaimableRewards = async (account: string) => {
+  const calls = elevationUtils.all.map((elevation) => ({
+    address: getSubCartographerAddress(elevation),
+    name: 'elevClaimableRewards',
+    params: [account]
+  }))
+
+  const res = await retryableMulticall(abi.cartographerOasis, calls, 'fetchElevClaimableRewards')
+  
+  return groupByAndMap(
+    elevationUtils.all,
+    (elevation) => elevation,
+    (_, index) => res == null ? new BigNumber(0) : new BigNumber(res[index]._hex)
+  )
+}
+
+export const fetchElevPotentialWinnings = async (account: string) => {
+  const calls = elevationUtils.elevationOnly.map((elevation) => ({
+    address: getSubCartographerAddress(elevation),
+    name: 'elevPotentialWinnings',
+    params: [account]
+  }))
+
+  const res = await retryableMulticall(abi.cartographerElevation, calls, 'fetchElevPotentialWinnings')
+  
+  return groupByAndMap(
+    elevationUtils.all,
+    (elevation) => elevation,
+    (_, index) => {
+      if (res == null) return {
+        yieldContributed: new BigNumber(0),
+        potentialWinnings: new BigNumber(0)
       }
-    },
-    { roundYieldContributed: {}, elevationRoundYieldContributed: {} },
+      return {
+        yieldContributed: new BigNumber(res[index * 2 + 0]._hex),
+        potentialWinnings: new BigNumber(res[index * 2 + 1]._hex),
+      }
+    }
   )
 }
 
@@ -206,9 +180,9 @@ export const fetchElevationsRoundRewards = async (farmConfigs: FarmConfig[]) => 
   const elevationFarms = farmConfigs.filter((farmConfig) => farmConfig.elevation !== Elevation.OASIS)
 
   const calls = elevationFarms.map((farm) => ({
-    address: getCartographerElevationAddress(),
+    address: getSubCartographerAddress(farm.elevation),
     name: 'totemRoundRewards',
-    params: [farm.pid],
+    params: [farm.farmToken],
   }))
 
   const res = await retryableMulticall(abi.cartographerElevation, calls, 'fetchElevationsRoundRewards')
@@ -218,10 +192,24 @@ export const fetchElevationsRoundRewards = async (farmConfigs: FarmConfig[]) => 
       roundRewards: new BigNumber(0),
       totemsRoundRewards: [],
     },
+    [Elevation.PLAINS]: {
+      roundRewards: new BigNumber(0),
+      totemsRoundRewards: [],
+    },
+    [Elevation.MESA]: {
+      roundRewards: new BigNumber(0),
+      totemsRoundRewards: [],
+    },
+    [Elevation.SUMMIT]: {
+      roundRewards: new BigNumber(0),
+      totemsRoundRewards: [],
+    },
   }
 
+  if (res == null) return elevationTotemRoundRewards
+
   elevationFarms.forEach((farm, farmIndex) => {
-    const [roundRewardsDirty, ...totemRoundRewardsDirty] = res == null ? [...new Array(11)].fill(0) : res[farmIndex][0]
+    const [roundRewardsDirty, ...totemRoundRewardsDirty] = res[farmIndex][0]
     const roundRewards = new BigNumber(roundRewardsDirty ? roundRewardsDirty._hex : 0)
     const totemsRoundRewards = (totemRoundRewardsDirty || []).map((reward) => new BigNumber(reward._hex))
 

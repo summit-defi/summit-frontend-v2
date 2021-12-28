@@ -8,10 +8,10 @@ import { useElevationRoundNumbers, useElevationTotems, useElevationTotemsLockedI
 export const useRoundRollovers = () => {
   const [
     _1,
-    _plainsTotemLockedIn,
-    _mesaTotemLockedIn,
-    _summitTotemLockedIn,
-    expeditionTotemLockedIn,
+    _plainstotemSelected,
+    _mesatotemSelected,
+    _summittotemSelected,
+    expeditiontotemSelected,
   ] = useElevationTotemsLockedIn()
   const [_2, _plainsTotem, _mesaTotem, _summitTotem, expeditionTotem] = useElevationTotems()
   const [_3, _plainsWinningTotem, _mesaWinningTotem, _summitWinningTotem, expeditionWinningTotem] = useWinningTotems()
@@ -85,7 +85,7 @@ export const useRoundRollovers = () => {
   //     setUnlockedElevationToShow(Elevation.PLAINS)
   //   } else if (
   //     plainsTotem === plainsWinningTotem &&
-  //     plainsTotemLockedIn &&
+  //     plainstotemSelected &&
   //     plainsRound > (prevPlainsRound.current || 0)
   //   ) {
   //     setElevationRolloversToShow((elevations) => [...elevations, Elevation.PLAINS])
@@ -94,7 +94,7 @@ export const useRoundRollovers = () => {
   // }, [
   //   plainsTotem,
   //   plainsWinningTotem,
-  //   plainsTotemLockedIn,
+  //   plainstotemSelected,
   //   plainsRound,
   //   setElevationRolloversToShow,
   //   setUnlockedElevationToShow,
@@ -110,7 +110,7 @@ export const useRoundRollovers = () => {
   //   }
   //   if (prevMesaRound.current === 0 && mesaRound === 1) {
   //     setUnlockedElevationToShow(Elevation.MESA)
-  //   } else if (mesaTotem === mesaWinningTotem && mesaTotemLockedIn && mesaRound > (prevMesaRound.current || 0)) {
+  //   } else if (mesaTotem === mesaWinningTotem && mesatotemSelected && mesaRound > (prevMesaRound.current || 0)) {
   //     setElevationRolloversToShow((elevations) => [...elevations, Elevation.MESA])
   //   }
   //   prevMesaRound.current = mesaRound
@@ -118,7 +118,7 @@ export const useRoundRollovers = () => {
   //   mesaTotem,
   //   mesaWinningTotem,
   //   mesaRound,
-  //   mesaTotemLockedIn,
+  //   mesatotemSelected,
   //   setElevationRolloversToShow,
   //   setUnlockedElevationToShow,
   // ])
@@ -135,7 +135,7 @@ export const useRoundRollovers = () => {
   //     setUnlockedElevationToShow(Elevation.SUMMIT)
   //   } else if (
   //     summitTotem === summitWinningTotem &&
-  //     summitTotemLockedIn &&
+  //     summittotemSelected &&
   //     summitRound > (prevSummitRound.current || 0)
   //   ) {
   //     setElevationRolloversToShow((elevations) => [...elevations, Elevation.SUMMIT])
@@ -144,7 +144,7 @@ export const useRoundRollovers = () => {
   // }, [
   //   summitTotem,
   //   summitWinningTotem,
-  //   summitTotemLockedIn,
+  //   summittotemSelected,
   //   summitRound,
   //   setElevationRolloversToShow,
   //   setUnlockedElevationToShow,
@@ -162,7 +162,7 @@ export const useRoundRollovers = () => {
       setUnlockedElevationToShow(Elevation.EXPEDITION)
     } else if (
       expeditionTotem === expeditionWinningTotem &&
-      expeditionTotemLockedIn &&
+      expeditiontotemSelected &&
       expeditionRound > (prevExpeditionRound.current || 0)
     ) {
       setElevationRolloversToShow((elevations) => [...elevations, Elevation.EXPEDITION])
@@ -171,7 +171,7 @@ export const useRoundRollovers = () => {
   }, [
     expeditionTotem,
     expeditionWinningTotem,
-    expeditionTotemLockedIn,
+    expeditiontotemSelected,
     expeditionRound,
     setElevationRolloversToShow,
     setUnlockedElevationToShow,

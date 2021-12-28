@@ -54,12 +54,6 @@ export const getMenuItems = (
     external: false,
     elevation: Elevation.OASIS,
   },
-  {
-    label: 'RECOVERY',
-    icon: 'totemIcons/RECOVERY.png',
-    href: `/recovery`,
-    external: false,
-  },
   ...elevationUtils.elevationOnly.map((elevation) => ({
     label: Elevation[elevation],
     icon: getTotemIcon(

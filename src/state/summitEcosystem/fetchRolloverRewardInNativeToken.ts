@@ -1,16 +1,16 @@
 import BigNumber from 'bignumber.js'
 import { abi, getCartographerAddress, retryableMulticall } from 'utils'
 
-export const fetchRolloverRewardInNativeToken = async () => {
+export const fetchRolloverReward = async () => {
   const res = await retryableMulticall(
     abi.cartographer,
     [
       {
         address: getCartographerAddress(),
-        name: 'rolloverRewardInNativeToken',
+        name: 'rolloverReward',
       },
     ],
-    'fetchRolloverRewardInNativeToken',
+    'fetchRelloverReward',
   )
   if (res == null) return null
   const [rolloverRewardInNativeToken] = res

@@ -17,7 +17,7 @@ interface Props {
   elevation: Elevation
   userTotem: number
   preselectedTotem?: number
-  totemLockedIn: boolean
+  totemSelected: boolean
   onDismiss?: () => void
 }
 
@@ -57,7 +57,7 @@ const SelectTotemModal: React.FC<Props> = ({
   elevation,
   userTotem,
   preselectedTotem = null,
-  totemLockedIn,
+  totemSelected,
   onDismiss = () => null,
 }) => {
   const { userEarned } = useElevationUserRoundInfo(elevation)
@@ -101,7 +101,7 @@ const SelectTotemModal: React.FC<Props> = ({
             {elevation !== Elevation.EXPEDITION && <StyledCardAccent elevationBackground={elevationBackground} />}
             <ArtworkTotem elevation={elevation} totem={totemToConfirm} desktopSize="200" mobileSize="200" />
           </TotemPadding>
-          {totemLockedIn && (
+          {totemSelected && (
             <Text mb="12px" textAlign="center">
               * you have funds staked in one of the <i>{elevation.toLowerCase()}</i> pools.
               <br />

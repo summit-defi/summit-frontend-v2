@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js'
 import { Elevation, elevationUtils } from 'config/constants/types'
 import { FarmType, SummitEcosystemState } from '../types'
 import { fetchElevationsData, fetchElevationHelperPublicInfo } from './fetchElevationInfo'
-import { fetchRolloverRewardInNativeToken } from './fetchRolloverRewardInNativeToken'
+import { fetchRolloverReward } from './fetchRolloverRewardInNativeToken'
 import { fetchSummitEnabled } from './fetchSummitEnabled'
 import { fetchUsersTotems } from './fetchUsersTotems'
 
@@ -68,8 +68,8 @@ export const SummitEcosystemSlice = createSlice({
       })
 
       elevationUtils.all.forEach((elevation) => {
-        state.totemsLockedIn[elevationUtils.toInt(elevation)] = totemsData[elevation].totemLockedIn
-        localStorage.setItem(`${state.activeAccount}/${elevation}lockedin`, `${totemsData[elevation].totemLockedIn}`)
+        state.totemsLockedIn[elevationUtils.toInt(elevation)] = totemsData[elevation].totemSelected
+        localStorage.setItem(`${state.activeAccount}/${elevation}lockedin`, `${totemsData[elevation].totemSelected}`)
       })
     },
     setElevationsInfo: (state, action) => {
@@ -202,7 +202,7 @@ export const updateChainId = (chainId: string) => async (dispatch) => {
   dispatch(setChainId(chainId))
 }
 export const fetchRolloverRewardInNativeTokenAsync = () => async (dispatch) => {
-  const rolloverRewardInNativeToken = await fetchRolloverRewardInNativeToken()
+  const rolloverRewardInNativeToken = await fetchRolloverReward()
   if (rolloverRewardInNativeToken == null) return
   dispatch(setRolloverRewardInNativeToken(rolloverRewardInNativeToken))
 }

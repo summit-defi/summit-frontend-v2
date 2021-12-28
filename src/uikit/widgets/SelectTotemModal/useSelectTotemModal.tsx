@@ -16,7 +16,7 @@ const useSelectTotemModal = (elevation: Elevation, preselectedTotem?: number): R
       elevation={elevation}
       userTotem={userTotem}
       preselectedTotem={preselectedTotem}
-      totemLockedIn={totemsLockedIn[elevationUtils.toInt(elevation)] || false}
+      totemSelected={totemsLockedIn[elevationUtils.toInt(elevation)] || false}
     />,
   )
   return { onPresentSelectTotemModal }

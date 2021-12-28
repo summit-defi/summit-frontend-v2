@@ -6,7 +6,6 @@ import {
   abiItem,
   getSummitTokenAddress,
   getCartographerAddress,
-  getCartographerElevationAddress,
   getExpeditionAddress,
   getCartographerOasisAddress,
   getElevationHelperAddress,
@@ -50,9 +49,6 @@ export const useCartographer = () => {
 }
 export const useCartographerOasis = () => {
   return useContract(abiItem.cartographerOasis, getCartographerOasisAddress())
-}
-export const useCartographerElevation = () => {
-  return useContract(abiItem.cartographerElevation, getCartographerElevationAddress())
 }
 export const useExpedition = () => {
   return useContract(abiItem.expedition, getExpeditionAddress())

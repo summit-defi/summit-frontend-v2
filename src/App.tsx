@@ -26,7 +26,6 @@ const ElevationFarms = lazy(() => import('./views/ElevationFarms'))
 const ExpeditionFarms = lazy(() => import('./views/Expeditions'))
 const Referrals = lazy(() => import('./views/Referrals'))
 const NotFound = lazy(() => import('./views/NotFound'))
-const UserRecoveries = lazy(() => import('./views/UserRecoveries'))
 
 const StyledRouter = styled(Router)`
   position: relative;
@@ -82,9 +81,6 @@ const App: React.FC = () => {
                 <ElevationFarms elevation={elevation} />
               </Route>
             ))}
-            <Route path="/recovery">
-              <UserRecoveries />
-            </Route>
             <Route path="/expedition">
               <ExpeditionFarms />
             </Route>

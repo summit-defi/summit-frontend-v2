@@ -11,6 +11,7 @@ import FarmCardUserWithdraw from './FarmCardUserWithdraw'
 import FarmCardUserElevate from './FarmCardUserElevate'
 import FarmCardMobileDepositWithdrawSelector from './FarmCardMobileDepositWithdrawSelector'
 import { useIsElevationLockedUntilRollover, useMediaQuery } from 'state/hooks'
+import { getFarmToken } from 'utils/farmId'
 
 const ExpandableSection = styled(Flex)<{ expanded: boolean }>`
   flex-direction: column;
@@ -65,11 +66,10 @@ interface Props {
 
 const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, farm, account, ethereum }) => {
   const {
-    pid,
-    depositFeeBP: depositFee,
-    isTokenOnly,
+    farmToken,
+    depositFeeBP,
     tokenAddress,
-    tokenDecimals,
+    decimals,
     lpAddress,
     taxBP: withdrawalFee,
     symbol,
@@ -80,6 +80,7 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, 
   const [renderExpandedComponents, setRenderExpandedComponents] = useState(false)
   const isMobile = useMediaQuery('(max-width: 986px)')
   const elevationLocked = useIsElevationLockedUntilRollover()
+  const farmTokenAddress = getFarmToken(farm)
   const [mobileDepositWithdraw, setMobileDepositWithdraw] = useState(isMobile ? 0 : -1)
 
   useEffect(() => {
@@ -93,8 +94,8 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, 
 
   const isApproved = account && allowance && allowance.isGreaterThan(0)
   const lpContract = useMemo(() => {
-    return getContract(ethereum as provider, isTokenOnly ? tokenAddress : lpAddress)
-  }, [ethereum, lpAddress, tokenAddress, isTokenOnly])
+    return getContract(ethereum as provider, farmTokenAddress)
+  }, [ethereum, lpAddress, tokenAddress, farmTokenAddress])
 
   // PENDING STATES
   const [harvestPending, setHarvestPending] = useState<boolean>(false)
@@ -115,14 +116,14 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, 
       elevation === Elevation.OASIS &&
       renderExpandedComponents && (
         <FarmCardUserHarvest
-          pid={pid}
-          earnedReward={earnedReward}
+          farmToken={farmToken}
           elevation={elevation}
+          earnedReward={earnedReward}
           disabled={disabled}
           setPending={setHarvestPending}
         />
       ),
-    [renderExpandedComponents, pid, earnedReward, elevation, disabled, setHarvestPending],
+    [renderExpandedComponents, farmToken, earnedReward, elevation, disabled, setHarvestPending],
   )
 
   // MOBILE DEPOSIT WITHDRAW SELECTOR
@@ -144,15 +145,15 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, 
       renderExpandedComponents &&
       (!isMobile || mobileDepositWithdraw === 0) && (
         <FarmCardUserApproveDeposit
-          pid={pid}
+          farmToken={farmToken}
+          elevation={elevation}
           symbol={symbol}
           userTotem={userTotem}
           elevationLocked={elevationLocked}
           tokenBalance={tokenBalance}
-          tokenDecimals={tokenDecimals}
-          depositFee={depositFee}
+          decimals={decimals}
+          depositFeeBP={depositFeeBP}
           isApproved={isApproved}
-          elevation={elevation}
           disabled={disabled}
           lpContract={lpContract}
           earnedReward={earnedReward}
@@ -160,19 +161,19 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, 
         />
       ),
     [
-      tokenDecimals,
+      farmToken,
+      elevation,
+      decimals,
       isMobile,
       mobileDepositWithdraw,
       elevationLocked,
       renderExpandedComponents,
-      pid,
       symbol,
       userTotem,
       tokenBalance,
-      depositFee,
+      depositFeeBP,
       earnedReward,
       isApproved,
-      elevation,
       disabled,
       lpContract,
       setApproveDepositPending,
@@ -185,30 +186,30 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, 
       renderExpandedComponents &&
       (!isMobile || mobileDepositWithdraw === 1) && (
         <FarmCardUserWithdraw
-          pid={pid}
+          farmToken={farmToken}
+          elevation={elevation}
           symbol={symbol}
           elevationLocked={elevationLocked}
           stakedBalance={stakedBalance}
           earnedReward={earnedReward}
-          tokenDecimals={tokenDecimals}
+          decimals={decimals}
           withdrawalFee={withdrawalFee}
-          elevation={elevation}
           disabled={disabled}
           setPending={setWithdrawPending}
         />
       ),
     [
-      tokenDecimals,
+      farmToken,
+      elevation,
+      decimals,
       isMobile,
       mobileDepositWithdraw,
       elevationLocked,
       renderExpandedComponents,
-      pid,
       symbol,
       stakedBalance,
       earnedReward,
       withdrawalFee,
-      elevation,
       disabled,
       setWithdrawPending,
     ],
@@ -237,10 +238,10 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, 
       <MobileVerticalFlexText width="100%" mt="24px">
         <Flex flexDirection="column" justifyContent="flex-start" alignItems="center">
           <Text fontSize="14px" bold monospace>
-            {symbol} Fee: {(depositFee || 0) / 100 + (withdrawalFee || 0) / 100}%
+            {symbol} Fee: {(depositFeeBP || 0) / 100 + (withdrawalFee || 0) / 100}%
           </Text>
           <Text fontSize="13px" bold monospace>
-            On Deposit: {(depositFee || 0) / 100}% / On Withdrawal: {(withdrawalFee || 0) / 100}%
+            On Deposit: {(depositFeeBP || 0) / 100}% / On Withdrawal: {(withdrawalFee || 0) / 100}%
           </Text>
         </Flex>
         <Flex flexDirection="column" justifyContent="flex-start" alignItems="center">

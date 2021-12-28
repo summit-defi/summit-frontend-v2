@@ -14,13 +14,13 @@ import { RewardsWillBeHarvestedType, useRewardsWillBeHarvestedModal } from '../R
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 
 interface Props {
-  pid: number
+  farmToken: string
   symbol: string
   userTotem: number
   elevationLocked: boolean
   tokenBalance: BigNumber
-  tokenDecimals: number
-  depositFee: number
+  decimals: number
+  depositFeeBP: number
   isApproved: boolean
   elevation: Elevation
   disabled: boolean
@@ -40,13 +40,13 @@ const CenteredSummitButton = styled(SummitButton)`
 `
 
 const FarmCardUserApproveDeposit: React.FC<Props> = ({
-  pid,
+  farmToken,
   symbol,
   elevationLocked,
   userTotem,
   tokenBalance,
-  tokenDecimals,
-  depositFee,
+  decimals,
+  depositFeeBP,
   isApproved,
   elevation,
   disabled,
@@ -68,7 +68,7 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
   const presentRewardsWillBeHarvestedModal = useRewardsWillBeHarvestedModal(elevation, earnedReward, 'Deposit', RewardsWillBeHarvestedType.Farm)
 
   // DEPOSIT ACTION
-  const { onStake, pending: stakePending } = useStake(elevation, pid)
+  const { onStake, pending: stakePending } = useStake(farmToken, elevation)
 
   useEffect(() => {
     setPending(stakePending || approvalPending)
@@ -78,8 +78,8 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
   const [depositVal, setDepositVal] = useState('')
   const [invalidDeposit, setInvalidDepositVal] = useState(false)
   const fullDepositBalance = useMemo(() => {
-    return getFullDisplayBalance(tokenBalance || new BigNumber(0), tokenDecimals)
-  }, [tokenBalance, tokenDecimals])
+    return getFullDisplayBalance(tokenBalance || new BigNumber(0), decimals)
+  }, [tokenBalance, decimals])
 
   const validDepositVal = (testVal, depositBalance) => {
     return (
@@ -103,14 +103,14 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
 
   const handleStake = useCallback(() => {
       presentRewardsWillBeHarvestedModal({
-        transactionToConfirm: () => onStake(symbol, depositVal, '0', userTotem, tokenDecimals)
+        transactionToConfirm: () => onStake(symbol, depositVal, decimals)
       })
     },
     [
       symbol,
       depositVal,
       userTotem,
-      tokenDecimals,
+      decimals,
       onStake,
       presentRewardsWillBeHarvestedModal,
     ]
@@ -130,7 +130,7 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
         onChange={handleChangeDeposit}
         max={fullDepositBalance}
         symbol={symbol}
-        depositFee={depositFee}
+        depositFeeBP={depositFeeBP}
       />
       {isApproved && (
         <CenteredSummitButton

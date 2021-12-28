@@ -2,15 +2,15 @@ import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
-import { getWeb3NoAccount, getTimestampDiff, getBalanceNumber } from 'utils'
+import { getWeb3NoAccount, getTimestampDiff } from 'utils'
 import {
   fetchFarmsPublicDataAsync,
   fetchExpeditionUserDataAsync,
   fetchExpeditionsPublicDataAsync,
   setBlock,
 } from './actions'
-import { State, Farm, Expedition, Block, ElevationInfo, ReferralsState, PriceableTokenSymbol } from './types'
-import { Elevation, ElevationUnlockRound, elevationUtils, ExpeditionConfig, FarmConfig, ForceElevationRetired } from '../config/constants/types'
+import { State, Farm, Expedition, Block, ElevationInfo, ReferralsState } from './types'
+import { Elevation, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
   fetchElevationHelperInfoAsync,
@@ -20,9 +20,9 @@ import {
 import { useLocation } from 'react-router-dom'
 import { getFarmConfigs } from 'config/constants/farms'
 import { fetchReferralsDataAsync } from './referrals'
-import { getExpeditionConfigs, getSummitLpSymbol } from 'config/constants'
 import useTheme from 'hooks/useTheme'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { farmId } from 'utils/farmId'
+import { getChainWrappedNativeTokenSymbol, TokenSymbol } from 'config/constants'
 
 const ZERO = new BigNumber(0)
 
@@ -54,14 +54,6 @@ export const useFarmConfigs = () => {
     setFarmConfigs(getFarmConfigs())
   }, [chainId, setFarmConfigs])
   return farmConfigs
-}
-export const useExpeditionConfigs = () => {
-  const chainId = useChainId()
-  const [expeditionConfigs, setExpeditionConfigs] = useState<ExpeditionConfig[]>(getExpeditionConfigs())
-  useEffect(() => {
-    setExpeditionConfigs(getExpeditionConfigs())
-  }, [chainId, setExpeditionConfigs])
-  return expeditionConfigs
 }
 
 export const useFetchPublicData = () => {
@@ -103,11 +95,6 @@ export const useFarms = (): Farm[] => {
   return selectorFarms
 }
 
-export const useFarmFromPid = (pid): Farm => {
-  const farm = useSelector((state: State) => state.farms.data.find((f) => f.pid === pid))
-  return farm
-}
-
 export const useElevationUserRoundInfo = (elevation: Elevation) => {
   return useSelector((state: State) => elevation === Elevation.EXPEDITION ? {} : state.farms.elevationData[elevationUtils.toInt(elevation || Elevation.OASIS)])
 }
@@ -145,36 +132,31 @@ export const useExpeditions = (
   }
 }
 
-export const useExpeditionFromPid = (pid): Expedition => {
-  const expedition = useSelector((state: State) => state.expeditions.data.find((p) => p.pid === pid))
-  return expedition
-}
-
-export const useExpeditionUser = (pid) => {
-  const expedition = useExpeditionFromPid(pid)
-  return (
-    expedition.userData || {
-      stakedSummit: ZERO,
-      stakedSummitLp: ZERO,
-      earnedReward: ZERO,
-      effectiveStakedSummit: ZERO,
-      hypotheticalWinReward: ZERO,
-    }
-  )
-}
-
 // Prices
 export const usePricesPerToken = () => {
   return useSelector((state: State) => state.prices.pricesPerToken)
 }
 export const useNativeTokenPrice = (): BigNumber => {
   const pricesPerToken = usePricesPerToken()
-  return useMemo(() => pricesPerToken != null && pricesPerToken[PriceableTokenSymbol.wFTM] ? pricesPerToken[PriceableTokenSymbol.wFTM] : new BigNumber(2.5), [pricesPerToken])
+  return useMemo(
+    () => {
+      const wrappedNativeTokenSymbol = getChainWrappedNativeTokenSymbol()
+      if (pricesPerToken == null || pricesPerToken[wrappedNativeTokenSymbol]) return new BigNumber(2.5)
+      return pricesPerToken[wrappedNativeTokenSymbol]
+    },
+    [pricesPerToken]
+  )
 }
 
 export const useSummitPrice = (): BigNumber => {
   const pricesPerToken = usePricesPerToken()
-  return useMemo(() => pricesPerToken != null && pricesPerToken[PriceableTokenSymbol.SUMMIT] ? pricesPerToken[PriceableTokenSymbol.SUMMIT] : new BigNumber(1), [pricesPerToken])
+  return useMemo(
+    () => {
+      if (pricesPerToken == null || pricesPerToken[TokenSymbol.SUMMIT] == null) return new BigNumber(1)
+      return pricesPerToken[TokenSymbol.SUMMIT]
+    },
+    [pricesPerToken]
+  )
 }
 
 export const useRolloverRewards = () => {
@@ -195,50 +177,50 @@ export const useTotalValue = (elevation?: Elevation): BigNumber => {
     () => farms
       .filter((farm) => elevation == null ? true : farm.elevation === elevation)
       .reduce((accumValue, farm) => {
-        return accumValue.plus((farm.lpSupply || new BigNumber(0)).div(new BigNumber(10).pow(farm.tokenDecimals || 18)).times(pricesPerToken != null && pricesPerToken[farm.symbol] ? pricesPerToken[farm.symbol] : new BigNumber(1)))
+        return accumValue.plus((farm.supply || new BigNumber(0)).div(new BigNumber(10).pow(farm.decimals || 18)).times(pricesPerToken != null && pricesPerToken[farm.symbol] ? pricesPerToken[farm.symbol] : new BigNumber(1)))
       }, new BigNumber(0)),
     [farms, pricesPerToken, elevation]
   )
 }
 
-export const useExpeditionPotTotalValue = (): number => {
-  const { account } = useWallet()
-  const { expeditions } = useExpeditions(account)
-  const pricesPerToken = usePricesPerToken()
-  const expeditionPotTotalValue = useSelector((state: State) => state.summitEcosystem.expeditionPotTotalValue)
+// export const useExpeditionPotTotalValue = (): number => {
+//   const { account } = useWallet()
+//   const { expeditions } = useExpeditions(account)
+//   const pricesPerToken = usePricesPerToken()
+//   const expeditionPotTotalValue = useSelector((state: State) => state.summitEcosystem.expeditionPotTotalValue)
 
-  return useMemo(
-    () => {
-      const expeditionsRewards = expeditions.reduce((acc, expedition) => {
-        const rewardsRemaining = getBalanceNumber(expedition.rewardsRemaining || new BigNumber(0), expedition.rewardToken.decimals)
-        const expeditionTokenPrice = (pricesPerToken != null && pricesPerToken[expedition.rewardToken.symbol] ? pricesPerToken[expedition.rewardToken.symbol].toNumber() : 1)
-        const rewardsDisbursed = expedition.disbursedOffset || 0
-        const rewardsBonusRemaining = expedition.bonusRewardsRemaining || 0
-        return acc + ((rewardsRemaining - rewardsDisbursed + rewardsBonusRemaining) * expeditionTokenPrice)
-      }, 0)
-      return (expeditionsRewards || 0) + expeditionPotTotalValue
-    },
-    [expeditions, expeditionPotTotalValue, pricesPerToken]
-  )
-}
+//   return useMemo(
+//     () => {
+//       const expeditionsRewards = expeditions.reduce((acc, expedition) => {
+//         const rewardsRemaining = getBalanceNumber(expedition.rewardsRemaining || new BigNumber(0), expedition.rewardToken.decimals)
+//         const expeditionTokenPrice = (pricesPerToken != null && pricesPerToken[expedition.rewardToken.symbol] ? pricesPerToken[expedition.rewardToken.symbol].toNumber() : 1)
+//         const rewardsDisbursed = expedition.disbursedOffset || 0
+//         const rewardsBonusRemaining = expedition.bonusRewardsRemaining || 0
+//         return acc + ((rewardsRemaining - rewardsDisbursed + rewardsBonusRemaining) * expeditionTokenPrice)
+//       }, 0)
+//       return (expeditionsRewards || 0) + expeditionPotTotalValue
+//     },
+//     [expeditions, expeditionPotTotalValue, pricesPerToken]
+//   )
+// }
 
-export const useExpeditionDisbursedValue = (): number => {
-  const { account } = useWallet()
-  const { expeditions } = useExpeditions(account)
-  const pricesPerToken = usePricesPerToken()
+// export const useExpeditionDisbursedValue = (): number => {
+//   const { account } = useWallet()
+//   const { expeditions } = useExpeditions(account)
+//   const pricesPerToken = usePricesPerToken()
 
-  return useMemo(
-    () => {
-      const expeditionsRewards = expeditions.reduce((acc, expedition) => {
-        const expeditionTokenPrice = (pricesPerToken != null && pricesPerToken[expedition.rewardToken.symbol] ? pricesPerToken[expedition.rewardToken.symbol].toNumber() : 1)
-        const emissionsDisbursed = getBalanceNumber((expedition.totalEmission || new BigNumber(0)).minus(expedition.rewardsRemaining || new BigNumber(0)), expedition.rewardToken.decimals)
-        return acc + ((expedition.disbursedOffset + emissionsDisbursed) * expeditionTokenPrice)
-      }, 0)
-      return expeditionsRewards
-    },
-    [expeditions, pricesPerToken]
-  )
-}
+//   return useMemo(
+//     () => {
+//       const expeditionsRewards = expeditions.reduce((acc, expedition) => {
+//         const expeditionTokenPrice = (pricesPerToken != null && pricesPerToken[expedition.rewardToken.symbol] ? pricesPerToken[expedition.rewardToken.symbol].toNumber() : 1)
+//         const emissionsDisbursed = getBalanceNumber((expedition.totalEmission || new BigNumber(0)).minus(expedition.rewardsRemaining || new BigNumber(0)), expedition.rewardToken.decimals)
+//         return acc + ((expedition.disbursedOffset + emissionsDisbursed) * expeditionTokenPrice)
+//       }, 0)
+//       return expeditionsRewards
+//     },
+//     [expeditions, pricesPerToken]
+//   )
+// }
 
 // Prices
 export const useFetchPriceList = () => {
@@ -289,7 +271,7 @@ export const useElevationInfo = (elevation: Elevation): ElevationInfo | null => 
   )
 }
 
-export const useSingleFarmSelected = (): number | null => {
+export const useSingleFarmSelected = (): string | null => {
   const location = useLocation()
   const farmConfigs = useFarmConfigs()
 
@@ -298,13 +280,15 @@ export const useSingleFarmSelected = (): number | null => {
     const elev = pathSplit[1]
     const lpLabel = pathSplit[2]
     if (lpLabel == null) return null
-    return (
-      farmConfigs.find(
-        (farm) => farm.elevation === (elev.toUpperCase() as Elevation) && `${farm.symbol.toLowerCase()}` === lpLabel,
-      )?.pid || null
+
+    const singleFarm = farmConfigs.find(
+      (farm) => farm.elevation === (elev.toUpperCase() as Elevation) && `${farm.symbol.toLowerCase()}` === lpLabel,
     )
+
+    return singleFarm != null ? farmId(singleFarm) : null
   }, [location, farmConfigs])
 }
+
 export const useSelectedElevation = (): Elevation | null => {
   const location = useLocation()
 
@@ -339,7 +323,7 @@ export const useElevationTotem = (elevation: Elevation): number | null => {
 export const useElevationTotemsLockedIn = (): boolean[] => {
   return useSelector((state: State) => state.summitEcosystem.totemsLockedIn)
 }
-export const useElevationTotemLockedIn = (elevation: Elevation): boolean => {
+export const useElevationtotemSelected = (elevation: Elevation): boolean => {
   return useSelector((state: State) => {
     return state.summitEcosystem.totemsLockedIn[elevationUtils.toInt(elevation)] || false
   })
@@ -440,9 +424,8 @@ export interface SisterFarms {
   [Elevation.SUMMIT]?: Farm
   [Elevation.EXPEDITION]?: Expedition
 }
-export const useSisterFarmsAndExpeditions = (symbol: string, forcedExpeditionPid?: number): SisterFarms => {
+export const useSisterFarms = (symbol: string): SisterFarms => {
   const farms = useFarms()
-  const expeditions: Expedition[] = useSelector((state: State) => state.expeditions.data)
 
   return useMemo(() => {
     const sisterFarms = baseSisterFarms
@@ -450,17 +433,8 @@ export const useSisterFarmsAndExpeditions = (symbol: string, forcedExpeditionPid
       if (farm.symbol !== symbol || !farm.launched) return
       sisterFarms[farm.elevation] = farm
     })
-    if (symbol === 'SUMMIT' || symbol === getSummitLpSymbol()) {
-      const forcedExpedition = expeditions.find((expedition) => expedition.live && expedition.pid === forcedExpeditionPid)
-      const activeExpedition = expeditions.find((expedition) => expedition.live && expedition.launched)
-      if (forcedExpedition != null) {
-        sisterFarms[Elevation.EXPEDITION] = forcedExpedition
-      } else {
-        sisterFarms[Elevation.EXPEDITION] = activeExpedition
-      }
-    }
     return sisterFarms
-  }, [farms, expeditions, symbol, forcedExpeditionPid])
+  }, [farms, symbol])
 }
 const baseSisterFarmsAvailable = {
   [Elevation.OASIS]: false,
@@ -469,16 +443,16 @@ const baseSisterFarmsAvailable = {
   [Elevation.SUMMIT]: false,
   [Elevation.EXPEDITION]: false,
 }
-export const useAvailableSisterElevations = (symbol: string, forcedExpeditionPid?: number) => {
-  const sisterFarmsAndExpeditions = useSisterFarmsAndExpeditions(symbol, forcedExpeditionPid)
+export const useAvailableSisterElevations = (symbol: string) => {
+  const sisterFarms = useSisterFarms(symbol)
 
   return useMemo(() => {
     const sisterFarmsAvailable = baseSisterFarmsAvailable
     elevationUtils.all.forEach((elevation) => {
-      sisterFarmsAvailable[elevation] = sisterFarmsAndExpeditions[elevation] != null
+      sisterFarmsAvailable[elevation] = sisterFarms[elevation] != null
     })
     return sisterFarmsAvailable
-  }, [sisterFarmsAndExpeditions])
+  }, [sisterFarms])
 }
 
 // Referrals

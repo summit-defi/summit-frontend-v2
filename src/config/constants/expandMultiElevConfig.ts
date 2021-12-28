@@ -1,3 +1,4 @@
+import { getFarmToken } from 'utils/farmId'
 import addresses from './contracts'
 import { MultiElevFarmConfig, FarmConfig, elevationUtils, Elevation } from './types'
 
@@ -9,6 +10,8 @@ const replaceSummitAddresses = (tokenAddress: string, summitAddress: string, sum
 
 export const expandMultiElevConfig = (chainId: string, config: MultiElevFarmConfig): FarmConfig[] => {
   const { getUrl, elevationsExistAndLive, tokenAddress, lpAddress, allocation, ...farmConfig } = config
+
+  const farmToken = getFarmToken(config)
   const summitAddress = addresses.summitToken[chainId]
   const summitLpAddress = addresses.summitLpToken[chainId]
   const trueTokenAddress = replaceSummitAddresses(tokenAddress, summitAddress, summitLpAddress)
@@ -20,6 +23,7 @@ export const expandMultiElevConfig = (chainId: string, config: MultiElevFarmConf
       const trueFarmWarning = config.farmWarning == null ? null : typeof config.farmWarning === 'string' ? config.farmWarning : config.farmWarning[elevation]
       const trueFarmComment = config.farmComment == null ? null : typeof config.farmComment === 'string' ? config.farmComment : config.farmComment[elevation]
       return {
+        farmToken,
         elevation: elevation as Elevation,
         allocation: allocation * elevationUtils.allocMultiplier(elevation as Elevation),
         tokenAddress: trueTokenAddress,

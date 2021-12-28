@@ -38,38 +38,32 @@ export const approve = async (lpContract, targetCartographer, account) => {
   return estimateGasAndExecute(approveCall, account)
 }
 
-export const stake = async (cartographer, pid, amount, amountSummitLp, totem, account, decimals) => {
+export const stake = async (cartographer, token, elevation, amount, account, decimals) => {
   const stakeCall = cartographer.methods.deposit(
-    pid,
+    token,
+    elevation,
     new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toString(),
-    new BigNumber(amountSummitLp).times(new BigNumber(10).pow(decimals)).toString(),
-    totem,
   )
   return estimateGasAndExecute(stakeCall, account)
 }
 
-export const unstake = async (cartographer, pid, amount, amountSummitLp, account, decimals) => {
+export const withdraw = async (cartographer, token, elevation, amount, account, decimals) => {
   const unstakeCall = cartographer.methods.withdraw(
-    pid,
+    token,
+    elevation,
     new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toString(),
-    new BigNumber(amountSummitLp).times(new BigNumber(10).pow(decimals)).toString(),
   )
   return estimateGasAndExecute(unstakeCall, account)
 }
 
-export const harvest = async (cartographer, pid, totem, account) => {
-  const harvestCall = cartographer.methods.deposit(pid, '0', '0', totem)
+export const claimPool = async (cartographer, token, elevation, account) => {
+  const claimCall = cartographer.methods.deposit(token, elevation, '0')
+  return estimateGasAndExecute(claimCall, account)
+}
+
+export const claimElevation = async (cartographer, elevation, account) => {
+  const harvestCall = cartographer.methods.claimElevation(elevation)
   return estimateGasAndExecute(harvestCall, account)
-}
-
-export const crossCompound = async (cartographer, pid, totem, account) => {
-  const crossCompoundCall = cartographer.methods.crossCompound(pid, totem)
-  return estimateGasAndExecute(crossCompoundCall, account)
-}
-
-export const harvestElevation = async (cartographer, elevation, isCompound, account) => {
-  const harvestElevationCall = cartographer.methods.harvestElevation(elevationUtils.toInt(elevation), isCompound)
-  return estimateGasAndExecute(harvestElevationCall, account)
 }
 
 export const switchTotem = async (cartographer, elevation, totem, account) => {
@@ -77,13 +71,12 @@ export const switchTotem = async (cartographer, elevation, totem, account) => {
   return estimateGasAndExecute(switchTotemCall, account)
 }
 
-export const elevate = async (cartographer, sourcePid, targetPid, amount, totem, token, account, decimals) => {
+export const elevate = async (cartographer, token, sourceElevation, targetElevation, amount, account, decimals) => {
   const elevateCall = cartographer.methods.elevate(
-    sourcePid,
-    targetPid,
-    new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toString(),
     token,
-    totem,
+    sourceElevation,
+    targetElevation,
+    new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toString()
   )
   return estimateGasAndExecute(elevateCall, account)
 }
@@ -110,12 +103,6 @@ export const createReferral = async (summitReferrals, referrerAddress, account) 
 export const harvestReferralRewards = async (summitReferrals, account) => {
   const harvestReferralRewardsCall = summitReferrals.methods.redeemReferralRewards()
   return estimateGasAndExecute(harvestReferralRewardsCall, account)
-}
-
-// RECOVERY
-export const recoverFunds = async (recoveryPassthroughContract, account) => {
-  const recoverFundsCall = recoveryPassthroughContract.methods.recoverFunds()
-  return estimateGasAndExecute(recoverFundsCall, account)
 }
 
 // WRAPPER TO RETRY TRANSACTIONS

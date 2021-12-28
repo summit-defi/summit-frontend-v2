@@ -11,7 +11,7 @@ import {
 import { getBalanceNumber } from 'utils'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import CardValue from 'views/Home/components/CardValue'
-import { useHarvestElevation } from 'hooks/useHarvest'
+import { useClaimElevation } from 'hooks/useHarvest'
 import TotemRoundRewardsBreakdown from './FarmCard/TotemRoundRewardsBreakdown'
 import PageLoader from 'components/PageLoader'
 import BigNumber from 'bignumber.js'
@@ -64,7 +64,7 @@ const ElevationUserRoundInfo: React.FC = () => {
   const rawEarned = getBalanceNumber(userEarned)
 
   // HARVESTING ELEVATION
-  const { onHarvestElevation, harvestPending, crossCompoundPending } = useHarvestElevation(elevation)
+  const { onClaimElevation, harvestPending } = useClaimElevation(elevation)
   const nothingToClaim = !userEarned || userEarned.isEqualTo(0)
 
   if (elevation === Elevation.OASIS) {
@@ -194,31 +194,15 @@ const ElevationUserRoundInfo: React.FC = () => {
             elevation={elevation}
             isLocked={elevationLocked}
             isLoading={harvestPending}
-            disabled={crossCompoundPending || nothingToClaim}
+            disabled={nothingToClaim}
             mr="8px"
-            onClick={() => onHarvestElevation(false)}
+            onClick={() => onClaimElevation()}
           >
             HARVEST
             <br />
             AVAIL REWARDS
           </SummitButton>
-          <SummitButton
-            elevation={elevation}
-            isLocked={elevationLocked}
-            isLoading={crossCompoundPending}
-            disabled={harvestPending || nothingToClaim}
-            onClick={() => onHarvestElevation(true)}
-          >
-            COMPOUND{'\u00A0'}*
-            <br />
-            AVAIL REWARDS
-          </SummitButton>
         </Flex>
-        <Text fontSize="13px" mt="8px" textAlign='center' bold monospace>
-          * Compound: Harvest earned SUMMIT and
-          <br />
-          deposit in SUMMIT farm at this elevation
-        </Text>
       </Flex>
     </Flex>
   )

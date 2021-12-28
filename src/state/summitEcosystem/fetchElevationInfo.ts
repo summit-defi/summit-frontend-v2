@@ -3,14 +3,13 @@ import {
   retryableMulticall,
   abi,
   groupByAndMap,
-  getCartographerElevationAddress,
+  getSubCartographerAddress,
 } from 'utils/'
 import BigNumber from 'bignumber.js'
 import { Elevation, ElevationRoundOffset, elevationUtils, ElevationWinnersOffset } from 'config/constants/types'
 
 export const fetchElevationsData = async () => {
   const elevationHelperAddress = getElevationHelperAddress()
-  const cartographerElevationAddress = getCartographerElevationAddress()
   const calls = elevationUtils.elevationExpedition.map((elevation) => [
     {
       address: elevationHelperAddress,
@@ -40,7 +39,7 @@ export const fetchElevationsData = async () => {
   const prevWinningsMultipliersCalls = elevationUtils.elevationOnly.map((elevation, elevIndex) => {
     const roundNumber = new BigNumber(res[elevIndex * 4 + 3][0]._hex).toNumber()
     return [1, 2, 3, 4, 5, 6].map((roundOffset) => ({
-      address: cartographerElevationAddress,
+      address: getSubCartographerAddress(elevation),
       name: 'elevRoundWinningsMult',
       params: [elevationUtils.toInt(elevation), Math.max(0, roundNumber - roundOffset)],
     }))

@@ -4,14 +4,14 @@ import {
   abi,
   groupBy,
   getCartographerAddress,
-  getCartographerElevationAddress,
-  getCartographerOasisAddress,
   retryDecorator,
+  getSubCartographerAddress,
 } from 'utils/'
 import { Elevation, elevationUtils, ForceElevationRetired } from '../../config/constants/types'
 import { SECONDS_PER_YEAR } from 'config'
 import { getFarmConfigs } from 'config/constants'
 import { Farm } from 'state/types'
+import { farmId } from 'utils/farmId'
 
 interface ExtendedFarm extends Farm {
   summitPerSecond: number
@@ -21,45 +21,43 @@ interface ExtendedFarm extends Farm {
 export const fetchFarms = async () => {
   const farmConfigs = getFarmConfigs()
   const cartographerAddress = getCartographerAddress()
-  const cartographerOasisAddress = getCartographerOasisAddress()
-  const cartographerElevationAddress = getCartographerElevationAddress()
 
   const fetchFarmData = async (farmConfig): Promise<ExtendedFarm> => {
     const { tokenAddress, lpAddress, elevation } = farmConfig
 
+    const elevationInt = elevationUtils.toInt(farmConfig.elevation)
     const isOasisFarm = elevation === Elevation.OASIS
-    const subCartographerAddress = isOasisFarm ? cartographerOasisAddress : cartographerElevationAddress
+    const subCartographerAddress = getSubCartographerAddress(elevation)
 
     const [
-      [allocation, elevEmissionMultiplier, stakedSupply, depositFee, earning, summitPerSecond],
+      [allocation, elevEmissionMultiplier, tokenDepositFee, tokenWithdrawalTax, earning, summitPerSecond],
       [poolInfo, [rawTotemSupplies]],
-      [tokenDecimalsRaw],
     ] = await Promise.all([
       await multicall(abi.cartographer, [
         {
           address: cartographerAddress,
           name: 'elevationModulatedAllocation',
-          params: [farmConfig.pid],
+          params: [tokenAddress, elevationInt],
         },
         {
           address: cartographerAddress,
           name: 'tokenElevationEmissionMultiplier',
-          params: [tokenAddress, elevationUtils.toInt(farmConfig.elevation)],
+          params: [tokenAddress, elevationInt],
         },
         {
           address: cartographerAddress,
-          name: 'stakedSupply',
-          params: [farmConfig.pid],
+          name: 'tokenDepositFee',
+          params: [tokenAddress, elevationInt],
         },
         {
           address: cartographerAddress,
-          name: 'depositFee',
-          params: [farmConfig.pid],
+          name: 'tokenWithdrawalTax',
+          params: [tokenAddress, elevationInt],
         },
         {
           address: cartographerAddress,
-          name: 'isEarning',
-          params: [farmConfig.pid],
+          name: 'tokenElevationIsEarning',
+          params: [tokenAddress, elevationInt],
         },
         {
           address: cartographerAddress,
@@ -70,26 +68,19 @@ export const fetchFarms = async () => {
         {
           address: subCartographerAddress,
           name: isOasisFarm ? 'oasisPoolInfo' : 'elevationPoolInfo',
-          params: [farmConfig.pid],
+          params: [tokenAddress],
         },
         {
           address: subCartographerAddress,
           name: isOasisFarm ? 'depositFee' : 'totemSupplies', // Throwaway for oasis farm
-          params: [farmConfig.pid],
-        },
-      ]),
-      await multicall(abi.ERC20, [
-        {
-          address: tokenAddress,
-          name: 'decimals',
+          params: [tokenAddress],
         },
       ]),
     ])
 
-    const tokenDecimals = new BigNumber(tokenDecimalsRaw).toNumber()
     const totemSupplies = [].concat(rawTotemSupplies)
 
-    const totalFee = new BigNumber(depositFee)
+    const totalFee = new BigNumber(tokenDepositFee)
     const trueDepositFee = totalFee.isGreaterThan(50) ? totalFee.minus(50) : new BigNumber(0)
     const withdrawalFee = totalFee.isGreaterThan(50) ? new BigNumber(50) : totalFee
     
@@ -108,14 +99,13 @@ export const fetchFarms = async () => {
       launched: elevation === Elevation.OASIS ? true : poolInfo.launched,
       live: poolInfo.live,
       earning,
-      lpSupply: new BigNumber(stakedSupply),
+      supply: new BigNumber(poolInfo.supply),
       allocation: trueAllocation,
       elevEmissionMultiplier: trueElevEmissionMultiplier,
       depositFeeBP: trueDepositFee,
       taxBP: withdrawalFee,
       summitPerSecond: new BigNumber(summitPerSecond).div(new BigNumber(10).pow(18)).toNumber(),
       totemSupplies: (totemSupplies || []).map((staked) => new BigNumber(staked._hex)),
-      tokenDecimals,
     }
   }
 
@@ -151,5 +141,5 @@ export const fetchFarms = async () => {
     }
   })
 
-  return groupBy(farmsWithSummitPerYear, (farm) => farm.pid)
+  return groupBy(farmsWithSummitPerYear, (farm) => farmId(farm))
 }

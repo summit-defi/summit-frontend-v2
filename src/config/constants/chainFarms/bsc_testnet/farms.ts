@@ -2,84 +2,85 @@ import { MultiElevFarmConfig } from '../../types'
 import { expandMultiElevConfig } from '../../expandMultiElevConfig'
 import { farmConfigs } from './farmConfigs'
 import { NamedChainId } from 'state/types'
-import { BscTestnetTokenSymbol, bscTestnetTokens } from './tokens'
+import { bscTestnetTokens } from './tokens'
+import { TokenSymbol } from 'config/constants/tokens'
 
 
 
 const summitFarm: MultiElevFarmConfig = {
-  symbol: BscTestnetTokenSymbol.SUMMIT,
-  ...farmConfigs[BscTestnetTokenSymbol.SUMMIT],
-  ...bscTestnetTokens[BscTestnetTokenSymbol.SUMMIT],
+  symbol: TokenSymbol.SUMMIT,
+  ...farmConfigs[TokenSymbol.SUMMIT],
+  ...bscTestnetTokens[TokenSymbol.SUMMIT],
   getUrl: 'https://spookyswap.finance/swap?outputCurrency=0xSUMMIT',
 }
 
 const everestFarm: MultiElevFarmConfig = {
-  symbol: BscTestnetTokenSymbol.EVEREST,
-  ...farmConfigs[BscTestnetTokenSymbol.EVEREST],
-  ...bscTestnetTokens[BscTestnetTokenSymbol.EVEREST],
+  symbol: TokenSymbol.EVEREST,
+  ...farmConfigs[TokenSymbol.EVEREST],
+  ...bscTestnetTokens[TokenSymbol.EVEREST],
   getUrl: 'https://spookyswap.finance/swap?outputCurrency=0xEVEREST',
 }
 
 const cakeFarm: MultiElevFarmConfig = {
-  symbol: BscTestnetTokenSymbol.CAKE,
-  ...farmConfigs[BscTestnetTokenSymbol.CAKE],
-  ...bscTestnetTokens[BscTestnetTokenSymbol.CAKE],
+  symbol: TokenSymbol.CAKE,
+  ...farmConfigs[TokenSymbol.CAKE],
+  ...bscTestnetTokens[TokenSymbol.CAKE],
   getUrl: 'https://spookyswap.finance/swap?outputCurrency=0xCAKE',
 }
 
 const bifiFarm: MultiElevFarmConfig = {
-  symbol: BscTestnetTokenSymbol.BIFI,
-  ...farmConfigs[BscTestnetTokenSymbol.BIFI],
-  ...bscTestnetTokens[BscTestnetTokenSymbol.BIFI],
+  symbol: TokenSymbol.BIFI,
+  ...farmConfigs[TokenSymbol.BIFI],
+  ...bscTestnetTokens[TokenSymbol.BIFI],
   getUrl: 'https://spookyswap.finance/swap?outputCurrency=0xBIFI',
 }
 
 const usdcFarm: MultiElevFarmConfig = {
-  symbol: BscTestnetTokenSymbol.USDC,
-  ...farmConfigs[BscTestnetTokenSymbol.USDC],
-  ...bscTestnetTokens[BscTestnetTokenSymbol.USDC],
+  symbol: TokenSymbol.USDC,
+  ...farmConfigs[TokenSymbol.USDC],
+  ...bscTestnetTokens[TokenSymbol.USDC],
   getUrl: 'https://spookyswap.finance/swap?outputCurrency=0xUSDC',
 }
 
 const gs0Farm: MultiElevFarmConfig = {
-  symbol: BscTestnetTokenSymbol.GS0,
-  ...farmConfigs[BscTestnetTokenSymbol.GS0],
-  ...bscTestnetTokens[BscTestnetTokenSymbol.GS0],
+  symbol: TokenSymbol.GS0,
+  ...farmConfigs[TokenSymbol.GS0],
+  ...bscTestnetTokens[TokenSymbol.GS0],
   getUrl: 'https://spookyswap.finance/swap?outputCurrency=0xGS0',
 }
 
 const gs1Farm: MultiElevFarmConfig = {
-  symbol: BscTestnetTokenSymbol.GS1,
-  ...farmConfigs[BscTestnetTokenSymbol.GS1],
-  ...bscTestnetTokens[BscTestnetTokenSymbol.GS1],
+  symbol: TokenSymbol.GS1,
+  ...farmConfigs[TokenSymbol.GS1],
+  ...bscTestnetTokens[TokenSymbol.GS1],
   getUrl: 'https://spookyswap.finance/swap?outputCurrency=0xGS1',
 }
 
 const gs2Farm: MultiElevFarmConfig = {
-  symbol: BscTestnetTokenSymbol.GS2,
-  ...farmConfigs[BscTestnetTokenSymbol.GS2],
-  ...bscTestnetTokens[BscTestnetTokenSymbol.GS2],
+  symbol: TokenSymbol.GS2,
+  ...farmConfigs[TokenSymbol.GS2],
+  ...bscTestnetTokens[TokenSymbol.GS2],
   getUrl: 'https://spookyswap.finance/swap?outputCurrency=0xGS2',
 }
 
 const gs3Farm: MultiElevFarmConfig = {
-  symbol: BscTestnetTokenSymbol.GS3,
-  ...farmConfigs[BscTestnetTokenSymbol.GS3],
-  ...bscTestnetTokens[BscTestnetTokenSymbol.GS3],
+  symbol: TokenSymbol.GS3,
+  ...farmConfigs[TokenSymbol.GS3],
+  ...bscTestnetTokens[TokenSymbol.GS3],
   getUrl: 'https://spookyswap.finance/swap?outputCurrency=0xGS3',
 }
 
 const gs4Farm: MultiElevFarmConfig = {
-  symbol: BscTestnetTokenSymbol.GS4,
-  ...farmConfigs[BscTestnetTokenSymbol.GS4],
-  ...bscTestnetTokens[BscTestnetTokenSymbol.GS4],
+  symbol: TokenSymbol.GS4,
+  ...farmConfigs[TokenSymbol.GS4],
+  ...bscTestnetTokens[TokenSymbol.GS4],
   getUrl: 'https://spookyswap.finance/swap?outputCurrency=0xGS4',
 }
 
 const gs5Farm: MultiElevFarmConfig = {
-  symbol: BscTestnetTokenSymbol.GS5,
-  ...farmConfigs[BscTestnetTokenSymbol.GS5],
-  ...bscTestnetTokens[BscTestnetTokenSymbol.GS5],
+  symbol: TokenSymbol.GS5,
+  ...farmConfigs[TokenSymbol.GS5],
+  ...bscTestnetTokens[TokenSymbol.GS5],
   getUrl: 'https://spookyswap.finance/swap?outputCurrency=0xGS5',
 }
 

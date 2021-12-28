@@ -20,6 +20,7 @@ import PageLoader from 'components/PageLoader'
 import { useFarmType } from 'hooks/useFarmType'
 import { FarmType } from 'state/types'
 import ElevationAndUserVolumes from './components/ElevationAndUserVolumes'
+import { farmId } from 'utils/farmId'
 
 const NoFarmsFlex = styled(Flex)`
   padding: 12px;
@@ -85,7 +86,7 @@ const ElevationFarms: React.FC<ElevationFarms> = (props) => {
   const farmsList = useCallback(
     (farmsToDisplay, removed: boolean) => farmsToDisplay.map((farm) => (
       <FarmCard
-        key={farm.pid}
+        key={farmId(farm)}
         farm={farm}
         removed={removed}
         summitPrice={summitPrice}

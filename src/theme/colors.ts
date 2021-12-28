@@ -21,7 +21,6 @@ export const brandColors = {
 
   REFERRALS: '#3E80A2',
   AUDIT: '#000418',
-  RECOVERY: '#CB0000',
 
   textGold: '#F7BA56',
 }

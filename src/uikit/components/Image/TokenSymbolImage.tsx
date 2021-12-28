@@ -1,6 +1,5 @@
 import { transparentize } from 'polished'
 import React from 'react'
-import { TokenSymbol } from 'state/types'
 import styled from 'styled-components'
 
 const LpSymbolWrapper = styled.div<{ width: number; height: number }>`
@@ -63,12 +62,7 @@ const symbolSortPrio = (symbol): number => {
 const SymbolImage: React.FC<Props> = ({ symbol, width, height }) => {
   const symbolPartsRaw = symbol.split('-')
   const symbolParts = symbolPartsRaw.sort((a, b) => (symbolSortPrio(a) > symbolSortPrio(b) ? 1 : -1))
-  const singleSymbols = [
-    TokenSymbol.fUSDT_DAI_USDC,
-    TokenSymbol.GRAND_ORCH,
-    TokenSymbol.BeetXLP_MIM_USDC_USDT,
-    TokenSymbol.BPT_BEETS_FTM,
-  ]
+  const singleSymbols = []
   return (
     <LpSymbolWrapper width={width} height={height}>
       {(singleSymbols.includes(symbol) || symbolParts.length === 1) ? (

@@ -1,4 +1,5 @@
 import addresses from 'config/constants/contracts'
+import { Elevation } from 'config/constants/types'
 
 const getChainId = () => {
   return JSON.parse(localStorage.getItem('ChainId')) || '250'
@@ -24,9 +25,26 @@ export const getCartographerOasisAddress = () => {
   const chainId = getChainId()
   return addresses.cartographerOasis[chainId]
 }
-export const getCartographerElevationAddress = () => {
+export const getCartographerPlainsAddress = () => {
   const chainId = getChainId()
-  return addresses.cartographerElevation[chainId]
+  return addresses.cartographerPlains[chainId]
+}
+export const getCartographerMesaAddress = () => {
+  const chainId = getChainId()
+  return addresses.cartographerMesa[chainId]
+}
+export const getCartographerSummitAddress = () => {
+  const chainId = getChainId()
+  return addresses.cartographerSummit[chainId]
+}
+export const getSubCartographerAddress = (elevation: Elevation) => {
+  const chainId = getChainId()
+  switch (elevation) {
+    case Elevation.OASIS: return addresses.cartographerOasis[chainId]
+    case Elevation.PLAINS: return addresses.cartographerPlains[chainId]
+    case Elevation.MESA: return addresses.cartographerMesa[chainId]
+    case Elevation.SUMMIT: return addresses.cartographerSummit[chainId]
+  }
 }
 export const getExpeditionAddress = () => {
   const chainId = getChainId()

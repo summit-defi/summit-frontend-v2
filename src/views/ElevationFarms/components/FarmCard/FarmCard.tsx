@@ -11,6 +11,7 @@ import FarmCardUserSection from './FarmCardUserSection'
 import CardValue from 'views/Home/components/CardValue'
 import { getBalanceNumber, nFormatter } from 'utils'
 import Totem from '../Totem'
+import { farmId } from 'utils/farmId'
 
 const FCard = styled(Flex)<{ $locked: boolean; expanded: boolean }>`
   align-self: baseline;
@@ -134,20 +135,20 @@ const FarmCard: React.FC<FarmCardProps> = ({
   elevationLocked,
 }) => {
   const {
-    pid,
+    farmToken,
     symbol,
     summitPerYear,
     allocation,
     userData,
-    tokenDecimals,
+    decimals,
     farmComment,
     farmWarning,
-    lpSupply,
+    supply: lpSupply,
   } = farm
 
-  const singleFarmPid = useSingleFarmSelected()
+  const singleFarmId = useSingleFarmSelected()
   const pricesPerToken = usePricesPerToken()
-  const expanded = singleFarmPid === pid
+  const expanded = singleFarmId === farmId(farm)
 
   const { stakedBalance, earnedReward, vestingReward, roundYieldContributed } = userData || {}
 
@@ -159,13 +160,13 @@ const FarmCard: React.FC<FarmCardProps> = ({
   const userTotem = useElevationTotem(elevation)
 
   const userStakedBalance: BigNumber = useMemo(
-    () => stakedBalance.div(new BigNumber(10).pow(tokenDecimals)).times(pricesPerToken[symbol]),
-    [stakedBalance, symbol, pricesPerToken, tokenDecimals]
+    () => stakedBalance.div(new BigNumber(10).pow(decimals)).times(pricesPerToken[symbol]),
+    [stakedBalance, symbol, pricesPerToken, decimals]
   )
 
   const totalValue: BigNumber = useMemo(
-    () => lpSupply.div(new BigNumber(10).pow(tokenDecimals)).times(pricesPerToken[symbol]),
-    [lpSupply, symbol, pricesPerToken, tokenDecimals]
+    () => lpSupply.div(new BigNumber(10).pow(decimals)).times(pricesPerToken[symbol]),
+    [lpSupply, symbol, pricesPerToken, decimals]
   )
 
   const apr = summitPrice
@@ -201,7 +202,7 @@ const FarmCard: React.FC<FarmCardProps> = ({
                 {symbol}
               </Text>
               <MultiplierTag variant="secondary" elevation={elevation}>
-                {allocation.div(10000).toString()}X
+                {(allocation / 10000).toFixed(2)}X
               </MultiplierTag>
             </Flex>
           </SymbolIconFlex>

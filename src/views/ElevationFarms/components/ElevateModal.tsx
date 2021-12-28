@@ -7,12 +7,11 @@ import { getFullDisplayBalance } from '../../../utils/formatBalance'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { Elevation } from 'config/constants/types'
 import ElevationSelector from './ElevationSelector'
-import { useElevationTotem, useSisterFarmsAndExpeditions } from 'state/hooks'
+import { useElevationTotem, useSisterFarms } from 'state/hooks'
 import { isNumber } from 'lodash'
 import Totem from './Totem'
 import { elevationPalette } from 'theme/colors'
 import useSelectTotemModal from 'uikit/widgets/SelectTotemModal/useSelectTotemModal'
-import { Farm } from 'state/types'
 import { RewardsWillBeHarvestedType, useRewardsWillBeHarvestedModal } from './RewardsWillBeHarvestedModal'
 import { getPriceableTokens } from 'config/constants'
 
@@ -23,14 +22,12 @@ interface ElevateModalProps {
   sourceElevation?: Elevation
   targetElevation?: Elevation
 
-  forcedExpeditionPid?: number
-
   openExpeditionPage: () => void
 
   onConfirmElevate: (
     symbol: string,
-    sourcePid: number,
-    targetPid: number,
+    sourceElevation: Elevation,
+    targetElevation: Elevation,
     amount: string,
     token: string,
     totem: number,
@@ -43,13 +40,12 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
   symbol,
   tokenAddress = null,
   sourceElevation = null,
-  targetElevation,
-  forcedExpeditionPid,
+  targetElevation = null,
   openExpeditionPage,
   onConfirmElevate,
   onDismiss,
 }) => {
-  const sisterFarmsAndExpedition = useSisterFarmsAndExpeditions(symbol, forcedExpeditionPid)
+  const sisterFarmsAndExpedition = useSisterFarms(symbol)
 
   const priceableTokens = getPriceableTokens()
   const decimals = priceableTokens.find((token) => token.symbol === symbol)?.decimals || 18
@@ -83,8 +79,6 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
   const totem = useElevationTotem(selectedTargetElevation)
   const { onPresentSelectTotemModal } = useSelectTotemModal(selectedTargetElevation)
 
-  const [sourcePid, setSourcePid] = useState(null)
-  const [targetPid, setTargetPid] = useState(null)
   const [sourceEarned, setSourceEarned] = useState(null)
   const [targetEarned, setTargetEarned] = useState(null)
   const [fullBalance, setFullBalance] = useState('0')
@@ -117,7 +111,6 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
     if (selectedSourceElevation === null) return
     if (selectedSourceElevation === Elevation.EXPEDITION) {
       const selectedExpedition = sisterFarmsAndExpedition[selectedSourceElevation]
-      setSourcePid(selectedExpedition.pid)
       const newFullBalance = getFullDisplayBalance(
         selectedExpedition.userData
           ? selectedExpedition.userData[symbol === 'SUMMIT' ? 'stakedSummit' : 'stakedSummitLp'] || new BigNumber(0)
@@ -130,7 +123,6 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
       setValInvalid(!validElevateVal(newFullBalance, newFullBalance))
     } else {
       const selectedFarm = sisterFarmsAndExpedition[selectedSourceElevation]
-      setSourcePid(selectedFarm.pid)
       setSourceEarned(selectedFarm.userData?.earnedReward || new BigNumber(0))
       const newFullBalance = getFullDisplayBalance(
         selectedFarm.userData?.stakedBalance || new BigNumber(0),
@@ -145,7 +137,6 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
     selectedSourceElevation,
     symbol,
     setFullBalance,
-    setSourcePid,
     setSourceEarned,
     setVal,
     setValInvalid,
@@ -159,9 +150,8 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    setTargetPid(sisterFarmsAndExpedition[selectedTargetElevation]!.pid)
     setTargetEarned(sisterFarmsAndExpedition[selectedTargetElevation]!.userData?.earnedReward || new BigNumber(0))
-  }, [selectedTargetElevation, sisterFarmsAndExpedition, setTargetPid, setTargetEarned])
+  }, [selectedTargetElevation, sisterFarmsAndExpedition, setTargetEarned])
 
   const handlePresentSelectTotem = () => {
     if (selectedTargetElevation === Elevation.EXPEDITION) {
@@ -180,7 +170,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
         sourceEarned,
         targetEarned,
       },
-      transactionToConfirm: () => onConfirmElevate(symbol, sourcePid, targetPid, val, tokenAddress, totem, decimals),
+      transactionToConfirm: () => onConfirmElevate(symbol, selectedSourceElevation, selectedTargetElevation, val, tokenAddress, totem, decimals),
     })
   }
 

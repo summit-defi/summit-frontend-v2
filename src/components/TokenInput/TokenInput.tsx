@@ -11,7 +11,7 @@ interface TokenInputProps extends InputProps {
   symbol: string
   onSelectMax?: () => void
   balanceText?: string
-  depositFee?: number
+  depositFeeBP?: number
   withdrawalFee?: number
   disabled?: boolean
 }
@@ -24,7 +24,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
   onChange,
   onSelectMax,
   value,
-  depositFee = 0,
+  depositFeeBP = 0,
   withdrawalFee = 0,
   disabled = false,
 }) => {
@@ -51,8 +51,8 @@ const TokenInput: React.FC<TokenInputProps> = ({
         placeholder="0"
         value={value}
       />
-      {depositFee > 0 ? (
-        <StyledFeeText>Deposit Fee: {new BigNumber(value || 0).times(depositFee / 10000).toString()}</StyledFeeText>
+      {depositFeeBP > 0 ? (
+        <StyledFeeText>Deposit Fee: {new BigNumber(value || 0).times(depositFeeBP / 10000).toString()}</StyledFeeText>
       ) : null}
       {withdrawalFee > 0 ? (
         <StyledFeeText>

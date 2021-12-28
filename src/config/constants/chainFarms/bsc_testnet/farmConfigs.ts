@@ -1,5 +1,5 @@
+import { TokenSymbol } from 'config/constants/tokens'
 import { MultiElevAllocationConfig } from '../../types'
-import { BscTestnetTokenSymbol } from './tokens'
 
 const baseElevations = {
   OASIS: { exists: true, live: true },
@@ -9,77 +9,77 @@ const baseElevations = {
 }
 
 export const farmConfigs: { [key: string]: MultiElevAllocationConfig } = {
-  [BscTestnetTokenSymbol.SUMMIT]: {
+  [TokenSymbol.SUMMIT]: {
     allocation: 1500,
     taxBP: 700,
     depositFeeBP: 100,
     native: true,
     elevationsExistAndLive: baseElevations,
   },
-  [BscTestnetTokenSymbol.EVEREST]: {
+  [TokenSymbol.EVEREST]: {
     allocation: 2000,
     taxBP: 0,
     depositFeeBP: 0,
     native: true,
     elevationsExistAndLive: baseElevations,
   },
-  [BscTestnetTokenSymbol.CAKE]: {
+  [TokenSymbol.CAKE]: {
     allocation: 300,
     taxBP: 700,
     depositFeeBP: 100,
     native: false,
     elevationsExistAndLive: baseElevations,
   },
-  [BscTestnetTokenSymbol.BIFI]: {
+  [TokenSymbol.BIFI]: {
     allocation: 200,
     taxBP: 700,
     depositFeeBP: 100,
     native: false,
     elevationsExistAndLive: baseElevations,
   },
-  [BscTestnetTokenSymbol.USDC]: {
+  [TokenSymbol.USDC]: {
     allocation: 100,
     taxBP: 700,
     depositFeeBP: 100,
     native: false,
     elevationsExistAndLive: baseElevations,
   },
-  [BscTestnetTokenSymbol.GS0]: {
+  [TokenSymbol.GS0]: {
     allocation: 50,
     taxBP: 700,
     depositFeeBP: 100,
     native: false,
     elevationsExistAndLive: baseElevations,
   },
-  [BscTestnetTokenSymbol.GS1]: {
+  [TokenSymbol.GS1]: {
     allocation: 50,
     taxBP: 700,
     depositFeeBP: 100,
     native: false,
     elevationsExistAndLive: baseElevations,
   },
-  [BscTestnetTokenSymbol.GS2]: {
+  [TokenSymbol.GS2]: {
     allocation: 50,
     taxBP: 700,
     depositFeeBP: 100,
     native: false,
     elevationsExistAndLive: baseElevations,
   },
-  [BscTestnetTokenSymbol.GS3]: {
+  [TokenSymbol.GS3]: {
     allocation: 50,
     taxBP: 700,
     depositFeeBP: 100,
     native: false,
     elevationsExistAndLive: baseElevations,
   },
-  [BscTestnetTokenSymbol.GS4]: {
+  [TokenSymbol.GS4]: {
     allocation: 50,
     taxBP: 700,
     depositFeeBP: 100,
     native: false,
     elevationsExistAndLive: baseElevations,
   },
-  [BscTestnetTokenSymbol.GS5]: {
+  [TokenSymbol.GS5]: {
     allocation: 50,
     taxBP: 700,
     depositFeeBP: 100,

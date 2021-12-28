@@ -13,6 +13,7 @@ import ERC20 from '../config/abi/ERC20.json'
 import Balancer2PoolPriceOracle from '../config/abi/Balancer2PoolPriceOracle.json'
 import BalancerMultiPoolPriceOracle from '../config/abi/BalancerMultiPoolPriceOracle.json'
 import PancakeFactory from '../config/abi/PCS/PancakeFactory.json'
+import { Elevation } from 'config/constants/types'
 
 export const abi = {
   cartographer,
@@ -45,4 +46,9 @@ export const abiItem = {
   Balancer2PoolPriceOracle: (abi.Balancer2PoolPriceOracle as unknown) as AbiItem,
   BalancerMultiPoolPriceOracle: (abi.BalancerMultiPoolPriceOracle as unknown) as AbiItem,
   PancakeFactory: (abi.PancakeFactory as unknown) as AbiItem,
+}
+
+export const subCartAbi = (elevation: Elevation) => {
+  if (elevation === Elevation.OASIS) return abi.cartographerOasis
+  return abi.cartographerElevation
 }
