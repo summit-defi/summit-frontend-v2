@@ -66,12 +66,12 @@ interface Props {
 const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, farm, account, ethereum }) => {
   const {
     pid,
-    depositFee,
+    depositFeeBP: depositFee,
     isTokenOnly,
     tokenAddress,
     tokenDecimals,
     lpAddress,
-    withdrawalFee,
+    taxBP: withdrawalFee,
     symbol,
     userData,
     passthroughStrategy,
