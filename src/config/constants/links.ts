@@ -1,4 +1,4 @@
-import { ftmLinks } from './chainFarms/ftm/links'
+import { bscTestnetLinks } from './chainFarms/bsc_testnet/links'
 import { getChainId } from './chainId'
 
 export interface ExternalLinks {
@@ -10,8 +10,8 @@ export interface ExternalLinks {
 
 const chainLinks = {
   56: [],
-  97: [],
-  250: ftmLinks,
+  97: bscTestnetLinks,
+  250: [],
 }
 
 export const getLinks = (): ExternalLinks => {

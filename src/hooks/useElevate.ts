@@ -16,14 +16,14 @@ const useElevate = () => {
   const cartographer = useCartographer()
 
   const handleElevate = useCallback(
-    async (lpName: string, token: string, sourceElevation: string, targetElevation: number, amount: string, decimals: number) => {
+    async (symbol: string, token: string, sourceElevation: Elevation, targetElevation: Elevation, amount: string, decimals: number) => {
       try {
         setPending(true)
         dispatch(setPendingExpeditionTx(true))
         await elevate(cartographer, token, sourceElevation, targetElevation, amount, account, decimals)
-        toastSuccess(`${lpName} Elevate Confirmed`)
+        toastSuccess(`${symbol} Elevate Confirmed`)
       } catch (error) {
-        toastError(`${lpName} Elevate Failed`, (error as Error).message)
+        toastError(`${symbol} Elevate Failed`, (error as Error).message)
       } finally {
         setPending(false)
         dispatch(setPendingExpeditionTx(false))

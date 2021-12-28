@@ -1,7 +1,5 @@
 /* eslint camelcase: 0 */
-import { PriceableToken, TokenAssetType } from 'state/types'
-
-export const ForceElevationRetired = true
+export const ForceElevationRetired = false
 
 export enum Elevation {
   OASIS = 'OASIS',
@@ -125,7 +123,7 @@ export const ElevationRoundDuration: { [key in keyof typeof Elevation]: number }
   [Elevation.EXPEDITION]: 3600 * 24,
 }
 export const elevationUtils = {
-  all: AllElevations,
+  all: [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT],
   oasisElevation: [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT],
   elevationExpedition: [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT, Elevation.EXPEDITION],
   elevationOnly: [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT],
@@ -280,6 +278,28 @@ export interface Address {
   97?: string // bsc testnet
   250?: string // ftm
   4002?: string // ftm testnet
+}
+
+
+export interface PriceableToken {
+  symbol: string
+  assetType: TokenAssetType
+  decimals: number
+  tokenAddress?: string
+  lpAddress?: string
+  containingTokens?: string[]
+  balancerMultiPoolPid?: string
+}
+
+export type PriceableTokenMap = { [key: string]: PriceableToken }
+
+export enum TokenAssetType {
+  Stablecoin = 'Stablecoin',
+  SingleAsset = 'SingleAsset',
+  LP = 'LP',
+  WrappedNative = 'WrappedNative',
+  Balancer2Pool = 'Balancer2Pool',
+  BalancerMultiPool = 'BalancerMultiPool',
 }
 
 export interface Token {

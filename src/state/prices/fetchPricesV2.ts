@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { getPriceableTokens } from 'config/constants'
-import { TokenAssetType, PriceableToken } from 'state/types'
+import { getPriceableTokens, PriceableToken, TokenAssetType } from 'config/constants'
 import {
   retryableMulticall,
   abi,
@@ -17,7 +16,7 @@ export const fetchPricesV2 = async () => {
   const nativePeggedLpAddress = getNativePeggedLpAddress()
   const nativeAddress = getWrappedNativeTokenAddress()
   const peggedAddress = getPeggedTokenAddress()
-  const priceableTokens = getPriceableTokens()
+  const priceableTokens = Object.values(getPriceableTokens())
   const balancer2PoolPriceOracleAddress = getBalancer2PoolPriceOracleAddress()
   const balancerMultiPoolPriceOracleAddress = getBalancerMultiPoolPriceOracleAddress()
   const erc20Res = await retryableMulticall(

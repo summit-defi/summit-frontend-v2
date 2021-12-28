@@ -29,25 +29,19 @@ const CenteredSummitButton = styled(SummitButton)`
 `
 
 const FarmCardUserElevate: React.FC<Props> = ({ farm, elevationLocked, disabled }) => {
-  const { symbol, elevation, isTokenOnly, tokenAddress, lpAddress } = farm
-  const trueTokenAddress = isTokenOnly ? tokenAddress : lpAddress
+  const { symbol, elevation, farmToken, decimals } = farm
   const summitEnabled = useSummitEnabled()
   const summitLpSymbol = getSummitLpSymbol()
   const availableSisterElevations = useAvailableSisterElevations(symbol)
-  const expeditionAvailable = availableSisterElevations[Elevation.EXPEDITION]
   const { onElevate } = useElevate()
   const history = useHistory()
-
-  const openExpeditionPage = () => {
-    history.push('/expedition')
-  }
 
   const [onPresentElevate] = useModal(
     <ElevateModal
       symbol={symbol}
-      tokenAddress={trueTokenAddress}
+      tokenAddress={farmToken}
       onConfirmElevate={onElevate}
-      openExpeditionPage={openExpeditionPage}
+      decimals={decimals}
     />,
   )
   const handleSelectElevation = (selectedElevation) => {
@@ -59,8 +53,6 @@ const FarmCardUserElevate: React.FC<Props> = ({ farm, elevationLocked, disabled 
 
   const elevations = [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT]
   const disabledElevations = elevations.filter((elevToDisable) => !availableSisterElevations[elevToDisable] || (ForceElevationRetired && [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT].includes(elevToDisable)))
-
-  const isSummitOrSummitLpFarm = ['SUMMIT', summitLpSymbol].includes(symbol)
 
   return (
     <Flex flexDirection="column" justifyContent="flex-start" alignItems="flex-start">
@@ -76,25 +68,11 @@ const FarmCardUserElevate: React.FC<Props> = ({ farm, elevationLocked, disabled 
         disabled={disabled || !summitEnabled}
         selectElevation={handleSelectElevation}
       />
-      {isSummitOrSummitLpFarm ? (
-        <CenteredSummitButton
-          elevation={Elevation.EXPEDITION}
-          isLocked={elevationLocked}
-          disabled={disabled || !expeditionAvailable || !summitEnabled}
-          style={{ width: '140px' }}
-          onClick={() => handleSelectElevation(Elevation.EXPEDITION)}
-        >
-          JOIN
-          <br />
-          EXPEDITION
-        </CenteredSummitButton>
-      ) : (
       <CenteredInfoText fontSize="12px" bold monospace>
         * NO FEES ON
         <br />
         ELEVATE TX
       </CenteredInfoText>
-      )}
     </Flex>
   )
 }

@@ -1,121 +1,123 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
-import { fetchExpeditions } from './fetchExpeditions'
+import { fetchExpeditionInfo } from './fetchExpeditionInfo'
 import {
-  fetchExpeditionUserAllowanceAndBalance,
-  fetchExpeditionStakedBalances,
-  fetchExpeditionEarnedRewards,
-  fetchExpeditionHypotheticalRewards,
-} from './fetchExpeditionsUsers'
-import { ExpeditionState, Expedition, ExpeditionUserData } from '../types'
+  fetchExpeditionPotentialWinnings,
+  fetchExpeditionWinnings,
+  fetchExpeditionUserData,
+} from './fetchExpeditionUserInfo'
+import { ExpeditionState } from '../types'
 import BigNumber from 'bignumber.js'
-import { groupByAndMap } from 'utils'
-import { getExpeditionConfigs } from 'config/constants'
+
+
+const BN_ZERO = new BigNumber(0)
+const emptyUserData = {
+  everestStaked: BN_ZERO,
+
+  deity: 0,
+  deitySelected: false,
+  deitySelectionRound: 0,
+  safetyFactor: 0,
+  safetyFactorSelected: false,
+
+  entered: false,
+
+  summitLifetimeWinnings: BN_ZERO,
+  usdcLifetimeWinnings: BN_ZERO,
+
+  summitWinnings: BN_ZERO,
+  usdcWinnings: BN_ZERO,
+
+  guaranteedSummit: BN_ZERO,
+  guaranteedUsdc: BN_ZERO,
+  potentialSummitWinnings: BN_ZERO,
+  potentialUsdcWinnings: BN_ZERO,
+}
+
+const emptyExpeditionTokenInfo = {
+  roundEmission: BN_ZERO,
+  emissionsRemaining: BN_ZERO,
+  markedForDist: BN_ZERO,
+  distributed: BN_ZERO,
+}
+
+const emptyExpedition = {
+  live: false,
+  launched: false,
+
+  safeEverest: BN_ZERO,
+  deitiedEverest: BN_ZERO,
+  deityEverest: [BN_ZERO, BN_ZERO],
+
+  summit: emptyExpeditionTokenInfo,
+  usdc: emptyExpeditionTokenInfo,
+
+  roundsRemaining: 0,
+}
 
 const initialState: ExpeditionState = {
-  data: [...getExpeditionConfigs()],
-  summitAllowance: new BigNumber(0),
-  summitBalance: new BigNumber(0),
-  summitLpAllowance: new BigNumber(0),
-  summitLpBalance: new BigNumber(0),
+  userData: emptyUserData,
+  data: emptyExpedition
 }
 
 export const ExpeditionsSlice = createSlice({
   name: 'Expeditions',
   initialState,
   reducers: {
-    setExpeditionsPublicData: (state, action) => {
-      const liveExpeditionsData: Expedition[] = action.payload
-      state.data = state.data.map((expedition) => {
-        return { ...expedition, ...liveExpeditionsData[expedition.pid] }
-      })
+    setExpeditionPublicData: (state, action) => {
+      state.data = action.payload
     },
     setExpeditionsUserData: (state, action) => {
-      const userData = action.payload
-      state.data = state.data.map((expedition) => ({
-        ...expedition,
-        userData: userData[expedition.pid],
-      }))
+      state.userData = {
+        ...state.userData,
+        ...action.payload,
+      }
     },
-    setExpeditionUserAllowanceAndBalance: (state, action) => {
-      const { summitAllowance, summitBalance, summitLpAllowance, summitLpBalance } = action.payload
-      state.summitAllowance = summitAllowance
-      state.summitBalance = summitBalance
-      state.summitLpAllowance = summitLpAllowance
-      state.summitLpBalance = summitLpBalance
+    updateExpeditionUserWinnings: (state, action) => {
+      const { summitWinnings, usdcWinnings } = action.payload
+      state.userData.summitWinnings = summitWinnings
+      state.userData.usdcWinnings = usdcWinnings
     },
-    updateExpeditionsUserData: (state, action) => {
-      const { field, value, pid } = action.payload
-      const index = state.data.findIndex((p) => p.pid === pid)
-      state.data[index] = { ...state.data[index], userData: { ...state.data[index].userData, [field]: value } }
+    updateExpeditionUserPotentialWinnings: (state, action) => {
+      const { guaranteedSummit, guaranteedUsdc, potentialSummitWinnings, potentialUsdcWinnings } = action.payload
+      state.userData.guaranteedSummit = guaranteedSummit
+      state.userData.guaranteedUsdc = guaranteedUsdc
+      state.userData.potentialSummitWinnings = potentialSummitWinnings
+      state.userData.potentialUsdcWinnings = potentialUsdcWinnings
     },
   },
 })
 
 // Actions
 export const {
-  setExpeditionsPublicData,
+  setExpeditionPublicData,
   setExpeditionsUserData,
-  setExpeditionUserAllowanceAndBalance,
-  updateExpeditionsUserData,
+  updateExpeditionUserWinnings,
+  updateExpeditionUserPotentialWinnings,
 } = ExpeditionsSlice.actions
 
 // Thunks
-export const fetchExpeditionsPublicDataAsync = () => async (dispatch) => {
-  const expeditionsData = await fetchExpeditions()
-  if (expeditionsData == null) return
-  dispatch(setExpeditionsPublicData(expeditionsData))
+export const fetchExpeditionPublicDataAsync = () => async (dispatch) => {
+  const expeditionInfo = await fetchExpeditionInfo()
+  if (expeditionInfo == null) return
+  dispatch(setExpeditionPublicData(expeditionInfo))
 }
 
 export const fetchExpeditionUserDataAsync = (account) => async (dispatch) => {
-  const expeditionConfigs = getExpeditionConfigs()
-  const allowancesAndBalances = await fetchExpeditionUserAllowanceAndBalance(account)
-  const stakedBalances = await fetchExpeditionStakedBalances(account, expeditionConfigs)
-  const pendingRewards = await fetchExpeditionEarnedRewards(account, expeditionConfigs)
-  const hypotheticalRewards = await fetchExpeditionHypotheticalRewards(account, expeditionConfigs)
-
-  if (
-    expeditionConfigs == null ||
-    allowancesAndBalances == null ||
-    stakedBalances == null ||
-    pendingRewards == null ||
-    hypotheticalRewards == null
-  )
-    return
-
-  const userData = groupByAndMap(
-    expeditionConfigs,
-    (expedition) => expedition.pid,
-    (expedition): ExpeditionUserData => ({
-      ...stakedBalances[expedition.pid],
-      earnedReward: pendingRewards[expedition.pid],
-      ...hypotheticalRewards[expedition.pid],
-    }),
-  )
-
+  const userData = await fetchExpeditionUserData(account)
   dispatch(setExpeditionsUserData(userData))
-  dispatch(setExpeditionUserAllowanceAndBalance(allowancesAndBalances))
 }
 
-export const updateExpeditionUserAllowanceAndBalance = (pid: string, account: string) => async (dispatch) => {
-  const allowancesAndBalances = await fetchExpeditionUserAllowanceAndBalance(account)
-  if (allowancesAndBalances == null) return
-  dispatch(setExpeditionUserAllowanceAndBalance(allowancesAndBalances))
+export const updateExpeditionUserWinningsAsync = (account: string) => async (dispatch) => {
+  const winnings = await fetchExpeditionWinnings(account)
+  if (winnings == null) return
+  dispatch(updateExpeditionUserWinnings(winnings))
 }
 
-export const updateUserStakedBalances = (pid: string, account: string) => async (dispatch) => {
-  const expeditionConfigs = getExpeditionConfigs()
-  const stakedBalances = await fetchExpeditionStakedBalances(account, expeditionConfigs)
-  if (stakedBalances == null) return
-  dispatch(updateExpeditionsUserData({ pid, field: 'stakedSummit', value: stakedBalances[pid].stakedSummit }))
-  dispatch(updateExpeditionsUserData({ pid, field: 'stakedSummitLp', value: stakedBalances[pid].stakedSummitLp }))
-}
-
-export const updateUserPendingReward = (pid: string, account: string) => async (dispatch) => {
-  const expeditionConfigs = getExpeditionConfigs()
-  const pendingRewards = await fetchExpeditionEarnedRewards(account, expeditionConfigs)
-  if (pendingRewards == null) return
-  dispatch(updateExpeditionsUserData({ pid, field: 'earnedReward', value: pendingRewards[pid] }))
+export const updateExpeditionUserPotentialWinningsAsync = (account: string) => async (dispatch) => {
+  const potentialWinnings = await fetchExpeditionPotentialWinnings(account)
+  if (potentialWinnings == null) return
+  dispatch(updateExpeditionUserPotentialWinnings(potentialWinnings))
 }
 
 export default ExpeditionsSlice.reducer

@@ -1,10 +1,9 @@
 export { fetchFarmsPublicDataAsync, fetchFarmUserDataAsync } from './farms'
 export {
-  fetchExpeditionsPublicDataAsync,
+  fetchExpeditionPublicDataAsync,
   fetchExpeditionUserDataAsync,
-  updateExpeditionUserAllowanceAndBalance,
-  updateUserPendingReward,
-  updateUserStakedBalances,
+  updateExpeditionUserPotentialWinningsAsync,
+  updateExpeditionUserWinningsAsync
 } from './expeditions'
 export {
   fetchElevationsPublicDataAsync,

@@ -27,7 +27,7 @@ const PriceLink = styled.a`
 `
 
 const SummitPrice: React.FC<Props> = ({ summitPriceUsd }) => {
-  const populatedSummitTokenLink = getLinks().summitTokenLink.replace('0xSUMMIT', getSummitTokenAddress())
+  const populatedSummitTokenLink = (getLinks().summitTokenLink || '').replace('0xSUMMIT', getSummitTokenAddress())
   return (
     <PriceLink href={populatedSummitTokenLink} rel="noreferrer noopener" target="_blank">
       <LogoRoundIcon width="36px" mr="8px" />

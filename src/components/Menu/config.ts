@@ -9,7 +9,7 @@ const getTotemIcon = (elevation, locked, totem, totemInUse) => {
 }
 
 const populateLinkSummitAddress = (link: string): string => {
-  return link.replace('0xSUMMIT', getSummitTokenAddress())
+  return (link || '').replace('0xSUMMIT', getSummitTokenAddress())
 }
 
 export const getMenuItems = (

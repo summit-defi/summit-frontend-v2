@@ -28,6 +28,9 @@ const EMPTY_ELEVATION_FARMS_DATA = {
 }
 
 const initialState: FarmsState = {
+  farmsLoaded: false,
+  userDataLoaded: false,
+  elevationDataLoaded: false,
   data: [...getFarmConfigs()],
   elevationData: [
     EMPTY_ELEVATION_FARMS_DATA,
@@ -43,18 +46,19 @@ export const farmsSlice = createSlice({
   reducers: {
     setFarmsPublicData: (state, action) => {
       const liveFarmsData: Farm[] = action.payload
-      state.data = state.data.map((farm) => {
-        return { ...farm, ...liveFarmsData[farmId(farm)] }
-      })
+      state.data = state.data.map((farm) => ({
+        ...farm,
+        ...liveFarmsData[farmId(farm)]
+      }))
+      state.farmsLoaded = true
     },
     setFarmUserData: (state, action) => {
       const { farmsUserData } = action.payload
-      state.data = state.data.map((farm) => {
-        return {
-          ...farm,
-          userData: farmsUserData[farmId(farm)],
-        }
-      })
+      state.data = state.data.map((farm) => ({
+        ...farm,
+        userData: farmsUserData[farmId(farm)],
+      }))
+      state.userDataLoaded = true
     },
     setElevationFarmsData: (state, action) => {
       const { elevClaimableRewards, elevPotentialWinnings, elevRoundRewards } = action.payload
@@ -65,6 +69,7 @@ export const farmsSlice = createSlice({
         roundRewards: elevRoundRewards[elevation].roundRewards as BigNumber,
         totemsRoundRewards: elevRoundRewards[elevation].totemRoundRewards as BigNumber[],
       }))
+      state.elevationDataLoaded = true
     },
   },
 })

@@ -3,7 +3,7 @@ import { expandMultiElevConfig } from '../../expandMultiElevConfig'
 import { farmConfigs } from './farmConfigs'
 import { NamedChainId } from 'state/types'
 import { bscTestnetTokens } from './tokens'
-import { TokenSymbol } from 'config/constants/tokens'
+import { TokenSymbol } from 'config/constants/tokenSymbols'
 
 
 

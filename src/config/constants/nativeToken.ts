@@ -1,7 +1,7 @@
-import { PriceableToken } from 'state/types'
-import { TokenSymbol } from '.'
+import { PriceableToken } from './types'
 import { bscTestnetTokens } from './chainFarms/bsc_testnet/tokens'
 import { getChainId } from './chainId'
+import { TokenSymbol } from './tokenSymbols'
 
 const chainNativeTokenSymbol = {
   56: '',

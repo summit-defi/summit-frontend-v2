@@ -19,7 +19,7 @@ const getLocalStorageVariables = () => {
     totemsLockedIn: elevationUtils.all.map((elevation): boolean =>
       JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}lockedin`)),
     ),
-    chainId: JSON.parse(localStorage.getItem('ChainId')) || '250',
+    chainId: JSON.parse(localStorage.getItem('ChainId')) || '97',
     farmType: (localStorage.getItem('FarmType') || FarmType.All) as FarmType,
   }
 }

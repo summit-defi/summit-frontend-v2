@@ -74,8 +74,8 @@ export const switchTotem = async (cartographer, elevation, totem, account) => {
 export const elevate = async (cartographer, token, sourceElevation, targetElevation, amount, account, decimals) => {
   const elevateCall = cartographer.methods.elevate(
     token,
-    sourceElevation,
-    targetElevation,
+    elevationUtils.toInt(sourceElevation),
+    elevationUtils.toInt(targetElevation),
     new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toString()
   )
   return estimateGasAndExecute(elevateCall, account)

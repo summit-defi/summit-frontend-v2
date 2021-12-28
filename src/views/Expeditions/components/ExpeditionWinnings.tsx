@@ -6,7 +6,7 @@ import { Expedition } from 'state/types'
 import { Elevation } from 'config/constants/types'
 import CardValue from 'views/Home/components/CardValue'
 import BigNumber from 'bignumber.js'
-import { useClaimPool } from 'hooks/useHarvest'
+import { useClaimPool } from 'hooks/useClaim'
 import SummitButton from 'uikit/components/Button/SummitButton'
 
 const InfoSection = styled.div`
@@ -40,33 +40,35 @@ interface HarvestProps {
 }
 
 const ExpeditionWinnings: React.FC<HarvestProps> = ({ expedition }) => {
-  const { pid, userData, rewardToken } = expedition
-  const { earnedReward } = userData || {}
-  const winnings = (earnedReward || new BigNumber(0))
 
-  const rawWinnings = getBalanceNumber(winnings, rewardToken.decimals)
-  const { onHarvest, pending: harvestPending } = useClaimPool(pid)
+  return null
+  // const { pid, userData, rewardToken } = expedition
+  // const { earnedReward } = userData || {}
+  // const winnings = (earnedReward || new BigNumber(0))
 
-  if (rawWinnings === 0) return null
+  // const rawWinnings = getBalanceNumber(winnings, rewardToken.decimals)
+  // const { onHarvest, pending: harvestPending } = useClaimPool(pid)
 
-  return (
-    <InfoSection>
-      <InfoItem>
-        <HighlightedText mt="4px" fontSize="14px" bold textAlign="center">
-          REWARDS:
-        </HighlightedText>
-        <Flex justifyContent="flex-end" alignItems="center">
-          <CardValue value={rawWinnings} decimals={2} elevation={Elevation.EXPEDITION} fontSize="26px" />
-          <HighlightedText bold monospace ml="6px" mt="4px">
-            {rewardToken.symbol}
-          </HighlightedText>
-        </Flex>
-      </InfoItem>
-      <SummitButton elevation="GOLD" isLoading={harvestPending} mr="8px" onClick={onHarvest}>
-        COLLECT REWARDS
-      </SummitButton>
-    </InfoSection>
-  )
+  // if (rawWinnings === 0) return null
+
+  // return (
+  //   <InfoSection>
+  //     <InfoItem>
+  //       <HighlightedText mt="4px" fontSize="14px" bold textAlign="center">
+  //         REWARDS:
+  //       </HighlightedText>
+  //       <Flex justifyContent="flex-end" alignItems="center">
+  //         <CardValue value={rawWinnings} decimals={2} elevation={Elevation.EXPEDITION} fontSize="26px" />
+  //         <HighlightedText bold monospace ml="6px" mt="4px">
+  //           {rewardToken.symbol}
+  //         </HighlightedText>
+  //       </Flex>
+  //     </InfoItem>
+  //     <SummitButton elevation="GOLD" isLoading={harvestPending} mr="8px" onClick={onHarvest}>
+  //       COLLECT REWARDS
+  //     </SummitButton>
+  //   </InfoSection>
+  // )
 }
 
 export default ExpeditionWinnings

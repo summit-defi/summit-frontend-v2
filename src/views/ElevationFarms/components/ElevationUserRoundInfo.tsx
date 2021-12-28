@@ -11,7 +11,7 @@ import {
 import { getBalanceNumber } from 'utils'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import CardValue from 'views/Home/components/CardValue'
-import { useClaimElevation } from 'hooks/useHarvest'
+import { useClaimElevation } from 'hooks/useClaim'
 import TotemRoundRewardsBreakdown from './FarmCard/TotemRoundRewardsBreakdown'
 import PageLoader from 'components/PageLoader'
 import BigNumber from 'bignumber.js'

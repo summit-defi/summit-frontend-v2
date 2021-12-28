@@ -63,198 +63,199 @@ const ExpeditionTokenManagement: React.FC<Props> = ({
   expeditionLocked,
   expired = false,
 }) => {
-  // Always either SUMMIT or SUMMIT LP, which will always have 18 decimals
-  // No need to pass through decimals to balance numbering
-  const pendingExpeditionTx = usePendingExpeditionTx()
 
-  const summitTokenContract = useSummitToken()
-  const summitLpContract = useSummitLp()
-  const lpContract = isSummitLp ? summitLpContract : summitTokenContract
-  const trueTokenAddress = lpContract.options.address
-  const symbol = isSummitLp ? getSummitLpSymbol() : 'SUMMIT'
+  return null
+  // // Always either SUMMIT or SUMMIT LP, which will always have 18 decimals
+  // // No need to pass through decimals to balance numbering
+  // const pendingExpeditionTx = usePendingExpeditionTx()
 
-  const isApproved = allowance && allowance.isGreaterThan(0)
+  // const summitTokenContract = useSummitToken()
+  // const summitLpContract = useSummitLp()
+  // const lpContract = isSummitLp ? summitLpContract : summitTokenContract
+  // const trueTokenAddress = lpContract.options.address
+  // const symbol = isSummitLp ? getSummitLpSymbol() : 'SUMMIT'
 
-  // APPROVE ACTION
-  const { onApprove, pending: approvalPending } = useApprove(Elevation.EXPEDITION, lpContract, symbol)
+  // const isApproved = allowance && allowance.isGreaterThan(0)
 
-  // DEPOSIT ACTION
-  const { onStake, pending: stakePending } = useStake(Elevation.EXPEDITION, pid)
+  // // APPROVE ACTION
+  // const { onApprove, pending: approvalPending } = useApprove(Elevation.EXPEDITION, lpContract, symbol)
 
-  // WITHDRAW ACTION
-  const { onWithdraw, pending: withdrawPending } = useWithdraw(Elevation.EXPEDITION, pid)
+  // // DEPOSIT ACTION
+  // const { onStake, pending: stakePending } = useStake(Elevation.EXPEDITION, pid)
 
-  // DEPOSIT TOKEN INPUT
-  const [depositVal, setDepositVal] = useState('')
-  const [invalidDeposit, setInvalidDepositVal] = useState(false)
-  const fullDepositBalance = useMemo(() => {
-    return getFullDisplayBalance(balance || new BigNumber(0), 18)
-  }, [balance])
+  // // WITHDRAW ACTION
+  // const { onWithdraw, pending: withdrawPending } = useWithdraw(Elevation.EXPEDITION, pid)
 
-  const validDepositVal = (testVal, depositBalance) => {
-    return (
-      testVal === '' ||
-      (isNumber(parseFloat(testVal)) && parseFloat(testVal) >= 0 && parseFloat(testVal) <= parseFloat(depositBalance))
-    )
-  }
+  // // DEPOSIT TOKEN INPUT
+  // const [depositVal, setDepositVal] = useState('')
+  // const [invalidDeposit, setInvalidDepositVal] = useState(false)
+  // const fullDepositBalance = useMemo(() => {
+  //   return getFullDisplayBalance(balance || new BigNumber(0), 18)
+  // }, [balance])
 
-  const handleChangeDeposit = useCallback(
-    (e: React.FormEvent<HTMLInputElement>) => {
-      setDepositVal(e.currentTarget.value)
-      setInvalidDepositVal(!validDepositVal(e.currentTarget.value, fullDepositBalance))
-    },
-    [setDepositVal, fullDepositBalance, setInvalidDepositVal],
-  )
+  // const validDepositVal = (testVal, depositBalance) => {
+  //   return (
+  //     testVal === '' ||
+  //     (isNumber(parseFloat(testVal)) && parseFloat(testVal) >= 0 && parseFloat(testVal) <= parseFloat(depositBalance))
+  //   )
+  // }
 
-  const handleSelectMaxDeposit = useCallback(() => {
-    setDepositVal(fullDepositBalance)
-    setInvalidDepositVal(!validDepositVal(fullDepositBalance, fullDepositBalance))
-  }, [fullDepositBalance, setDepositVal, setInvalidDepositVal])
+  // const handleChangeDeposit = useCallback(
+  //   (e: React.FormEvent<HTMLInputElement>) => {
+  //     setDepositVal(e.currentTarget.value)
+  //     setInvalidDepositVal(!validDepositVal(e.currentTarget.value, fullDepositBalance))
+  //   },
+  //   [setDepositVal, fullDepositBalance, setInvalidDepositVal],
+  // )
 
-  const handleStake = useCallback(
-    () => onStake(symbol, isSummitLp ? '0' : depositVal, isSummitLp ? depositVal : '0', userDeity, 18),
-    [symbol, isSummitLp, depositVal, userDeity, onStake],
-  )
+  // const handleSelectMaxDeposit = useCallback(() => {
+  //   setDepositVal(fullDepositBalance)
+  //   setInvalidDepositVal(!validDepositVal(fullDepositBalance, fullDepositBalance))
+  // }, [fullDepositBalance, setDepositVal, setInvalidDepositVal])
 
-  // WITHDRAWAL TOKEN INPUT
-  const [withdrawVal, setWithdrawVal] = useState('')
-  const [invalidWithdraw, setInvalidWithdrawVal] = useState(false)
-  const fullWithdrawBalance = useMemo(() => {
-    return getFullDisplayBalance(staked || new BigNumber(0))
-  }, [staked])
+  // const handleStake = useCallback(
+  //   () => onStake(symbol, isSummitLp ? '0' : depositVal, isSummitLp ? depositVal : '0', userDeity, 18),
+  //   [symbol, isSummitLp, depositVal, userDeity, onStake],
+  // )
 
-  const validWithdrawVal = (testVal, stakedBal) => {
-    return (
-      testVal === '' ||
-      (isNumber(parseFloat(testVal)) && parseFloat(testVal) >= 0 && parseFloat(testVal) <= parseFloat(stakedBal))
-    )
-  }
-  const handleChangeWithdraw = useCallback(
-    (e: React.FormEvent<HTMLInputElement>) => {
-      setWithdrawVal(e.currentTarget.value)
-      setInvalidWithdrawVal(!validWithdrawVal(e.currentTarget.value, fullWithdrawBalance))
-    },
-    [setWithdrawVal, fullWithdrawBalance, setInvalidWithdrawVal],
-  )
+  // // WITHDRAWAL TOKEN INPUT
+  // const [withdrawVal, setWithdrawVal] = useState('')
+  // const [invalidWithdraw, setInvalidWithdrawVal] = useState(false)
+  // const fullWithdrawBalance = useMemo(() => {
+  //   return getFullDisplayBalance(staked || new BigNumber(0))
+  // }, [staked])
 
-  const handleSelectMaxWithdraw = useCallback(() => {
-    setWithdrawVal(fullWithdrawBalance)
-    setInvalidWithdrawVal(!validWithdrawVal(fullWithdrawBalance, fullWithdrawBalance))
-  }, [fullWithdrawBalance, setWithdrawVal, setInvalidWithdrawVal])
+  // const validWithdrawVal = (testVal, stakedBal) => {
+  //   return (
+  //     testVal === '' ||
+  //     (isNumber(parseFloat(testVal)) && parseFloat(testVal) >= 0 && parseFloat(testVal) <= parseFloat(stakedBal))
+  //   )
+  // }
+  // const handleChangeWithdraw = useCallback(
+  //   (e: React.FormEvent<HTMLInputElement>) => {
+  //     setWithdrawVal(e.currentTarget.value)
+  //     setInvalidWithdrawVal(!validWithdrawVal(e.currentTarget.value, fullWithdrawBalance))
+  //   },
+  //   [setWithdrawVal, fullWithdrawBalance, setInvalidWithdrawVal],
+  // )
 
-  const handleWithdraw = useCallback(
-    () => onWithdraw(symbol, isSummitLp ? '0' : withdrawVal, isSummitLp ? withdrawVal : '0', 18),
-    [symbol, isSummitLp, withdrawVal, onWithdraw],
-  )
+  // const handleSelectMaxWithdraw = useCallback(() => {
+  //   setWithdrawVal(fullWithdrawBalance)
+  //   setInvalidWithdrawVal(!validWithdrawVal(fullWithdrawBalance, fullWithdrawBalance))
+  // }, [fullWithdrawBalance, setWithdrawVal, setInvalidWithdrawVal])
 
-  // ELEVATE
-  const availableSisterElevations = useAvailableSisterElevations(symbol, pid)
-  const { onElevate } = useElevate()
+  // const handleWithdraw = useCallback(
+  //   () => onWithdraw(symbol, isSummitLp ? '0' : withdrawVal, isSummitLp ? withdrawVal : '0', 18),
+  //   [symbol, isSummitLp, withdrawVal, onWithdraw],
+  // )
 
-  const history = useHistory()
-  const openExpeditionPage = () => {
-    history.push('/expedition')
-  }
+  // // ELEVATE
+  // const availableSisterElevations = useAvailableSisterElevations(symbol, pid)
+  // const { onElevate } = useElevate()
 
-  const [onPresentElevate] = useModal(
-    <ElevateModal
-      symbol={symbol}
-      tokenAddress={trueTokenAddress}
-      forcedExpeditionPid={pid}
-      onConfirmElevate={onElevate}
-      openExpeditionPage={openExpeditionPage}
-    />,
-  )
-  const handleSelectElevation = (selectedElevation) => {
-    onPresentElevate({
-      sourceElevation: selectedElevation === Elevation.EXPEDITION ? undefined : Elevation.EXPEDITION,
-      targetElevation: selectedElevation,
-    })
-  }
+  // const history = useHistory()
+  // const openExpeditionPage = () => {
+  //   history.push('/expedition')
+  // }
 
-  const elevations = [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT, Elevation.EXPEDITION]
-  const disabledElevations = elevations.filter((elevToDisable) => !availableSisterElevations[elevToDisable] || (ForceElevationRetired && [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT].includes(elevToDisable)))
+  // const [onPresentElevate] = useModal(
+  //   <ElevateModal
+  //     symbol={symbol}
+  //     tokenAddress={trueTokenAddress}
+  //     forcedExpeditionPid={pid}
+  //     onConfirmElevate={onElevate}
+  //   />,
+  // )
+  // const handleSelectElevation = (selectedElevation) => {
+  //   onPresentElevate({
+  //     sourceElevation: selectedElevation === Elevation.EXPEDITION ? undefined : Elevation.EXPEDITION,
+  //     targetElevation: selectedElevation,
+  //   })
+  // }
 
-  return (
-    <MobileVerticalFlex expired={expired}>
-      {/* DEPOSIT */}
-      { !expired &&
-        <Flex flexDirection="column">
-          <TokenInput
-            elevation={Elevation.EXPEDITION}
-            value={depositVal}
-            balanceText="Wallet"
-            onSelectMax={handleSelectMaxDeposit}
-            onChange={handleChangeDeposit}
-            max={fullDepositBalance}
-            disabled={!isApproved || pendingExpeditionTx}
-            symbol={symbol}
-          />
-          {isApproved && (
-            <CenteredSummitButton
-              elevation={Elevation.EXPEDITION}
-              isLocked={expeditionLocked}
-              isLoading={stakePending}
-              disabled={invalidDeposit || withdrawPending || pendingExpeditionTx}
-              onClick={handleStake}
-            >
-              DEPOSIT
-            </CenteredSummitButton>
-          )}
-          {!isApproved && (
-            <CenteredSummitButton isLoading={approvalPending} onClick={onApprove} elevation={Elevation.EXPEDITION}>
-              APPROVE {symbol}
-            </CenteredSummitButton>
-          )}
-        </Flex>
-      }
+  // const elevations = [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT, Elevation.EXPEDITION]
+  // const disabledElevations = elevations.filter((elevToDisable) => !availableSisterElevations[elevToDisable] || (ForceElevationRetired && [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT].includes(elevToDisable)))
 
-      {/* WITHDRAW */}
-      <Flex flexDirection="column">
-        <TokenInput
-          elevation={Elevation.EXPEDITION}
-          value={withdrawVal}
-          balanceText="Deposited"
-          onSelectMax={handleSelectMaxWithdraw}
-          onChange={handleChangeWithdraw}
-          max={fullWithdrawBalance}
-          symbol={symbol}
-          disabled={!isApproved || isSummitLp || pendingExpeditionTx}
-        />
-        <CenteredSummitButton
-          elevation={Elevation.EXPEDITION}
-          isLocked={expeditionLocked}
-          isLoading={withdrawPending}
-          disabled={invalidWithdraw || stakePending || !isApproved || isSummitLp || pendingExpeditionTx}
-          onClick={handleWithdraw}
-        >
-          { isSummitLp ?
-            <ButtonText>
-              <ButtonText style={{textDecoration: 'line-through'}}>WITHDRAW</ButtonText>
-              <ButtonText>USE ELEVATE INSTEAD</ButtonText>
-            </ButtonText>:
-            'WITHDRAW'
-          }
-        </CenteredSummitButton>
-      </Flex>
+  // return (
+  //   <MobileVerticalFlex expired={expired}>
+  //     {/* DEPOSIT */}
+  //     { !expired &&
+  //       <Flex flexDirection="column">
+  //         <TokenInput
+  //           elevation={Elevation.EXPEDITION}
+  //           value={depositVal}
+  //           balanceText="Wallet"
+  //           onSelectMax={handleSelectMaxDeposit}
+  //           onChange={handleChangeDeposit}
+  //           max={fullDepositBalance}
+  //           disabled={!isApproved || pendingExpeditionTx}
+  //           symbol={symbol}
+  //         />
+  //         {isApproved && (
+  //           <CenteredSummitButton
+  //             elevation={Elevation.EXPEDITION}
+  //             isLocked={expeditionLocked}
+  //             isLoading={stakePending}
+  //             disabled={invalidDeposit || withdrawPending || pendingExpeditionTx}
+  //             onClick={handleStake}
+  //           >
+  //             DEPOSIT
+  //           </CenteredSummitButton>
+  //         )}
+  //         {!isApproved && (
+  //           <CenteredSummitButton isLoading={approvalPending} onClick={onApprove} elevation={Elevation.EXPEDITION}>
+  //             APPROVE {symbol}
+  //           </CenteredSummitButton>
+  //         )}
+  //       </Flex>
+  //     }
 
-      {/* ELEVATE */}
-      <Flex flexDirection="column" mb='24px'>
-        <Text fontSize="14px" mb="8px" bold italic>
-          Elevate
-        </Text>
-        <ElevationSelector
-          selected={Elevation.EXPEDITION}
-          desktopOnlyVertical
-          isLocked={expeditionLocked}
-          elevations={elevations}
-          disabledElevations={disabledElevations}
-          disabled={stakePending || withdrawPending || !isApproved || pendingExpeditionTx}
-          selectElevation={handleSelectElevation}
-        />
-      </Flex>
-    </MobileVerticalFlex>
-  )
+  //     {/* WITHDRAW */}
+  //     <Flex flexDirection="column">
+  //       <TokenInput
+  //         elevation={Elevation.EXPEDITION}
+  //         value={withdrawVal}
+  //         balanceText="Deposited"
+  //         onSelectMax={handleSelectMaxWithdraw}
+  //         onChange={handleChangeWithdraw}
+  //         max={fullWithdrawBalance}
+  //         symbol={symbol}
+  //         disabled={!isApproved || isSummitLp || pendingExpeditionTx}
+  //       />
+  //       <CenteredSummitButton
+  //         elevation={Elevation.EXPEDITION}
+  //         isLocked={expeditionLocked}
+  //         isLoading={withdrawPending}
+  //         disabled={invalidWithdraw || stakePending || !isApproved || isSummitLp || pendingExpeditionTx}
+  //         onClick={handleWithdraw}
+  //       >
+  //         { isSummitLp ?
+  //           <ButtonText>
+  //             <ButtonText style={{textDecoration: 'line-through'}}>WITHDRAW</ButtonText>
+  //             <ButtonText>USE ELEVATE INSTEAD</ButtonText>
+  //           </ButtonText>:
+  //           'WITHDRAW'
+  //         }
+  //       </CenteredSummitButton>
+  //     </Flex>
+
+  //     {/* ELEVATE */}
+  //     <Flex flexDirection="column" mb='24px'>
+  //       <Text fontSize="14px" mb="8px" bold italic>
+  //         Elevate
+  //       </Text>
+  //       <ElevationSelector
+  //         selected={Elevation.EXPEDITION}
+  //         desktopOnlyVertical
+  //         isLocked={expeditionLocked}
+  //         elevations={elevations}
+  //         disabledElevations={disabledElevations}
+  //         disabled={stakePending || withdrawPending || !isApproved || pendingExpeditionTx}
+  //         selectElevation={handleSelectElevation}
+  //       />
+  //     </Flex>
+  //   </MobileVerticalFlex>
+  // )
 }
 
 export default ExpeditionTokenManagement

@@ -7,7 +7,7 @@ import { provider } from 'web3-core'
 import { Text, Flex } from 'uikit'
 import FlexLayout from 'components/layout/Flex'
 import Page from 'components/layout/Page'
-import { useElevationLocked, useElevationTotem, useFarms, useSummitPrice } from 'state/hooks'
+import { useElevationLocked, useElevationTotem, useFarms, useFarmsLoaded, useSummitPrice } from 'state/hooks'
 import useRefresh from 'hooks/useRefresh'
 import { fetchFarmUserDataAsync } from 'state/actions'
 import { Elevation } from 'config/constants/types'
@@ -39,6 +39,7 @@ export interface ElevationFarms {
 const ElevationFarms: React.FC<ElevationFarms> = (props) => {
   const { path } = useRouteMatch()
   const farmsLP = useFarms()
+  const farmsLoaded = useFarmsLoaded()
   const summitPrice = useSummitPrice()
   const web3 = useWeb3()
   const { farmType, liveFarms } = useFarmType()
@@ -56,16 +57,12 @@ const ElevationFarms: React.FC<ElevationFarms> = (props) => {
     }
   }, [account, dispatch, fastRefresh, web3])
 
-  const filterFarmsWithUserData = useCallback((farmsToFilter) => farmsToFilter.filter((farm) => !!farm.userData), [])
-
-  const farmsLoaded = filterFarmsWithUserData(farmsLP).length > 0
-
   const filterAllFarms = useCallback(
     (farmsToFilter) =>
       farmsToFilter.filter(
         (farm) =>
           farm.elevation === elevation &&
-          liveFarms === ((farm.allocation || new BigNumber(0)).isGreaterThan(0) && farm.live) &&
+          liveFarms === ((farm.allocation || 0) > 0 && farm.live) &&
           (farmType === FarmType.All || farm.isTokenOnly === (farmType === FarmType.Token)),
       ),
     [farmType, liveFarms, elevation],
@@ -82,6 +79,12 @@ const ElevationFarms: React.FC<ElevationFarms> = (props) => {
   )
 
   const farms = stakedFarms.concat(unstakedFarms)
+
+  console.log({
+    stakedFarms,
+    unstakedFarms,
+    farmsLP
+  })
 
   const farmsList = useCallback(
     (farmsToDisplay, removed: boolean) => farmsToDisplay.map((farm) => (

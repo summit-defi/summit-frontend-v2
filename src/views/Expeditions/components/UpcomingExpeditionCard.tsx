@@ -70,42 +70,43 @@ interface Props {
 }
 
 const UpcomingExpeditionCard: React.FC<Props> = ({ expedition }) => {
-  const { rewardToken, roundsRemaining, rewardsRemaining } = expedition
+  return null
+  // const { rewardToken, roundsRemaining, rewardsRemaining } = expedition
 
-  return (
-    <ExpeditionWrapper>
-      <Glow justifyContent="center" flexDirection="column" alignItems="center">
-        <TokenSymbolImage symbol={rewardToken.symbol} width={80} height={80} />
-        <Text bold monospace fontSize="14px">
-          UPCOMING EXPEDITION:
-        </Text>
-        <Text bold monospace mb="48px" fontSize="24px" letterSpacing="5px">
-          {rewardToken.symbol}
-        </Text>
-      </Glow>
+  // return (
+  //   <ExpeditionWrapper>
+  //     <Glow justifyContent="center" flexDirection="column" alignItems="center">
+  //       <TokenSymbolImage symbol={rewardToken.symbol} width={80} height={80} />
+  //       <Text bold monospace fontSize="14px">
+  //         UPCOMING EXPEDITION:
+  //       </Text>
+  //       <Text bold monospace mb="48px" fontSize="24px" letterSpacing="5px">
+  //         {rewardToken.symbol}
+  //       </Text>
+  //     </Glow>
 
-      <InfoSection justifyContent="space-around" mb="64px" mt="36px">
-        <InfoItem>
-          <Text bold monospace fontSize="14px">
-            Rounds:
-          </Text>
-          <Text bold monospace fontSize="24px">
-            {roundsRemaining}
-          </Text>
-        </InfoItem>
-        <InfoItem>
-          <Text bold monospace fontSize="14px">
-            Total Reward:
-          </Text>
-          <Text bold monospace fontSize="24px">
-            {getFormattedBigNumber(rewardsRemaining, 3, rewardToken.decimals)} {rewardToken.symbol}
-          </Text>
-        </InfoItem>
-      </InfoSection>
+  //     <InfoSection justifyContent="space-around" mb="64px" mt="36px">
+  //       <InfoItem>
+  //         <Text bold monospace fontSize="14px">
+  //           Rounds:
+  //         </Text>
+  //         <Text bold monospace fontSize="24px">
+  //           {roundsRemaining}
+  //         </Text>
+  //       </InfoItem>
+  //       <InfoItem>
+  //         <Text bold monospace fontSize="14px">
+  //           Total Reward:
+  //         </Text>
+  //         <Text bold monospace fontSize="24px">
+  //           {getFormattedBigNumber(rewardsRemaining, 3, rewardToken.decimals)} {rewardToken.symbol}
+  //         </Text>
+  //       </InfoItem>
+  //     </InfoSection>
 
-      <UpcomingExpeditionTimer />
-    </ExpeditionWrapper>
-  )
+  //     <UpcomingExpeditionTimer />
+  //   </ExpeditionWrapper>
+  // )
 }
 
 export default UpcomingExpeditionCard

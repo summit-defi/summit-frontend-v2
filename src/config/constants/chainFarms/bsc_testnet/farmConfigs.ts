@@ -1,4 +1,4 @@
-import { TokenSymbol } from 'config/constants/tokens'
+import { TokenSymbol } from 'config/constants/tokenSymbols'
 import { MultiElevAllocationConfig } from '../../types'
 
 const baseElevations = {

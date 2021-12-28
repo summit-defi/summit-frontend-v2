@@ -1,4 +1,5 @@
 import { getFarmToken } from 'utils/farmId'
+import { farmConfigs } from './chainFarms/bsc_testnet/farmConfigs'
 import addresses from './contracts'
 import { MultiElevFarmConfig, FarmConfig, elevationUtils, Elevation } from './types'
 
@@ -11,11 +12,11 @@ const replaceSummitAddresses = (tokenAddress: string, summitAddress: string, sum
 export const expandMultiElevConfig = (chainId: string, config: MultiElevFarmConfig): FarmConfig[] => {
   const { getUrl, elevationsExistAndLive, tokenAddress, lpAddress, allocation, ...farmConfig } = config
 
-  const farmToken = getFarmToken(config)
   const summitAddress = addresses.summitToken[chainId]
   const summitLpAddress = addresses.summitLpToken[chainId]
   const trueTokenAddress = replaceSummitAddresses(tokenAddress, summitAddress, summitLpAddress)
   const trueLpAddress = replaceSummitAddresses(lpAddress, summitAddress, summitLpAddress)
+  const farmToken = getFarmToken({ assetType: farmConfig.assetType, tokenAddress: trueTokenAddress, lpAddress: trueLpAddress })
   const trueGetUrl = getUrl.replace('0xSUMMIT', summitAddress)
   return Object.entries(elevationsExistAndLive)
     .filter(([_, { exists }]) => exists)

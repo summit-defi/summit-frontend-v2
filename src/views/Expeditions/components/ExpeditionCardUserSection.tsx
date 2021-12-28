@@ -10,7 +10,6 @@ import { useElevationTotem, usePricesPerToken, useSummitPrice } from 'state/hook
 import ExpeditionTokenSelector from './ExpeditionTokenSelector'
 import ExpeditionTokenManagement from './ExpeditionTokenManagement'
 import PageLoader from 'components/PageLoader'
-import ExpeditionStakedToDepositedInfo from './ExpeditionStakedToDepositedInfo'
 
 const InfoSection = styled.div`
   display: flex;

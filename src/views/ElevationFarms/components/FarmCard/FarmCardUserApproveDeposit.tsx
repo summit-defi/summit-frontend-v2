@@ -16,7 +16,6 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 interface Props {
   farmToken: string
   symbol: string
-  userTotem: number
   elevationLocked: boolean
   tokenBalance: BigNumber
   decimals: number
@@ -43,7 +42,6 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
   farmToken,
   symbol,
   elevationLocked,
-  userTotem,
   tokenBalance,
   decimals,
   depositFeeBP,
@@ -109,7 +107,6 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
     [
       symbol,
       depositVal,
-      userTotem,
       decimals,
       onStake,
       presentRewardsWillBeHarvestedModal,

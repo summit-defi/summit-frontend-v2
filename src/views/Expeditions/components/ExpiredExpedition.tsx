@@ -5,7 +5,7 @@ import { Image, Flex, Text, HighlightedText, Heading, TokenSymbolImage, useModal
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import useStake from 'hooks/useStake'
 import useWithdraw from 'hooks/useWithdraw'
-import { useClaimPool } from 'hooks/useHarvest'
+import { useClaimPool } from 'hooks/useClaim'
 import { Expedition } from 'state/types'
 import { FCard } from 'views/ElevationFarms/components/FCard'
 import SummitButton from 'uikit/components/Button/SummitButton'
@@ -91,85 +91,87 @@ interface ExpiredExpeditionProps {
 }
 
 const ExpiredExpedition: React.FC<ExpiredExpeditionProps> = ({ expedition, summitAllowance, summitBalance, summitLpAllowance, summitLpBalance }) => {
-  const { pid, rewardToken, userData } = expedition
-  const { stakedSummit, stakedSummitLp, earnedReward } = userData || {}
-  const summitLpContract = useSummitLp()
-  const history = useHistory()
 
-  const zeroStaked = (stakedSummit || new BigNumber(0)).isEqualTo(0) && (stakedSummitLp || new BigNumber(0)).isEqualTo(0)
-  const zeroWon = (earnedReward || new BigNumber(0)).isEqualTo(0)
+  return null
+  // const { pid, rewardToken, userData } = expedition
+  // const { stakedSummit, stakedSummitLp, earnedReward } = userData || {}
+  // const summitLpContract = useSummitLp()
+  // const history = useHistory()
+
+  // const zeroStaked = (stakedSummit || new BigNumber(0)).isEqualTo(0) && (stakedSummitLp || new BigNumber(0)).isEqualTo(0)
+  // const zeroWon = (earnedReward || new BigNumber(0)).isEqualTo(0)
 
 
-  const { onWithdraw, pending: exitPending } = useWithdraw(Elevation.EXPEDITION, pid)
+  // const { onWithdraw, pending: exitPending } = useWithdraw(Elevation.EXPEDITION, pid)
 
-  const winnings = (earnedReward || new BigNumber(0))
-  const rawWinnings = getBalanceNumber(winnings, rewardToken.decimals)
-  const rawSummitStaked = getBalanceNumber(stakedSummit)
-  const rawSummitLpStaked = getBalanceNumber(stakedSummitLp)
+  // const winnings = (earnedReward || new BigNumber(0))
+  // const rawWinnings = getBalanceNumber(winnings, rewardToken.decimals)
+  // const rawSummitStaked = getBalanceNumber(stakedSummit)
+  // const rawSummitLpStaked = getBalanceNumber(stakedSummitLp)
 
-  const { onElevate } = useElevate()
+  // const { onElevate } = useElevate()
 
-  const openExpeditionPage = () => {
-    history.push('/expedition')
-  }
+  // const openExpeditionPage = () => {
+  //   history.push('/expedition')
+  // }
 
   
 
-  if (zeroStaked && zeroWon) return null
+  // if (zeroStaked && zeroWon) return null
 
-  return (
-    <ExpeditionWrapper>
-      <Glow justifyContent="center" flexDirection="column" alignItems="center">
-        <TokenSymbolImage symbol={rewardToken.symbol} width={80} height={80} />
-        <Text bold monospace fontSize="14px" letterSpacing="5px">
-          FINISHED EXPEDITION:
-        </Text>
-        <Text bold monospace mb="48px" fontSize="24px" letterSpacing="5px">
-          {rewardToken.symbol}
-        </Text>
-      </Glow>
+  // return (
+  //   <ExpeditionWrapper>
+  //     <Glow justifyContent="center" flexDirection="column" alignItems="center">
+  //       <TokenSymbolImage symbol={rewardToken.symbol} width={80} height={80} />
+  //       <Text bold monospace fontSize="14px" letterSpacing="5px">
+  //         FINISHED EXPEDITION:
+  //       </Text>
+  //       <Text bold monospace mb="48px" fontSize="24px" letterSpacing="5px">
+  //         {rewardToken.symbol}
+  //       </Text>
+  //     </Glow>
 
-      <InfoItem>
-        <Text mt="4px" bold>
-          WINNINGS:
-        </Text>
-        <Flex justifyContent="flex-end" alignItems="center">
-          <CardValue value={rawWinnings} decimals={2} elevation={Elevation.EXPEDITION} fontSize="26px" />
-          <HighlightedText bold monospace ml="6px" mt="4px">
-            {rewardToken.symbol}
-          </HighlightedText>
-        </Flex>
-      </InfoItem>
+  //     <InfoItem>
+  //       <Text mt="4px" bold>
+  //         WINNINGS:
+  //       </Text>
+  //       <Flex justifyContent="flex-end" alignItems="center">
+  //         <CardValue value={rawWinnings} decimals={2} elevation={Elevation.EXPEDITION} fontSize="26px" />
+  //         <HighlightedText bold monospace ml="6px" mt="4px">
+  //           {rewardToken.symbol}
+  //         </HighlightedText>
+  //       </Flex>
+  //     </InfoItem>
 
-      <InfoItem>
-        <Text mt="4px" bold>
-          STAKED:
-        </Text>
-        <Flex justifyContent="flex-end" alignItems="center">
-          <CardValue value={rawSummitStaked} decimals={2} elevation={Elevation.EXPEDITION} fontSize="26px" />
-          <HighlightedText bold monospace ml="6px" mt="4px">
-            SUMMIT
-          </HighlightedText>
-        </Flex>
-        <Flex justifyContent="flex-end" alignItems="center">
-          <CardValue value={rawSummitLpStaked} decimals={2} elevation={Elevation.EXPEDITION} fontSize="26px" />
-          <HighlightedText bold monospace ml="6px" mt="4px">
-            SUMMIT-FTM LP
-          </HighlightedText>
-        </Flex>
-      </InfoItem>
+  //     <InfoItem>
+  //       <Text mt="4px" bold>
+  //         STAKED:
+  //       </Text>
+  //       <Flex justifyContent="flex-end" alignItems="center">
+  //         <CardValue value={rawSummitStaked} decimals={2} elevation={Elevation.EXPEDITION} fontSize="26px" />
+  //         <HighlightedText bold monospace ml="6px" mt="4px">
+  //           SUMMIT
+  //         </HighlightedText>
+  //       </Flex>
+  //       <Flex justifyContent="flex-end" alignItems="center">
+  //         <CardValue value={rawSummitLpStaked} decimals={2} elevation={Elevation.EXPEDITION} fontSize="26px" />
+  //         <HighlightedText bold monospace ml="6px" mt="4px">
+  //           SUMMIT-FTM LP
+  //         </HighlightedText>
+  //       </Flex>
+  //     </InfoItem>
 
-      <ExpeditionCardUserSection
-        expedition={expedition}
-        summitAllowance={summitAllowance}
-        summitLpAllowance={summitLpAllowance}
-        summitBalance={summitBalance}
-        summitLpBalance={summitLpBalance}
-        expeditionLocked={false}
-        expired
-      />
-    </ExpeditionWrapper>
-  )
+  //     <ExpeditionCardUserSection
+  //       expedition={expedition}
+  //       summitAllowance={summitAllowance}
+  //       summitLpAllowance={summitLpAllowance}
+  //       summitBalance={summitBalance}
+  //       summitLpBalance={summitLpBalance}
+  //       expeditionLocked={false}
+  //       expired
+  //     />
+  //   </ExpeditionWrapper>
+  // )
 }
 
 const StyledCardActions = styled.div`

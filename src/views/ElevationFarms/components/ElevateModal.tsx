@@ -13,24 +13,21 @@ import Totem from './Totem'
 import { elevationPalette } from 'theme/colors'
 import useSelectTotemModal from 'uikit/widgets/SelectTotemModal/useSelectTotemModal'
 import { RewardsWillBeHarvestedType, useRewardsWillBeHarvestedModal } from './RewardsWillBeHarvestedModal'
-import { getPriceableTokens } from 'config/constants'
 
 interface ElevateModalProps {
   symbol: string
   tokenAddress: string
+  decimals: number
 
   sourceElevation?: Elevation
   targetElevation?: Elevation
 
-  openExpeditionPage: () => void
-
   onConfirmElevate: (
     symbol: string,
+    token: string,
     sourceElevation: Elevation,
     targetElevation: Elevation,
     amount: string,
-    token: string,
-    totem: number,
     decimals: number,
   ) => void
   onDismiss?: () => void
@@ -38,37 +35,23 @@ interface ElevateModalProps {
 
 const ElevateModal: React.FC<ElevateModalProps> = ({
   symbol,
-  tokenAddress = null,
+  tokenAddress,
+  decimals,
   sourceElevation = null,
   targetElevation = null,
-  openExpeditionPage,
   onConfirmElevate,
   onDismiss,
 }) => {
-  const sisterFarmsAndExpedition = useSisterFarms(symbol)
-
-  const priceableTokens = getPriceableTokens()
-  const decimals = priceableTokens.find((token) => token.symbol === symbol)?.decimals || 18
-
+  const sisterFarms = useSisterFarms(symbol)
 
   // REWARDS WILL BE HARVESTED MODAL
   const presentRewardsWillBeHarvestedModal = useRewardsWillBeHarvestedModal(Elevation.OASIS, new BigNumber(0), 'Elevate', RewardsWillBeHarvestedType.Elevate)
   
-  // const tokenDecimals =
-  //   (sourceElevation || targetElevation) === Elevation.EXPEDITION
-  //     ? sisterFarmsAndExpedition[Elevation.EXPEDITION].rewardToken.decimals
-  //     : (sisterFarmsAndExpedition[sourceElevation || targetElevation] as Farm).tokenDecimals
-  // const tokenDecimals = ((sisterFarmsAndExpedition[sourceElevation] || sisterFarmsAndExpedition[targetElevation]) as Farm).tokenDecimals
-
-  const expeditionAvailable = sisterFarmsAndExpedition[Elevation.EXPEDITION] != null
-
-  const disabledElevations = Object.entries(sisterFarmsAndExpedition)
+  const disabledElevations = Object.entries(sisterFarms)
     .filter(([_, sisterFarm]) => sisterFarm == null)
     .map(([sisterElevation]) => sisterElevation) as Elevation[]
 
-  const sisterElevations = [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT].concat(
-    expeditionAvailable ? Elevation.EXPEDITION : [],
-  )
+  const sisterElevations = [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT]
   const sourceElevations =
     sourceElevation != null ? [sourceElevation] : sisterElevations.filter((elev) => elev !== targetElevation)
   const targetElevations =
@@ -109,29 +92,16 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
 
   useEffect(() => {
     if (selectedSourceElevation === null) return
-    if (selectedSourceElevation === Elevation.EXPEDITION) {
-      const selectedExpedition = sisterFarmsAndExpedition[selectedSourceElevation]
-      const newFullBalance = getFullDisplayBalance(
-        selectedExpedition.userData
-          ? selectedExpedition.userData[symbol === 'SUMMIT' ? 'stakedSummit' : 'stakedSummitLp'] || new BigNumber(0)
-          : new BigNumber(0),
-        decimals,
-      )
-
-      setFullBalance(newFullBalance)
-      setVal(newFullBalance)
-      setValInvalid(!validElevateVal(newFullBalance, newFullBalance))
-    } else {
-      const selectedFarm = sisterFarmsAndExpedition[selectedSourceElevation]
-      setSourceEarned(selectedFarm.userData?.earnedReward || new BigNumber(0))
-      const newFullBalance = getFullDisplayBalance(
-        selectedFarm.userData?.stakedBalance || new BigNumber(0),
-        decimals,
-      )
-      setFullBalance(newFullBalance)
-      setVal(newFullBalance)
-      setValInvalid(!validElevateVal(newFullBalance, newFullBalance))
-    }
+    
+    const selectedFarm = sisterFarms[selectedSourceElevation]
+    setSourceEarned(selectedFarm.userData?.earnedReward || new BigNumber(0))
+    const newFullBalance = getFullDisplayBalance(
+      selectedFarm.userData?.stakedBalance || new BigNumber(0),
+      decimals,
+    )
+    setFullBalance(newFullBalance)
+    setVal(newFullBalance)
+    setValInvalid(!validElevateVal(newFullBalance, newFullBalance))
   }, [
     decimals,
     selectedSourceElevation,
@@ -140,7 +110,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
     setSourceEarned,
     setVal,
     setValInvalid,
-    sisterFarmsAndExpedition,
+    sisterFarms,
   ])
 
   const handleSelectTargetElevation = useCallback(
@@ -150,14 +120,11 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    setTargetEarned(sisterFarmsAndExpedition[selectedTargetElevation]!.userData?.earnedReward || new BigNumber(0))
-  }, [selectedTargetElevation, sisterFarmsAndExpedition, setTargetEarned])
+    setTargetEarned(sisterFarms[selectedTargetElevation]!.userData?.earnedReward || new BigNumber(0))
+  }, [selectedTargetElevation, sisterFarms, setTargetEarned])
 
   const handlePresentSelectTotem = () => {
-    if (selectedTargetElevation === Elevation.EXPEDITION) {
-      openExpeditionPage()
-      onDismiss()
-    } else onPresentSelectTotemModal()
+    onPresentSelectTotemModal()
   }
 
   // CONFIRM ELEVATE
@@ -170,7 +137,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
         sourceEarned,
         targetEarned,
       },
-      transactionToConfirm: () => onConfirmElevate(symbol, selectedSourceElevation, selectedTargetElevation, val, tokenAddress, totem, decimals),
+      transactionToConfirm: () => onConfirmElevate(symbol, tokenAddress, selectedSourceElevation, selectedTargetElevation, val, decimals),
     })
   }
 
@@ -183,9 +150,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
     >
       <Flex justifyContent="center" flexDirection="column" alignItems="center">
         <Text textAlign="center" bold>
-          {selectedTargetElevation === Elevation.EXPEDITION
-            ? `Transfer ${symbol} directly into the Expedition for your chance to win.`
-            : `Transfer ${symbol} between elevations and skip the fees.`}
+          {`Transfer ${symbol} between elevations and skip the fees.`}
         </Text>
 
         <Flex justifyContent="space-around" alignItems="center" width="100%" mt="24px">
@@ -226,7 +191,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
         </Text>
         {totem == null ? (
           <SummitButton elevation={selectedTargetElevation} mt="11px" mb="11px" onClick={handlePresentSelectTotem}>
-            {selectedTargetElevation === Elevation.EXPEDITION ? 'SELECT DEITY' : 'SELECT TOTEM'}
+            SELECT TOTEM
           </SummitButton>
         ) : (
           <Totem

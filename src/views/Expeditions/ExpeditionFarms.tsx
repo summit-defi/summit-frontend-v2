@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { HighlightedText, Text, Flex } from 'uikit'
 import {
-  useExpeditions,
+  useExpedition,
   useElevationTotem,
   useElevationLocked,
   useIsElevationLockedUntilRollover,
@@ -47,123 +47,89 @@ const ExpeditionFarms: React.FC = () => {
   const expeditionPotTotalValue = useExpeditionPotTotalValue()
   const expeditionDisbursedValue = useExpeditionDisbursedValue()
   const expeditionLocked = useIsElevationLockedUntilRollover()
-  const { expeditions, summitAllowance, summitBalance, summitLpAllowance, summitLpBalance } = useExpeditions(account)
+  const { expedition, userData } = useExpedition(account)
   const totem = useElevationTotem(Elevation.EXPEDITION)
   const deityDivider = useExpeditionDivider()
   const expeditionsLoaded = true
 
-  const { expiredExpeditions, activeExpeditions, upcomingExpeditions } = useMemo(() => {
-    const expired = []
-    const active = []
-    const upcoming = []
-    expeditions.forEach((exped) => {
-      if (exped.expeditionRound < exped.startRound && exped.live) upcoming.push(exped)
-      else if (exped.launched && exped.live) active.push(exped)
-      else expired.push(exped)
-    })
-    return { expiredExpeditions: expired, activeExpeditions: active, upcomingExpeditions: upcoming }
-  }, [expeditions])
+  return null
 
-  const activeExpedition = activeExpeditions[0]
-  const upcomingExpedition = upcomingExpeditions[0]
+  // return (
+  //   <StyledPage>
+  //     <HighlightedText elevation={Elevation.EXPEDITION} header mb="24px">
+  //       THE EXPEDITION
+  //     </HighlightedText>
 
-  return (
-    <StyledPage>
-      <HighlightedText elevation={Elevation.EXPEDITION} header mb="24px">
-        THE EXPEDITION
-      </HighlightedText>
-
-      {/* TODO: Re-enable this with real data */}
-      <Flex alignItems='center' justifyContent='center'>
-        { expiredExpeditions.map((expedition) => 
-          <ExpiredExpedition
-            key={expedition.pid}
-            expedition={expedition}
-            summitAllowance={summitAllowance}
-            summitLpAllowance={summitLpAllowance}
-            summitBalance={summitBalance}
-            summitLpBalance={summitLpBalance}
-          />
-        )}
-      </Flex>
-
-      <ExpeditionTotems totem={totem} expedition={activeExpedition} deityDivider={deityDivider} />
+  //     <ExpeditionTotems totem={totem} expedition={activeExpedition} deityDivider={deityDivider} />
 
 
-      { (upcomingExpedition == null && activeExpedition == null) && <>
-        <StyledHighlightedText fontSize="16px" letterSpacing="2px" mb='8px'>
-          EXPEDITION TREASURY:
-        </StyledHighlightedText>
-        <CardValue
-          value={expeditionPotTotalValue}
-          prefix="$"
-          decimals={2}
-          fontSize="40px"
-          gold
-          elevation={Elevation.OASIS}
-        />
-        <StyledHighlightedText fontSize="14px" letterSpacing="2px" mt='8px' mb='0px'>
-          DISBURSED TO DATE:
-        </StyledHighlightedText>
-        <CardValue
-          value={expeditionDisbursedValue}
-          prefix="$"
-          decimals={2}
-          fontSize="26px"
-          gold
-          elevation={Elevation.OASIS}
-        />
-        <Text textAlign='center' bold monospace italic mt='8px' fontSize='16px'>
-            100% of the Expedition Treasury
-            <br/>
-            will be given back exclusively to
-            <br/>
-            SUMMIT and {getSummitLpSymbol()} holders
-          </Text>
+  //     { (upcomingExpedition == null && activeExpedition == null) && <>
+  //       <StyledHighlightedText fontSize="16px" letterSpacing="2px" mb='8px'>
+  //         EXPEDITION TREASURY:
+  //       </StyledHighlightedText>
+  //       <CardValue
+  //         value={expeditionPotTotalValue}
+  //         prefix="$"
+  //         decimals={2}
+  //         fontSize="40px"
+  //         gold
+  //         elevation={Elevation.OASIS}
+  //       />
+  //       <StyledHighlightedText fontSize="14px" letterSpacing="2px" mt='8px' mb='0px'>
+  //         DISBURSED TO DATE:
+  //       </StyledHighlightedText>
+  //       <CardValue
+  //         value={expeditionDisbursedValue}
+  //         prefix="$"
+  //         decimals={2}
+  //         fontSize="26px"
+  //         gold
+  //         elevation={Elevation.OASIS}
+  //       />
+  //       <Text textAlign='center' bold monospace italic mt='8px' fontSize='16px'>
+  //           100% of the Expedition Treasury
+  //           <br/>
+  //           will be given back exclusively to
+  //           <br/>
+  //           SUMMIT and {getSummitLpSymbol()} holders
+  //         </Text>
 
 
-        <Text bold monospace textAlign='center'><br/><br/>. . .<br/><br/></Text>
+  //       <Text bold monospace textAlign='center'><br/><br/>. . .<br/><br/></Text>
 
-        <ElevationFarmingExplanation />
-      </>}
+  //       <ElevationFarmingExplanation />
+  //     </>}
 
-      {/* <Text bold monospace textAlign='center'><br/><br/>. . .<br/></Text>
+  //     {/* <Text bold monospace textAlign='center'><br/><br/>. . .<br/></Text>
 
-      <Flex flexDirection='column' justifyContent='flex-start' maxWidth='500px' margin='36px auto'>
-        <Text bold monospace fontSize='16px'>How Expeditions work:</Text>
-        <br/>
-        <Text bold monospace italic>1. Choose your Deity above.</Text>
-        <br/>
-        <Text bold monospace italic>2. Deposit your SUMMIT and {getSummitLpSymbol()} to participate. You MUST be deposited at the end of the round for your funds to count.</Text>
-        <br/>
-        <Text bold monospace italic>3. The combined USD value of your SUMMIT and {getSummitLpSymbol()} will determine your % of the pot you can win.</Text>
-      </Flex> */}
+  //     <Flex flexDirection='column' justifyContent='flex-start' maxWidth='500px' margin='36px auto'>
+  //       <Text bold monospace fontSize='16px'>How Expeditions work:</Text>
+  //       <br/>
+  //       <Text bold monospace italic>1. Choose your Deity above.</Text>
+  //       <br/>
+  //       <Text bold monospace italic>2. Deposit your SUMMIT and {getSummitLpSymbol()} to participate. You MUST be deposited at the end of the round for your funds to count.</Text>
+  //       <br/>
+  //       <Text bold monospace italic>3. The combined USD value of your SUMMIT and {getSummitLpSymbol()} will determine your % of the pot you can win.</Text>
+  //     </Flex> */}
 
-
-      {upcomingExpedition != null &&
-        <FlexLayout>
-          <UpcomingExpeditionCard expedition={upcomingExpedition} />
-        </FlexLayout>
-      }
-
-      {((!locked && totem == null) || !expeditionsLoaded) && <PageLoader fill={false} />}
-      {/* <ExpeditionInfo/> */}
-      {totem != null && (
-        <FlexLayout>
-          {activeExpedition != null &&
-            <ExpeditionCard
-              expedition={activeExpedition}
-              expeditionLocked={expeditionLocked}
-              summitAllowance={summitAllowance}
-              summitLpAllowance={summitLpAllowance}
-              summitBalance={summitBalance}
-              summitLpBalance={summitLpBalance}
-            />
-          }
-        </FlexLayout>
-      )}
-    </StyledPage>
-  )
+  //     {((!locked && totem == null) || !expeditionsLoaded) && <PageLoader fill={false} />}
+  //     {/* <ExpeditionInfo/> */}
+  //     {totem != null && (
+  //       <FlexLayout>
+  //         {activeExpedition != null &&
+  //           <ExpeditionCard
+  //             expedition={activeExpedition}
+  //             expeditionLocked={expeditionLocked}
+  //             summitAllowance={summitAllowance}
+  //             summitLpAllowance={summitLpAllowance}
+  //             summitBalance={summitBalance}
+  //             summitLpBalance={summitLpBalance}
+  //           />
+  //         }
+  //       </FlexLayout>
+  //     )}
+  //   </StyledPage>
+  // )
 }
 
 export default ExpeditionFarms

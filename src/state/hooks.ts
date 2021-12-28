@@ -6,10 +6,10 @@ import { getWeb3NoAccount, getTimestampDiff } from 'utils'
 import {
   fetchFarmsPublicDataAsync,
   fetchExpeditionUserDataAsync,
-  fetchExpeditionsPublicDataAsync,
+  fetchExpeditionPublicDataAsync,
   setBlock,
 } from './actions'
-import { State, Farm, Expedition, Block, ElevationInfo, ReferralsState } from './types'
+import { State, Farm, Expedition, Block, ElevationInfo, ReferralsState, ExpeditionUserData } from './types'
 import { Elevation, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
@@ -23,6 +23,8 @@ import { fetchReferralsDataAsync } from './referrals'
 import useTheme from 'hooks/useTheme'
 import { farmId } from 'utils/farmId'
 import { getChainWrappedNativeTokenSymbol, TokenSymbol } from 'config/constants'
+import { fetchExpeditionPotentialWinnings, fetchExpeditionWinnings } from './expeditions/fetchExpeditionUserInfo'
+import { updateExpeditionUserPotentialWinningsAsync, updateExpeditionUserWinnings, updateExpeditionUserWinningsAsync } from './expeditions'
 
 const ZERO = new BigNumber(0)
 
@@ -61,7 +63,7 @@ export const useFetchPublicData = () => {
   const { slowRefresh } = useRefresh()
   useEffect(() => {
     dispatch(fetchFarmsPublicDataAsync())
-    dispatch(fetchExpeditionsPublicDataAsync())
+    dispatch(fetchExpeditionPublicDataAsync())
     dispatch(fetchElevationsPublicDataAsync())
     dispatch(fetchElevationHelperInfoAsync())
   }, [dispatch, slowRefresh])
@@ -94,6 +96,9 @@ export const useFarms = (): Farm[] => {
   const selectorFarms = useSelector((state: State) => state.farms.data)
   return selectorFarms
 }
+export const useFarmsLoaded = (): boolean => {
+  return useSelector((state: State) => state.farms.farmsLoaded)
+}
 
 export const useElevationUserRoundInfo = (elevation: Elevation) => {
   return useSelector((state: State) => elevation === Elevation.EXPEDITION ? {} : state.farms.elevationData[elevationUtils.toInt(elevation || Elevation.OASIS)])
@@ -101,34 +106,27 @@ export const useElevationUserRoundInfo = (elevation: Elevation) => {
 
 // Expeditions
 
-export const useExpeditions = (
+export const useExpedition = (
   account,
 ): {
-  expeditions: Expedition[]
-  summitAllowance: BigNumber
-  summitLpAllowance: BigNumber
-  summitBalance: BigNumber
-  summitLpBalance: BigNumber
+  expedition: Expedition
+  userData: ExpeditionUserData
 } => {
-  const { fastRefresh } = useRefresh()
+  const { slowRefresh } = useRefresh()
   const dispatch = useDispatch()
   useEffect(() => {
     if (account) {
       dispatch(fetchExpeditionUserDataAsync(account))
+      dispatch(updateExpeditionUserWinningsAsync(account))
+      dispatch(updateExpeditionUserPotentialWinningsAsync(account))
     }
-  }, [account, dispatch, fastRefresh])
+  }, [account, dispatch, slowRefresh])
 
-  const expeditions: Expedition[] = useSelector((state: State) => state.expeditions.data)
-  const summitAllowance = useSelector((state: State) => state.expeditions.summitAllowance)
-  const summitBalance = useSelector((state: State) => state.expeditions.summitBalance)
-  const summitLpAllowance = useSelector((state: State) => state.expeditions.summitLpAllowance)
-  const summitLpBalance = useSelector((state: State) => state.expeditions.summitLpBalance)
+  const expedition: Expedition = useSelector((state: State) => state.expedition.data)
+  const userData = useSelector((state: State) => state.expedition.userData)
   return {
-    expeditions,
-    summitAllowance,
-    summitBalance,
-    summitLpAllowance,
-    summitLpBalance,
+    expedition,
+    userData,
   }
 }
 
@@ -183,44 +181,46 @@ export const useTotalValue = (elevation?: Elevation): BigNumber => {
   )
 }
 
-// export const useExpeditionPotTotalValue = (): number => {
-//   const { account } = useWallet()
-//   const { expeditions } = useExpeditions(account)
-//   const pricesPerToken = usePricesPerToken()
-//   const expeditionPotTotalValue = useSelector((state: State) => state.summitEcosystem.expeditionPotTotalValue)
+export const useExpeditionPotTotalValue = (): number => {
+  return 0
+  // const { account } = useWallet()
+  // const { expeditions } = useExpeditions(account)
+  // const pricesPerToken = usePricesPerToken()
+  // const expeditionPotTotalValue = useSelector((state: State) => state.summitEcosystem.expeditionPotTotalValue)
 
-//   return useMemo(
-//     () => {
-//       const expeditionsRewards = expeditions.reduce((acc, expedition) => {
-//         const rewardsRemaining = getBalanceNumber(expedition.rewardsRemaining || new BigNumber(0), expedition.rewardToken.decimals)
-//         const expeditionTokenPrice = (pricesPerToken != null && pricesPerToken[expedition.rewardToken.symbol] ? pricesPerToken[expedition.rewardToken.symbol].toNumber() : 1)
-//         const rewardsDisbursed = expedition.disbursedOffset || 0
-//         const rewardsBonusRemaining = expedition.bonusRewardsRemaining || 0
-//         return acc + ((rewardsRemaining - rewardsDisbursed + rewardsBonusRemaining) * expeditionTokenPrice)
-//       }, 0)
-//       return (expeditionsRewards || 0) + expeditionPotTotalValue
-//     },
-//     [expeditions, expeditionPotTotalValue, pricesPerToken]
-//   )
-// }
+  // return useMemo(
+  //   () => {
+  //     const expeditionsRewards = expeditions.reduce((acc, expedition) => {
+  //       const rewardsRemaining = getBalanceNumber(expedition.rewardsRemaining || new BigNumber(0), expedition.rewardToken.decimals)
+  //       const expeditionTokenPrice = (pricesPerToken != null && pricesPerToken[expedition.rewardToken.symbol] ? pricesPerToken[expedition.rewardToken.symbol].toNumber() : 1)
+  //       const rewardsDisbursed = expedition.disbursedOffset || 0
+  //       const rewardsBonusRemaining = expedition.bonusRewardsRemaining || 0
+  //       return acc + ((rewardsRemaining - rewardsDisbursed + rewardsBonusRemaining) * expeditionTokenPrice)
+  //     }, 0)
+  //     return (expeditionsRewards || 0) + expeditionPotTotalValue
+  //   },
+  //   [expeditions, expeditionPotTotalValue, pricesPerToken]
+  // )
+}
 
-// export const useExpeditionDisbursedValue = (): number => {
-//   const { account } = useWallet()
-//   const { expeditions } = useExpeditions(account)
-//   const pricesPerToken = usePricesPerToken()
+export const useExpeditionDisbursedValue = (): number => {
+  return 0
+  // const { account } = useWallet()
+  // const { expeditions } = useExpeditions(account)
+  // const pricesPerToken = usePricesPerToken()
 
-//   return useMemo(
-//     () => {
-//       const expeditionsRewards = expeditions.reduce((acc, expedition) => {
-//         const expeditionTokenPrice = (pricesPerToken != null && pricesPerToken[expedition.rewardToken.symbol] ? pricesPerToken[expedition.rewardToken.symbol].toNumber() : 1)
-//         const emissionsDisbursed = getBalanceNumber((expedition.totalEmission || new BigNumber(0)).minus(expedition.rewardsRemaining || new BigNumber(0)), expedition.rewardToken.decimals)
-//         return acc + ((expedition.disbursedOffset + emissionsDisbursed) * expeditionTokenPrice)
-//       }, 0)
-//       return expeditionsRewards
-//     },
-//     [expeditions, pricesPerToken]
-//   )
-// }
+  // return useMemo(
+  //   () => {
+  //     const expeditionsRewards = expeditions.reduce((acc, expedition) => {
+  //       const expeditionTokenPrice = (pricesPerToken != null && pricesPerToken[expedition.rewardToken.symbol] ? pricesPerToken[expedition.rewardToken.symbol].toNumber() : 1)
+  //       const emissionsDisbursed = getBalanceNumber((expedition.totalEmission || new BigNumber(0)).minus(expedition.rewardsRemaining || new BigNumber(0)), expedition.rewardToken.decimals)
+  //       return acc + ((expedition.disbursedOffset + emissionsDisbursed) * expeditionTokenPrice)
+  //     }, 0)
+  //     return expeditionsRewards
+  //   },
+  //   [expeditions, pricesPerToken]
+  // )
+}
 
 // Prices
 export const useFetchPriceList = () => {
@@ -422,7 +422,6 @@ export interface SisterFarms {
   [Elevation.PLAINS]?: Farm
   [Elevation.MESA]?: Farm
   [Elevation.SUMMIT]?: Farm
-  [Elevation.EXPEDITION]?: Expedition
 }
 export const useSisterFarms = (symbol: string): SisterFarms => {
   const farms = useFarms()
@@ -441,7 +440,6 @@ const baseSisterFarmsAvailable = {
   [Elevation.PLAINS]: false,
   [Elevation.MESA]: false,
   [Elevation.SUMMIT]: false,
-  [Elevation.EXPEDITION]: false,
 }
 export const useAvailableSisterElevations = (symbol: string) => {
   const sisterFarms = useSisterFarms(symbol)

@@ -1,4 +1,4 @@
-import { PriceableToken } from 'state/types'
+import { PriceableTokenMap } from './types'
 import { getChainId } from './chainId'
 import { bscTestnetPeggedTokens, bscTestnetTokens } from './chainFarms/bsc_testnet/tokens'
 import addresses from './contracts'
@@ -29,36 +29,24 @@ const replaceSummitAddresses = (tokenAddress: string, summitAddress: string, sum
   return tokenAddress
 }
 
-const replaceTokensSummitAddresses = (chainId, tokens: PriceableToken[]): PriceableToken[] => {
+const replaceTokensSummitAddresses = (chainId, tokens: PriceableTokenMap): PriceableTokenMap => {
   const summitAddress = addresses.summitToken[chainId]
   const summitLpAddress = addresses.summitLpToken[chainId]
-  return tokens.map((token) => ({
-    ...token,
-    token: replaceSummitAddresses(token.tokenAddress, summitAddress, summitLpAddress),
-    lp: replaceSummitAddresses(token.lpAddress, summitAddress, summitLpAddress),
-  }))
+
+  const newTokens = {}
+
+  Object.keys(tokens).forEach((symbol) => {
+    newTokens[symbol] = {
+      ...tokens[symbol],
+      tokenAddress: replaceSummitAddresses(tokens[symbol].tokenAddress, summitAddress, summitLpAddress),
+      lpAddress: replaceSummitAddresses(tokens[symbol].lpAddress, summitAddress, summitLpAddress),
+    }
+  })
+
+  return newTokens
 }
 
-export const getPriceableTokens = (): PriceableToken[] => {
+export const getPriceableTokens = (): PriceableTokenMap => {
   const chainId = getChainId()
   return replaceTokensSummitAddresses(chainId, chainTokens[chainId])
-}
-
-
-export enum TokenSymbol {
-  // SHARED
-  SUMMIT = 'SUMMIT',
-  EVEREST = 'EVEREST',
-
-  // BSC TESTNET
-  wBNB = 'wBNB',
-  CAKE = 'CAKE',
-  BIFI = 'BIFI',
-  USDC = 'USDC',
-  GS0 = 'GS0',
-  GS1 = 'GS1',
-  GS2 = 'GS2',
-  GS3 = 'GS3',
-  GS4 = 'GS4',
-  GS5 = 'GS5',
 }

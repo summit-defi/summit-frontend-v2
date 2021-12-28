@@ -2,7 +2,7 @@ import addresses from 'config/constants/contracts'
 import { Elevation } from 'config/constants/types'
 
 const getChainId = () => {
-  return JSON.parse(localStorage.getItem('ChainId')) || '250'
+  return JSON.parse(localStorage.getItem('ChainId')) || '97'
 }
 
 export const getSummitTokenAddress = () => {
@@ -44,6 +44,7 @@ export const getSubCartographerAddress = (elevation: Elevation) => {
     case Elevation.PLAINS: return addresses.cartographerPlains[chainId]
     case Elevation.MESA: return addresses.cartographerMesa[chainId]
     case Elevation.SUMMIT: return addresses.cartographerSummit[chainId]
+    default: return ''
   }
 }
 export const getExpeditionAddress = () => {

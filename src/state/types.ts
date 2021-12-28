@@ -8,25 +8,6 @@ export const NamedChainId = {
   BSC: '56'
 }
 
-export interface PriceableToken {
-  symbol: string
-  assetType: TokenAssetType
-  decimals: number
-  tokenAddress?: string
-  lpAddress?: string
-  containingTokens?: string[]
-  balancerMultiPoolPid?: string
-}
-
-export enum TokenAssetType {
-  Stablecoin,
-  SingleAsset,
-  LP,
-  WrappedNative,
-  Balancer2Pool,
-  BalancerMultiPool,
-}
-
 export interface FarmUserData {
   allowance: BigNumber
   tokenBalance: BigNumber
@@ -44,10 +25,8 @@ export interface Farm extends FarmConfig {
 }
 
 export interface ExpeditionUserData {
-  everestAllowance: BigNumber
-  everestBalance: BigNumber
-
   everestStaked: BigNumber
+
   deity: number
   deitySelected: boolean
   deitySelectionRound: number
@@ -86,9 +65,7 @@ export interface Expedition {
   summit: ExpeditionTokenInfo
   usdc: ExpeditionTokenInfo
 
-  // UI
   roundsRemaining: number
-  expeditionDeityWinningsMult: number
 }
 
 // Slices states
@@ -101,6 +78,9 @@ export interface ElevationFarmsData {
 }
 
 export interface FarmsState {
+  farmsLoaded: boolean
+  userDataLoaded: boolean
+  elevationDataLoaded: boolean
   data: Farm[]
   elevationData: ElevationFarmsData[]
 }
@@ -166,7 +146,7 @@ export interface PriceState {
 export interface State {
   farms: FarmsState
   prices: PriceState
-  expeditions: ExpeditionState
+  expedition: ExpeditionState
   block: Block
   summitEcosystem: SummitEcosystemState
   referrals: ReferralsState

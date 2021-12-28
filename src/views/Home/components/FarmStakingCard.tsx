@@ -2,14 +2,14 @@ import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { Flex, Card, CardBody, LogoRoundIcon, HighlightedText } from 'uikit'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { useHarvestAll } from 'hooks/useHarvest'
 import UnlockButton from 'components/UnlockButton'
 import SummitHarvestBalance from './SummitHarvestBalance'
 import SummitWalletBalance from './SummitWalletBalance'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { useAllEarnedAndVesting } from 'hooks/useAllEarnedAndVesting'
+import { useAllElevsClaimable } from 'hooks/useAllElevsClaimable'
 import SummitVestingBalance from './SummitVestingBalance'
 import { getBalanceNumber, getSummitTokenAddress } from 'utils'
+import BigNumber from 'bignumber.js'
 
 const StyledFarmStakingCard = styled(Card)`
   min-height: 376px;
@@ -37,30 +37,19 @@ const Actions = styled(Flex)`
 
 const FarmedStakingCard = () => {
   const { account } = useWallet()
-  const earnedAndVesting = useAllEarnedAndVesting()
-  const pidsWithEarned =
-    earnedAndVesting != null
-      ? Object.entries(earnedAndVesting).reduce(
-          (pids, [pid, { earned }]) => (earned.toNumber() > 0 ? [...pids, pid] : pids),
-          [],
-        )
-      : []
+  const elevsClaimable = useAllElevsClaimable()
+  
   const { totalEarned, totalVesting } =
-    earnedAndVesting != null
-      ? Object.values(earnedAndVesting).reduce(
-          (accum, { earned, vesting }) => ({
-            totalEarned: accum.totalEarned + earned.toNumber(),
-            totalVesting: accum.totalVesting + vesting.toNumber(),
-          }),
-          { totalEarned: 0, totalVesting: 0 },
+    elevsClaimable != null
+      ? Object.values(elevsClaimable).reduce(
+          (accum, elevClaimable) => accum.add(elevClaimable),
+          new BigNumber(0),
         )
-      : { totalEarned: 0, totalVesting: 0 }
+      : new BigNumber(0)
 
   const displayTotalEarned = getBalanceNumber(totalEarned)
   const displayTotalVesting = getBalanceNumber(totalVesting)
   const summitAddress = getSummitTokenAddress()
-
-  const { onHarvestAll, pending: harvestAllPending } = useHarvestAll(pidsWithEarned)
 
   const addWatchSummitToken = useCallback(async () => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment

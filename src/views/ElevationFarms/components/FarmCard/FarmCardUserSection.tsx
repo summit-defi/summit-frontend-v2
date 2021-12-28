@@ -59,19 +59,16 @@ interface Props {
   expanded: boolean
   elevation: Elevation
   farm: Farm
-  userTotem: number
   account?: string
   ethereum?: provider
 }
 
-const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, farm, account, ethereum }) => {
+const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, account, ethereum }) => {
   const {
     farmToken,
     depositFeeBP,
-    tokenAddress,
     decimals,
-    lpAddress,
-    taxBP: withdrawalFee,
+    taxBP,
     symbol,
     userData,
     passthroughStrategy,
@@ -95,7 +92,7 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, 
   const isApproved = account && allowance && allowance.isGreaterThan(0)
   const lpContract = useMemo(() => {
     return getContract(ethereum as provider, farmTokenAddress)
-  }, [ethereum, lpAddress, tokenAddress, farmTokenAddress])
+  }, [ethereum, farmTokenAddress])
 
   // PENDING STATES
   const [harvestPending, setHarvestPending] = useState<boolean>(false)
@@ -148,7 +145,6 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, 
           farmToken={farmToken}
           elevation={elevation}
           symbol={symbol}
-          userTotem={userTotem}
           elevationLocked={elevationLocked}
           tokenBalance={tokenBalance}
           decimals={decimals}
@@ -169,7 +165,6 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, 
       elevationLocked,
       renderExpandedComponents,
       symbol,
-      userTotem,
       tokenBalance,
       depositFeeBP,
       earnedReward,
@@ -193,7 +188,7 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, 
           stakedBalance={stakedBalance}
           earnedReward={earnedReward}
           decimals={decimals}
-          withdrawalFee={withdrawalFee}
+          withdrawalFee={taxBP}
           disabled={disabled}
           setPending={setWithdrawPending}
         />
@@ -209,7 +204,7 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, 
       symbol,
       stakedBalance,
       earnedReward,
-      withdrawalFee,
+      taxBP,
       disabled,
       setWithdrawPending,
     ],
@@ -238,10 +233,10 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, userTotem, elevation, 
       <MobileVerticalFlexText width="100%" mt="24px">
         <Flex flexDirection="column" justifyContent="flex-start" alignItems="center">
           <Text fontSize="14px" bold monospace>
-            {symbol} Fee: {(depositFeeBP || 0) / 100 + (withdrawalFee || 0) / 100}%
+            {symbol} Fee: {(depositFeeBP || 0) / 100 + (taxBP || 0) / 100}%
           </Text>
           <Text fontSize="13px" bold monospace>
-            On Deposit: {(depositFeeBP || 0) / 100}% / On Withdrawal: {(withdrawalFee || 0) / 100}%
+            On Deposit: {(depositFeeBP || 0) / 100}% / On Withdrawal: {(taxBP || 0) / 100}%
           </Text>
         </Flex>
         <Flex flexDirection="column" justifyContent="flex-start" alignItems="center">

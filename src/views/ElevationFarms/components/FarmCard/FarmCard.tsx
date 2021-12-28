@@ -274,7 +274,6 @@ const FarmCard: React.FC<FarmCardProps> = ({
       <FarmCardUserSection
         expanded={expanded}
         ethereum={ethereum}
-        userTotem={userTotem}
         elevation={elevation}
         farm={farm}
         account={account}

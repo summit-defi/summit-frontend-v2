@@ -1,5 +1,5 @@
-import { TokenSymbol } from "config/constants/tokens"
-import { TokenAssetType, PriceableToken } from "state/types"
+import { TokenSymbol } from "config/constants/tokenSymbols"
+import { TokenAssetType, PriceableToken } from "config/constants/types"
 
 export const bscTestnetPeggedTokens = {
   [TokenSymbol.USDC]: true,
