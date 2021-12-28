@@ -7,12 +7,12 @@ import {
   fetchExpeditionEarnedRewards,
   fetchExpeditionHypotheticalRewards,
 } from './fetchExpeditionsUsers'
-import { ExpeditionsState, Expedition, ExpeditionUserData } from '../types'
+import { ExpeditionState, Expedition, ExpeditionUserData } from '../types'
 import BigNumber from 'bignumber.js'
 import { groupByAndMap } from 'utils'
 import { getExpeditionConfigs } from 'config/constants'
 
-const initialState: ExpeditionsState = {
+const initialState: ExpeditionState = {
   data: [...getExpeditionConfigs()],
   summitAllowance: new BigNumber(0),
   summitBalance: new BigNumber(0),

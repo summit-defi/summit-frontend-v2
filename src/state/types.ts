@@ -44,32 +44,51 @@ export interface Farm extends FarmConfig {
 }
 
 export interface ExpeditionUserData {
-  stakedSummit: BigNumber
-  stakedSummitLp: BigNumber
-  earnedReward: BigNumber
-  effectiveStakedSummit: BigNumber
-  hypotheticalWinReward: BigNumber
+  everestAllowance: BigNumber
+  everestBalance: BigNumber
+
+  everestStaked: BigNumber
+  deity: number
+  deitySelected: boolean
+  deitySelectionRound: number
+  safetyFactor: number
+  safetyFactorSelected: boolean
+
+  entered: boolean
+
+  summitLifetimeWinnings: BigNumber
+  usdcLifetimeWinnings: BigNumber
+
+  summitWinnings: BigNumber
+  usdcWinnings: BigNumber
+
+  guaranteedSummit: BigNumber
+  guaranteedUsdc: BigNumber
+  potentialSummitWinnings: BigNumber
+  potentialUsdcWinnings: BigNumber
 }
+
+export interface ExpeditionTokenInfo {
+  roundEmission: BigNumber
+  emissionsRemaining: BigNumber
+  markedForDist: BigNumber
+  distributed: BigNumber
+}
+
 export interface Expedition {
-  launched?: boolean
+  live: boolean
+  launched: boolean
 
-  totalSummitStaked?: BigNumber
-  totalSummitLpStaked?: BigNumber
-  expeditionRound?: number
-  startRound?: number
-  totalRounds?: number
-  roundsRemaining?: number
+  safeEverest: BigNumber
+  deitiedEverest: BigNumber
+  deityEverest: BigNumber[]
 
-  totalEmission?: BigNumber
-  roundEmission?: BigNumber
-  rewardsRemaining?: BigNumber
+  summit: ExpeditionTokenInfo
+  usdc: ExpeditionTokenInfo
 
-  roundRewards?: BigNumber
-  totalDeposited?: BigNumber
-  totemsDeposited?: BigNumber[]
-  userData?: ExpeditionUserData
-
-  totemWinMultipliers?: [BigNumber, BigNumber]
+  // UI
+  roundsRemaining: number
+  expeditionDeityWinningsMult: number
 }
 
 // Slices states
@@ -86,12 +105,9 @@ export interface FarmsState {
   elevationData: ElevationFarmsData[]
 }
 
-export interface ExpeditionsState {
-  summitAllowance: BigNumber
-  summitBalance: BigNumber
-  summitLpAllowance: BigNumber
-  summitLpBalance: BigNumber
-  data: Expedition[]
+export interface ExpeditionState {
+  userData: ExpeditionUserData
+  data: Expedition
 }
 
 export interface ElevationInfo {
@@ -150,7 +166,7 @@ export interface PriceState {
 export interface State {
   farms: FarmsState
   prices: PriceState
-  expeditions: ExpeditionsState
+  expeditions: ExpeditionState
   block: Block
   summitEcosystem: SummitEcosystemState
   referrals: ReferralsState
