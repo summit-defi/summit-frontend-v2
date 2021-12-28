@@ -1,62 +1,20 @@
 import BigNumber from 'bignumber.js'
-import { FarmConfig, ExpeditionConfig, Elevation } from 'config/constants/types'
+import { FarmConfig, Elevation } from 'config/constants/types'
 /* eslint-disable camelcase */
 
-
-export const TokenSymbol = {
-  SUMMIT: 'SUMMIT',
-  SUMMIT_FTM: 'SUMMIT-FTM',
-  TOMB_FTM: 'TOMB-FTM',
-  TSHARE_FTM: 'TSHARE-FTM',
-  FTM_BOO: 'FTM-BOO',
-  USDC_FTM: 'USDC-FTM',
-  FTM_wETH: 'FTM-wETH',
-  fUSDT_FTM: 'fUSDT-FTM',
-  FTM_DAI: 'FTM-DAI',
-  fUSDT_DAI_USDC: 'fUSDT-DAI-USDC',
-  BOO: 'BOO',
-  USDC: 'USDC',
-  fUSDT: 'fUSDT',
-  DAI: 'DAI',
-  BIFI: 'BIFI',
-  wFTM: 'wFTM',
-  GRAND_ORCH: 'GRAND-ORCH',
-  BeetXLP_MIM_USDC_USDT: 'BeetXLP-MIM-USDC-USDT',
-  BPT_BEETS_FTM: 'BPT-BEETS-FTM',
-}
-
-export enum PriceableTokenSymbol {
-  SUMMIT = 'SUMMIT',
-  SUMMIT_FTM = 'SUMMIT-FTM',
-  TOMB_FTM = 'TOMB-FTM',
-  TSHARE_FTM = 'TSHARE-FTM',
-  FTM_BOO = 'FTM-BOO',
-  USDC_FTM = 'USDC-FTM',
-  FTM_wETH = 'FTM-wETH',
-  fUSDT_FTM = 'fUSDT-FTM',
-  FTM_DAI = 'FTM-DAI',
-  fUSDT_DAI_USDC = 'fUSDT-DAI-USDC',
-  BOO = 'BOO',
-  USDC = 'USDC',
-  fUSDT = 'fUSDT',
-  DAI = 'DAI',
-  BIFI = 'BIFI',
-  wFTM = 'wFTM',
-  MIM = 'MIM',
-  wBTC = 'wBTC',
-  wETH = 'wETH',
-  GRAND_ORCH = 'GRAND-ORCH',
-  BeetXLP_MIM_USDC_USDT = 'BeetXLP-MIM-USDC-USDT',
-  BPT_BEETS_FTM = 'BPT-BEETS-FTM',
+export const NamedChainId = {
+  FTM: '250',
+  BSC_TESTNET: '97',
+  BSC: '56'
 }
 
 export interface PriceableToken {
-  symbol: PriceableTokenSymbol
-  type: TokenPriceType,
+  symbol: string
+  type: TokenPriceType
   decimals
-  token?: string,
-  lp?: string,
-  containingTokens?: PriceableTokenSymbol[],
+  tokenAddress?: string
+  lpAddress?: string
+  containingTokens?: string[]
   balancerMultiPoolPid?: string
 }
 
@@ -87,16 +45,10 @@ export interface FarmUserData {
 }
 export interface Farm extends FarmConfig {
   lpSupply?: BigNumber
-  live?: boolean
   launched?: boolean
-  depositFee?: number
-  withdrawalFee?: number
   userData?: FarmUserData
   summitPerYear?: BigNumber
   getUrl?: string
-  tokenDecimals?: number
-  assetType: TokenAssetType
-  balancer3PoolPid?: string
 }
 
 export interface ExpeditionUserData {
@@ -106,7 +58,7 @@ export interface ExpeditionUserData {
   effectiveStakedSummit: BigNumber
   hypotheticalWinReward: BigNumber
 }
-export interface Expedition extends ExpeditionConfig {
+export interface Expedition {
   launched?: boolean
 
   totalSummitStaked?: BigNumber
@@ -198,7 +150,7 @@ export interface ReferralsState {
 // API Price State
 
 export interface PriceState {
-  pricesPerToken?: { [key in keyof typeof PriceableTokenSymbol]: number }
+  pricesPerToken?: { [key: string]: number }
 }
 
 // Global state

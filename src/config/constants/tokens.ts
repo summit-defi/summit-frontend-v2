@@ -1,12 +1,12 @@
 import { PriceableToken } from 'state/types'
 import { getChainId } from './chainId'
-import { ftmPeggedTokens, ftmPriceableTokens } from './chainTokens/ftmTokens'
+import { bscTestnetPeggedTokens, bscTestnetTokens } from './chainFarms/bsc_testnet/tokens'
 import addresses from './contracts'
 
 const chainPeggedTokens = {
   56: [],
-  97: [],
-  250: ftmPeggedTokens,
+  97: bscTestnetPeggedTokens,
+  250: [],
 }
 
 export const getPeggedTokens = () => {
@@ -14,10 +14,10 @@ export const getPeggedTokens = () => {
   return chainPeggedTokens[chainId]
 }
 
-const chainPriceableTokens = {
+const chainTokens = {
   56: [],
-  97: [],
-  250: ftmPriceableTokens,
+  97: bscTestnetTokens,
+  250: [],
 }
 
 const replaceSummitAddresses = (tokenAddress: string, summitAddress: string, summitLpAddress: string): string => {
@@ -31,12 +31,12 @@ const replaceTokensSummitAddresses = (chainId, tokens: PriceableToken[]): Pricea
   const summitLpAddress = addresses.summitLpToken[chainId]
   return tokens.map((token) => ({
     ...token,
-    token: replaceSummitAddresses(token.token, summitAddress, summitLpAddress),
-    lp: replaceSummitAddresses(token.lp, summitAddress, summitLpAddress),
+    token: replaceSummitAddresses(token.tokenAddress, summitAddress, summitLpAddress),
+    lp: replaceSummitAddresses(token.lpAddress, summitAddress, summitLpAddress),
   }))
 }
 
 export const getPriceableTokens = (): PriceableToken[] => {
   const chainId = getChainId()
-  return replaceTokensSummitAddresses(chainId, chainPriceableTokens[chainId])
+  return replaceTokensSummitAddresses(chainId, chainTokens[chainId])
 }

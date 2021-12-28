@@ -85,21 +85,21 @@ export const fetchPricesV2 = async () => {
   const fetchableTokens: PriceableToken[] = [...singleAssetPriceables, ...lpPriceables]
   const fetchableCalls = fetchableTokens.map((fetchableToken) => [
     {
-      address: fetchableToken.token || fetchableToken.lp,
+      address: fetchableToken.tokenAddress || fetchableToken.lpAddress,
       name: 'balanceOf',
-      params: [fetchableToken.lp],
+      params: [fetchableToken.lpAddress],
     },
     {
       address: nativeAddress,
       name: 'balanceOf',
-      params: [fetchableToken.lp],
+      params: [fetchableToken.lpAddress],
     },
     {
-      address: fetchableToken.lp,
+      address: fetchableToken.lpAddress,
       name: 'totalSupply',
     },
     {
-      address: fetchableToken.token || fetchableToken.lp,
+      address: fetchableToken.tokenAddress || fetchableToken.lpAddress,
       name: 'decimals',
     },
   ])
@@ -160,7 +160,7 @@ export const fetchPricesV2 = async () => {
     {
       address: balancer2PoolPriceOracleAddress,
       name: 'calculateAssetPrice',
-      params: [balancer2PoolToken.lp],
+      params: [balancer2PoolToken.lpAddress],
     },
   ])
   const balancer2PoolPriceablesRes = await retryableMulticall(abi.Balancer2PoolPriceOracle, balancer2PoolPriceOracleCalls.flat(), 'fetchPricesV2Balancer2Pool')
@@ -185,7 +185,7 @@ export const fetchPricesV2 = async () => {
 
   const balancerMultiPoolTokenSuppliesCalls = balancerMultiPoolPriceables.map((balancerMultiPoolToken) => [
     {
-      address: balancerMultiPoolToken.lp,
+      address: balancerMultiPoolToken.lpAddress,
       name: 'totalSupply',
     },
   ])

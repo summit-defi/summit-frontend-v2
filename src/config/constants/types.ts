@@ -1,6 +1,7 @@
 /* eslint camelcase: 0 */
 import BigNumber from 'bignumber.js'
-import { TokenAssetType } from 'state/types'
+import { PriceableToken, TokenAssetType } from 'state/types'
+import { BscTestnetTokenSymbol } from './chainFarms/bsc_testnet/tokens'
 
 export const ForceElevationRetired = true
 
@@ -297,32 +298,29 @@ export interface Token {
   projectLink?: string
 }
 
-export interface MultiElevAllocationConfig {
-  elevationPids: {
-    [Elevation.OASIS]: number | null
-    [Elevation.PLAINS]: number | null
-    [Elevation.MESA]: number | null
-    [Elevation.SUMMIT]: number | null
-  }
-  allocation: number
+export interface ElevationExistsAndLive {
+  exists: boolean
+  live: boolean
 }
 
-export interface MultiElevFarmConfig {
-  elevationPids: {
-    [Elevation.OASIS]: number | null
-    [Elevation.PLAINS]: number | null
-    [Elevation.MESA]: number | null
-    [Elevation.SUMMIT]: number | null
-  }
-  symbol: string
-  altName?: string
-  lpAddress: string
-  tokenAddress: string
+export type TokenSymbol = BscTestnetTokenSymbol
+
+export interface ElevationsExistAndLive {
+  [Elevation.OASIS]: ElevationExistsAndLive
+  [Elevation.PLAINS]: ElevationExistsAndLive
+  [Elevation.MESA]: ElevationExistsAndLive
+  [Elevation.SUMMIT]: ElevationExistsAndLive
+}
+
+export interface MultiElevAllocationConfig {
   allocation: number
-  isTokenOnly?: boolean
+  depositFeeBP: number
+  taxBP: number
+  native: boolean
+  elevationsExistAndLive: ElevationsExistAndLive
+}
 
-  quoteInNativeToken: boolean
-
+export interface MultiElevFarmConfig extends MultiElevAllocationConfig, PriceableToken  {
   passthroughStrategy?: string
   getUrl?: string
   farmComment?: string | {
@@ -341,32 +339,19 @@ export interface MultiElevFarmConfig {
   balancer3PoolPid?: string
 }
 
-export interface FarmConfig {
-  pid: number
+export interface FarmConfig extends PriceableToken {
   elevation: Elevation
-  symbol: string
-  lpAddress: string
-  isTokenOnly: boolean
-  tokenAddress: string
+  
+  allocation: number
+  depositFeeBP: number
+  taxBP: number
+  native: boolean
+  live: boolean
 
-  quoteInNativeToken: boolean
-  allocation: BigNumber
-
+  // UI
   passthroughStrategy?: string
   farmComment?: string
   farmWarning?: string
-  
-  assetType: TokenAssetType
-  balancer3PoolPid?: string
-}
-
-export interface ExpeditionConfig {
-  pid: number
-  rewardToken: Token
-  live: boolean
-  sortOrder?: number
-  disbursedOffset: number
-  bonusRewardsRemaining?: number
 }
 
 export enum RevertReasonOutput {

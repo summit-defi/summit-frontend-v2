@@ -1,5 +1,4 @@
 export * from './farms'
-export * from './expeditions'
 export * from './summitLpSymbol'
 export * from './nativeTokenSymbol'
 export * from './links'

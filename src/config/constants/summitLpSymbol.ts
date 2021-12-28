@@ -2,7 +2,7 @@ import { getChainId } from './chainId'
 
 const chainSummitLpSymbol = {
   56: '',
-  97: '',
+  97: 'SUMMIT-BNB',
   250: 'SUMMIT-FTM',
 }
 
