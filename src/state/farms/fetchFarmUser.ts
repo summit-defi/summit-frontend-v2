@@ -21,7 +21,7 @@ export const fetchFarmUserAllowances = async (account: string, farmConfigs: Farm
     name: 'allowance',
     params: [account, getCartographerAddress()],
   }))
-  const tokenAllowancesRaw = await retryableMulticall(abi.BEP20, calls, 'fetchFarmUserAllowances')
+  const tokenAllowancesRaw = await retryableMulticall(abi.ERC20, calls, 'fetchFarmUserAllowances')
   const tokenAllowances = groupByAndMap(
     farmTokens,
     (token) => token,
@@ -43,7 +43,7 @@ export const fetchFarmUserBalances = async (account, farmConfigs: FarmConfig[]) 
     name: 'balanceOf',
     params: [account],
   }))
-  const tokenBalancesRaw = await retryableMulticall(abi.BEP20, calls, 'fetchFarmUserBalance')
+  const tokenBalancesRaw = await retryableMulticall(abi.ERC20, calls, 'fetchFarmUserBalance')
 
   const tokenBalances = groupByAndMap(
     farmTokens,

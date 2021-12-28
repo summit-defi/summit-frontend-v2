@@ -4,7 +4,7 @@ import { abiItem } from './abi'
 
 export const getContract = (provider: ProviderType, address: string) => {
   const web3 = new Web3(provider)
-  const contract = new web3.eth.Contract(abiItem.BEP20, address)
+  const contract = new web3.eth.Contract(abiItem.ERC20, address)
   return contract
 }
 

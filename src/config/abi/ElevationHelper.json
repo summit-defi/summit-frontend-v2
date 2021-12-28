@@ -5,6 +5,11 @@
         "internalType": "address",
         "name": "_cartographer",
         "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_expeditionV2",
+        "type": "address"
       }
     ],
     "stateMutability": "nonpayable",
@@ -21,9 +26,9 @@
       },
       {
         "indexed": true,
-        "internalType": "uint8",
+        "internalType": "uint256",
         "name": "deityDivider",
-        "type": "uint8"
+        "type": "uint256"
       }
     ],
     "name": "DeityDividerSelected",
@@ -53,18 +58,50 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
+        "internalType": "uint8",
+        "name": "_elevation",
+        "type": "uint8"
       },
+      {
+        "indexed": false,
+        "internalType": "uint16",
+        "name": "_allocMultiplier",
+        "type": "uint16"
+      }
+    ],
+    "name": "SetElevationAllocMultiplier",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint8",
+        "name": "_elevation",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "_mult",
+        "type": "uint8"
+      }
+    ],
+    "name": "SetElevationRoundDurationMult",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
       {
         "indexed": true,
         "internalType": "address",
-        "name": "newAddress",
+        "name": "_summitRNGModuleAdd",
         "type": "address"
       }
     ],
-    "name": "SetTrustedSeederAdd",
+    "name": "UpgradeSummitRNGModule",
     "type": "event"
   },
   {
@@ -103,9 +140,9 @@
     "name": "allocMultiplier",
     "outputs": [
       {
-        "internalType": "uint8",
+        "internalType": "uint16",
         "name": "",
-        "type": "uint8"
+        "type": "uint16"
       }
     ],
     "stateMutability": "view",
@@ -129,9 +166,9 @@
     "name": "currentDeityDivider",
     "outputs": [
       {
-        "internalType": "uint8",
+        "internalType": "uint256",
         "name": "",
-        "type": "uint8"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -183,6 +220,44 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "_elevation",
+        "type": "uint8"
+      }
+    ],
+    "name": "elevationAllocMultiplier",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "_elevation",
+        "type": "uint8"
+      }
+    ],
+    "name": "elevationLocked",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -255,9 +330,22 @@
     "name": "expeditionDeityDivider",
     "outputs": [
       {
-        "internalType": "uint8",
+        "internalType": "uint256",
         "name": "",
-        "type": "uint8"
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "expeditionV2",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -302,19 +390,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "futureBlockMined",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint8",
@@ -325,9 +400,14 @@
     "name": "historicalWinningTotems",
     "outputs": [
       {
-        "internalType": "uint256[20]",
+        "internalType": "uint256[]",
         "name": "",
-        "type": "uint256[20]"
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
       }
     ],
     "stateMutability": "view",
@@ -354,19 +434,6 @@
   },
   {
     "inputs": [],
-    "name": "nextSeedRoundAvailable",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
     "name": "owner",
     "outputs": [
       {
@@ -381,27 +448,39 @@
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "_sealedSeed",
-        "type": "bytes32"
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
-    "name": "receiveSealedSeed",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "pendingAllocMultiplier",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
       {
-        "internalType": "bytes32",
-        "name": "_unsealedSeed",
-        "type": "bytes32"
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
-    "name": "receiveUnsealedSeed",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "name": "pendingDurationMult",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -543,14 +622,50 @@
   {
     "inputs": [
       {
+        "internalType": "uint8",
+        "name": "_elevation",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_allocMultiplier",
+        "type": "uint16"
+      }
+    ],
+    "name": "setElevationAllocMultiplier",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "_elevation",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_mult",
+        "type": "uint8"
+      }
+    ],
+    "name": "setElevationRoundDurationMult",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "summitRNGModuleAdd",
+    "outputs": [
+      {
         "internalType": "address",
-        "name": "_trustedSeeder",
+        "name": "",
         "type": "address"
       }
     ],
-    "name": "setTrustedSeederAdd",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
@@ -629,19 +744,6 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "trustedSeeder",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -658,6 +760,19 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_summitRNGModuleAdd",
+        "type": "address"
+      }
+    ],
+    "name": "upgradeSummitRNGModule",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

@@ -7,14 +7,14 @@ import {
   getSummitTokenAddress,
   getCartographerAddress,
   getCartographerElevationAddress,
-  getCartographerExpeditionAddress,
+  getExpeditionAddress,
   getCartographerOasisAddress,
   getElevationHelperAddress,
   getSummitReferralsAddress,
   getSummitLpAddress,
-  getRecoveryPassthroughContract,
+  getEverestTokenAddress,
+  getSummitLockingAddress,
 } from 'utils/'
-import { PriceableTokenSymbol } from 'state/types'
 
 const useContract = (abi: AbiItem, address: string, contractOptions?: ContractOptions) => {
   const web3 = useWeb3()
@@ -31,15 +31,18 @@ const useContract = (abi: AbiItem, address: string, contractOptions?: ContractOp
  * Helper hooks to get specific contracts (by ABI)
  */
 
-export const useBEP20 = (address: string) => {
-  return useContract(abiItem.BEP20, address)
+export const useERC20 = (address: string) => {
+  return useContract(abiItem.ERC20, address)
 }
 
 export const useSummitToken = () => {
-  return useContract(abiItem.BEP20, getSummitTokenAddress())
+  return useContract(abiItem.summitToken, getSummitTokenAddress())
+}
+export const useEverestToken = () => {
+  return useContract(abiItem.everestToken, getEverestTokenAddress())
 }
 export const useSummitLp = () => {
-  return useContract(abiItem.BEP20, getSummitLpAddress())
+  return useContract(abiItem.ERC20, getSummitLpAddress())
 }
 
 export const useCartographer = () => {
@@ -51,8 +54,8 @@ export const useCartographerOasis = () => {
 export const useCartographerElevation = () => {
   return useContract(abiItem.cartographerElevation, getCartographerElevationAddress())
 }
-export const useCartographerExpedition = () => {
-  return useContract(abiItem.cartographerExpedition, getCartographerExpeditionAddress())
+export const useExpedition = () => {
+  return useContract(abiItem.expedition, getExpeditionAddress())
 }
 export const useElevationHelper = () => {
   return useContract(abiItem.elevationHelper, getElevationHelperAddress())
@@ -60,8 +63,8 @@ export const useElevationHelper = () => {
 export const useSummitReferrals = () => {
   return useContract(abiItem.summitReferrals, getSummitReferralsAddress())
 }
-export const useRecoveryPassthroughContract = (symbol: PriceableTokenSymbol) => {
-  return useContract(abiItem.baseRecoveryPassthrough, getRecoveryPassthroughContract(symbol))
+export const useSummitLocking = () => {
+  return useContract(abiItem.summitLocking, getSummitLockingAddress())
 }
 
 export default useContract

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { provider } from 'web3-core'
-import { getTokenBalance } from 'utils/bep20'
+import { getTokenBalance } from 'utils/erc20'
 import { abi, getSummitTokenAddress, retryableMulticall } from 'utils'
 import useRefresh from './useRefresh'
 
@@ -34,7 +34,7 @@ export const useTotalSummitSupply = () => {
   useEffect(() => {
     async function fetchTotalSupply() {
       const res = await retryableMulticall(
-        abi.BEP20,
+        abi.ERC20,
         [
           {
             address: summitAddress,
@@ -62,7 +62,7 @@ export const useBurnedSummitBalance = () => {
   useEffect(() => {
     const fetchBalance = async () => {
       const res = await retryableMulticall(
-        abi.BEP20,
+        abi.ERC20,
         [
           {
             address: summitAddress,

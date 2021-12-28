@@ -1,5 +1,4 @@
 import addresses from 'config/constants/contracts'
-import { PriceableTokenSymbol } from 'state/types'
 
 const getChainId = () => {
   return JSON.parse(localStorage.getItem('ChainId')) || '250'
@@ -8,6 +7,10 @@ const getChainId = () => {
 export const getSummitTokenAddress = () => {
   const chainId = getChainId()
   return addresses.summitToken[chainId]
+}
+export const getEverestTokenAddress = () => {
+  const chainId = getChainId()
+  return addresses.everestToken[chainId]
 }
 export const getSummitLpAddress = () => {
   const chainId = getChainId()
@@ -25,9 +28,9 @@ export const getCartographerElevationAddress = () => {
   const chainId = getChainId()
   return addresses.cartographerElevation[chainId]
 }
-export const getCartographerExpeditionAddress = () => {
+export const getExpeditionAddress = () => {
   const chainId = getChainId()
-  return addresses.cartographerExpedition[chainId]
+  return addresses.expedition[chainId]
 }
 export const getElevationHelperAddress = () => {
   const chainId = getChainId()
@@ -36,6 +39,10 @@ export const getElevationHelperAddress = () => {
 export const getSummitReferralsAddress = () => {
   const chainId = getChainId()
   return addresses.summitReferrals[chainId]
+}
+export const getSummitLockingAddress = () => {
+  const chainId = getChainId()
+  return addresses.summitLocking[chainId]
 }
 export const getMulticallAddress = () => {
   const chainId = getChainId()
@@ -72,10 +79,4 @@ export const getBalancer2PoolPriceOracleAddress = () => {
 export const getBalancerMultiPoolPriceOracleAddress = () => {
   const chainId = getChainId()
   return addresses.beethovenMultiPoolOracle[chainId]
-}
-
-export const getRecoveryPassthroughContract = (symbol: PriceableTokenSymbol) => {
-  const transformedSymbol = symbol.split('-').join('_').toLowerCase()
-  const chainId = getChainId()
-  return addresses[`${transformedSymbol}_recovery`][chainId]
 }

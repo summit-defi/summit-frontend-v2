@@ -3,7 +3,7 @@ import {
   abi,
   groupByAndMap,
   getCartographerAddress,
-  getCartographerExpeditionAddress,
+  getExpeditionAddress,
   getSummitLpAddress,
   getSummitTokenAddress,
 } from 'utils/'
@@ -16,7 +16,7 @@ export const fetchExpeditionUserAllowanceAndBalance = async (account) => {
   const cartographerAddress = getCartographerAddress()
 
   const res = await retryableMulticall(
-    abi.BEP20,
+    abi.ERC20,
     [
       {
         address: summitAddress,
@@ -55,7 +55,7 @@ export const fetchExpeditionUserAllowanceAndBalance = async (account) => {
 
 export const fetchExpeditionStakedBalances = async (account, expeditionConfigs: ExpeditionConfig[]) => {
   const calls = expeditionConfigs.map((expedition) => ({
-    address: getCartographerExpeditionAddress(),
+    address: getExpeditionAddress(),
     name: 'userInfo',
     params: [expedition.pid, account],
   }))

@@ -11,50 +11,16 @@
     "type": "constructor"
   },
   {
-    "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
         "internalType": "address",
-        "name": "previousOwner",
+        "name": "_token",
         "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newOwner",
-        "type": "address"
-      }
-    ],
-    "name": "OwnershipTransferred",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
       },
       {
         "internalType": "bool",
         "name": "_live",
         "type": "bool"
-      },
-      {
-        "internalType": "contract IBEP20",
-        "name": "_token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint16",
-        "name": "_feeBP",
-        "type": "uint16"
       }
     ],
     "name": "add",
@@ -63,67 +29,27 @@
     "type": "function"
   },
   {
-    "inputs": [
+    "inputs": [],
+    "name": "cartographer",
+    "outputs": [
       {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      },
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "contract IBEP20",
+        "internalType": "contract Cartographer",
         "name": "",
         "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
-    "name": "addExpedition",
-    "outputs": [],
-    "stateMutability": "nonpayable",
+    "stateMutability": "view",
     "type": "function"
   },
   {
     "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_harvestPid",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "_summitPid",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      },
       {
         "internalType": "address",
         "name": "_userAdd",
         "type": "address"
       }
     ],
-    "name": "crossCompound",
+    "name": "claimElevation",
     "outputs": [
       {
         "internalType": "uint256",
@@ -137,9 +63,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
       },
       {
         "internalType": "uint256",
@@ -147,19 +73,14 @@
         "type": "uint256"
       },
       {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      },
-      {
         "internalType": "address",
         "name": "_userAdd",
         "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isElevate",
+        "type": "bool"
       }
     ],
     "name": "deposit",
@@ -168,11 +89,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "nonpayable",
@@ -181,12 +97,12 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
+        "internalType": "address",
+        "name": "_userAdd",
+        "type": "address"
       }
     ],
-    "name": "depositFee",
+    "name": "elevClaimableRewards",
     "outputs": [
       {
         "internalType": "uint256",
@@ -200,57 +116,8 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
         "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      },
-      {
-        "internalType": "address",
-        "name": "_userAdd",
-        "type": "address"
-      }
-    ],
-    "name": "elevateDeposit",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "address",
-        "name": "",
+        "name": "_token",
         "type": "address"
       },
       {
@@ -259,7 +126,7 @@
         "type": "address"
       }
     ],
-    "name": "elevateWithdraw",
+    "name": "emergencyWithdraw",
     "outputs": [
       {
         "internalType": "uint256",
@@ -284,58 +151,13 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      },
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "harvestElevation",
+    "inputs": [],
+    "name": "getPools",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "address[]",
         "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      },
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "hypotheticalRewards",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "type": "address[]"
       }
     ],
     "stateMutability": "view",
@@ -345,9 +167,23 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_ElevationHelper",
+        "name": "_userAdd",
         "type": "address"
-      },
+      }
+    ],
+    "name": "getUserInteractingPools",
+    "outputs": [
+      {
+        "internalType": "address[]",
+        "name": "",
+        "type": "address[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
       {
         "internalType": "address",
         "name": "",
@@ -355,7 +191,7 @@
       },
       {
         "internalType": "address",
-        "name": "",
+        "name": "_summitTokenAddress",
         "type": "address"
       }
     ],
@@ -367,36 +203,12 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
-      }
-    ],
-    "name": "isEarning",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      },
-      {
         "internalType": "address",
         "name": "",
         "type": "address"
       }
     ],
-    "name": "isTotemInUse",
+    "name": "isTotemSelected",
     "outputs": [
       {
         "internalType": "bool",
@@ -404,7 +216,7 @@
         "type": "bool"
       }
     ],
-    "stateMutability": "view",
+    "stateMutability": "pure",
     "type": "function"
   },
   {
@@ -430,17 +242,22 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_userAdd",
+        "type": "address"
+      }
+    ],
+    "name": "poolClaimableRewards",
+    "outputs": [
+      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "name": "oasisPIDs",
-    "outputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
       }
     ],
     "stateMutability": "view",
@@ -449,20 +266,15 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
+        "internalType": "address",
         "name": "",
-        "type": "uint16"
+        "type": "address"
       }
     ],
-    "name": "oasisPoolInfo",
+    "name": "poolInfo",
     "outputs": [
       {
-        "internalType": "uint16",
-        "name": "pid",
-        "type": "uint16"
-      },
-      {
-        "internalType": "contract IBEP20",
+        "internalType": "address",
         "name": "token",
         "type": "address"
       },
@@ -485,11 +297,6 @@
         "internalType": "uint256",
         "name": "accSummitPerShare",
         "type": "uint256"
-      },
-      {
-        "internalType": "uint16",
-        "name": "feeBP",
-        "type": "uint16"
       }
     ],
     "stateMutability": "view",
@@ -497,109 +304,6 @@
   },
   {
     "inputs": [],
-    "name": "owner",
-    "outputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "name": "pidExistence",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract IBEP20",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "poolExistence",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "renounceOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
-      },
-      {
-        "internalType": "address",
-        "name": "_userAdd",
-        "type": "address"
-      }
-    ],
-    "name": "rewards",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
     "name": "rollover",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -608,43 +312,14 @@
   {
     "inputs": [
       {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      },
-      {
         "internalType": "address",
-        "name": "",
+        "name": "_token",
         "type": "address"
-      }
-    ],
-    "name": "selectedTotem",
-    "outputs": [
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
       },
       {
         "internalType": "bool",
         "name": "_live",
         "type": "bool"
-      },
-      {
-        "internalType": "uint16",
-        "name": "_feeBP",
-        "type": "uint16"
       }
     ],
     "name": "set",
@@ -653,11 +328,24 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "summitTokenAddress",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
       }
     ],
     "name": "supply",
@@ -679,11 +367,6 @@
         "type": "uint8"
       },
       {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      },
-      {
         "internalType": "address",
         "name": "",
         "type": "address"
@@ -697,46 +380,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
-      },
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      }
-    ],
-    "name": "token",
-    "outputs": [
-      {
-        "internalType": "contract IBEP20",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "address",
-        "name": "newOwner",
+        "name": "_token",
         "type": "address"
-      }
-    ],
-    "name": "transferOwnership",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
       }
     ],
     "name": "updatePool",
@@ -747,9 +393,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
+        "internalType": "address",
         "name": "",
-        "type": "uint16"
+        "type": "address"
       },
       {
         "internalType": "address",
@@ -776,19 +422,9 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
       },
       {
         "internalType": "address",
@@ -796,13 +432,42 @@
         "type": "address"
       }
     ],
-    "name": "withdraw",
+    "name": "userStakedAmount",
     "outputs": [
       {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
       },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "_userAdd",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isElevate",
+        "type": "bool"
+      }
+    ],
+    "name": "withdraw",
+    "outputs": [
       {
         "internalType": "uint256",
         "name": "",

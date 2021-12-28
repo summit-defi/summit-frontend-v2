@@ -20,8 +20,8 @@ export const fetchPricesV2 = async () => {
   const priceableTokens = getPriceableTokens()
   const balancer2PoolPriceOracleAddress = getBalancer2PoolPriceOracleAddress()
   const balancerMultiPoolPriceOracleAddress = getBalancerMultiPoolPriceOracleAddress()
-  const bep20Res = await retryableMulticall(
-    abi.BEP20,
+  const erc20Res = await retryableMulticall(
+    abi.ERC20,
     [
       {
         address: nativeAddress,
@@ -45,14 +45,14 @@ export const fetchPricesV2 = async () => {
     'fetchPricesV2',
   )
 
-  if (bep20Res == null) return null
+  if (erc20Res == null) return null
 
   const [
     nativeBalanceInNativeStableLp,
     peggedBalanceInNativeStableLp,
     nativeDecimals,
     peggedDecimals,
-  ] = bep20Res
+  ] = erc20Res
 
   const nativeAmount = new BigNumber(nativeBalanceInNativeStableLp).div(new BigNumber(10).pow(nativeDecimals))
   const peggedAmount = new BigNumber(peggedBalanceInNativeStableLp).div(new BigNumber(10).pow(peggedDecimals))
@@ -103,7 +103,7 @@ export const fetchPricesV2 = async () => {
       name: 'decimals',
     },
   ])
-  const priceableRes = await retryableMulticall(abi.BEP20, fetchableCalls.flat(), 'fetchPricesV2FetchTokenInfo')
+  const priceableRes = await retryableMulticall(abi.ERC20, fetchableCalls.flat(), 'fetchPricesV2FetchTokenInfo')
 
   const priceableResChunks = chunkArray(4, priceableRes)
 
@@ -189,7 +189,7 @@ export const fetchPricesV2 = async () => {
       name: 'totalSupply',
     },
   ])
-  const balancerMultiPoolTokenSuppliesRes = await retryableMulticall(abi.BEP20, balancerMultiPoolTokenSuppliesCalls.flat(), 'fetchPricesV2BalancerMultiPoolSupply')
+  const balancerMultiPoolTokenSuppliesRes = await retryableMulticall(abi.ERC20, balancerMultiPoolTokenSuppliesCalls.flat(), 'fetchPricesV2BalancerMultiPoolSupply')
 
   const balancerMultiPoolPricesPerToken = groupByAndMap(
     balancerMultiPoolPriceables,

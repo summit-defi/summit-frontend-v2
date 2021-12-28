@@ -3,17 +3,12 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_devAdd",
+        "name": "_treasuryAdd",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_expedAdd",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_trustedSeederAdd",
+        "name": "_expeditionTreasuryAdd",
         "type": "address"
       }
     ],
@@ -31,15 +26,28 @@
       },
       {
         "indexed": true,
-        "internalType": "uint16",
-        "name": "harvestPid",
-        "type": "uint16"
+        "internalType": "uint8",
+        "name": "elevation",
+        "type": "uint8"
       },
       {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalClaimed",
+        "type": "uint256"
+      }
+    ],
+    "name": "ClaimElevation",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
-        "internalType": "uint16",
-        "name": "crossCompoundPid",
-        "type": "uint16"
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
       },
       {
         "indexed": false,
@@ -48,7 +56,7 @@
         "type": "uint256"
       }
     ],
-    "name": "CrossCompound",
+    "name": "ClaimWinnings",
     "type": "event"
   },
   {
@@ -62,20 +70,20 @@
       },
       {
         "indexed": true,
-        "internalType": "uint16",
-        "name": "pid",
-        "type": "uint16"
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint8",
+        "name": "elevation",
+        "type": "uint8"
       },
       {
         "indexed": false,
         "internalType": "uint256",
         "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "expeditionSummitLpAmount",
         "type": "uint256"
       }
     ],
@@ -93,20 +101,20 @@
       },
       {
         "indexed": true,
-        "internalType": "uint16",
-        "name": "currentPid",
-        "type": "uint16"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint16",
-        "name": "newPid",
-        "type": "uint16"
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint8",
-        "name": "totem",
+        "name": "sourceElevation",
+        "type": "uint8"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "targetElevation",
         "type": "uint8"
       },
       {
@@ -117,37 +125,6 @@
       }
     ],
     "name": "Elevate",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "uint16",
-        "name": "pid",
-        "type": "uint16"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "rewardToken",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_rewardAmount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_rounds",
-        "type": "uint256"
-      }
-    ],
-    "name": "ExpeditionCreated",
     "type": "event"
   },
   {
@@ -167,18 +144,43 @@
       },
       {
         "indexed": false,
-        "internalType": "bool",
-        "name": "crossCompound",
-        "type": "bool"
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "ElevateAndLockStakedSummit",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint8",
+        "name": "elevation",
+        "type": "uint8"
       },
       {
         "indexed": false,
         "internalType": "uint256",
-        "name": "totalHarvested",
+        "name": "amount",
         "type": "uint256"
       }
     ],
-    "name": "HarvestElevation",
+    "name": "EmergencyWithdraw",
     "type": "event"
   },
   {
@@ -242,22 +244,29 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "Paused",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
-        "internalType": "uint16",
-        "name": "pid",
-        "type": "uint16"
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
       },
       {
         "indexed": false,
         "internalType": "uint8",
         "name": "elevation",
         "type": "uint8"
-      },
-      {
-        "indexed": false,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
       }
     ],
     "name": "PoolCreated",
@@ -268,27 +277,21 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "uint16",
-        "name": "pid",
-        "type": "uint16"
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint8",
+        "name": "elevation",
+        "type": "uint8"
       },
       {
         "indexed": false,
         "internalType": "bool",
         "name": "live",
         "type": "bool"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "depositFee",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "elevation",
-        "type": "uint256"
       }
     ],
     "name": "PoolUpdated",
@@ -299,18 +302,74 @@
     "inputs": [
       {
         "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "previousAdminRole",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "newAdminRole",
+        "type": "bytes32"
+      }
+    ],
+    "name": "RoleAdminChanged",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
         "internalType": "address",
-        "name": "user",
+        "name": "account",
         "type": "address"
       },
       {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "amount",
-        "type": "uint256"
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
       }
     ],
-    "name": "RedeemRewards",
+    "name": "RoleGranted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "sender",
+        "type": "address"
+      }
+    ],
+    "name": "RoleRevoked",
     "type": "event"
   },
   {
@@ -349,6 +408,19 @@
     "anonymous": false,
     "inputs": [
       {
+        "indexed": false,
+        "internalType": "uint16",
+        "name": "_baseMinimumWithdrawalTax",
+        "type": "uint16"
+      }
+    ],
+    "name": "SetBaseMinimumWithdrawalTax",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
         "indexed": true,
         "internalType": "address",
         "name": "user",
@@ -362,6 +434,153 @@
       }
     ],
     "name": "SetExpeditionTreasuryAddress",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_maxBonusBP",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetMaxBonusBP",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_reward",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetRolloverRewardInNativeToken",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_treasuryBP",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_referralsBP",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetSummitDistributionBPs",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_taxDecayDuration",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetTaxDecayDuration",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "alloc",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetTokenAllocation",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint16",
+        "name": "_feeBP",
+        "type": "uint16"
+      }
+    ],
+    "name": "SetTokenDepositFee",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "_isNativeFarm",
+        "type": "bool"
+      }
+    ],
+    "name": "SetTokenIsNativeFarm",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint16",
+        "name": "_taxBP",
+        "type": "uint16"
+      }
+    ],
+    "name": "SetTokenWithdrawTax",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "SetTotalSummitPerSecond",
     "type": "event"
   },
   {
@@ -389,17 +608,11 @@
       {
         "indexed": true,
         "internalType": "address",
-        "name": "user",
-        "type": "address"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "newAddress",
+        "name": "_summitOwner",
         "type": "address"
       }
     ],
-    "name": "SetTrustedSeederAddress",
+    "name": "SummitOwnershipTransferred",
     "type": "event"
   },
   {
@@ -431,38 +644,13 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
         "indexed": false,
-        "internalType": "uint256",
-        "name": "alloc",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
       }
     ],
-    "name": "TokenAllocCreated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "token",
-        "type": "address"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "alloc",
-        "type": "uint256"
-      }
-    ],
-    "name": "TokenAllocUpdated",
+    "name": "Unpaused",
     "type": "event"
   },
   {
@@ -476,20 +664,20 @@
       },
       {
         "indexed": true,
-        "internalType": "uint16",
-        "name": "pid",
-        "type": "uint16"
+        "internalType": "address",
+        "name": "token",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint8",
+        "name": "elevation",
+        "type": "uint8"
       },
       {
         "indexed": false,
         "internalType": "uint256",
         "name": "amount",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "expeditionSummitLpAmount",
         "type": "uint256"
       }
     ],
@@ -497,9 +685,83 @@
     "type": "event"
   },
   {
+    "inputs": [],
+    "name": "DEFAULT_ADMIN_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "PAUSER_ROLE",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
-        "internalType": "contract IBEP20",
+        "internalType": "address",
+        "name": "_userAdd",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "_getBonusBP",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_userAdd",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "_getTaxBP",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_token",
         "type": "address"
       },
@@ -514,11 +776,6 @@
         "type": "bool"
       },
       {
-        "internalType": "uint16",
-        "name": "_feeBP",
-        "type": "uint16"
-      },
-      {
         "internalType": "bool",
         "name": "_withUpdate",
         "type": "bool"
@@ -530,111 +787,13 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_startRoundOffset",
-        "type": "uint256"
-      },
-      {
-        "internalType": "contract IBEP20",
-        "name": "_rewardToken",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_rewardAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_rounds",
-        "type": "uint256"
-      }
-    ],
-    "name": "addExpedition",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "contract IBEP20",
-        "name": "_token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_allocation",
-        "type": "uint256"
-      }
-    ],
-    "name": "createTokenAllocation",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint8",
-        "name": "_totem",
-        "type": "uint8"
-      }
-    ],
-    "name": "crossCompound",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_expedSummitLpAmount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint8",
-        "name": "_totem",
-        "type": "uint8"
-      }
-    ],
-    "name": "deposit",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
-      }
-    ],
-    "name": "depositFee",
+    "inputs": [],
+    "name": "baseMinimumWithdrawalTax",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint16",
         "name": "",
-        "type": "uint256"
+        "type": "uint16"
       }
     ],
     "stateMutability": "view",
@@ -648,23 +807,102 @@
         "type": "address"
       },
       {
-        "internalType": "contract IBEP20",
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "bonusBP",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
+        "name": "_elevation",
+        "type": "uint8"
+      }
+    ],
+    "name": "claimElevation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_userAdd",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
         "name": "_token",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_feeBP",
+        "name": "_amount",
         "type": "uint256"
+      }
+    ],
+    "name": "claimWinnings",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_elevation",
+        "type": "uint8"
       },
       {
         "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
+      }
+    ],
+    "name": "deposit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_userAdd",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_expedSummitLpAmount",
+        "name": "_amount",
         "type": "uint256"
       }
     ],
@@ -680,21 +918,14 @@
     "type": "function"
   },
   {
-    "inputs": [],
-    "name": "devAdd",
-    "outputs": [
+    "inputs": [
       {
-        "internalType": "address",
+        "internalType": "uint256",
         "name": "",
-        "type": "address"
+        "type": "uint256"
       }
     ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "devSummitPerSecond",
+    "name": "elevAlloc",
     "outputs": [
       {
         "internalType": "uint256",
@@ -708,29 +939,24 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_sourcePid",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint16",
-        "name": "_targetPid",
-        "type": "uint16"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "contract IBEP20",
+        "internalType": "address",
         "name": "_token",
         "type": "address"
       },
       {
         "internalType": "uint8",
-        "name": "_totem",
+        "name": "_sourceElevation",
         "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_targetElevation",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
       }
     ],
     "name": "elevate",
@@ -741,9 +967,45 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
+        "internalType": "uint8",
+        "name": "_elevation",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "elevateAndLockStakedSummit",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "elevationHelper",
+    "outputs": [
+      {
+        "internalType": "contract ElevationHelper",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_elevation",
+        "type": "uint8"
       }
     ],
     "name": "elevationModulatedAllocation",
@@ -755,6 +1017,43 @@
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "elevationPoolsCount",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_elevation",
+        "type": "uint8"
+      }
+    ],
+    "name": "emergencyWithdraw",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -779,7 +1078,20 @@
   },
   {
     "inputs": [],
-    "name": "expedAdd",
+    "name": "everest",
+    "outputs": [
+      {
+        "internalType": "contract EverestToken",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "expeditionTreasuryAdd",
     "outputs": [
       {
         "internalType": "address",
@@ -793,17 +1105,36 @@
   {
     "inputs": [
       {
-        "internalType": "uint8",
-        "name": "_elevation",
-        "type": "uint8"
-      },
-      {
-        "internalType": "bool",
-        "name": "_crossCompound",
-        "type": "bool"
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
       }
     ],
-    "name": "harvestElevation",
+    "name": "getRoleAdmin",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "grantRole",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -811,27 +1142,22 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
       },
       {
         "internalType": "address",
-        "name": "_userAdd",
+        "name": "account",
         "type": "address"
       }
     ],
-    "name": "hypotheticalRewards",
+    "name": "hasRole",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "bool",
         "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -840,13 +1166,8 @@
   {
     "inputs": [
       {
-        "internalType": "contract SummitToken",
+        "internalType": "address",
         "name": "_summit",
-        "type": "address"
-      },
-      {
-        "internalType": "contract ILiquidityPair",
-        "name": "_summitLp",
         "type": "address"
       },
       {
@@ -866,12 +1187,27 @@
       },
       {
         "internalType": "address",
-        "name": "_CartographerElevation",
+        "name": "_CartographerPlains",
         "type": "address"
       },
       {
         "internalType": "address",
-        "name": "_CartographerExpedition",
+        "name": "_CartographerMesa",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_CartographerSummit",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_everest",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_summitLocking",
         "type": "address"
       }
     ],
@@ -883,30 +1219,17 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
-    "name": "isEarning",
+    "name": "isNativeFarmToken",
     "outputs": [
       {
         "internalType": "bool",
         "name": "",
         "type": "bool"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "launchTimestamp",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -920,24 +1243,8 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_lastRewardTimestamp",
-        "type": "uint256"
-      },
-      {
-        "internalType": "contract IBEP20",
-        "name": "_token",
-        "type": "address"
-      },
-      {
-        "internalType": "uint8",
-        "name": "_elevation",
-        "type": "uint8"
-      }
-    ],
-    "name": "mintPoolSummit",
+    "inputs": [],
+    "name": "maxBonusBP",
     "outputs": [
       {
         "internalType": "uint256",
@@ -945,6 +1252,19 @@
         "type": "uint256"
       }
     ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_summitOwner",
+        "type": "address"
+      }
+    ],
+    "name": "migrateSummitOwnership",
+    "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
   },
@@ -962,19 +1282,20 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "",
-        "type": "uint16"
-      }
-    ],
-    "name": "poolElevation",
+    "inputs": [],
+    "name": "pause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "paused",
     "outputs": [
       {
-        "internalType": "uint8",
+        "internalType": "bool",
         "name": "",
-        "type": "uint8"
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -983,17 +1304,22 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
+        "internalType": "address",
         "name": "",
-        "type": "uint256"
+        "type": "address"
+      },
+      {
+        "internalType": "uint8",
+        "name": "",
+        "type": "uint8"
       }
     ],
-    "name": "poolIds",
+    "name": "poolExistence",
     "outputs": [
       {
-        "internalType": "uint16",
+        "internalType": "bool",
         "name": "",
-        "type": "uint16"
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -1007,7 +1333,7 @@
         "type": "uint256"
       },
       {
-        "internalType": "contract IBEP20",
+        "internalType": "address",
         "name": "_token",
         "type": "address"
       },
@@ -1044,37 +1370,6 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_userAdd",
-        "type": "address"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "redeemRewards",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "referralBurnTimestamp",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
         "internalType": "uint256",
         "name": "_amount",
         "type": "uint256"
@@ -1087,7 +1382,7 @@
   },
   {
     "inputs": [],
-    "name": "referralsSummitPerSecond",
+    "name": "referralsSummitBP",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1108,7 +1403,25 @@
   {
     "inputs": [
       {
-        "internalType": "contract IBEP20",
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
+        "internalType": "address",
+        "name": "account",
+        "type": "address"
+      }
+    ],
+    "name": "renounceRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_token",
         "type": "address"
       }
@@ -1121,40 +1434,19 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
       },
       {
         "internalType": "address",
-        "name": "_userAdd",
+        "name": "account",
         "type": "address"
       }
     ],
-    "name": "rewards",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
+    "name": "revokeRole",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -1179,7 +1471,7 @@
   },
   {
     "inputs": [],
-    "name": "rolloverRewardInNativeToken",
+    "name": "rolloverReward",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1192,39 +1484,20 @@
   },
   {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
       {
         "internalType": "uint8",
         "name": "_elevation",
         "type": "uint8"
-      }
-    ],
-    "name": "roundEndTimestamp",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
       },
       {
         "internalType": "bool",
         "name": "_live",
         "type": "bool"
-      },
-      {
-        "internalType": "uint16",
-        "name": "_feeBP",
-        "type": "uint16"
       },
       {
         "internalType": "bool",
@@ -1240,12 +1513,12 @@
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_devAdd",
-        "type": "address"
+        "internalType": "uint16",
+        "name": "_baseMinimumWithdrawalTax",
+        "type": "uint16"
       }
     ],
-    "name": "setDevAdd",
+    "name": "setBaseMinimumWithdrawalTax",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1254,11 +1527,11 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_expedAdd",
+        "name": "_expeditionTreasuryAdd",
         "type": "address"
       }
     ],
-    "name": "setExpedAdd",
+    "name": "setExpeditionTreasuryAdd",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1266,7 +1539,7 @@
   {
     "inputs": [
       {
-        "internalType": "contract IBEP20",
+        "internalType": "address",
         "name": "_token",
         "type": "address"
       },
@@ -1290,6 +1563,19 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "_maxBonusBP",
+        "type": "uint256"
+      }
+    ],
+    "name": "setMaxBonusBP",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
         "name": "_reward",
         "type": "uint256"
       }
@@ -1303,16 +1589,16 @@
     "inputs": [
       {
         "internalType": "uint256",
-        "name": "_staking",
+        "name": "_referralsBP",
         "type": "uint256"
       },
       {
         "internalType": "uint256",
-        "name": "_dev",
+        "name": "_treasuryBP",
         "type": "uint256"
       }
     ],
-    "name": "setSummitDistributionProfile",
+    "name": "setSummitDistributionBPs",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1320,7 +1606,74 @@
   {
     "inputs": [
       {
-        "internalType": "contract IBEP20",
+        "internalType": "uint256",
+        "name": "_taxDecayDuration",
+        "type": "uint256"
+      }
+    ],
+    "name": "setTaxDecayDuration",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_allocation",
+        "type": "uint256"
+      }
+    ],
+    "name": "setTokenAllocation",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "uint16",
+        "name": "_feeBP",
+        "type": "uint16"
+      }
+    ],
+    "name": "setTokenDepositFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
+      {
+        "internalType": "bool",
+        "name": "_isNativeFarm",
+        "type": "bool"
+      }
+    ],
+    "name": "setTokenIsNativeFarm",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_token",
         "type": "address"
       },
@@ -1338,17 +1691,17 @@
   {
     "inputs": [
       {
-        "internalType": "contract IBEP20",
+        "internalType": "address",
         "name": "_token",
         "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "_allocation",
-        "type": "uint256"
+        "internalType": "uint16",
+        "name": "_taxBP",
+        "type": "uint16"
       }
     ],
-    "name": "setTokenSharedAlloc",
+    "name": "setTokenWithdrawTax",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1370,11 +1723,11 @@
     "inputs": [
       {
         "internalType": "address",
-        "name": "_trustedSeederAdd",
+        "name": "_treasuryAdd",
         "type": "address"
       }
     ],
-    "name": "setTrustedSeederAdd",
+    "name": "setTreasuryAdd",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1382,17 +1735,17 @@
   {
     "inputs": [
       {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
-      }
-    ],
-    "name": "stakedSupply",
-    "outputs": [
-      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "name": "subCartographers",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -1413,10 +1766,10 @@
   },
   {
     "inputs": [],
-    "name": "summitLp",
+    "name": "summitLocking",
     "outputs": [
       {
-        "internalType": "contract ILiquidityPair",
+        "internalType": "contract SummitLocking",
         "name": "",
         "type": "address"
       }
@@ -1432,6 +1785,38 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "summitReferrals",
+    "outputs": [
+      {
+        "internalType": "contract SummitReferrals",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes4",
+        "name": "interfaceId",
+        "type": "bytes4"
+      }
+    ],
+    "name": "supportsInterface",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -1458,79 +1843,43 @@
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "_from",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "_userAdd",
+        "type": "address"
       },
       {
-        "internalType": "uint256",
-        "name": "_to",
-        "type": "uint256"
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
       }
     ],
-    "name": "timeDiffSeconds",
+    "name": "taxBP",
     "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "pure",
-    "type": "function"
-  },
-  {
-    "inputs": [
       {
         "internalType": "uint16",
-        "name": "_pid",
+        "name": "",
         "type": "uint16"
-      },
-      {
-        "internalType": "bool",
-        "name": "_isExpeditionSummitLp",
-        "type": "bool"
-      }
-    ],
-    "name": "token",
-    "outputs": [
-      {
-        "internalType": "contract IBEP20",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "contract IBEP20",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "tokenAllocExistence",
+    "inputs": [],
+    "name": "taxDecayDuration",
     "outputs": [
       {
-        "internalType": "bool",
+        "internalType": "uint256",
         "name": "",
-        "type": "bool"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "contract IBEP20",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "tokenBaseAlloc",
+    "inputs": [],
+    "name": "taxResetOnDepositBP",
     "outputs": [
       {
         "internalType": "uint256",
@@ -1544,7 +1893,64 @@
   {
     "inputs": [
       {
-        "internalType": "contract IBEP20",
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "tokenAlloc",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "tokenAllocEmissionMultiplier",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "tokenDepositFee",
+    "outputs": [
+      {
+        "internalType": "uint16",
+        "name": "",
+        "type": "uint16"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "_token",
         "type": "address"
       },
@@ -1568,7 +1974,7 @@
   {
     "inputs": [
       {
-        "internalType": "contract IBEP20",
+        "internalType": "address",
         "name": "",
         "type": "address"
       },
@@ -1592,22 +1998,22 @@
   {
     "inputs": [
       {
-        "internalType": "contract IBEP20",
+        "internalType": "address",
         "name": "",
         "type": "address"
       },
       {
-        "internalType": "uint8",
+        "internalType": "address",
         "name": "",
-        "type": "uint8"
+        "type": "address"
       }
     ],
-    "name": "tokenElevationPid",
+    "name": "tokenLastDepositTimestampForTax",
     "outputs": [
       {
-        "internalType": "uint16",
+        "internalType": "uint256",
         "name": "",
-        "type": "uint16"
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -1616,7 +2022,31 @@
   {
     "inputs": [
       {
-        "internalType": "contract IBEP20",
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "tokenLastWithdrawTimestampForBonus",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
@@ -1635,17 +2065,17 @@
   {
     "inputs": [
       {
-        "internalType": "contract IBEP20",
+        "internalType": "address",
         "name": "",
         "type": "address"
       }
     ],
-    "name": "tokenSharedAlloc",
+    "name": "tokenWithdrawalTax",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "uint16",
         "name": "",
-        "type": "uint256"
+        "type": "uint16"
       }
     ],
     "stateMutability": "view",
@@ -1653,12 +2083,12 @@
   },
   {
     "inputs": [],
-    "name": "totalSharedAlloc",
+    "name": "tokensWithAllocation",
     "outputs": [
       {
-        "internalType": "uint256",
+        "internalType": "address[]",
         "name": "",
-        "type": "uint256"
+        "type": "address[]"
       }
     ],
     "stateMutability": "view",
@@ -1679,7 +2109,7 @@
   },
   {
     "inputs": [],
-    "name": "trustedSeederAdd",
+    "name": "treasuryAdd",
     "outputs": [
       {
         "internalType": "address",
@@ -1691,49 +2121,64 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "treasurySummitBP",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "unpause",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
     "inputs": [
+      {
+        "internalType": "address",
+        "name": "_userAdd",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      }
+    ],
+    "name": "userTokenStakedAmount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_token",
+        "type": "address"
+      },
       {
         "internalType": "uint8",
         "name": "_elevation",
         "type": "uint8"
       },
       {
-        "internalType": "address",
-        "name": "_userAdd",
-        "type": "address"
-      }
-    ],
-    "name": "userTotem",
-    "outputs": [
-      {
-        "internalType": "bool",
-        "name": "",
-        "type": "bool"
-      },
-      {
-        "internalType": "uint8",
-        "name": "",
-        "type": "uint8"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint16",
-        "name": "_pid",
-        "type": "uint16"
-      },
-      {
         "internalType": "uint256",
         "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_expedSummitLpAmount",
         "type": "uint256"
       }
     ],
@@ -1750,23 +2195,13 @@
         "type": "address"
       },
       {
-        "internalType": "contract IBEP20",
+        "internalType": "address",
         "name": "_token",
         "type": "address"
       },
       {
         "internalType": "uint256",
-        "name": "_feeBP",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
         "name": "_amount",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "_expedSummitLpAmount",
         "type": "uint256"
       }
     ],

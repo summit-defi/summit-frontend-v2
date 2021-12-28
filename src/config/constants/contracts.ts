@@ -56,6 +56,15 @@ export default {
     "97": "0xae13d989dac2f0debff460ac112a837c89baa7cd",
     "250": "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83"
   },
+  "expeditionTreasury": {
+    '250': '0xF3265e6b1e9683E719d88a658D25b61888713188',
+  },
+  "beethoven2PoolOracle": {
+    '250': '0x33365E1B22BbeF5766419e19f77c15fD3E0a8Ae5',
+  },
+  "beethovenMultiPoolOracle": {
+    "97": "0xdDE494d67e6d343AC1460135df84b7BCa9448B54",
+  },
   "peggedToken": {
     "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
     "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee",

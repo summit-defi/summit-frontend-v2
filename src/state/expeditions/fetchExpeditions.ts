@@ -1,11 +1,11 @@
 import { getExpeditionConfigs } from 'config/constants/expeditions'
-import { multicall, abi, getElevationHelperAddress, getCartographerExpeditionAddress, groupByAndMap } from 'utils'
+import { multicall, abi, getElevationHelperAddress, getExpeditionAddress, groupByAndMap } from 'utils'
 import BigNumber from 'bignumber.js'
 import { Elevation, elevationUtils } from 'config/constants/types'
 
 export const fetchExpeditions = async () => {
   const expeditions = getExpeditionConfigs()
-  const cartographerExpeditionAddress = getCartographerExpeditionAddress()
+  const cartographerExpeditionAddress = getExpeditionAddress()
   const elevationHelperAddress = getElevationHelperAddress()
   const callsExpeditionsInfo = expeditions.map((expeditionConfig) => [
     {

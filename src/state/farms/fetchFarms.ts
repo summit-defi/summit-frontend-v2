@@ -78,7 +78,7 @@ export const fetchFarms = async () => {
           params: [farmConfig.pid],
         },
       ]),
-      await multicall(abi.BEP20, [
+      await multicall(abi.ERC20, [
         {
           address: tokenAddress,
           name: 'decimals',
