@@ -24,7 +24,7 @@ interface Props {
   elevation: Elevation
   disabled: boolean
   lpContract: Contract
-  earnedReward: BigNumber
+  claimable: BigNumber
   setPending: (boolean) => void
 }
 
@@ -48,7 +48,7 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
   isApproved,
   elevation,
   disabled,
-  earnedReward,
+  claimable,
   setPending,
   lpContract,
 }) => {
@@ -63,7 +63,7 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
   const { onApprove, pending: approvalPending } = useApprove(elevation, lpContract, symbol)
 
   // REWARDS WILL BE HARVESTED MODAL
-  const presentRewardsWillBeHarvestedModal = useRewardsWillBeHarvestedModal(elevation, earnedReward, 'Deposit', RewardsWillBeHarvestedType.Farm)
+  const presentRewardsWillBeHarvestedModal = useRewardsWillBeHarvestedModal(elevation, claimable, 'Deposit', RewardsWillBeHarvestedType.Farm)
 
   // DEPOSIT ACTION
   const { onStake, pending: stakePending } = useStake(farmToken, elevation)

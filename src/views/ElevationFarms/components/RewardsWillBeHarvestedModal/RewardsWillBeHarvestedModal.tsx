@@ -21,7 +21,7 @@ const HorizontalDisplayBalance = styled(Flex)`
 
 interface Props {
   elevation: Elevation
-  earnedReward?: BigNumber
+  claimable?: BigNumber
   transactionName: string
   rewardHarvestType: RewardsWillBeHarvestedType
   elevateInfo?: {
@@ -36,7 +36,7 @@ interface Props {
 
 export const RewardsWillBeHarvestedModal: React.FC<Props> = ({
   elevation,
-  earnedReward,
+  claimable,
   transactionName,
   rewardHarvestType,
   elevateInfo,
@@ -60,7 +60,7 @@ export const RewardsWillBeHarvestedModal: React.FC<Props> = ({
     default:
     case RewardsWillBeHarvestedType.Farm:
     case RewardsWillBeHarvestedType.FullElevation:
-      if (earnedReward.isEqualTo(0)) {
+      if (claimable.isEqualTo(0)) {
         handleConfirm()
       }
       break
@@ -71,7 +71,7 @@ export const RewardsWillBeHarvestedModal: React.FC<Props> = ({
       { (rewardHarvestType === RewardsWillBeHarvestedType.Farm || rewardHarvestType === RewardsWillBeHarvestedType.FullElevation) &&
         <>
           <Text bold monospace textAlign='center'>This {transactionName} will also<br/>harvest your available</Text>
-          <HighlightedText elevation={elevation} gold fontSize='24px' mt='12px'>{getFormattedBigNumber(earnedReward)}</HighlightedText>
+          <HighlightedText elevation={elevation} gold fontSize='24px' mt='12px'>{getFormattedBigNumber(claimable)}</HighlightedText>
           <HighlightedText elevation={elevation} gold fontSize='16px' mb='12px'>SUMMIT</HighlightedText>
           <Text bold monospace textAlign='center'>{elevation === Elevation.OASIS ? 'earnings' : 'rewards'} from the {rewardHarvestType === RewardsWillBeHarvestedType.Farm ? 'Farm' : elevation}</Text>
         </>

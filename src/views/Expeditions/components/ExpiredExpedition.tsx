@@ -94,17 +94,17 @@ const ExpiredExpedition: React.FC<ExpiredExpeditionProps> = ({ expedition, summi
 
   return null
   // const { pid, rewardToken, userData } = expedition
-  // const { stakedSummit, stakedSummitLp, earnedReward } = userData || {}
+  // const { stakedSummit, stakedSummitLp, claimable } = userData || {}
   // const summitLpContract = useSummitLp()
   // const history = useHistory()
 
   // const zeroStaked = (stakedSummit || new BigNumber(0)).isEqualTo(0) && (stakedSummitLp || new BigNumber(0)).isEqualTo(0)
-  // const zeroWon = (earnedReward || new BigNumber(0)).isEqualTo(0)
+  // const zeroWon = (claimable || new BigNumber(0)).isEqualTo(0)
 
 
   // const { onWithdraw, pending: exitPending } = useWithdraw(Elevation.EXPEDITION, pid)
 
-  // const winnings = (earnedReward || new BigNumber(0))
+  // const winnings = (claimable || new BigNumber(0))
   // const rawWinnings = getBalanceNumber(winnings, rewardToken.decimals)
   // const rawSummitStaked = getBalanceNumber(stakedSummit)
   // const rawSummitLpStaked = getBalanceNumber(stakedSummitLp)

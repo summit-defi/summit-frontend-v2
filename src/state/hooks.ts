@@ -7,9 +7,8 @@ import {
   fetchFarmsPublicDataAsync,
   fetchExpeditionUserDataAsync,
   fetchExpeditionPublicDataAsync,
-  setBlock,
 } from './actions'
-import { State, Farm, Expedition, Block, ElevationInfo, ReferralsState, ExpeditionUserData } from './types'
+import { State, Farm, Expedition, ElevationInfo, ReferralsState, ExpeditionUserData } from './types'
 import { Elevation, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
@@ -67,16 +66,6 @@ export const useFetchPublicData = () => {
     dispatch(fetchElevationsPublicDataAsync())
     dispatch(fetchElevationHelperInfoAsync())
   }, [dispatch, slowRefresh])
-
-  useEffect(() => {
-    const web3 = getWeb3NoAccount()
-    const interval = setInterval(async () => {
-      const blockNumber = await web3.eth.getBlockNumber()
-      dispatch(setBlock(blockNumber))
-    }, 6000)
-
-    return () => clearInterval(interval)
-  }, [dispatch])
 }
 export const useCurrentTimestamp = (): number => {
   const [timestamp, setTimestamp] = useState<number>(Math.floor(Date.now() / 1000))
@@ -230,11 +219,6 @@ export const useFetchPriceList = () => {
   useEffect(() => {
     dispatch(fetchPricesAsync())
   }, [dispatch, slowRefresh])
-}
-
-// Block
-export const useBlock = (): Block => {
-  return useSelector((state: State) => state.block)
 }
 
 // SummitEcosystem

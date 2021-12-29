@@ -17,7 +17,7 @@ interface Props {
   elevationLocked: boolean
   stakedBalance: BigNumber
   decimals: number
-  earnedReward: BigNumber
+  claimable: BigNumber
   withdrawalFee: number
   disabled: boolean
   setPending: (boolean) => void
@@ -41,7 +41,7 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
   stakedBalance,
   decimals,
   withdrawalFee,
-  earnedReward,
+  claimable,
   disabled,
   setPending,
 }) => {
@@ -50,7 +50,7 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
 
 
   // REWARDS WILL BE HARVESTED MODAL
-  const presentRewardsWillBeHarvestedModal = useRewardsWillBeHarvestedModal(elevation, earnedReward, 'Withdraw', RewardsWillBeHarvestedType.Farm)
+  const presentRewardsWillBeHarvestedModal = useRewardsWillBeHarvestedModal(elevation, claimable, 'Withdraw', RewardsWillBeHarvestedType.Farm)
 
 
   useEffect(() => {

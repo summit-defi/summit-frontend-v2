@@ -33,7 +33,7 @@ export const fetchFarms = async () => {
         {
           address: cartographerAddress,
           name: 'tokenAllocEmissionMultiplier',
-          params: [farmToken, elevationInt],
+          params: [farmToken],
         },
         {
           address: cartographerAddress,

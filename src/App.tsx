@@ -31,7 +31,7 @@ const StyledRouter = styled(Router)`
   position: relative;
 `
 
-// This config is required for number formating
+// This config is required for number formatting
 BigNumber.config({
   EXPONENTIAL_AT: 1000,
   DECIMAL_PLACES: 80,
@@ -49,6 +49,7 @@ const App: React.FC = () => {
   const web3 = useWeb3()
   useEffect(() => {
     if (account) {
+      console.log('Call from App.tsx')
       dispatch(setActiveAccount(account))
       dispatch(fetchFarmUserDataAsync(account))
       dispatch(fetchUserTotemsAsync(account))

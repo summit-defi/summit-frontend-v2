@@ -32,16 +32,6 @@ const ElevationAndUserVolumes: React.FC = () => {
   const rawUserStakedBalanceValue = getBalanceNumber(userTotalValue)
   return (
     <BackgroundedFlex flexDirection="column" alignItems="center" justifyContent="center" mb='32px'>
-      { elevation !== Elevation.OASIS && <Text bold monospace fontSize='16px' textAlign='center' color='red'>
-          The {elevation} is under maintenance.
-          <br/>
-          You can see your funds / farms in the RETIRED tab.
-          <br/>
-          Please elevate your funds back to the Oasis.
-          <br/>
-          <br/>
-          <br/>
-        </Text>}
       <Flex justifyContent="center" alignItems="center" mt="0px">
         <StyledHighlightedText fontSize="13px" letterSpacing="2px">
           {elevation} TVL:

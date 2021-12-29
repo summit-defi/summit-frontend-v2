@@ -3,7 +3,6 @@ import farmsReducer from './farms'
 import expeditionsReducer from './expeditions'
 import summitEcosystemReducer from './summitEcosystem'
 import pricesReducer from './prices'
-import blockReducer from './block'
 import referralsReducer from './referrals'
 
 export default configureStore({
@@ -14,7 +13,6 @@ export default configureStore({
     summitEcosystem: summitEcosystemReducer,
     referrals: referralsReducer,
     prices: pricesReducer,
-    block: blockReducer,
   },
   middleware: getDefaultMiddleware({
     serializableCheck: false,

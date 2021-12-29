@@ -181,14 +181,6 @@ const TotemHeader: React.FC<Props> = ({ userTotem, account }) => {
                 </>
               )}
 
-              { elevation !== Elevation.OASIS && <Text bold monospace fontSize='16px' textAlign='center' color='red'>
-                The {elevation} is under maintenance.
-                <br/>
-                You can see your funds / farms in the RETIRED tab.
-                <br/>
-                Please elevate your funds back to the Oasis.
-              </Text>}
-
               <ElevationTimerAndRollover />
 
               {userTotem != null && !elevationLocked && <FarmTypeSelector />}
@@ -249,14 +241,6 @@ const TotemHeader: React.FC<Props> = ({ userTotem, account }) => {
                 </>
           )}
           <ElevationTimerAndRollover />
-
-          { elevation !== Elevation.OASIS && <Text bold monospace fontSize='14px' textAlign='center' color='red'>
-            The {elevation} is under maintenance.
-            <br/>
-            You can see your funds / farms in the RETIRED tab.
-            <br/>
-            Please elevate your funds back to the Oasis.
-          </Text>}
 
           {userTotem != null && !elevationLocked && <FarmTypeSelector />}
         </HeaderWrapper>

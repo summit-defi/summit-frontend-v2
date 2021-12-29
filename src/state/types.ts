@@ -12,9 +12,9 @@ export interface FarmUserData {
   allowance: BigNumber
   tokenBalance: BigNumber
   stakedBalance: BigNumber
-  earnedReward: BigNumber
+  claimable: BigNumber
   vestingReward: BigNumber
-  roundYieldContributed: BigNumber
+  yieldContributed: BigNumber
 }
 export interface Farm extends FarmConfig {
   supply?: BigNumber
@@ -147,11 +147,6 @@ export interface State {
   farms: FarmsState
   prices: PriceState
   expedition: ExpeditionState
-  block: Block
   summitEcosystem: SummitEcosystemState
   referrals: ReferralsState
-}
-
-export interface Block {
-  blockNumber: number
 }

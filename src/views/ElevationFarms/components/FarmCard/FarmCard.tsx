@@ -7,7 +7,7 @@ import { provider } from 'web3-core'
 import { Elevation } from 'config/constants/types'
 import { useElevationTotem, usePricesPerToken, useSingleFarmSelected } from 'state/hooks'
 import { NavLink } from 'react-router-dom'
-import FarmCardUserSection from './FarmCardUserSection'
+import FarmCardUserSectionExpander from './FarmCardUserSectionExpander'
 import CardValue from 'views/Home/components/CardValue'
 import { getBalanceNumber, nFormatter } from 'utils'
 import Totem from '../Totem'
@@ -150,22 +150,28 @@ const FarmCard: React.FC<FarmCardProps> = ({
   const pricesPerToken = usePricesPerToken()
   const expanded = singleFarmId === farmId(farm)
 
-  const { stakedBalance, earnedReward, vestingReward, roundYieldContributed } = userData || {}
+  const { stakedBalance, claimable, vestingReward, yieldContributed } = userData || {}
 
-  const rawEarned = getBalanceNumber(earnedReward)
+  const rawEarned = getBalanceNumber(claimable)
   const rawVesting = getBalanceNumber(vestingReward)
-  const rawYieldContribution = getBalanceNumber(roundYieldContributed)
+  const rawYieldContribution = getBalanceNumber(yieldContributed)
 
   const isElevationFarm = elevation !== Elevation.OASIS
   const userTotem = useElevationTotem(elevation)
 
   const userStakedBalance: BigNumber = useMemo(
-    () => stakedBalance.div(new BigNumber(10).pow(decimals)).times(pricesPerToken[symbol]),
+    () => {
+      if (stakedBalance == null || pricesPerToken == null) return new BigNumber(0)
+      return stakedBalance.div(new BigNumber(10).pow(decimals)).times(pricesPerToken[symbol])
+    },
     [stakedBalance, symbol, pricesPerToken, decimals]
   )
 
   const totalValue: BigNumber = useMemo(
-    () => lpSupply.div(new BigNumber(10).pow(decimals)).times(pricesPerToken[symbol]),
+    () => {
+      if (lpSupply == null || pricesPerToken == null) return new BigNumber(0)
+      return lpSupply.div(new BigNumber(10).pow(decimals)).times(pricesPerToken[symbol])
+    },
     [lpSupply, symbol, pricesPerToken, decimals]
   )
 
@@ -202,7 +208,7 @@ const FarmCard: React.FC<FarmCardProps> = ({
                 {symbol}
               </Text>
               <MultiplierTag variant="secondary" elevation={elevation}>
-                {(allocation / 10000).toFixed(2)}X
+                {(allocation / 100).toFixed(1)}X
               </MultiplierTag>
             </Flex>
           </SymbolIconFlex>
@@ -271,7 +277,7 @@ const FarmCard: React.FC<FarmCardProps> = ({
         </FarmNumericalInfoFlex>
       </PressableFlex>
 
-      <FarmCardUserSection
+      <FarmCardUserSectionExpander
         expanded={expanded}
         ethereum={ethereum}
         elevation={elevation}

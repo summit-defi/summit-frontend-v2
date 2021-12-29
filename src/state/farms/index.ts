@@ -83,6 +83,7 @@ export const fetchFarmsPublicDataAsync = () => async (dispatch) => {
   dispatch(setFarmsPublicData(farmsInfo))
 }
 export const fetchFarmUserDataAsync = (account) => async (dispatch) => {
+  console.log('FETCH FARM USER DATA ASYNC')
   const farmConfigs = getFarmConfigs()
 
   const [

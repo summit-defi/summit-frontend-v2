@@ -10,7 +10,7 @@ import styled from 'styled-components'
 
 interface Props {
   farmToken: string
-  earnedReward: BigNumber
+  claimable: BigNumber
   elevation: Elevation
   disabled: boolean
   setPending: (boolean) => void
@@ -47,13 +47,13 @@ const Divider = styled.div`
   width: 100%;
 `
 
-const FarmCardUserHarvest: React.FC<Props> = ({ farmToken, earnedReward, elevation, setPending }) => {
-  const rawEarned = getBalanceNumber(earnedReward)
+const FarmCardUserHarvest: React.FC<Props> = ({ farmToken, claimable, elevation, setPending }) => {
+  const rawEarned = getBalanceNumber(claimable)
   const earnLabel = 'SUMMIT'
 
   // HARVEST BUTTON
   const { onHarvest, pending: harvestPending } = useClaimPool(farmToken, elevation)
-  const nothingToClaim = !earnedReward || earnedReward.isEqualTo(0)
+  const nothingToClaim = !claimable || claimable.isEqualTo(0)
 
   useEffect(() => {
     setPending(harvestPending)

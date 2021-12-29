@@ -5,11 +5,11 @@ import { Elevation } from 'config/constants/types'
 import BigNumber from 'bignumber.js'
 
 
-export const useRewardsWillBeHarvestedModal = (elevation: Elevation, earnedReward: BigNumber, transactionName, rewardHarvestType: RewardsWillBeHarvestedType) => {
+export const useRewardsWillBeHarvestedModal = (elevation: Elevation, claimable: BigNumber, transactionName, rewardHarvestType: RewardsWillBeHarvestedType) => {
   const [onPresentRewardsWillBeHarvestedModal] = useModal(
     <RewardsWillBeHarvestedModal
       elevation={elevation}
-      earnedReward={earnedReward}
+      claimable={claimable}
       transactionName={transactionName}
       rewardHarvestType={rewardHarvestType}
     />,

@@ -12,4 +12,3 @@ export {
   updateUserTotemAsync,
   updateElevationInfoAsync,
 } from './summitEcosystem'
-export { setBlock } from './block'

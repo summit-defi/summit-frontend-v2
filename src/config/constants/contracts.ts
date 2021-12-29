@@ -75,12 +75,12 @@ export default {
   },
   "peggedToken": {
     "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",
-    "97": "0xed24fc36d5ee211ea25a80239fb8c4cfd80f12ee",
+    "97": "0x2f02f77c2ba5a7ce4924f2a1e5ecc85580fdd096",
     "250": "0x04068DA6C83AFCFA0e13ba15A6696662335D5B75"
   },
   "nativePeggedLp": {
     "56": "",
-    "97": "",
+    "97": "0x9dac3b2fd8a7277966d1794198bc1dfad058b649",
     "250": "0x2b4c76d0dc16be1c31d4c1dc53bf9b45987fc75c"
   },
   "timelock": {

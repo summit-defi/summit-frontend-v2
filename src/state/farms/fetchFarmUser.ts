@@ -118,7 +118,10 @@ export const fetchPoolClaimableRewards = async (account: string, farmConfigs: Fa
   return groupByAndMap(
     farmConfigs,
     (farm) => farmId(farm),
-    (farm, index) => res == null ? new BigNumber(0) : new BigNumber(res[index]._hex)
+    (farm, index) => {
+      if (res == null) return new BigNumber(0)
+      return new BigNumber(res[index][0]._hex)
+    }
   )
 }
 

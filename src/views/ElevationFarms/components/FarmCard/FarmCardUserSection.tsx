@@ -74,20 +74,19 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
     passthroughStrategy,
     getUrl,
   } = farm
-  const [renderExpandedComponents, setRenderExpandedComponents] = useState(false)
+
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  useEffect(() => {
+    setIsExpanded(expanded)
+  }, [expanded, setIsExpanded])
+
   const isMobile = useMediaQuery('(max-width: 986px)')
   const elevationLocked = useIsElevationLockedUntilRollover()
   const farmTokenAddress = getFarmToken(farm)
   const [mobileDepositWithdraw, setMobileDepositWithdraw] = useState(isMobile ? 0 : -1)
 
-  useEffect(() => {
-    let collapseTimeout
-    if (expanded) setRenderExpandedComponents(true)
-    else collapseTimeout = setTimeout(() => setRenderExpandedComponents(false), 300)
-    return () => clearTimeout(collapseTimeout)
-  }, [expanded, symbol, setRenderExpandedComponents])
-
-  const { allowance, stakedBalance, tokenBalance, earnedReward } = userData || {}
+  const { allowance, stakedBalance, tokenBalance, claimable } = userData || {}
 
   const isApproved = account && allowance && allowance.isGreaterThan(0)
   const lpContract = useMemo(() => {
@@ -110,17 +109,16 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
   // HARVEST SECTION
   const harvestSection = useCallback(
     () =>
-      elevation === Elevation.OASIS &&
-      renderExpandedComponents && (
+      elevation === Elevation.OASIS && (
         <FarmCardUserHarvest
           farmToken={farmToken}
           elevation={elevation}
-          earnedReward={earnedReward}
+          claimable={claimable}
           disabled={disabled}
           setPending={setHarvestPending}
         />
       ),
-    [renderExpandedComponents, farmToken, earnedReward, elevation, disabled, setHarvestPending],
+    [farmToken, claimable, elevation, disabled, setHarvestPending],
   )
 
   // MOBILE DEPOSIT WITHDRAW SELECTOR
@@ -139,7 +137,6 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
   // DEPOSIT SECTION
   const depositSection = useCallback(
     () =>
-      renderExpandedComponents &&
       (!isMobile || mobileDepositWithdraw === 0) && (
         <FarmCardUserApproveDeposit
           farmToken={farmToken}
@@ -152,7 +149,7 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
           isApproved={isApproved}
           disabled={disabled}
           lpContract={lpContract}
-          earnedReward={earnedReward}
+          claimable={claimable}
           setPending={setApproveDepositPending}
         />
       ),
@@ -163,11 +160,10 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
       isMobile,
       mobileDepositWithdraw,
       elevationLocked,
-      renderExpandedComponents,
       symbol,
       tokenBalance,
       depositFeeBP,
-      earnedReward,
+      claimable,
       isApproved,
       disabled,
       lpContract,
@@ -178,7 +174,6 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
   // WITHDRAW SECTION
   const withdrawSection = useCallback(
     () =>
-      renderExpandedComponents &&
       (!isMobile || mobileDepositWithdraw === 1) && (
         <FarmCardUserWithdraw
           farmToken={farmToken}
@@ -186,7 +181,7 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
           symbol={symbol}
           elevationLocked={elevationLocked}
           stakedBalance={stakedBalance}
-          earnedReward={earnedReward}
+          claimable={claimable}
           decimals={decimals}
           withdrawalFee={taxBP}
           disabled={disabled}
@@ -200,10 +195,9 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
       isMobile,
       mobileDepositWithdraw,
       elevationLocked,
-      renderExpandedComponents,
       symbol,
       stakedBalance,
-      earnedReward,
+      claimable,
       taxBP,
       disabled,
       setWithdrawPending,
@@ -213,15 +207,14 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
   // ELEVATE SECTION
   const elevateSection = useCallback(
     () =>
-      renderExpandedComponents &&
       (!isMobile || mobileDepositWithdraw === 2) && (
         <FarmCardUserElevate farm={farm} elevationLocked={elevationLocked} disabled={disabled} />
       ),
-    [isMobile, mobileDepositWithdraw, elevationLocked, renderExpandedComponents, farm, disabled],
+    [isMobile, mobileDepositWithdraw, elevationLocked, farm, disabled],
   )
 
   return (
-    <ExpandableSection expanded={expanded}>
+    <ExpandableSection expanded={isExpanded}>
       <Divider />
       {harvestSection()}
       <MobileVerticalFlex>

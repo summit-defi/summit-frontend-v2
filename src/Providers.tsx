@@ -3,7 +3,6 @@ import React from 'react'
 import * as bsc from '@binance-chain/bsc-use-wallet'
 import { Provider } from 'react-redux'
 import getRpcUrl from 'utils/getRpcUrl'
-import { BlockContextProvider } from 'contexts/BlockContext'
 import { RefreshContextProvider } from 'contexts/RefreshContext'
 import store from 'state'
 import { ToastsProvider } from 'contexts/ToastsContext'
@@ -25,9 +24,7 @@ const Providers: React.FC = ({ children }) => {
             }}
           >
             <ModalProvider>
-              <BlockContextProvider>
-                <RefreshContextProvider>{children}</RefreshContextProvider>
-              </BlockContextProvider>
+              <RefreshContextProvider>{children}</RefreshContextProvider>
             </ModalProvider>
           </bsc.UseWalletProvider>
         </ToastsProvider>

@@ -43,8 +43,8 @@ const ExpeditionWinnings: React.FC<HarvestProps> = ({ expedition }) => {
 
   return null
   // const { pid, userData, rewardToken } = expedition
-  // const { earnedReward } = userData || {}
-  // const winnings = (earnedReward || new BigNumber(0))
+  // const { claimable } = userData || {}
+  // const winnings = (claimable || new BigNumber(0))
 
   // const rawWinnings = getBalanceNumber(winnings, rewardToken.decimals)
   // const { onHarvest, pending: harvestPending } = useClaimPool(pid)

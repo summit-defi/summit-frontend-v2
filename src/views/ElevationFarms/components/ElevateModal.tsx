@@ -94,7 +94,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
     if (selectedSourceElevation === null) return
     
     const selectedFarm = sisterFarms[selectedSourceElevation]
-    setSourceEarned(selectedFarm.userData?.earnedReward || new BigNumber(0))
+    setSourceEarned(selectedFarm.userData?.claimable || new BigNumber(0))
     const newFullBalance = getFullDisplayBalance(
       selectedFarm.userData?.stakedBalance || new BigNumber(0),
       decimals,
@@ -120,7 +120,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    setTargetEarned(sisterFarms[selectedTargetElevation]!.userData?.earnedReward || new BigNumber(0))
+    setTargetEarned(sisterFarms[selectedTargetElevation]!.userData?.claimable || new BigNumber(0))
   }, [selectedTargetElevation, sisterFarms, setTargetEarned])
 
   const handlePresentSelectTotem = () => {

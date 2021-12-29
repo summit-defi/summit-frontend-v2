@@ -20,7 +20,7 @@ import PageLoader from 'components/PageLoader'
 import { useFarmType } from 'hooks/useFarmType'
 import { FarmType } from 'state/types'
 import ElevationAndUserVolumes from './components/ElevationAndUserVolumes'
-import { farmId } from 'utils/farmId'
+import { farmId, getFarmType } from 'utils/farmId'
 
 const NoFarmsFlex = styled(Flex)`
   padding: 12px;
@@ -53,6 +53,7 @@ const ElevationFarms: React.FC<ElevationFarms> = (props) => {
   const { fastRefresh } = useRefresh()
   useEffect(() => {
     if (account) {
+      console.log('Call from ElevationFarms')
       dispatch(fetchFarmUserDataAsync(account))
     }
   }, [account, dispatch, fastRefresh, web3])
@@ -63,7 +64,7 @@ const ElevationFarms: React.FC<ElevationFarms> = (props) => {
         (farm) =>
           farm.elevation === elevation &&
           liveFarms === ((farm.allocation || 0) > 0 && farm.live) &&
-          (farmType === FarmType.All || farm.isTokenOnly === (farmType === FarmType.Token)),
+          (farmType === FarmType.All || getFarmType(farm) === farmType),
       ),
     [farmType, liveFarms, elevation],
   )
@@ -71,20 +72,14 @@ const ElevationFarms: React.FC<ElevationFarms> = (props) => {
   const filteredFarms = filterAllFarms(farmsLP)
 
   const [stakedFarms, unstakedFarms] = partition(filteredFarms, (farm) =>
-    !account
+    (!account || !farm.userData)
       ? false
-      : farm.userData?.stakedBalance.isGreaterThan(0) ||
-        farm.userData?.earnedReward.isGreaterThan(0) ||
-        farm.userData?.vestingReward.isGreaterThan(0),
+      : farm.userData.stakedBalance?.isGreaterThan(0) ||
+        farm.userData.claimable?.isGreaterThan(0) ||
+        farm.userData.vestingReward?.isGreaterThan(0),
   )
 
   const farms = stakedFarms.concat(unstakedFarms)
-
-  console.log({
-    stakedFarms,
-    unstakedFarms,
-    farmsLP
-  })
 
   const farmsList = useCallback(
     (farmsToDisplay, removed: boolean) => farmsToDisplay.map((farm) => (
