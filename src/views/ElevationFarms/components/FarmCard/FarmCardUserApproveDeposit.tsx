@@ -10,8 +10,8 @@ import TokenInput from 'components/TokenInput'
 import useStake from 'hooks/useStake'
 import { useApprove } from 'hooks/useApprove'
 import { isNumber } from 'lodash'
-import { RewardsWillBeHarvestedType, useRewardsWillBeHarvestedModal } from '../RewardsWillBeHarvestedModal'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useRewardsWillBeClaimedModal, RewardsWillBeClaimedType } from '../RewardsWillBeClaimedModal'
 
 interface Props {
   farmToken: string
@@ -62,8 +62,8 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
   // APPROVE ACTION
   const { onApprove, pending: approvalPending } = useApprove(elevation, lpContract, symbol)
 
-  // REWARDS WILL BE HARVESTED MODAL
-  const presentRewardsWillBeHarvestedModal = useRewardsWillBeHarvestedModal(elevation, claimable, 'Deposit', RewardsWillBeHarvestedType.Farm)
+  // REWARDS WILL BE CLAIMED MODAL
+  const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(elevation, claimable, 'Deposit', RewardsWillBeClaimedType.Farm)
 
   // DEPOSIT ACTION
   const { onStake, pending: stakePending } = useStake(farmToken, elevation)
@@ -100,7 +100,7 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
   }, [fullDepositBalance, setDepositVal, setInvalidDepositVal])
 
   const handleStake = useCallback(() => {
-      presentRewardsWillBeHarvestedModal({
+      presentRewardsWillBeClaimedModal({
         transactionToConfirm: () => onStake(symbol, depositVal, decimals)
       })
     },
@@ -109,7 +109,7 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
       depositVal,
       decimals,
       onStake,
-      presentRewardsWillBeHarvestedModal,
+      presentRewardsWillBeClaimedModal,
     ]
   )
 

@@ -35,11 +35,11 @@ const InfoItem = styled.div`
   }
 `
 
-interface HarvestProps {
+interface ClaimProps {
   expedition: Expedition
 }
 
-const ExpeditionWinnings: React.FC<HarvestProps> = ({ expedition }) => {
+const ExpeditionWinnings: React.FC<ClaimProps> = ({ expedition }) => {
 
   return null
   // const { pid, userData, rewardToken } = expedition
@@ -47,7 +47,7 @@ const ExpeditionWinnings: React.FC<HarvestProps> = ({ expedition }) => {
   // const winnings = (claimable || new BigNumber(0))
 
   // const rawWinnings = getBalanceNumber(winnings, rewardToken.decimals)
-  // const { onHarvest, pending: harvestPending } = useClaimPool(pid)
+  // const { onClaim, pending: claimPending } = useClaimPool(pid)
 
   // if (rawWinnings === 0) return null
 
@@ -64,7 +64,7 @@ const ExpeditionWinnings: React.FC<HarvestProps> = ({ expedition }) => {
   //         </HighlightedText>
   //       </Flex>
   //     </InfoItem>
-  //     <SummitButton elevation="GOLD" isLoading={harvestPending} mr="8px" onClick={onHarvest}>
+  //     <SummitButton elevation="GOLD" isLoading={claimPending} mr="8px" onClick={onClaim}>
   //       COLLECT REWARDS
   //     </SummitButton>
   //   </InfoSection>

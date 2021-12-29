@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { ZEROADD } from 'config/constants/types'
-import { useCreateReferral, useHarvestReferralRewards } from 'hooks/useCreateOrBurnReferrals'
+import { useCreateReferral, useClaimReferralRewards } from 'hooks/useCreateOrBurnReferrals'
 import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text, HighlightedText, Card, useModal } from 'uikit'
@@ -29,7 +29,7 @@ interface Props {
 
 const UserReferrals: React.FC<Props> = ({ referrer, pendingRewards, accumulatedRewards }) => {
   const { onCreateReferral, pending: createReferralPending } = useCreateReferral()
-  const { onHarvestReferralRewards, pending: harvestReferralRewardsPending } = useHarvestReferralRewards()
+  const { onClaimReferralRewards, pending: claimReferralRewardsPending } = useClaimReferralRewards()
   const [onPresentAccountEntry] = useModal(<ReferralAccountEntryModal onCreateReferral={onCreateReferral} />)
 
   return (
@@ -93,10 +93,10 @@ const UserReferrals: React.FC<Props> = ({ referrer, pendingRewards, accumulatedR
           postfix="SUMMIT"
         />
         <SummitButton
-          isLoading={harvestReferralRewardsPending}
+          isLoading={claimReferralRewardsPending}
           disabled={pendingRewards === 0}
           size="lg"
-          onClick={onHarvestReferralRewards}
+          onClick={onClaimReferralRewards}
           mt="8px"
         >
           CLAIM REWARDS

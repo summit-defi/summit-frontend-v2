@@ -14,8 +14,6 @@ import CardValue from 'views/Home/components/CardValue'
 import { useClaimElevation } from 'hooks/useClaim'
 import TotemRoundRewardsBreakdown from './FarmCard/TotemRoundRewardsBreakdown'
 import PageLoader from 'components/PageLoader'
-import BigNumber from 'bignumber.js'
-// import VestingAndAvailableTimeline from './VestingAndAvailableTimeline'
 
 const FlexInfoItem = styled(Flex)`
   flex-direction: column;
@@ -57,15 +55,13 @@ const ElevationUserRoundInfo: React.FC = () => {
   const elevation = useSelectedElevation()
   const userTotem = useElevationTotem(elevation)
   const elevationLocked = useIsElevationLockedUntilRollover()
-  const { userEarned, userVesting, userYieldContributed, roundRewards, totemsRoundRewards } = useElevationUserRoundInfo(
-    elevation,
-  )
+  const { claimable, yieldContributed, potentialWinnings, roundRewards, totemRoundRewards } = useElevationUserRoundInfo(elevation)
   
-  const rawEarned = getBalanceNumber(userEarned)
+  const rawClaimable = getBalanceNumber(claimable)
 
-  // HARVESTING ELEVATION
-  const { onClaimElevation, harvestPending } = useClaimElevation(elevation)
-  const nothingToClaim = !userEarned || userEarned.isEqualTo(0)
+  // CLAIMING ELEVATION
+  const { onClaimElevation, claimPending } = useClaimElevation(elevation)
+  const nothingToClaim = !claimable || claimable.isEqualTo(0)
 
   if (elevation === Elevation.OASIS) {
     return (
@@ -84,31 +80,26 @@ const ElevationUserRoundInfo: React.FC = () => {
           Earnings across the OASIS:
         </Text>
         <br />
-        <CardValue value={rawEarned} decimals={2} fontSize="28px" elevation={Elevation.OASIS} />
+        <CardValue value={rawClaimable} decimals={2} fontSize="28px" elevation={Elevation.OASIS} />
         <HighlightedText bold monospace ml="8px" elevation={elevation}>
           SUMMIT
         </HighlightedText>
         <br />
         <Text textAlign="center" bold monospace fontSize="12px">
-          Harvest earnings in each farm below
+          Claim earnings in each farm below
         </Text>
       </>
     )
   }
 
-  if (!elevation || totemsRoundRewards.length === 0) {
+  if (!elevation || totemRoundRewards.length === 0) {
     return <PageLoader fill={false} />
   }
 
   const earnLabel = 'SUMMIT'
 
-  const rawVesting = getBalanceNumber(userVesting)
-  const rawYieldContribution = getBalanceNumber(userYieldContributed)
-
-  const expectedWinnings = (totemsRoundRewards[userTotem] || new BigNumber(0)).isEqualTo(0)
-    ? 0
-    : userYieldContributed.times(roundRewards).dividedBy(totemsRoundRewards[userTotem])
-  const rawExpectedWinnings = getBalanceNumber(expectedWinnings)
+  const rawYieldContributed = getBalanceNumber(yieldContributed)
+  const rawPotentialWinnings = getBalanceNumber(potentialWinnings)
 
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="center" flex={1} width="100%">
@@ -120,7 +111,7 @@ const ElevationUserRoundInfo: React.FC = () => {
         elevation={elevation}
         userTotem={userTotem}
         roundRewards={roundRewards}
-        totemsRoundRewards={totemsRoundRewards}
+        totemRoundRewards={totemRoundRewards}
       />
 
       <Flex alignItems="center" justifyContent="space-around" width="100%" mb="24px">
@@ -131,7 +122,7 @@ const ElevationUserRoundInfo: React.FC = () => {
             Contributed
           </Text>
           <InfoItemValue>
-            <CardValue value={rawYieldContribution} decimals={3} elevation={elevation} fontSize="22px" />
+            <CardValue value={rawYieldContributed} decimals={3} elevation={elevation} fontSize="22px" />
             <HighlightedText bold monospace mt="-8px" elevation={elevation}>
               {earnLabel}
             </HighlightedText>
@@ -139,12 +130,12 @@ const ElevationUserRoundInfo: React.FC = () => {
         </FlexInfoItem>
         <FlexInfoItem>
           <Text bold fontSize="12px" textAlign="center">
-            Expected Rewards
+            Potential Winnings
             <br />
-            If Round Win
+            (If Win)
           </Text>
           <InfoItemValue>
-            <CardValue value={rawExpectedWinnings} decimals={3} elevation={elevation} fontSize="22px" />
+            <CardValue value={rawPotentialWinnings} decimals={3} elevation={elevation} fontSize="22px" />
             <HighlightedText bold monospace mt="-8px" elevation={elevation}>
               {earnLabel}
             </HighlightedText>
@@ -158,29 +149,13 @@ const ElevationUserRoundInfo: React.FC = () => {
         Previous Rounds{'\''} Rewards:
       </HighlightedText>
 
-      {/* <VestingAndAvailableTimeline
-        userEarned={userEarned}        
-        userVesting={userVesting}
-      /> */}
-
       <Flex alignItems="center" justifyContent="space-around" width="100%">
         <FlexInfoItem>
           <Text bold fontSize="12px">
-            Available Rewards
+            Winnings
           </Text>
           <InfoItemValue>
-            <CardValue value={rawEarned} decimals={3} elevation={elevation} fontSize="22px" />
-            <HighlightedText bold monospace mt="-8px" elevation={elevation}>
-              {earnLabel}
-            </HighlightedText>
-          </InfoItemValue>
-        </FlexInfoItem>
-        <FlexInfoItem>
-          <Text bold fontSize="12px">
-            Vesting Rewards
-          </Text>
-          <InfoItemValue>
-            <CardValue value={rawVesting} decimals={3} elevation={elevation} fontSize="22px" />
+            <CardValue value={rawClaimable} decimals={3} elevation={elevation} fontSize="22px" />
             <HighlightedText bold monospace mt="-8px" elevation={elevation}>
               {earnLabel}
             </HighlightedText>
@@ -193,14 +168,14 @@ const ElevationUserRoundInfo: React.FC = () => {
           <SummitButton
             elevation={elevation}
             isLocked={elevationLocked}
-            isLoading={harvestPending}
+            isLoading={claimPending}
             disabled={nothingToClaim}
             mr="8px"
             onClick={() => onClaimElevation()}
           >
-            HARVEST
+            CLAIM
             <br />
-            AVAIL REWARDS
+            WINNINGS
           </SummitButton>
         </Flex>
       </Flex>

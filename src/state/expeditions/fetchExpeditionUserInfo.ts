@@ -14,9 +14,6 @@ export const fetchExpeditionUserData = async (account) => {
 
   const res = await retryableMulticall(abi.expedition, [call], 'fetchExpeditionUserData')
 
-  console.log({
-    userExpedInfo: res
-  })
   return null
 }
 

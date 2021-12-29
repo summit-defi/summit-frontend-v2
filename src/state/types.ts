@@ -13,7 +13,6 @@ export interface FarmUserData {
   tokenBalance: BigNumber
   stakedBalance: BigNumber
   claimable: BigNumber
-  vestingReward: BigNumber
   yieldContributed: BigNumber
 }
 export interface Farm extends FarmConfig {
@@ -74,7 +73,7 @@ export interface ElevationFarmsData {
   yieldContributed: BigNumber
   potentialWinnings: BigNumber
   roundRewards: BigNumber
-  totemsRoundRewards: BigNumber[]
+  totemRoundRewards: BigNumber[]
 }
 
 export interface FarmsState {

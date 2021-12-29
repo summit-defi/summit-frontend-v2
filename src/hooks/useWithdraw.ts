@@ -17,15 +17,15 @@ const useWithdraw = (farmToken: string, elevation: Elevation) => {
   const cartographer = useCartographer()
 
   const handleWithdraw = useCallback(
-    async (lpName: string, amount: string, decimals: number) => {
+    async (symbol: string, amount: string, decimals: number) => {
       const filteredAmount = amount || '0'
       try {
         setPending(true)
         if (elevation === Elevation.EXPEDITION) dispatch(setPendingExpeditionTx(true))
         await withdraw(cartographer, farmToken, elevation, filteredAmount, account, decimals)
-        toastSuccess(`${lpName} Withdraw Confirmed`)
+        toastSuccess(`${symbol} Withdraw Confirmed`)
       } catch (error) {
-        toastError(`${lpName} Withdraw Failed`, (error as Error).message)
+        toastError(`${symbol} Withdraw Failed`, (error as Error).message)
       } finally {
         setPending(false)
         if (elevation === Elevation.EXPEDITION) dispatch(setPendingExpeditionTx(true))

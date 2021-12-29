@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useDispatch } from 'react-redux'
 import { fetchElevationHelperInfoAsync } from 'state/actions'
-import { burnReferralRewards, createReferral, harvestReferralRewards } from 'utils/callHelpers'
+import { burnReferralRewards, createReferral, claimReferralRewards } from 'utils/callHelpers'
 import { useCartographer, useSummitReferrals } from './useContract'
 import { fetchReferralsDataAsync } from 'state/referrals'
 import useToast from './useToast'
@@ -33,18 +33,18 @@ export const useCreateReferral = () => {
   return { onCreateReferral: handleCreateReferral, pending }
 }
 
-export const useHarvestReferralRewards = () => {
+export const useClaimReferralRewards = () => {
   const dispatch = useDispatch()
   const { account }: { account: string } = useWallet()
   const summitReferrals = useSummitReferrals()
   const { toastSuccess, toastError } = useToast()
   const [pending, setPending] = useState(false)
 
-  const handleHarvestReferralRewards = useCallback(async () => {
+  const handleClaimReferralRewards = useCallback(async () => {
     try {
       setPending(true)
-      await harvestReferralRewards(summitReferrals, account)
-      toastSuccess('Referral Rewards Harvested')
+      await claimReferralRewards(summitReferrals, account)
+      toastSuccess('Referral Rewards Claimed')
     } catch (error) {
       toastError('Referral Reward Claim Failed', (error as Error).message)
     } finally {
@@ -53,7 +53,7 @@ export const useHarvestReferralRewards = () => {
     }
   }, [account, dispatch, summitReferrals, setPending, toastSuccess, toastError])
 
-  return { onHarvestReferralRewards: handleHarvestReferralRewards, pending }
+  return { onClaimReferralRewards: handleClaimReferralRewards, pending }
 }
 
 export const useBurnUnclaimedReferralRewards = () => {

@@ -20,10 +20,6 @@ export const useAllElevsClaimable = () => {
         params: [account],
       }))
 
-      console.log({
-        allElevsClaimableCalls: calls
-      })
-
       const res = await retryableMulticall(abi.cartographer, calls, 'useAllElevsClaimable')
       if (res == null) return
 

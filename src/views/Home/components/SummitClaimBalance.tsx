@@ -8,7 +8,7 @@ interface Props {
   earned: number
 }
 
-const SummitHarvestBalance: React.FC<Props> = ({ account, earned }) => {
+const SummitClaimBalance: React.FC<Props> = ({ account, earned }) => {
   if (!account) {
     return (
       <Text color="textDisabled" style={{ lineHeight: '60px' }}>
@@ -20,4 +20,4 @@ const SummitHarvestBalance: React.FC<Props> = ({ account, earned }) => {
   return <CardValue value={earned} elevation={Elevation.OASIS} />
 }
 
-export default SummitHarvestBalance
+export default SummitClaimBalance

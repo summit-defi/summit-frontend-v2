@@ -9,15 +9,18 @@ import { setExpeditionPot } from 'state/summitEcosystem'
 
 export const useFetchExpeditionPotTotalValue = async () => {
   const expeditionTreasuryAddress = getExpeditionTreasuryAddress()
-  const { slowRefresh } = useRefresh() 
+  const { slowRefresh } = useRefresh()
   const dispatch = useDispatch()
 
   return useEffect(
     () => {
       axios.get(`https://openapi.debank.com/v1/user/chain_balance?id=${expeditionTreasuryAddress}&chain_id=ftm`)
-      .then(res => {
-        dispatch(setExpeditionPot(res.data.usd_value))
-      })
+        .then(res => {
+          dispatch(setExpeditionPot(res.data.usd_value))
+        })
+        .catch(err => {
+          dispatch(setExpeditionPot(0))
+        })
     },
     [expeditionTreasuryAddress, slowRefresh, dispatch]
   )

@@ -8,7 +8,7 @@ import ModalActions from 'components/ModalActions'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import styled from 'styled-components'
 
-export enum RewardsWillBeHarvestedType {
+export enum RewardsWillBeClaimedType {
   Farm = 'Farm',
   FullElevation = 'FullElevation',
   Elevate = 'Elevate'
@@ -23,7 +23,7 @@ interface Props {
   elevation: Elevation
   claimable?: BigNumber
   transactionName: string
-  rewardHarvestType: RewardsWillBeHarvestedType
+  rewardClaimType: RewardsWillBeClaimedType
   elevateInfo?: {
     sourceElevation: Elevation,
     targetElevation: Elevation,
@@ -34,11 +34,11 @@ interface Props {
   onDismiss?: () => void
 }
 
-export const RewardsWillBeHarvestedModal: React.FC<Props> = ({
+export const RewardsWillBeClaimedModal: React.FC<Props> = ({
   elevation,
   claimable,
   transactionName,
-  rewardHarvestType,
+  rewardClaimType,
   elevateInfo,
   transactionToConfirm,
   onDismiss = () => null,
@@ -50,16 +50,16 @@ export const RewardsWillBeHarvestedModal: React.FC<Props> = ({
     onDismiss()
   }
 
-  switch(rewardHarvestType) {
-    case RewardsWillBeHarvestedType.Elevate:
+  switch(rewardClaimType) {
+    case RewardsWillBeClaimedType.Elevate:
       if ((elevateInfo.sourceEarned || new BigNumber(0)).plus(elevateInfo.targetEarned || new BigNumber(0)).isEqualTo(0)) {
         handleConfirm()
       }
       break
       
     default:
-    case RewardsWillBeHarvestedType.Farm:
-    case RewardsWillBeHarvestedType.FullElevation:
+    case RewardsWillBeClaimedType.Farm:
+    case RewardsWillBeClaimedType.FullElevation:
       if (claimable.isEqualTo(0)) {
         handleConfirm()
       }
@@ -67,19 +67,19 @@ export const RewardsWillBeHarvestedModal: React.FC<Props> = ({
   }
 
   return (
-    <Modal title="REWARDS TO|br|HARVEST" onDismiss={onDismiss} headerless elevationCircleHeader={elevateInfo?.targetElevation || elevation}>
-      { (rewardHarvestType === RewardsWillBeHarvestedType.Farm || rewardHarvestType === RewardsWillBeHarvestedType.FullElevation) &&
+    <Modal title="REWARDS TO|br|CLAIM" onDismiss={onDismiss} headerless elevationCircleHeader={elevateInfo?.targetElevation || elevation}>
+      { (rewardClaimType === RewardsWillBeClaimedType.Farm || rewardClaimType === RewardsWillBeClaimedType.FullElevation) &&
         <>
-          <Text bold monospace textAlign='center'>This {transactionName} will also<br/>harvest your available</Text>
+          <Text bold monospace textAlign='center'>This {transactionName} will also<br/>claim your available</Text>
           <HighlightedText elevation={elevation} gold fontSize='24px' mt='12px'>{getFormattedBigNumber(claimable)}</HighlightedText>
           <HighlightedText elevation={elevation} gold fontSize='16px' mb='12px'>SUMMIT</HighlightedText>
-          <Text bold monospace textAlign='center'>{elevation === Elevation.OASIS ? 'earnings' : 'rewards'} from the {rewardHarvestType === RewardsWillBeHarvestedType.Farm ? 'Farm' : elevation}</Text>
+          <Text bold monospace textAlign='center'>{elevation === Elevation.OASIS ? 'earnings' : 'rewards'} from the {rewardClaimType === RewardsWillBeClaimedType.Farm ? 'Farm' : elevation}</Text>
         </>
       }
-      { rewardHarvestType === RewardsWillBeHarvestedType.Elevate &&
+      { rewardClaimType === RewardsWillBeClaimedType.Elevate &&
         <>
           <Text bold monospace mb='24px' textAlign='center'>
-            Elevating will harvest your earned
+            Elevating will claim your earned
             <br/>
             rewards from both the source and target farms:
           </Text>
@@ -99,13 +99,13 @@ export const RewardsWillBeHarvestedModal: React.FC<Props> = ({
           }
         </>
       }
-      { [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT].includes(elevation) && rewardHarvestType !== RewardsWillBeHarvestedType.FullElevation &&
+      { [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT].includes(elevation) && rewardClaimType !== RewardsWillBeClaimedType.FullElevation &&
         <Text bold monospace italic textAlign='center' fontSize='12px' mt='24px'>
-          This will only harvest rewards from
+          This will only claim rewards from
           <br/>
           THIS specific farm at the {elevation}.
           <br/>
-          It will not harvest rewards from other farms.
+          It will not claim rewards from other farms.
         </Text>
       }
       <ModalActions>

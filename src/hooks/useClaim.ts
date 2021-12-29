@@ -15,7 +15,7 @@ export const useClaimPool = (farmToken: string, elevation: Elevation) => {
   const [pending, setPending] = useState(false)
   const { toastSuccess, toastError } = useToast()
 
-  const handleHarvest = useCallback(async () => {
+  const handleClaim = useCallback(async () => {
     try {
       setPending(true)
       await claimPool(cartographer, farmToken, elevationUtils.toInt(elevation), account)
@@ -37,20 +37,20 @@ export const useClaimPool = (farmToken: string, elevation: Elevation) => {
     toastError,
   ])
 
-  return { onHarvest: handleHarvest, pending }
+  return { onClaim: handleClaim, pending }
 }
 
 export const useClaimElevation = (elevation: Elevation) => {
   const dispatch = useDispatch()
   const { account } = useWallet()
   const cartographer = useCartographer()
-  const [harvestPending, setHarvestPending] = useState(false)
+  const [claimPending, setClaimPending] = useState(false)
   const { toastSuccess, toastError } = useToast()
 
   const handleClaimElevation = useCallback(
     async () => {
       try {
-        setHarvestPending(true)
+        setClaimPending(true)
 
         await claimElevation(cartographer, elevation, account)
 
@@ -59,11 +59,11 @@ export const useClaimElevation = (elevation: Elevation) => {
         toastError(`Error Claiming Winnings`, (error as Error).message)
       } finally {
         dispatch(fetchFarmUserDataAsync(account))
-        setHarvestPending(false)
+        setClaimPending(false)
       }
     },
-    [account, dispatch, elevation, cartographer, setHarvestPending, toastSuccess, toastError],
+    [account, dispatch, elevation, cartographer, setClaimPending, toastSuccess, toastError],
   )
 
-  return { onClaimElevation: handleClaimElevation, harvestPending }
+  return { onClaimElevation: handleClaimElevation, claimPending }
 }

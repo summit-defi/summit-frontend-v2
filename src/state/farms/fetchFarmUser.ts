@@ -154,11 +154,11 @@ export const fetchElevClaimableRewards = async (account: string) => {
   }))
 
   const res = await retryableMulticall(abi.cartographerOasis, calls, 'fetchElevClaimableRewards')
-  
+
   return groupByAndMap(
     elevationUtils.all,
     (elevation) => elevation,
-    (_, index) => res == null ? new BigNumber(0) : new BigNumber(res[index]._hex)
+    (_, index) => res == null ? new BigNumber(0) : new BigNumber(res[index][0]._hex)
   )
 }
 

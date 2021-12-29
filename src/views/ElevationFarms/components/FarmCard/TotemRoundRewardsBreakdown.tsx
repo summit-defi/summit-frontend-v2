@@ -36,10 +36,10 @@ interface Props {
   elevation: Elevation
   userTotem: number
   roundRewards: BigNumber
-  totemsRoundRewards: BigNumber[]
+  totemRoundRewards: BigNumber[]
 }
 
-const TotemRoundRewardsBreakdown: React.FC<Props> = ({ elevation, userTotem, roundRewards, totemsRoundRewards }) => {
+const TotemRoundRewardsBreakdown: React.FC<Props> = ({ elevation, userTotem, roundRewards, totemRoundRewards }) => {
   const totemsArray = elevationUtils.totemsArray(elevation)
   const chunkedTotems = chunkArray(5, totemsArray)
   const colorGradient = chroma
@@ -52,9 +52,9 @@ const TotemRoundRewardsBreakdown: React.FC<Props> = ({ elevation, userTotem, rou
       {chunkedTotems.map((rowTotems) => (
         <TotemBreakdownRow key={rowTotems[0]}>
           {rowTotems.map((totem) => {
-            const totemRoundRewards = totemsRoundRewards[totem] || new BigNumber(0)
-            const stakedBalance = totemRoundRewards.div(new BigNumber(10).pow(18)).toNumber()
-            const perc = totemRoundRewards.isEqualTo(0) ? 0 : roundRewards.dividedBy(totemRoundRewards).toNumber()
+            const totemRoundReward = totemRoundRewards[totem] || new BigNumber(0)
+            const stakedBalance = totemRoundReward.div(new BigNumber(10).pow(18)).toNumber()
+            const perc = totemRoundReward.isEqualTo(0) ? 0 : roundRewards.dividedBy(totemRoundReward).toNumber()
             return (
               <TotemWithStatsWrapper key={totem}>
                 <Totem

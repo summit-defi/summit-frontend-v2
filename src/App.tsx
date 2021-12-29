@@ -49,7 +49,6 @@ const App: React.FC = () => {
   const web3 = useWeb3()
   useEffect(() => {
     if (account) {
-      console.log('Call from App.tsx')
       dispatch(setActiveAccount(account))
       dispatch(fetchFarmUserDataAsync(account))
       dispatch(fetchUserTotemsAsync(account))

@@ -24,7 +24,7 @@ const EMPTY_ELEVATION_FARMS_DATA = {
   yieldContributed: BN_ZERO,
   potentialWinnings: BN_ZERO,
   roundRewards: BN_ZERO,
-  totemsRoundRewards: [],
+  totemRoundRewards: [],
 }
 
 const initialState: FarmsState = {
@@ -67,7 +67,7 @@ export const farmsSlice = createSlice({
         yieldContributed: elevPotentialWinnings[elevation].yieldContributed as BigNumber,
         potentialWinnings: elevPotentialWinnings[elevation].potentialWinnings as BigNumber,
         roundRewards: elevRoundRewards[elevation].roundRewards as BigNumber,
-        totemsRoundRewards: elevRoundRewards[elevation].totemRoundRewards as BigNumber[],
+        totemRoundRewards: elevRoundRewards[elevation].totemRoundRewards as BigNumber[],
       }))
       state.elevationDataLoaded = true
     },
@@ -83,7 +83,6 @@ export const fetchFarmsPublicDataAsync = () => async (dispatch) => {
   dispatch(setFarmsPublicData(farmsInfo))
 }
 export const fetchFarmUserDataAsync = (account) => async (dispatch) => {
-  console.log('FETCH FARM USER DATA ASYNC')
   const farmConfigs = getFarmConfigs()
 
   const [

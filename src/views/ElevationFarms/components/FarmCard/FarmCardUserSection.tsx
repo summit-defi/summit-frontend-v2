@@ -5,7 +5,6 @@ import { Farm } from 'state/types'
 import { Elevation } from 'config/constants/types'
 import { getContract } from 'utils'
 import { provider } from 'web3-core'
-import FarmCardUserHarvest from './FarmCardUserHarvest'
 import FarmCardUserApproveDeposit from './FarmCardUserApproveDeposit'
 import FarmCardUserWithdraw from './FarmCardUserWithdraw'
 import FarmCardUserElevate from './FarmCardUserElevate'
@@ -94,32 +93,17 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
   }, [ethereum, farmTokenAddress])
 
   // PENDING STATES
-  const [harvestPending, setHarvestPending] = useState<boolean>(false)
+  const [claimPending, setClaimPending] = useState<boolean>(false)
   const [approveDepositPending, setApproveDepositPending] = useState<boolean>(false)
   const [withdrawPending, setWithdrawPending] = useState<boolean>(false)
 
   // DISABLED
-  const disabled = useMemo(() => approveDepositPending || withdrawPending || harvestPending || !isApproved, [
+  const disabled = useMemo(() => approveDepositPending || withdrawPending || claimPending || !isApproved, [
     approveDepositPending,
     withdrawPending,
-    harvestPending,
+    claimPending,
     isApproved,
   ])
-
-  // HARVEST SECTION
-  const harvestSection = useCallback(
-    () =>
-      elevation === Elevation.OASIS && (
-        <FarmCardUserHarvest
-          farmToken={farmToken}
-          elevation={elevation}
-          claimable={claimable}
-          disabled={disabled}
-          setPending={setHarvestPending}
-        />
-      ),
-    [farmToken, claimable, elevation, disabled, setHarvestPending],
-  )
 
   // MOBILE DEPOSIT WITHDRAW SELECTOR
   const mobileDepositWithdrawSelector = useCallback(
@@ -216,7 +200,6 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
   return (
     <ExpandableSection expanded={isExpanded}>
       <Divider />
-      {harvestSection()}
       <MobileVerticalFlex>
         {mobileDepositWithdrawSelector()}
         {depositSection()}
@@ -244,7 +227,7 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
         </Flex>
       </MobileVerticalFlexText>
       <Text fontSize="13px" mt="24px" bold monospace>
-        Deposit / Withdrawal / Elevate txns will harvest available SUMMIT
+        Deposit / Withdrawal / Elevate txns will claim available SUMMIT
       </Text>
       <BottomPadding />
     </ExpandableSection>

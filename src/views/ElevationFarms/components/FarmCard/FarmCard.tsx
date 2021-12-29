@@ -150,10 +150,9 @@ const FarmCard: React.FC<FarmCardProps> = ({
   const pricesPerToken = usePricesPerToken()
   const expanded = singleFarmId === farmId(farm)
 
-  const { stakedBalance, claimable, vestingReward, yieldContributed } = userData || {}
+  const { stakedBalance, claimable, yieldContributed } = userData || {}
 
   const rawEarned = getBalanceNumber(claimable)
-  const rawVesting = getBalanceNumber(vestingReward)
   const rawYieldContribution = getBalanceNumber(yieldContributed)
 
   const isElevationFarm = elevation !== Elevation.OASIS
@@ -214,11 +213,11 @@ const FarmCard: React.FC<FarmCardProps> = ({
           </SymbolIconFlex>
           <FlexInfoItem>
             <Text bold fontSize="14px">
-              {isElevationFarm ? 'Total Rewards' : 'Earned'}
+              {isElevationFarm ? 'Winnings' : 'Earned'}
             </Text>
             <InfoItemValue>
               <CardValue
-                value={rawEarned + (isElevationFarm ? rawVesting : 0)}
+                value={rawEarned}
                 decimals={3}
                 elevation={elevation}
                 fontSize="22px"

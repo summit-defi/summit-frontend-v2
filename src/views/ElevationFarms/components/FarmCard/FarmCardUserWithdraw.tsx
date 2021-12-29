@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import TokenInput from 'components/TokenInput'
 import useWithdraw from 'hooks/useWithdraw'
 import { isNumber } from 'lodash'
-import { RewardsWillBeHarvestedType, useRewardsWillBeHarvestedModal } from '../RewardsWillBeHarvestedModal'
+import { useRewardsWillBeClaimedModal, RewardsWillBeClaimedType } from '../RewardsWillBeClaimedModal'
 
 interface Props {
   farmToken: string
@@ -49,8 +49,8 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
   const { onWithdraw, pending: withdrawPending } = useWithdraw(farmToken, elevation)
 
 
-  // REWARDS WILL BE HARVESTED MODAL
-  const presentRewardsWillBeHarvestedModal = useRewardsWillBeHarvestedModal(elevation, claimable, 'Withdraw', RewardsWillBeHarvestedType.Farm)
+  // REWARDS WILL BE CLAIMED MODAL
+  const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(elevation, claimable, 'Withdraw', RewardsWillBeClaimedType.Farm)
 
 
   useEffect(() => {
@@ -84,10 +84,10 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
   }, [fullWithdrawBalance, setWithdrawVal, setInvalidWithdrawVal])
 
   const handleWithdraw = useCallback(() => {
-    presentRewardsWillBeHarvestedModal({
+    presentRewardsWillBeClaimedModal({
       transactionToConfirm: () => onWithdraw(symbol, withdrawVal, decimals)
     })
-  }, [symbol, withdrawVal, onWithdraw, presentRewardsWillBeHarvestedModal, decimals])
+  }, [symbol, withdrawVal, onWithdraw, presentRewardsWillBeClaimedModal, decimals])
 
   return (
     <Flex flexDirection="column" justifyContent="flex-start" alignItems="flex-start">

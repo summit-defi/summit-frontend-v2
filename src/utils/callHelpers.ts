@@ -41,7 +41,7 @@ export const approve = async (lpContract, targetCartographer, account) => {
 export const stake = async (cartographer, token, elevation, amount, account, decimals) => {
   const stakeCall = cartographer.methods.deposit(
     token,
-    elevation,
+    elevationUtils.toInt(elevation),
     new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toString(),
   )
   return estimateGasAndExecute(stakeCall, account)
@@ -50,7 +50,7 @@ export const stake = async (cartographer, token, elevation, amount, account, dec
 export const withdraw = async (cartographer, token, elevation, amount, account, decimals) => {
   const unstakeCall = cartographer.methods.withdraw(
     token,
-    elevation,
+    elevationUtils.toInt(elevation),
     new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toString(),
   )
   return estimateGasAndExecute(unstakeCall, account)
@@ -62,8 +62,8 @@ export const claimPool = async (cartographer, token, elevation, account) => {
 }
 
 export const claimElevation = async (cartographer, elevation, account) => {
-  const harvestCall = cartographer.methods.claimElevation(elevation)
-  return estimateGasAndExecute(harvestCall, account)
+  const claimCall = cartographer.methods.claimElevation(elevation)
+  return estimateGasAndExecute(claimCall, account)
 }
 
 export const switchTotem = async (cartographer, elevation, totem, account) => {
@@ -100,9 +100,9 @@ export const createReferral = async (summitReferrals, referrerAddress, account) 
   return estimateGasAndExecute(createReferralCall, account)
 }
 
-export const harvestReferralRewards = async (summitReferrals, account) => {
-  const harvestReferralRewardsCall = summitReferrals.methods.redeemReferralRewards()
-  return estimateGasAndExecute(harvestReferralRewardsCall, account)
+export const claimReferralRewards = async (summitReferrals, account) => {
+  const claimReferralRewardsCall = summitReferrals.methods.redeemReferralRewards()
+  return estimateGasAndExecute(claimReferralRewardsCall, account)
 }
 
 // WRAPPER TO RETRY TRANSACTIONS

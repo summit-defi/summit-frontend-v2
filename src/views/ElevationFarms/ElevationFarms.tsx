@@ -53,7 +53,6 @@ const ElevationFarms: React.FC<ElevationFarms> = (props) => {
   const { fastRefresh } = useRefresh()
   useEffect(() => {
     if (account) {
-      console.log('Call from ElevationFarms')
       dispatch(fetchFarmUserDataAsync(account))
     }
   }, [account, dispatch, fastRefresh, web3])

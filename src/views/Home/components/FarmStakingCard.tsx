@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Flex, Card, CardBody, LogoRoundIcon, HighlightedText } from 'uikit'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import UnlockButton from 'components/UnlockButton'
-import SummitHarvestBalance from './SummitHarvestBalance'
+import SummitClaimBalance from './SummitClaimBalance'
 import SummitWalletBalance from './SummitWalletBalance'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { useAllElevsClaimable } from 'hooks/useAllElevsClaimable'
@@ -95,7 +95,7 @@ const FarmedStakingCard = () => {
         </TokenImageWrapper>
         <Flex justifyContent="space-between" alignItems="center">
           <Label>SUMMIT Available</Label>
-          <SummitHarvestBalance account={account} earned={displayTotalEarned} />
+          <SummitClaimBalance account={account} earned={displayTotalEarned} />
         </Flex>
         <Flex justifyContent="space-between" alignItems="center">
           <Label>SUMMIT Vesting</Label>
@@ -108,8 +108,8 @@ const FarmedStakingCard = () => {
         <Actions>
           {!account &&
           //  ? (
-          //   <SummitButton isLoading={harvestAllPending} disabled={pidsWithEarned.length <= 0} onClick={onHarvestAll}>
-          //     {`HARVEST ALL (${pidsWithEarned.length})`}
+          //   <SummitButton isLoading={claimAllPending} disabled={pidsWithEarned.length <= 0} onClick={onClaimAll}>
+          //     {`CLAIM ALL (${pidsWithEarned.length})`}
           //   </SummitButton>
           // ) : (
             <UnlockButton/>

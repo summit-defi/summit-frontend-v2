@@ -12,7 +12,7 @@ import { isNumber } from 'lodash'
 import Totem from './Totem'
 import { elevationPalette } from 'theme/colors'
 import useSelectTotemModal from 'uikit/widgets/SelectTotemModal/useSelectTotemModal'
-import { RewardsWillBeHarvestedType, useRewardsWillBeHarvestedModal } from './RewardsWillBeHarvestedModal'
+import { useRewardsWillBeClaimedModal, RewardsWillBeClaimedType } from './RewardsWillBeClaimedModal'
 
 interface ElevateModalProps {
   symbol: string
@@ -44,8 +44,8 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
 }) => {
   const sisterFarms = useSisterFarms(symbol)
 
-  // REWARDS WILL BE HARVESTED MODAL
-  const presentRewardsWillBeHarvestedModal = useRewardsWillBeHarvestedModal(Elevation.OASIS, new BigNumber(0), 'Elevate', RewardsWillBeHarvestedType.Elevate)
+  // REWARDS WILL BE CLAIMED MODAL
+  const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(Elevation.OASIS, new BigNumber(0), 'Elevate', RewardsWillBeClaimedType.Elevate)
   
   const disabledElevations = Object.entries(sisterFarms)
     .filter(([_, sisterFarm]) => sisterFarm == null)
@@ -130,7 +130,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
   // CONFIRM ELEVATE
   const handleConfirmElevate = () => {
     onDismiss()
-    presentRewardsWillBeHarvestedModal({
+    presentRewardsWillBeClaimedModal({
       elevateInfo: {
         sourceElevation: selectedSourceElevation,
         targetElevation: selectedTargetElevation,

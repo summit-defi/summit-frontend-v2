@@ -49,7 +49,7 @@ const Divider = styled.div`
   width: 100%;
 `
 
-interface HarvestProps {
+interface ClaimProps {
   expedition: Expedition
   summitAllowance: BigNumber
   summitBalance: BigNumber
@@ -59,7 +59,7 @@ interface HarvestProps {
   expired?: boolean
 }
 
-const ExpeditionCardUserSection: React.FC<HarvestProps> = ({
+const ExpeditionCardUserSection: React.FC<ClaimProps> = ({
   expedition,
   summitAllowance,
   summitLpAllowance,

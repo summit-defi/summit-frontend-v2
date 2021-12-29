@@ -10,7 +10,7 @@ import { HighlightedText, Text } from 'uikit/components/Text'
 import { getElevationGradientFarmCardBackground } from 'utils'
 import ArtworkTotem from 'views/ElevationFarms/components/ArtworkTotem'
 import InitialSelectionTotems from 'views/ElevationFarms/components/InitialSelectionTotems'
-import { RewardsWillBeHarvestedType, useRewardsWillBeHarvestedModal } from 'views/ElevationFarms/components/RewardsWillBeHarvestedModal'
+import { RewardsWillBeClaimedType, useRewardsWillBeClaimedModal } from 'views/ElevationFarms/components/RewardsWillBeClaimedModal'
 import { Modal } from '../Modal'
 
 interface Props {
@@ -61,7 +61,7 @@ const SelectTotemModal: React.FC<Props> = ({
   onDismiss = () => null,
 }) => {
   const { userEarned } = useElevationUserRoundInfo(elevation)
-  const presentRewardsWillBeHarvestedModal = useRewardsWillBeHarvestedModal(elevation, userEarned || new BigNumber(0), 'Deposit', RewardsWillBeHarvestedType.FullElevation)
+  const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(elevation, userEarned || new BigNumber(0), 'Deposit', RewardsWillBeClaimedType.FullElevation)
 
   const { pending, onSelectTotem } = useSelectTotem()
   const [totemToConfirm, setTotemToConfirm] = useState<number | null>(
@@ -70,10 +70,10 @@ const SelectTotemModal: React.FC<Props> = ({
   const elevationBackground = getElevationGradientFarmCardBackground(elevation)
   const handleSelectTotem = useCallback(async () => {
     onDismiss()
-    presentRewardsWillBeHarvestedModal(
+    presentRewardsWillBeClaimedModal(
       { transactionToConfirm: () => onSelectTotem(elevation, totemToConfirm) }
     )
-  }, [onSelectTotem, elevation, totemToConfirm, onDismiss, presentRewardsWillBeHarvestedModal])
+  }, [onSelectTotem, elevation, totemToConfirm, onDismiss, presentRewardsWillBeClaimedModal])
   const totemToConfirmName = elevationUtils.getElevationTotemName(elevation, totemToConfirm, false)
   const elevationName = `${elevation}`
 

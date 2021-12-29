@@ -91,7 +91,7 @@ const ExpeditionTokenSelector: React.FC<Props> = ({ deity, setSelectedToken, exp
           <>
             Withdraw from the Expedition
             <br/>
-            <Text italic monospace bold>(Your first exit transaction will harvest any winnings)</Text>
+            <Text italic monospace bold>(Your first exit transaction will claim any winnings)</Text>
           </> :
           `Deposit to the Cosmic ${deity === 0 ? 'Bull' : 'Bear'}:`
         }
