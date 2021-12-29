@@ -69,9 +69,9 @@ const FarmCardUserElevate: React.FC<Props> = ({ farm, elevationLocked, disabled 
         selectElevation={handleSelectElevation}
       />
       <CenteredInfoText fontSize="12px" bold monospace>
-        * NO FEES ON
+        * NO TAX ON
         <br />
-        ELEVATE TX
+        ELEVATE
       </CenteredInfoText>
     </Flex>
   )

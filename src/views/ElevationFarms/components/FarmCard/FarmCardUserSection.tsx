@@ -68,6 +68,7 @@ const FarmCardUserSection: React.FC<Props> = ({ isExpanded: expanded, elevation,
     depositFeeBP,
     decimals,
     taxBP,
+    native,
     symbol,
     userData,
     passthroughStrategy,
@@ -209,11 +210,16 @@ const FarmCardUserSection: React.FC<Props> = ({ isExpanded: expanded, elevation,
       </MobileVerticalFlex>
       <MobileVerticalFlexText width="100%" mt="24px">
         <Flex flexDirection="column" justifyContent="flex-start" alignItems="center">
-          <Text fontSize="14px" bold monospace>
-            {symbol} Fee: {(depositFeeBP || 0) / 100 + (taxBP || 0) / 100}%
+          { (depositFeeBP || 0) > 0 &&
+            <Text bold monospace>
+              Deposit Fee: {(depositFeeBP || 0) / 100}%
+            </Text>
+          }
+          <Text bold monospace>
+            Fairness Tax: 7% ⮕ {native ? 0 : 1}%
           </Text>
           <Text fontSize="13px" bold monospace>
-            On Deposit: {(depositFeeBP || 0) / 100}% / On Withdrawal: {(taxBP || 0) / 100}%
+            (Fairness Tax decays over 7 days)
           </Text>
         </Flex>
         <Flex flexDirection="column" justifyContent="flex-start" alignItems="center">
@@ -227,9 +233,6 @@ const FarmCardUserSection: React.FC<Props> = ({ isExpanded: expanded, elevation,
           </ExternalLinkButton>
         </Flex>
       </MobileVerticalFlexText>
-      <Text fontSize="13px" mt="24px" bold monospace>
-        Deposit / Withdrawal / Elevate txns will claim available SUMMIT
-      </Text>
       <BottomPadding />
     </ExpandableSection>
   )

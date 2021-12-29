@@ -13,7 +13,7 @@ import { getBalanceNumber, nFormatter } from 'utils'
 import Totem from '../Totem'
 import { farmId } from 'utils/farmId'
 
-const FCard = styled(Flex)<{ $locked: boolean; expanded: boolean }>`
+const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
   align-self: baseline;
   flex-direction: column;
   justify-content: space-around;
@@ -26,8 +26,8 @@ const FCard = styled(Flex)<{ $locked: boolean; expanded: boolean }>`
   border-bottom-style: solid;
   border-bottom-color: ${({ theme }) => theme.colors.text};
 
-  ${({ expanded }) =>
-    expanded &&
+  ${({ $expanded }) =>
+    $expanded &&
     css`
       background: ${({ theme }) => theme.colors.cardHover};
       box-shadow: 2px 2px 12px -4px rgba(25, 19, 38, 0.4), 2px 2px 8px rgba(25, 19, 38, 0.2);
@@ -42,7 +42,7 @@ const FCard = styled(Flex)<{ $locked: boolean; expanded: boolean }>`
   }
 `
 
-const PressableFlex = styled(NavLink)<{ expanded: boolean }>`
+const PressableFlex = styled(NavLink)<{ $expanded: boolean }>`
   display: flex;
   justify-content: center;
   align-items: flex-start;
@@ -51,8 +51,8 @@ const PressableFlex = styled(NavLink)<{ expanded: boolean }>`
   cursor: pointer;
   transition: all 300ms;
   flex-wrap: wrap;
-  ${({ expanded }) =>
-    !expanded &&
+  ${({ $expanded }) =>
+    !$expanded &&
     css`
       &:hover {
         background: ${({ theme }) => theme.colors.cardHover};
@@ -153,6 +153,7 @@ const FarmCard: React.FC<FarmCardProps> = ({
   const expanded = singleFarmId === farmId(farm)
 
   const { stakedBalance, claimable, yieldContributed } = userData || {}
+  const { bonusBP = 0, taxBP = 0 } = tokenInfo || {}
 
   const rawEarned = getBalanceNumber(claimable)
   const rawYieldContribution = getBalanceNumber(yieldContributed)
@@ -197,8 +198,8 @@ const FarmCard: React.FC<FarmCardProps> = ({
   const targetUrl = `/${elevation.toLowerCase()}${expanded ? '' : `/${symbol.toLowerCase()}`}`
 
   return (
-    <FCard $locked={elevationLocked} expanded={expanded}>
-      <PressableFlex to={targetUrl} expanded={expanded}>
+    <FCard $locked={elevationLocked} $expanded={expanded}>
+      <PressableFlex to={targetUrl} $expanded={expanded}>
         { farmComment != null && <Text monospace bold italic fontSize='13px' mb='14px' textAlign='center'>* {farmComment}</Text> }
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }
         <FarmNumericalInfoFlex>
@@ -215,7 +216,7 @@ const FarmCard: React.FC<FarmCardProps> = ({
           </SymbolIconFlex>
           <FlexInfoItem>
             <Text bold fontSize="14px">
-              {isElevationFarm ? 'Winnings' : 'Earned'}
+              Winnings
             </Text>
             <InfoItemValue>
               <CardValue
@@ -247,6 +248,25 @@ const FarmCard: React.FC<FarmCardProps> = ({
               </YieldContributedWrapper>
             </FlexInfoItem>
           )}
+
+          { userStakedBalance.gt(0) && bonusBP > 0 &&
+            <FlexInfoItem>
+              <Text fontSize="14px">Winnings Bonus</Text>
+              <InfoItemValue>
+                <CardValue value={bonusBP / 100} postfix='%' decimals={1} elevation={elevation} fontSize="22px" />
+              </InfoItemValue>
+            </FlexInfoItem>
+          }
+
+          { userStakedBalance.gt(0) &&
+            <FlexInfoItem>
+              <Text fontSize="14px">Fairness Tax</Text>
+              <InfoItemValue>
+                <CardValue value={taxBP / 100} postfix='%' decimals={1} elevation={elevation} fontSize="22px" />
+              </InfoItemValue>
+            </FlexInfoItem>
+          }
+
           <FlexInfoItem>
             <Text fontSize="14px">Deposited</Text>
             <InfoItemValue>

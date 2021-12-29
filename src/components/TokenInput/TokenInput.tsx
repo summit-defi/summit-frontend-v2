@@ -56,7 +56,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
       ) : null}
       {withdrawalFee > 0 ? (
         <StyledFeeText>
-          Withdrawal Fee: {new BigNumber(value || 0).times(withdrawalFee / 10000).toString()}
+          Fairness Tax: {new BigNumber(value || 0).times(withdrawalFee / 10000).toString()}
         </StyledFeeText>
       ) : null}
     </StyledTokenInput>
