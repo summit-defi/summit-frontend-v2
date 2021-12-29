@@ -11,6 +11,7 @@ import { rolloverElevation } from 'utils/callHelpers'
 import { useCartographer } from './useContract'
 import { Elevation, ElevationInt } from 'config/constants/types'
 import useToast from './useToast'
+import { fetchTokensUserDataAsync } from 'state/tokens'
 
 const useRolloverElevation = () => {
   const dispatch = useDispatch()
@@ -37,6 +38,7 @@ const useRolloverElevation = () => {
           dispatch(fetchExpeditionUserDataAsync(account))
         } else {
           dispatch(fetchFarmUserDataAsync(account))
+          dispatch(fetchTokensUserDataAsync(account))
         }
         dispatch(fetchElevationHelperInfoAsync())
         dispatch(updateElevationInfoAsync(elevation))

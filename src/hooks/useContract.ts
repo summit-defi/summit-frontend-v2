@@ -9,7 +9,6 @@ import {
   getExpeditionAddress,
   getCartographerOasisAddress,
   getElevationHelperAddress,
-  getSummitReferralsAddress,
   getSummitLpAddress,
   getEverestTokenAddress,
   getSummitLockingAddress,
@@ -55,9 +54,6 @@ export const useExpedition = () => {
 }
 export const useElevationHelper = () => {
   return useContract(abiItem.elevationHelper, getElevationHelperAddress())
-}
-export const useSummitReferrals = () => {
-  return useContract(abiItem.summitReferrals, getSummitReferralsAddress())
 }
 export const useSummitLocking = () => {
   return useContract(abiItem.summitLocking, getSummitLockingAddress())

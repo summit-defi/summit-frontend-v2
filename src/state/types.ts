@@ -9,8 +9,6 @@ export const NamedChainId = {
 }
 
 export interface FarmUserData {
-  allowance: BigNumber
-  tokenBalance: BigNumber
   stakedBalance: BigNumber
   claimable: BigNumber
   yieldContributed: BigNumber
@@ -115,7 +113,6 @@ export interface SummitEcosystemState {
   totemsLockedIn: boolean[]
   elevationsInfo: ElevationInfo[]
   keywordRound: number
-  referralBurnTimestamp: number
   expeditionDivider: number
   farmType: FarmType
   liveFarms: boolean
@@ -127,25 +124,34 @@ export interface SummitEcosystemState {
   pendingExpeditionTx: boolean
 }
 
-export interface ReferralsState {
-  referrer: string
-  pendingRewards: number
-  accumulatedRewards: number
-  rewardsToBeBurned: number
-}
-
 // API Price State
 
 export interface PriceState {
   pricesPerToken?: { [key: string]: number }
 }
 
-// Global state
+// Tokens
 
+export interface UserTokenData {
+  symbol: string
+  tokenAddress: string
+  staked?: BigNumber
+  bonusResetTimestamp?: number
+  bonusBP?: number
+  taxResetTimestamp?: number
+  taxBP?: number
+  farmAllowance?: BigNumber
+  walletBalance?: BigNumber
+}
+export interface TokensState {
+  data: UserTokenData[]
+}
+
+// Global state
 export interface State {
   farms: FarmsState
   prices: PriceState
   expedition: ExpeditionState
   summitEcosystem: SummitEcosystemState
-  referrals: ReferralsState
+  tokens: TokensState
 }

@@ -38,17 +38,21 @@ const Actions = styled(Flex)`
 const FarmedStakingCard = () => {
   const { account } = useWallet()
   const elevsClaimable = useAllElevsClaimable()
-  
-  const { totalEarned, totalVesting } =
-    elevsClaimable != null
-      ? Object.values(elevsClaimable).reduce(
-          (accum, elevClaimable) => accum.add(elevClaimable),
-          new BigNumber(0),
-        )
-      : new BigNumber(0)
 
-  const displayTotalEarned = getBalanceNumber(totalEarned)
-  const displayTotalVesting = getBalanceNumber(totalVesting)
+  console.log({
+    elevsClaimable,
+    isNull: elevsClaimable != null
+  })
+  
+  const totalClaimable =
+    elevsClaimable != null ?
+      Object.values(elevsClaimable).reduce(
+        (accum, elevClaimable) => accum.plus(elevClaimable),
+        new BigNumber(0),
+      ) :
+      new BigNumber(0)
+
+  const displayTotalClaimable = getBalanceNumber(totalClaimable)
   const summitAddress = getSummitTokenAddress()
 
   const addWatchSummitToken = useCallback(async () => {
@@ -94,12 +98,8 @@ const FarmedStakingCard = () => {
           </SummitButton>
         </TokenImageWrapper>
         <Flex justifyContent="space-between" alignItems="center">
-          <Label>SUMMIT Available</Label>
-          <SummitClaimBalance account={account} earned={displayTotalEarned} />
-        </Flex>
-        <Flex justifyContent="space-between" alignItems="center">
-          <Label>SUMMIT Vesting</Label>
-          <SummitVestingBalance account={account} vesting={displayTotalVesting} />
+          <Label>SUMMIT Claimable</Label>
+          <SummitClaimBalance account={account} earned={displayTotalClaimable} />
         </Flex>
         <Flex justifyContent="space-between" alignItems="center">
           <Label>SUMMIT in Wallet</Label>

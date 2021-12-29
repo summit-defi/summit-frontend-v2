@@ -78,10 +78,4 @@ export const getMenuItems = (
     external: false,
     elevation: Elevation.EXPEDITION,
   },
-  {
-    label: 'REFERRALS',
-    href: `/referrals`,
-    icon: 'totemIcons/ADDRESS.png',
-    external: false,
-  },
 ]

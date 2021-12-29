@@ -20,11 +20,11 @@ import { ToastListener } from 'contexts/ToastsContext'
 import { useRoundRollovers } from 'hooks/useRoundRollovers'
 import PageForcedDarkComponent from 'PageForcedDarkComponent'
 import { useFetchExpeditionPotTotalValue } from 'hooks/useFetchExpeditionPotTotalValue'
+import { fetchTokensUserDataAsync } from 'state/tokens'
 
 const Home = lazy(() => import('./views/Home'))
 const ElevationFarms = lazy(() => import('./views/ElevationFarms'))
 const ExpeditionFarms = lazy(() => import('./views/Expeditions'))
-const Referrals = lazy(() => import('./views/Referrals'))
 const NotFound = lazy(() => import('./views/NotFound'))
 
 const StyledRouter = styled(Router)`
@@ -52,6 +52,7 @@ const App: React.FC = () => {
       dispatch(setActiveAccount(account))
       dispatch(fetchFarmUserDataAsync(account))
       dispatch(fetchUserTotemsAsync(account))
+      dispatch(fetchTokensUserDataAsync(account))
       dispatch(fetchRolloverRewardInNativeTokenAsync())
     }
   }, [account, dispatch, web3])
@@ -83,9 +84,6 @@ const App: React.FC = () => {
             ))}
             <Route path="/expedition">
               <ExpeditionFarms />
-            </Route>
-            <Route path="/referrals">
-              <Referrals />
             </Route>
             <Route component={NotFound} />
           </Switch>

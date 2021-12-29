@@ -4,9 +4,9 @@ import { useDispatch } from 'react-redux'
 import { fetchFarmUserDataAsync } from 'state/actions'
 import { withdraw } from 'utils/callHelpers'
 import { useCartographer } from './useContract'
-import useToast, { useTransactionToasts } from './useToast'
+import { useTransactionToasts } from './useToast'
 import { Elevation } from 'config/constants/types'
-import { setPendingExpeditionTx } from 'state/summitEcosystem'
+import { fetchTokensUserDataAsync } from 'state/tokens'
 
 const useWithdraw = (farmToken: string, elevation: Elevation) => {
   const dispatch = useDispatch()
@@ -21,15 +21,14 @@ const useWithdraw = (farmToken: string, elevation: Elevation) => {
       const filteredAmount = amount || '0'
       try {
         setPending(true)
-        if (elevation === Elevation.EXPEDITION) dispatch(setPendingExpeditionTx(true))
         await withdraw(cartographer, farmToken, elevation, filteredAmount, account, decimals)
         toastSuccess(`${symbol} Withdraw Confirmed`)
       } catch (error) {
         toastError(`${symbol} Withdraw Failed`, (error as Error).message)
       } finally {
         setPending(false)
-        if (elevation === Elevation.EXPEDITION) dispatch(setPendingExpeditionTx(true))
         dispatch(fetchFarmUserDataAsync(account))
+        dispatch(fetchTokensUserDataAsync(account))
       }
     },
     [elevation, account, dispatch, cartographer, farmToken, setPending, toastSuccess, toastError],

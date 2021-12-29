@@ -28,7 +28,6 @@ const initialState: SummitEcosystemState = {
   ...getLocalStorageVariables(),
   elevationsInfo: [],
   keywordRound: 0,
-  referralBurnTimestamp: 0,
   expeditionDivider: 50,
   liveFarms: true,
   pendingTxs: [],
@@ -51,9 +50,8 @@ export const SummitEcosystemSlice = createSlice({
       localStorage.setItem('SummitEnabled', JSON.stringify(action.payload))
     },
     setElevationHelperInfo: (state, action) => {
-      const { keywordRound, referralBurnTimestamp, expeditionDivider } = action.payload
+      const { keywordRound, expeditionDivider } = action.payload
       state.keywordRound = keywordRound
-      state.referralBurnTimestamp = referralBurnTimestamp
       state.expeditionDivider = expeditionDivider
     },
     setElevationsData: (state, action) => {

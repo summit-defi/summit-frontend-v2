@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Flex, Text, ExternalLinkButton } from 'uikit'
-import { Farm } from 'state/types'
+import { Farm, UserTokenData } from 'state/types'
 import { Elevation } from 'config/constants/types'
 import { getContract } from 'utils'
 import { provider } from 'web3-core'
@@ -12,7 +12,7 @@ import FarmCardMobileDepositWithdrawSelector from './FarmCardMobileDepositWithdr
 import { useIsElevationLockedUntilRollover, useMediaQuery } from 'state/hooks'
 import { getFarmToken } from 'utils/farmId'
 
-const ExpandableSection = styled(Flex)<{ expanded: boolean }>`
+const ExpandableSection = styled(Flex)<{ isExpanded: boolean }>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -20,8 +20,8 @@ const ExpandableSection = styled(Flex)<{ expanded: boolean }>`
   overflow: hidden;
   padding-left: 24px;
   padding-right: 24px;
-  max-height: ${({ expanded }) => (expanded ? '1000px' : '0px')};
-  opacity: ${({ expanded }) => (expanded ? 1 : 0)};
+  max-height: ${({ isExpanded }) => (isExpanded ? '1000px' : '0px')};
+  opacity: ${({ isExpanded }) => (isExpanded ? 1 : 0)};
 `
 
 const BottomPadding = styled.div`
@@ -55,14 +55,14 @@ const MobileVerticalFlexText = styled(MobileVerticalFlex)`
 `
 
 interface Props {
-  expanded: boolean
+  isExpanded: boolean
   elevation: Elevation
   farm: Farm
+  tokenInfo: UserTokenData
   account?: string
   ethereum?: provider
 }
-
-const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, account, ethereum }) => {
+const FarmCardUserSection: React.FC<Props> = ({ isExpanded: expanded, elevation, farm, tokenInfo, account, ethereum }) => {
   const {
     farmToken,
     depositFeeBP,
@@ -85,9 +85,10 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
   const farmTokenAddress = getFarmToken(farm)
   const [mobileDepositWithdraw, setMobileDepositWithdraw] = useState(isMobile ? 0 : -1)
 
-  const { allowance, stakedBalance, tokenBalance, claimable } = userData || {}
+  const { stakedBalance, claimable } = userData || {}
+  const { farmAllowance, walletBalance } = tokenInfo
 
-  const isApproved = account && allowance && allowance.isGreaterThan(0)
+  const isApproved = account && farmAllowance && farmAllowance.isGreaterThan(0)
   const lpContract = useMemo(() => {
     return getContract(ethereum as provider, farmTokenAddress)
   }, [ethereum, farmTokenAddress])
@@ -127,7 +128,7 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
           elevation={elevation}
           symbol={symbol}
           elevationLocked={elevationLocked}
-          tokenBalance={tokenBalance}
+          walletBalance={walletBalance}
           decimals={decimals}
           depositFeeBP={depositFeeBP}
           isApproved={isApproved}
@@ -145,7 +146,7 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
       mobileDepositWithdraw,
       elevationLocked,
       symbol,
-      tokenBalance,
+      walletBalance,
       depositFeeBP,
       claimable,
       isApproved,
@@ -198,7 +199,7 @@ const FarmCardUserSection: React.FC<Props> = ({ expanded, elevation, farm, accou
   )
 
   return (
-    <ExpandableSection expanded={isExpanded}>
+    <ExpandableSection isExpanded={isExpanded}>
       <Divider />
       <MobileVerticalFlex>
         {mobileDepositWithdrawSelector()}

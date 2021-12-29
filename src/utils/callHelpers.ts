@@ -86,24 +86,6 @@ export const rolloverElevation = async (cartographer, elevation, account) => {
   const rolloverElevationCall = cartographer.methods.rollover(elevation)
   return estimateGasAndExecute(rolloverElevationCall, account)
 }
-export const burnReferralRewards = async (cartographer, account) => {
-  const burnReferralCall = cartographer.methods.rolloverReferral()
-  return estimateGasAndExecute(burnReferralCall, account)
-}
-
-// REFERRALS
-export const createReferral = async (summitReferrals, referrerAddress, account) => {
-  if (!Web3.utils.isAddress(referrerAddress)) {
-    throw new RevertError('Invalid Address')
-  }
-  const createReferralCall = summitReferrals.methods.createReferral(referrerAddress)
-  return estimateGasAndExecute(createReferralCall, account)
-}
-
-export const claimReferralRewards = async (summitReferrals, account) => {
-  const claimReferralRewardsCall = summitReferrals.methods.redeemReferralRewards()
-  return estimateGasAndExecute(claimReferralRewardsCall, account)
-}
 
 // WRAPPER TO RETRY TRANSACTIONS
 export const retryDecorator = (decoratee, retryCount = 4) => {

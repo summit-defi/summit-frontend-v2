@@ -68,8 +68,6 @@ export type Colors = {
   MESA: string
   SUMMIT: string
   EXPEDITION: string
-
-  REFERRALS: string
 }
 
 export type ZIndices = {

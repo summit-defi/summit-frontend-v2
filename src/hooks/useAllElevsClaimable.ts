@@ -20,14 +20,14 @@ export const useAllElevsClaimable = () => {
         params: [account],
       }))
 
-      const res = await retryableMulticall(abi.cartographer, calls, 'useAllElevsClaimable')
+      const res = await retryableMulticall(abi.cartographerOasis, calls, 'useAllElevsClaimable')
       if (res == null) return
 
       setEarnedAndVesting(
         groupByAndMap(
           elevationUtils.all,
           (elevation) => elevation,
-          (_, index) => new BigNumber(res[index]._hex),
+          (_, index) => new BigNumber(res[index][0]._hex),
         ),
       )
     }

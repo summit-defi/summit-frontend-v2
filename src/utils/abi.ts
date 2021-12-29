@@ -7,7 +7,6 @@ import everestToken from '../config/abi/EverestToken.json'
 import expedition from '../config/abi/ExpeditionV2.json'
 import elevationHelper from '../config/abi/ElevationHelper.json'
 import multicall from '../config/abi/Multicall.json'
-import summitReferrals from '../config/abi/SummitReferrals.json'
 import summitLocking from '../config/abi/SummitLocking.json'
 import ERC20 from '../config/abi/ERC20.json'
 import Balancer2PoolPriceOracle from '../config/abi/Balancer2PoolPriceOracle.json'
@@ -24,7 +23,6 @@ export const abi = {
   expedition,
   elevationHelper,
   multicall,
-  summitReferrals,
   summitLocking,
   ERC20,
   Balancer2PoolPriceOracle,
@@ -40,7 +38,6 @@ export const abiItem = {
   expedition: (abi.expedition as unknown) as AbiItem,
   elevationHelper: (abi.elevationHelper as unknown) as AbiItem,
   multicall: (abi.multicall as unknown) as AbiItem,
-  summitReferrals: (abi.summitReferrals as unknown) as AbiItem,
   summitLocking: (abi.summitLocking as unknown) as AbiItem,
   ERC20: (abi.ERC20 as unknown) as AbiItem,
   Balancer2PoolPriceOracle: (abi.Balancer2PoolPriceOracle as unknown) as AbiItem,

@@ -1,27 +1,28 @@
 import React, { useState, useEffect } from 'react'
-import { Farm } from 'state/types'
+import { Farm, UserTokenData } from 'state/types'
 import { Elevation } from 'config/constants/types'
 import { provider } from 'web3-core'
 import FarmCardUserSection from './FarmCardUserSection'
 
 interface Props {
-  expanded: boolean
+  isExpanded: boolean
   elevation: Elevation
   farm: Farm
+  tokenInfo: UserTokenData
   account?: string
   ethereum?: provider
 }
 
 const FarmCardUserSectionExpander: React.FC<Props> = (props) => {
-  const { expanded } = props
+  const { isExpanded } = props
   const [renderExpandedComponents, setRenderExpandedComponents] = useState(false)
 
   useEffect(() => {
     let collapseTimeout
-    if (expanded) setRenderExpandedComponents(true)
+    if (isExpanded) setRenderExpandedComponents(true)
     else collapseTimeout = setTimeout(() => setRenderExpandedComponents(false), 300)
     return () => clearTimeout(collapseTimeout)
-  }, [expanded, setRenderExpandedComponents])
+  }, [isExpanded, setRenderExpandedComponents])
 
   if (!renderExpandedComponents) return null
 

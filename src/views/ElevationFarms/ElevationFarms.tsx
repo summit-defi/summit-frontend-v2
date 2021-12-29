@@ -7,7 +7,7 @@ import { provider } from 'web3-core'
 import { Text, Flex } from 'uikit'
 import FlexLayout from 'components/layout/Flex'
 import Page from 'components/layout/Page'
-import { useElevationLocked, useElevationTotem, useFarms, useFarmsLoaded, useSummitPrice } from 'state/hooks'
+import { useElevationLocked, useElevationTotem, useFarms, useFarmsLoaded, useSummitPrice, useUserTokens } from 'state/hooks'
 import useRefresh from 'hooks/useRefresh'
 import { fetchFarmUserDataAsync } from 'state/actions'
 import { Elevation } from 'config/constants/types'
@@ -21,6 +21,7 @@ import { useFarmType } from 'hooks/useFarmType'
 import { FarmType } from 'state/types'
 import ElevationAndUserVolumes from './components/ElevationAndUserVolumes'
 import { farmId, getFarmType } from 'utils/farmId'
+import { fetchTokensUserDataAsync } from 'state/tokens'
 
 const NoFarmsFlex = styled(Flex)`
   padding: 12px;
@@ -39,6 +40,7 @@ export interface ElevationFarms {
 const ElevationFarms: React.FC<ElevationFarms> = (props) => {
   const { path } = useRouteMatch()
   const farmsLP = useFarms()
+  const userTokenInfos = useUserTokens()
   const farmsLoaded = useFarmsLoaded()
   const summitPrice = useSummitPrice()
   const web3 = useWeb3()
@@ -54,6 +56,7 @@ const ElevationFarms: React.FC<ElevationFarms> = (props) => {
   useEffect(() => {
     if (account) {
       dispatch(fetchFarmUserDataAsync(account))
+      dispatch(fetchTokensUserDataAsync(account))
     }
   }, [account, dispatch, fastRefresh, web3])
 
@@ -81,10 +84,11 @@ const ElevationFarms: React.FC<ElevationFarms> = (props) => {
   const farms = stakedFarms.concat(unstakedFarms)
 
   const farmsList = useCallback(
-    (farmsToDisplay, removed: boolean) => farmsToDisplay.map((farm) => (
+    (farmsToDisplay, userTokens, removed: boolean) => farmsToDisplay.map((farm) => (
       <FarmCard
         key={farmId(farm)}
         farm={farm}
+        tokenInfo={userTokens[farm.symbol]}
         removed={removed}
         summitPrice={summitPrice}
         ethereum={ethereum}
@@ -111,7 +115,7 @@ const ElevationFarms: React.FC<ElevationFarms> = (props) => {
             </NoFarmsFlex>
           )}
           <FlexLayout>
-            <Route path={`${path}/`}>{farmsList(farms, false)}</Route>
+            <Route path={`${path}/`}>{farmsList(farms, userTokenInfos, false)}</Route>
           </FlexLayout>
         </div>
       )}

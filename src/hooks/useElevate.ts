@@ -6,7 +6,7 @@ import { elevate } from 'utils/callHelpers'
 import { useCartographer } from './useContract'
 import useToast from './useToast'
 import { Elevation } from 'config/constants/types'
-import { setPendingExpeditionTx } from 'state/summitEcosystem'
+import { fetchTokensUserDataAsync } from 'state/tokens'
 
 const useElevate = () => {
   const dispatch = useDispatch()
@@ -19,15 +19,14 @@ const useElevate = () => {
     async (symbol: string, token: string, sourceElevation: Elevation, targetElevation: Elevation, amount: string, decimals: number) => {
       try {
         setPending(true)
-        dispatch(setPendingExpeditionTx(true))
         await elevate(cartographer, token, sourceElevation, targetElevation, amount, account, decimals)
         toastSuccess(`${symbol} Elevate Confirmed`)
       } catch (error) {
         toastError(`${symbol} Elevate Failed`, (error as Error).message)
       } finally {
         setPending(false)
-        dispatch(setPendingExpeditionTx(false))
         dispatch(fetchFarmUserDataAsync(account))
+        dispatch(fetchTokensUserDataAsync(account))
       }
     },
     [account, dispatch, cartographer, setPending, toastSuccess, toastError],

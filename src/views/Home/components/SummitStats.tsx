@@ -29,11 +29,9 @@ const SummitStats = () => {
   const burnedBalance = useBurnedSummitBalance()
   const summitPrice = useSummitPrice()
   const farm = useSummitPerSecond()
-  const referrals = farm.times(20).div(1000)
   const treasury = farm.times(200).div(1000)
-  const totalSummitPerSecond = farm.plus(referrals).plus(treasury)
+  const totalSummitPerSecond = farm.plus(treasury)
   const farmPerc = farm.div(totalSummitPerSecond).times(100).toNumber()
-  const referralsPerc = referrals.div(totalSummitPerSecond).times(100).toNumber()
   const treasuryPerc = treasury.div(totalSummitPerSecond).times(100).toNumber()
   const circSupply = totalSupply ? totalSupply.minus(burnedBalance) : new BigNumber(0)
   const summitSupply = getBalanceNumber(circSupply)
@@ -80,7 +78,6 @@ const SummitStats = () => {
             <SummitEmissionDoughnut
               poolEmission={farmPerc}
               treasuryEmission={treasuryPerc}
-              referralEmission={referralsPerc}
             />
           </Flex>
           <Flex flexDirection="column" alignItems="center" justifyContent="center">

@@ -1,5 +1,9 @@
+import BigNumber from "bignumber.js"
+
 /* eslint camelcase: 0 */
 export const ForceElevationRetired = false
+
+export const BN_ZERO = new BigNumber(0)
 
 export enum Elevation {
   OASIS = 'OASIS',
@@ -366,11 +370,6 @@ export interface FarmConfig extends PriceableToken {
 
 export enum RevertReasonOutput {
   Bad_withdrawal = 'Attempted_to_withdraw_zero,_or_more_than_you_have_staked.',
-  Already_been_referred = 'You_have_already_entered_a_referral_address',
-  No_reciprocal_referrals = 'You_can\'t_refer_the_user_user_that_referred_you',
-  Referral_burn_not_available = 'The_Referral_Burn_isn\'t_available_yet',
-  Cant_refer_yourself = 'You_can\'t_refer_yourself',
-  No_referral_rewards_to_redeem = 'You_don\'t_have_any_referral_rewards_to_redeem',
   Invalid_elev = 'Transaction_was_attempted_on_an_invalid_elevation',
   Pool_not_launched_yet = 'This_farm_hasn\'t_been_launched_yet',
   Elevation_locked = 'This_elevation_has_not_yet_unlocked',
@@ -388,11 +387,6 @@ export enum RevertReasonOutput {
 
 export const RevertReasonMap = {
   Bad_withdrawal: RevertReasonOutput.Bad_withdrawal,
-  Already_been_referred: RevertReasonOutput.Already_been_referred,
-  No_reciprocal_referrals: RevertReasonOutput.No_reciprocal_referrals,
-  Referral_burn_not_available: RevertReasonOutput.Referral_burn_not_available,
-  Cant_refer_yourself: RevertReasonOutput.Cant_refer_yourself,
-  No_referral_rewards_to_redeem: RevertReasonOutput.No_referral_rewards_to_redeem,
   Invalid_elev: RevertReasonOutput.Invalid_elev,
   Pool_not_launched_yet: RevertReasonOutput.Pool_not_launched_yet,
   Elevation_locked: RevertReasonOutput.Elevation_locked,
@@ -410,11 +404,6 @@ export const RevertReasonMap = {
 
 export const IsSummitRevertReason = {
   [RevertReasonOutput.Bad_withdrawal]: true,
-  [RevertReasonOutput.Already_been_referred]: true,
-  [RevertReasonOutput.No_reciprocal_referrals]: true,
-  [RevertReasonOutput.Referral_burn_not_available]: true,
-  [RevertReasonOutput.Cant_refer_yourself]: true,
-  [RevertReasonOutput.No_referral_rewards_to_redeem]: true,
   [RevertReasonOutput.Invalid_elev]: true,
   [RevertReasonOutput.Pool_not_launched_yet]: true,
   [RevertReasonOutput.Elevation_locked]: true,

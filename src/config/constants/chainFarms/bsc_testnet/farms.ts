@@ -1,9 +1,10 @@
 import { MultiElevFarmConfig } from '../../types'
-import { expandMultiElevConfig } from '../../expandMultiElevConfig'
+import { expandMultiElevConfig, multiElevConfigTokenInfo } from '../../expandMultiElevConfig'
 import { farmConfigs } from './farmConfigs'
-import { NamedChainId } from 'state/types'
+import { NamedChainId, UserTokenData } from 'state/types'
 import { bscTestnetTokens } from './tokens'
 import { TokenSymbol } from 'config/constants/tokenSymbols'
+import { getFarmToken } from 'utils/farmId'
 
 
 
@@ -84,19 +85,26 @@ const gs5Farm: MultiElevFarmConfig = {
   getUrl: 'https://spookyswap.finance/swap?outputCurrency=0xGS5',
 }
 
+const farms = [
+  summitFarm,
+  everestFarm,
+  cakeFarm,
+  bifiFarm,
+  usdcFarm,
+  gs0Farm,
+  gs1Farm,
+  gs2Farm,
+  gs3Farm,
+  gs4Farm,
+  gs5Farm,
+]
+
 export const bscTestnetFarms = (chainId) => {
   if (chainId !== NamedChainId.BSC_TESTNET) return []
-  return [
-    ...expandMultiElevConfig(chainId, summitFarm),
-    ...expandMultiElevConfig(chainId, everestFarm),
-    ...expandMultiElevConfig(chainId, cakeFarm),
-    ...expandMultiElevConfig(chainId, bifiFarm),
-    ...expandMultiElevConfig(chainId, usdcFarm),
-    ...expandMultiElevConfig(chainId, gs0Farm),
-    ...expandMultiElevConfig(chainId, gs1Farm),
-    ...expandMultiElevConfig(chainId, gs2Farm),
-    ...expandMultiElevConfig(chainId, gs3Farm),
-    ...expandMultiElevConfig(chainId, gs4Farm),
-    ...expandMultiElevConfig(chainId, gs5Farm),
-  ]
+  return farms.map((farm) => expandMultiElevConfig(chainId, farm)).flat()
+}
+
+export const bscTestnetFarmTokens = (chainId): UserTokenData[] => {
+  if (chainId !== NamedChainId.BSC_TESTNET) return []
+  return farms.map(((farm) => multiElevConfigTokenInfo(chainId, farm)))
 }

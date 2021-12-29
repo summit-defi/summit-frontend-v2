@@ -4,8 +4,6 @@ import { getFarmConfigs } from 'config/constants/farms'
 import { fetchFarms } from './fetchFarms'
 import {
   fetchPoolClaimableRewards,
-  fetchFarmUserAllowances,
-  fetchFarmUserBalances,
   fetchFarmUserStakedBalances,
   fetchElevationsRoundRewards,
   fetchElevClaimableRewards,
@@ -15,10 +13,9 @@ import {
 import { FarmsState, Farm } from '../types'
 import { groupByAndMap } from 'utils'
 import BigNumber from 'bignumber.js'
-import { Elevation, elevationUtils } from 'config/constants/types'
+import { BN_ZERO, elevationUtils } from 'config/constants/types'
 import { farmId } from 'utils/farmId'
 
-const BN_ZERO = new BigNumber(0)
 const EMPTY_ELEVATION_FARMS_DATA = {
   claimable: BN_ZERO,
   yieldContributed: BN_ZERO,
@@ -86,8 +83,6 @@ export const fetchFarmUserDataAsync = (account) => async (dispatch) => {
   const farmConfigs = getFarmConfigs()
 
   const [
-    allowances,
-    tokenBalances,
     stakedBalances,
     poolClaimableRewards,
     poolYieldContributed,
@@ -95,8 +90,6 @@ export const fetchFarmUserDataAsync = (account) => async (dispatch) => {
     elevPotentialWinnings,
     elevRoundRewards,
   ] = await Promise.all([
-    await fetchFarmUserAllowances(account, farmConfigs),
-    await fetchFarmUserBalances(account, farmConfigs),
     await fetchFarmUserStakedBalances(account, farmConfigs),
     await fetchPoolClaimableRewards(account, farmConfigs),
     await fetchPoolYieldContributed(account, farmConfigs),
@@ -111,8 +104,6 @@ export const fetchFarmUserDataAsync = (account) => async (dispatch) => {
     (farm) => {
       const id = farmId(farm)
       return {
-        allowance: allowances[id] || BN_ZERO,
-        tokenBalance: tokenBalances[id] || BN_ZERO,
         stakedBalance: stakedBalances[id] || BN_ZERO,
         claimable: poolClaimableRewards[id] || BN_ZERO,
         yieldContributed: poolYieldContributed[id] || BN_ZERO,

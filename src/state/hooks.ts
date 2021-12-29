@@ -2,13 +2,13 @@ import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
-import { getWeb3NoAccount, getTimestampDiff } from 'utils'
+import { getWeb3NoAccount, getTimestampDiff, groupByAndMap, groupBy } from 'utils'
 import {
   fetchFarmsPublicDataAsync,
   fetchExpeditionUserDataAsync,
   fetchExpeditionPublicDataAsync,
 } from './actions'
-import { State, Farm, Expedition, ElevationInfo, ReferralsState, ExpeditionUserData } from './types'
+import { State, Farm, Expedition, ElevationInfo, ExpeditionUserData, UserTokenData } from './types'
 import { Elevation, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
@@ -18,7 +18,6 @@ import {
 } from './summitEcosystem'
 import { useLocation } from 'react-router-dom'
 import { getFarmConfigs } from 'config/constants/farms'
-import { fetchReferralsDataAsync } from './referrals'
 import useTheme from 'hooks/useTheme'
 import { farmId } from 'utils/farmId'
 import { getChainWrappedNativeTokenSymbol, TokenSymbol } from 'config/constants'
@@ -91,6 +90,18 @@ export const useFarmsLoaded = (): boolean => {
 
 export const useElevationUserRoundInfo = (elevation: Elevation) => {
   return useSelector((state: State) => elevation === Elevation.EXPEDITION ? {} : state.farms.elevationData[elevationUtils.toInt(elevation || Elevation.OASIS)])
+}
+
+// User Tokens Data
+export const useUserTokens = () => {
+  const selectorTokens: UserTokenData[] = useSelector((state: State) => state.tokens.data)
+  return useMemo(
+    () => groupBy(
+      selectorTokens,
+      (token) => token.symbol,
+    ),
+    [selectorTokens]
+  )
 }
 
 // Expeditions
@@ -232,19 +243,6 @@ export const useFetchSummitEnabled = () => {
 
 export const useSummitEnabled = () => useSelector((state: State) => state.summitEcosystem.summitEnabled)
 
-export const useReferralBurnTimestamp = (): number => {
-  return useSelector((state: State) => state.summitEcosystem.referralBurnTimestamp)
-}
-export const useReferralBurnTimeRemaining = (): number => {
-  const referralBurnTimestamp = useReferralBurnTimestamp()
-  const currentTimestamp = useCurrentTimestamp()
-
-  return useMemo(() => getTimestampDiff(currentTimestamp, referralBurnTimestamp), [
-    referralBurnTimestamp,
-    currentTimestamp,
-  ])
-}
-
 export const useElevationsInfo = (): Map<Elevation, ElevationInfo> => {
   return useSelector((state: State) => state.summitEcosystem.elevationsInfo)
 }
@@ -307,7 +305,7 @@ export const useElevationTotem = (elevation: Elevation): number | null => {
 export const useElevationTotemsLockedIn = (): boolean[] => {
   return useSelector((state: State) => state.summitEcosystem.totemsLockedIn)
 }
-export const useElevationtotemSelected = (elevation: Elevation): boolean => {
+export const useElevationTotemSelected = (elevation: Elevation): boolean => {
   return useSelector((state: State) => {
     return state.summitEcosystem.totemsLockedIn[elevationUtils.toInt(elevation)] || false
   })
@@ -435,19 +433,6 @@ export const useAvailableSisterElevations = (symbol: string) => {
     })
     return sisterFarmsAvailable
   }, [sisterFarms])
-}
-
-// Referrals
-export const useReferrals = (account): ReferralsState => {
-  const { fastRefresh } = useRefresh()
-  const dispatch = useDispatch()
-  useEffect(() => {
-    if (account) {
-      dispatch(fetchReferralsDataAsync(account))
-    }
-  }, [account, dispatch, fastRefresh])
-
-  return useSelector((state: State) => state.referrals)
 }
 
 // HISTORICAL WINNERS

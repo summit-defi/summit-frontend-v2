@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js'
+import { getFarmTokens } from 'config/constants'
 import { Elevation, elevationUtils, FarmConfig, ForceElevationRetired } from 'config/constants/types'
 import {
   getCartographerAddress,
@@ -9,55 +10,6 @@ import {
   getSubCartographerAddress,
 } from 'utils'
 import { farmId } from 'utils/farmId'
-
-const getFarmTokens = (farms: FarmConfig[]) => {
-  return [...new Set<string>(farms.map((farm) => farm.farmToken))]
-}
-
-export const fetchFarmUserAllowances = async (account: string, farmConfigs: FarmConfig[]) => {
-  const farmTokens = getFarmTokens(farmConfigs)
-
-  const calls = farmTokens.map((token) => ({
-    address: token,
-    name: 'allowance',
-    params: [account, getCartographerAddress()],
-  }))
-  const tokenAllowancesRaw = await retryableMulticall(abi.ERC20, calls, 'fetchFarmUserAllowances')
-  const tokenAllowances = groupByAndMap(
-    farmTokens,
-    (token) => token,
-    (_, index) => new BigNumber(tokenAllowancesRaw == null ? 0 : tokenAllowancesRaw[index]),
-  )
-
-  return groupByAndMap(
-    farmConfigs,
-    (farm) => farmId(farm),
-    (farm) => tokenAllowances[farm.farmToken],
-  )
-}
-
-export const fetchFarmUserBalances = async (account, farmConfigs: FarmConfig[]) => {
-  const farmTokens = getFarmTokens(farmConfigs)
-
-  const calls = farmTokens.map((token) => ({
-    address: token,
-    name: 'balanceOf',
-    params: [account],
-  }))
-  const tokenBalancesRaw = await retryableMulticall(abi.ERC20, calls, 'fetchFarmUserBalance')
-
-  const tokenBalances = groupByAndMap(
-    farmTokens,
-    (token) => token,
-    (_, index) => new BigNumber(tokenBalancesRaw == null ? 0 : tokenBalancesRaw[index]),
-  )
-
-  return groupByAndMap(
-    farmConfigs,
-    (farm) => farmId(farm),
-    (farm) => tokenBalances[farm.farmToken],
-  )
-}
 
 export const fetchFarmUserStakedBalances = async (account: string, farmConfigs: FarmConfig[]) => {
     // TODO: check if this can handle everything being called with the same abi

@@ -6,6 +6,7 @@ import { claimPool, claimElevation } from 'utils'
 import { useCartographer } from './useContract'
 import useToast from './useToast'
 import { Elevation, elevationUtils } from 'config/constants/types'
+import { fetchTokensUserDataAsync } from 'state/tokens'
 
 
 export const useClaimPool = (farmToken: string, elevation: Elevation) => {
@@ -24,6 +25,7 @@ export const useClaimPool = (farmToken: string, elevation: Elevation) => {
       toastError('Error Claiming Rewards', (error as Error).message)
     } finally {
       dispatch(fetchFarmUserDataAsync(account))
+      dispatch(fetchTokensUserDataAsync(account))
       setPending(false)
     }
   }, [
@@ -59,6 +61,7 @@ export const useClaimElevation = (elevation: Elevation) => {
         toastError(`Error Claiming Winnings`, (error as Error).message)
       } finally {
         dispatch(fetchFarmUserDataAsync(account))
+        dispatch(fetchTokensUserDataAsync(account))
         setClaimPending(false)
       }
     },

@@ -19,7 +19,6 @@ export const brandColors = {
   SUMMIT: '#7B7D93',
   EXPEDITION: '#ebf2fd',
 
-  REFERRALS: '#3E80A2',
   AUDIT: '#000418',
 
   textGold: '#F7BA56',

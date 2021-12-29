@@ -93,20 +93,15 @@ export const fetchElevationHelperPublicInfo = async () => {
   const calls = [
     {
       address: elevationHelperAddress,
-      name: 'referralBurnTimestamp',
-    },
-    {
-      address: elevationHelperAddress,
       name: 'currentDeityDivider',
     },
   ]
 
   const res = await retryableMulticall(abi.elevationHelper, calls, 'fetchElevationHelperPublicInfo')
   if (res == null) return null
-  const [referralBurnTimestamp, expeditionDivider] = res
+  const [expeditionDivider] = res
 
   return {
-    referralBurnTimestamp: new BigNumber(referralBurnTimestamp).toNumber(),
     expeditionDivider: new BigNumber(expeditionDivider).toNumber(),
   }
 }

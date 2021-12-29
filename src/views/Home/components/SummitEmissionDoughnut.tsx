@@ -10,17 +10,16 @@ const StyledDoughnut = styled(Doughnut)`
 interface Props {
   poolEmission: number
   treasuryEmission: number
-  referralEmission: number
 }
 
-const SummitEmissionDoughnut: React.FC<Props> = ({ poolEmission, treasuryEmission, referralEmission }) => {
+const SummitEmissionDoughnut: React.FC<Props> = ({ poolEmission, treasuryEmission }) => {
   const summitBalancesChartData = {
-    labels: ['Farm (%)', 'Treasury (%)', 'Referrals (%)'],
+    labels: ['Farm (%)', 'Treasury (%)'],
     datasets: [
       {
-        data: [poolEmission, treasuryEmission, referralEmission],
-        backgroundColor: ['#1D4D57', '#638263', '#C8BC89'],
-        hoverBackgroundColor: ['#35655D', '#BBAA6A', '#D6CFB1'],
+        data: [poolEmission, treasuryEmission],
+        backgroundColor: ['#1D4D57', '#638263'],
+        hoverBackgroundColor: ['#35655D', '#BBAA6A'],
         hoverOffset: 5,
         borderColor: 'transparent',
         borderWidth: 2,

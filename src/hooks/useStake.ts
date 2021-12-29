@@ -6,6 +6,7 @@ import { stake } from 'utils/callHelpers'
 import { useCartographer } from './useContract'
 import { useTransactionToasts } from './useToast'
 import { Elevation } from 'config/constants/types'
+import { fetchTokensUserDataAsync } from 'state/tokens'
 
 const useStake = (farmToken: string, elevation: Elevation) => {
   const dispatch = useDispatch()
@@ -26,6 +27,7 @@ const useStake = (farmToken: string, elevation: Elevation) => {
       } finally {
         setPending(false)
         dispatch(fetchFarmUserDataAsync(account))
+        dispatch(fetchTokensUserDataAsync(account))
       }
     },
     [elevation, account, dispatch, cartographer, farmToken, setPending, toastSuccess, toastError],

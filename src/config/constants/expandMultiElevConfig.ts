@@ -1,5 +1,5 @@
+import { UserTokenData } from 'state/types'
 import { getFarmToken } from 'utils/farmId'
-import { farmConfigs } from './chainFarms/bsc_testnet/farmConfigs'
 import addresses from './contracts'
 import { MultiElevFarmConfig, FarmConfig, elevationUtils, Elevation } from './types'
 
@@ -10,6 +10,7 @@ const replaceSummitAddresses = (tokenAddress: string, summitAddress: string, sum
 }
 
 export const expandMultiElevConfig = (chainId: string, config: MultiElevFarmConfig): FarmConfig[] => {
+  console.log('Expand MultiElev Config')
   const { getUrl, elevationsExistAndLive, tokenAddress, lpAddress, allocation, ...farmConfig } = config
 
   const summitAddress = addresses.summitToken[chainId]
@@ -37,3 +38,17 @@ export const expandMultiElevConfig = (chainId: string, config: MultiElevFarmConf
       }
     })
 }
+
+export const multiElevConfigTokenInfo = (chainId: string, config: MultiElevFarmConfig): UserTokenData => {
+  const summitAddress = addresses.summitToken[chainId]
+  const summitLpAddress = addresses.summitLpToken[chainId]
+  const trueTokenAddress = replaceSummitAddresses(config.tokenAddress, summitAddress, summitLpAddress)
+  const trueLpAddress = replaceSummitAddresses(config.lpAddress, summitAddress, summitLpAddress)
+  const tokenAddress = getFarmToken({ assetType: config.assetType, tokenAddress: trueTokenAddress, lpAddress: trueLpAddress })
+  return {
+    symbol: config.symbol,
+    tokenAddress,
+  }
+}
+
+

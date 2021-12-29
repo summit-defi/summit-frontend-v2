@@ -17,7 +17,7 @@ interface Props {
   farmToken: string
   symbol: string
   elevationLocked: boolean
-  tokenBalance: BigNumber
+  walletBalance: BigNumber
   decimals: number
   depositFeeBP: number
   isApproved: boolean
@@ -42,7 +42,7 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
   farmToken,
   symbol,
   elevationLocked,
-  tokenBalance,
+  walletBalance,
   decimals,
   depositFeeBP,
   isApproved,
@@ -60,7 +60,7 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
   ]
   const elevationForcedDisabled = elevation !== Elevation.OASIS && ForceElevationRetired && !whitelistedAccounts.includes(account)
   // APPROVE ACTION
-  const { onApprove, pending: approvalPending } = useApprove(elevation, lpContract, symbol)
+  const { onApprove, pending: approvalPending } = useApprove(lpContract, symbol)
 
   // REWARDS WILL BE CLAIMED MODAL
   const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(elevation, claimable, 'Deposit', RewardsWillBeClaimedType.Farm)
@@ -76,8 +76,8 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
   const [depositVal, setDepositVal] = useState('')
   const [invalidDeposit, setInvalidDepositVal] = useState(false)
   const fullDepositBalance = useMemo(() => {
-    return getFullDisplayBalance(tokenBalance || new BigNumber(0), decimals)
-  }, [tokenBalance, decimals])
+    return getFullDisplayBalance(walletBalance || new BigNumber(0), decimals)
+  }, [walletBalance, decimals])
 
   const validDepositVal = (testVal, depositBalance) => {
     return (

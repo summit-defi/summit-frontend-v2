@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import BigNumber from 'bignumber.js'
 import styled, { css } from 'styled-components'
 import { Flex, Text, Skeleton, Tag, TokenSymbolImage, HighlightedText } from 'uikit'
-import { Farm } from 'state/types'
+import { Farm, UserTokenData } from 'state/types'
 import { provider } from 'web3-core'
 import { Elevation } from 'config/constants/types'
 import { useElevationTotem, usePricesPerToken, useSingleFarmSelected } from 'state/hooks'
@@ -118,6 +118,7 @@ const MultiplierTag = styled(Tag)<{ elevation: Elevation }>`
 
 interface FarmCardProps {
   farm: Farm
+  tokenInfo: UserTokenData
   removed: boolean
   summitPrice?: BigNumber
   ethereum?: provider
@@ -128,6 +129,7 @@ interface FarmCardProps {
 
 const FarmCard: React.FC<FarmCardProps> = ({
   farm,
+  tokenInfo,
   elevation,
   ethereum,
   summitPrice,
@@ -277,10 +279,11 @@ const FarmCard: React.FC<FarmCardProps> = ({
       </PressableFlex>
 
       <FarmCardUserSectionExpander
-        expanded={expanded}
+        isExpanded={expanded}
         ethereum={ethereum}
         elevation={elevation}
         farm={farm}
+        tokenInfo={tokenInfo}
         account={account}
       />
     </FCard>
