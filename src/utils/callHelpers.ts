@@ -33,8 +33,8 @@ const estimateGasAndExecute = async (call, account) => {
     })
 }
 
-export const approve = async (lpContract, targetCartographer, account) => {
-  const approveCall = lpContract.methods.approve(targetCartographer.options.address, ethers.constants.MaxUint256)
+export const approve = async (tokenContract, targetAddress, account) => {
+  const approveCall = tokenContract.methods.approve(targetAddress, ethers.constants.MaxUint256)
   return estimateGasAndExecute(approveCall, account)
 }
 
@@ -79,6 +79,12 @@ export const elevate = async (cartographer, token, sourceElevation, targetElevat
     new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toString()
   )
   return estimateGasAndExecute(elevateCall, account)
+}
+
+// V1 --> V2 Token swap
+export const tokenSwapV1Summit = async (summitToken, v1SummitBalance, account) => {
+  const switchTotemCall = summitToken.methods.tokenSwap(v1SummitBalance)
+  return estimateGasAndExecute(switchTotemCall, account)
 }
 
 // SUMMIT ECOSYSTEM

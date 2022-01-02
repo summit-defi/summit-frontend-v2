@@ -9,6 +9,10 @@ export const getSummitTokenAddress = () => {
   const chainId = getChainId()
   return addresses.summitToken[chainId]
 }
+export const getV1SummitTokenAddress = () => {
+  const chainId = getChainId()
+  return addresses.oldSummitToken[chainId]
+}
 export const getEverestTokenAddress = () => {
   const chainId = getChainId()
   return addresses.everestToken[chainId]

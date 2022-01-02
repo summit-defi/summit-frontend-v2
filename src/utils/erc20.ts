@@ -1,3 +1,4 @@
+import BigNumber from 'bignumber.js'
 import Web3 from 'web3'
 import { provider as ProviderType } from 'web3-core'
 import { abiItem } from './abi'
@@ -19,5 +20,20 @@ export const getTokenBalance = async (
     return balance
   } catch (e) {
     return '0'
+  }
+}
+
+export const getTokenApproved = async (
+  provider: ProviderType,
+  tokenAddress: string,
+  userAddress: string,
+  targetAddress: string,
+): Promise<boolean> => {
+  const contract = getContract(provider, tokenAddress)
+  try {
+    const allowance: string = await contract.methods.allowance(userAddress, targetAddress).call()
+    return new BigNumber(allowance).gt(0)
+  } catch (e) {
+    return false
   }
 }

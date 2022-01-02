@@ -115,9 +115,9 @@ const ElevationUserRoundInfo: React.FC = () => {
       />
 
       <Flex alignItems="center" justifyContent="space-around" width="100%" mb="24px">
-        <FlexInfoItem>
+        <FlexInfoItem width='200px'>
           <Text bold fontSize="12px" textAlign="center">
-            Your Yield
+            Yield
             <br />
             Contributed
           </Text>
@@ -128,7 +128,7 @@ const ElevationUserRoundInfo: React.FC = () => {
             </HighlightedText>
           </InfoItemValue>
         </FlexInfoItem>
-        <FlexInfoItem>
+        <FlexInfoItem width='200px'>
           <Text bold fontSize="12px" textAlign="center">
             Potential Winnings
             <br />
@@ -146,11 +146,12 @@ const ElevationUserRoundInfo: React.FC = () => {
       <Divider />
 
       <HighlightedText mb="8px" elevation={elevation}>
-        Previous Rounds{'\''} Rewards:
+        Finished Rounds:
       </HighlightedText>
 
-      <Flex alignItems="center" justifyContent="space-around" width="100%">
-        <FlexInfoItem>
+
+      <Flex alignItems='center' justifyContent='space-around' width="100%">
+        <FlexInfoItem width='200px'>
           <Text bold fontSize="12px">
             Winnings
           </Text>
@@ -161,10 +162,8 @@ const ElevationUserRoundInfo: React.FC = () => {
             </HighlightedText>
           </InfoItemValue>
         </FlexInfoItem>
-      </Flex>
 
-      <Flex flexDirection="column" mt="12px">
-        <Flex alignItems="center" justifyContent="center" width="100%">
+        <Flex flexDirection="column" width='200px'>
           <SummitButton
             elevation={elevation}
             isLocked={elevationLocked}

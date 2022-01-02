@@ -10,6 +10,7 @@ import TotemsLineup from './components/TotemsLineup'
 import { Elevation } from 'config/constants/types'
 import { getSummitLpSymbol } from 'config/constants'
 import { InverseDeity } from 'views/ElevationFarms/components/InverseDeity'
+import SummitTokenSwapCard from './components/SummitTokenSwapCard'
 
 const Hero = styled.div`
   align-items: center;
@@ -145,6 +146,7 @@ const Home: React.FC = () => {
 
       <div>
         <Cards>
+          <SummitTokenSwapCard />
           <FarmStakingCard />
           <SummitStats />
         </Cards>

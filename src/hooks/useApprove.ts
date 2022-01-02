@@ -18,7 +18,7 @@ export const useApprove = (lpContract: Contract, tokenName: string) => {
   const handleApprove = useCallback(async () => {
     try {
       setPending(true)
-      await approve(lpContract, cartographer, account)
+      await approve(lpContract, cartographer.options.address, account)
       toastSuccess(`${tokenName} Approved`)
     } catch (error) {
       toastError(`${tokenName} Approval Failed`, (error as Error).message)
