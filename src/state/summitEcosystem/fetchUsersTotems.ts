@@ -14,7 +14,6 @@ export const fetchUsersTotems = async (account) => {
   const usersTotems = {
     [Elevation.OASIS]: {
       totem: 0,
-      totemSelected: true,
       totemSelectionRound: 0,
     }
   }
@@ -22,8 +21,7 @@ export const fetchUsersTotems = async (account) => {
   elevationUtils.elevationOnly.forEach((elevation, index) => {
     const { totemSelected, totem, totemSelectionRound } = res[index]
     usersTotems[elevation] = {
-      totem,
-      totemSelected,
+      totem: totemSelected ? totem : null,
       totemSelectionRound,
     }
   })

@@ -12,6 +12,11 @@ const StyledLock = styled(Lock)`
   fill: white;
   filter: drop-shadow(0px 0px 8px black) drop-shadow(0px 0px 2px black);
 `
+const StyledSpinner = styled(Spinner)`
+  position: absolute;
+  align-self: center;
+  filter: drop-shadow(0px 0px 4px black);
+`
 
 const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): JSX.Element => {
   const {
@@ -61,7 +66,7 @@ const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): 
     >
       <>
         {isLocked && <StyledLock width="28px" />}
-        {isLoading && <Spinner ml="6px" mr="12px" className="spinner" />}
+        {isLoading && <StyledSpinner className="spinner" />}
         {isValidElement(startIcon) &&
           cloneElement(startIcon, {
             mr: '0.5rem',

@@ -3,7 +3,6 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import useTheme from 'hooks/useTheme'
 import {
   useElevationTotems,
-  useElevationTotemsLockedIn,
   useSummitPrice,
   useSummitEnabled,
   useElevationsLocked,
@@ -18,12 +17,11 @@ const Menu = (props) => {
   const summitPriceUsd = useSummitPrice()
   const userTotems = useElevationTotems()
   const summitEnabled = useSummitEnabled()
-  const totemsLockedIn = useElevationTotemsLockedIn()
   const elevationsLocked = useElevationsLocked()
   const links = getLinks()
   const menuLinks = useMemo(() => {
-    return getMenuItems(summitEnabled, links.exchange, links.liquidity, userTotems, totemsLockedIn, elevationsLocked)
-  }, [summitEnabled, links, userTotems, totemsLockedIn, elevationsLocked])
+    return getMenuItems(summitEnabled, links.exchange, links.liquidity, userTotems, elevationsLocked)
+  }, [summitEnabled, links, userTotems, elevationsLocked])
 
   return (
     <UikitMenu

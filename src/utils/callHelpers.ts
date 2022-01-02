@@ -38,6 +38,14 @@ export const approve = async (tokenContract, targetAddress, account) => {
   return estimateGasAndExecute(approveCall, account)
 }
 
+export const betaTokenMint = async (tokenContract, amount, account, decimals) => {
+  const betaTokenMintCall = tokenContract.methods.mint(
+    account,
+    new BigNumber(amount).times(new BigNumber(10).pow(decimals)).toString(),
+  )
+  return estimateGasAndExecute(betaTokenMintCall, account)
+}
+
 export const stake = async (cartographer, token, elevation, amount, account, decimals) => {
   const stakeCall = cartographer.methods.deposit(
     token,
@@ -57,17 +65,17 @@ export const withdraw = async (cartographer, token, elevation, amount, account, 
 }
 
 export const claimPool = async (cartographer, token, elevation, account) => {
-  const claimCall = cartographer.methods.deposit(token, elevation, '0')
+  const claimCall = cartographer.methods.deposit(token, elevationUtils.toInt(elevation), '0')
   return estimateGasAndExecute(claimCall, account)
 }
 
 export const claimElevation = async (cartographer, elevation, account) => {
-  const claimCall = cartographer.methods.claimElevation(elevation)
+  const claimCall = cartographer.methods.claimElevation(elevationUtils.toInt(elevation))
   return estimateGasAndExecute(claimCall, account)
 }
 
 export const switchTotem = async (cartographer, elevation, totem, account) => {
-  const switchTotemCall = cartographer.methods.switchTotem(elevation, totem)
+  const switchTotemCall = cartographer.methods.switchTotem(elevationUtils.toInt(elevation), totem)
   return estimateGasAndExecute(switchTotemCall, account)
 }
 
@@ -89,7 +97,7 @@ export const tokenSwapV1Summit = async (summitToken, v1SummitBalance, account) =
 
 // SUMMIT ECOSYSTEM
 export const rolloverElevation = async (cartographer, elevation, account) => {
-  const rolloverElevationCall = cartographer.methods.rollover(elevation)
+  const rolloverElevationCall = cartographer.methods.rollover(elevationUtils.toInt(elevation))
   return estimateGasAndExecute(rolloverElevationCall, account)
 }
 

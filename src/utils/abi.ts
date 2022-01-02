@@ -9,6 +9,7 @@ import elevationHelper from '../config/abi/ElevationHelper.json'
 import multicall from '../config/abi/Multicall.json'
 import summitLocking from '../config/abi/SummitLocking.json'
 import ERC20 from '../config/abi/ERC20.json'
+import DummyERC20 from '../config/abi/DummyERC20.json'
 import Balancer2PoolPriceOracle from '../config/abi/Balancer2PoolPriceOracle.json'
 import BalancerMultiPoolPriceOracle from '../config/abi/BalancerMultiPoolPriceOracle.json'
 import PancakeFactory from '../config/abi/PCS/PancakeFactory.json'
@@ -25,6 +26,7 @@ export const abi = {
   multicall,
   summitLocking,
   ERC20,
+  DummyERC20,
   Balancer2PoolPriceOracle,
   BalancerMultiPoolPriceOracle,
   PancakeFactory,
@@ -40,6 +42,7 @@ export const abiItem = {
   multicall: (abi.multicall as unknown) as AbiItem,
   summitLocking: (abi.summitLocking as unknown) as AbiItem,
   ERC20: (abi.ERC20 as unknown) as AbiItem,
+  DummyERC20: (abi.DummyERC20 as unknown) as AbiItem,
   Balancer2PoolPriceOracle: (abi.Balancer2PoolPriceOracle as unknown) as AbiItem,
   BalancerMultiPoolPriceOracle: (abi.BalancerMultiPoolPriceOracle as unknown) as AbiItem,
   PancakeFactory: (abi.PancakeFactory as unknown) as AbiItem,

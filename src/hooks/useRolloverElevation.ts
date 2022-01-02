@@ -9,7 +9,7 @@ import {
 } from 'state/actions'
 import { rolloverElevation } from 'utils/callHelpers'
 import { useCartographer } from './useContract'
-import { Elevation, ElevationInt } from 'config/constants/types'
+import { Elevation } from 'config/constants/types'
 import useToast from './useToast'
 import { fetchTokensUserDataAsync } from 'state/tokens'
 
@@ -23,9 +23,8 @@ const useRolloverElevation = () => {
   const handleRolloverElevation = useCallback(
     async (elevation: Elevation, isUnlock: boolean) => {
       setPending(true)
-      const elevationInt = ElevationInt[elevation]
       try {
-        await rolloverElevation(cartographer, elevationInt, account)
+        await rolloverElevation(cartographer, elevation, account)
         toastSuccess(
           `THE ${elevation}: ${isUnlock ? 'Unlocked' : 'Rolled Over'}`,
           'You have been sent your SUMMIT reward',

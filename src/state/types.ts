@@ -110,7 +110,7 @@ export interface SummitEcosystemState {
   activeAccount: string
   summitEnabled: boolean
   totems: Array<number | null>
-  totemsLockedIn: boolean[]
+  totemSelectionRounds: Array<number | null>
   elevationsInfo: ElevationInfo[]
   keywordRound: number
   expeditionDivider: number

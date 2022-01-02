@@ -63,36 +63,7 @@ const ElevationUserRoundInfo: React.FC = () => {
   const { onClaimElevation, claimPending } = useClaimElevation(elevation)
   const nothingToClaim = !claimable || claimable.isEqualTo(0)
 
-  if (elevation === Elevation.OASIS) {
-    return (
-      <>
-        <Text textAlign="center" bold fontSize="small">
-          The Otter represents you in all farms at the OASIS
-          <br />
-          <br />
-          There are no other totems to compete against,
-          <br />
-          so any yield you generate is available immediately.
-        </Text>
-        <br />
-        <br />
-        <Text bold monospace textAlign="center">
-          Earnings across the OASIS:
-        </Text>
-        <br />
-        <CardValue value={rawClaimable} decimals={2} fontSize="28px" elevation={Elevation.OASIS} />
-        <HighlightedText bold monospace ml="8px" elevation={elevation}>
-          SUMMIT
-        </HighlightedText>
-        <br />
-        <Text textAlign="center" bold monospace fontSize="12px">
-          Claim earnings in each farm below
-        </Text>
-      </>
-    )
-  }
-
-  if (!elevation || totemRoundRewards.length === 0) {
+  if (!elevation) {
     return <PageLoader fill={false} />
   }
 

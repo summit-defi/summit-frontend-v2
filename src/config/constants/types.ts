@@ -2,6 +2,7 @@ import BigNumber from "bignumber.js"
 
 /* eslint camelcase: 0 */
 export const ForceElevationRetired = false
+export const BetaFeatures = true
 
 export const BN_ZERO = new BigNumber(0)
 

@@ -26,6 +26,7 @@ const Home = lazy(() => import('./views/Home'))
 const ElevationFarms = lazy(() => import('./views/ElevationFarms'))
 const ExpeditionFarms = lazy(() => import('./views/Expeditions'))
 const NotFound = lazy(() => import('./views/NotFound'))
+const BetaTokens = lazy(() => import('./views/Beta'))
 
 const StyledRouter = styled(Router)`
   position: relative;
@@ -76,6 +77,9 @@ const App: React.FC = () => {
           <Switch>
             <Route path="/" exact>
               <Home />
+            </Route>
+            <Route path='/beta' exact>
+              <BetaTokens />
             </Route>
             {elevationUtils.oasisElevation.map((elevation) => (
               <Route path={`/${elevation.toLowerCase()}`} key={elevation}>

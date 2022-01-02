@@ -2,9 +2,9 @@ import { MenuEntry } from 'uikit'
 import { Elevation, elevationUtils } from 'config/constants/types'
 import { getSummitTokenAddress } from 'utils'
 
-const getTotemIcon = (elevation, locked, totem, totemInUse) => {
+const getTotemIcon = (elevation, locked, totem) => {
   if (locked) return 'elevationLock'
-  if (!totemInUse) return ''
+  if (totem == null) return ''
   return elevationUtils.getTotemIcon(elevation, totem)
 }
 
@@ -17,7 +17,6 @@ export const getMenuItems = (
   exchangeLink,
   liqLink,
   totems,
-  totemsLockedIn,
   elevationsLocked,
 ): MenuEntry[] => [
   {
@@ -38,6 +37,11 @@ export const getMenuItems = (
     label: 'DOCS',
     href: 'https://docs.summitdefi.com',
     external: true,
+  },
+  {
+    label: 'BETA',
+    href: '/beta',
+    icon: 'totemIcons/BETA.png',
   },
 
   {
@@ -60,7 +64,6 @@ export const getMenuItems = (
       elevation,
       elevationsLocked[elevationUtils.toInt(elevation)],
       totems[elevation],
-      totemsLockedIn[elevationUtils.toInt(elevation)],
     ),
     href: `/${elevation.toLowerCase()}`,
     external: false,
@@ -72,7 +75,6 @@ export const getMenuItems = (
       Elevation.EXPEDITION,
       elevationsLocked[elevationUtils.toInt(Elevation.EXPEDITION)],
       totems[Elevation.EXPEDITION],
-      totemsLockedIn[elevationUtils.toInt(Elevation.EXPEDITION)],
     ),
     href: `/expedition`,
     external: false,

@@ -15,9 +15,8 @@ import { Modal } from '../Modal'
 
 interface Props {
   elevation: Elevation
-  userTotem: number
+  userTotem: number | null
   preselectedTotem?: number
-  totemSelected: boolean
   onDismiss?: () => void
 }
 
@@ -57,7 +56,6 @@ const SelectTotemModal: React.FC<Props> = ({
   elevation,
   userTotem,
   preselectedTotem = null,
-  totemSelected,
   onDismiss = () => null,
 }) => {
   const { userEarned } = useElevationUserRoundInfo(elevation)
@@ -101,15 +99,6 @@ const SelectTotemModal: React.FC<Props> = ({
             {elevation !== Elevation.EXPEDITION && <StyledCardAccent elevationBackground={elevationBackground} />}
             <ArtworkTotem elevation={elevation} totem={totemToConfirm} desktopSize="200" mobileSize="200" />
           </TotemPadding>
-          {totemSelected && (
-            <Text mb="12px" textAlign="center">
-              * you have funds staked in one of the <i>{elevation.toLowerCase()}</i> pools.
-              <br />
-              Switching totems will require transaction
-              <br />
-              to move funds to your new totem.
-            </Text>
-          )}
           <SummitButton isLoading={pending} elevation={elevation} onClick={handleSelectTotem}>
             CONFIRM
           </SummitButton>
@@ -121,10 +110,7 @@ const SelectTotemModal: React.FC<Props> = ({
             <br />
             but only one can win each round.
             <br />
-            Your totem is shared across all farms of an elevation.
-          </Text>
-          <Text italic fontSize="12px" textAlign="center" mb="36px">
-            Totems can be changed at any time without penalty.
+            Your yield contributed is moved to your new totem.
           </Text>
           <InitialSelectionTotems elevation={elevation} userTotem={userTotem} onSelect={handleSelectTotemToConfirm} />
         </Flex>

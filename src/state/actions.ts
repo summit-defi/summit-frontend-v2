@@ -9,6 +9,5 @@ export {
   fetchElevationsPublicDataAsync,
   fetchUserTotemsAsync,
   fetchElevationHelperInfoAsync,
-  updateUserTotemAsync,
   updateElevationInfoAsync,
 } from './summitEcosystem'

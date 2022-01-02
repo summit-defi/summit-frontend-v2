@@ -296,19 +296,12 @@ export const useSelectedElevationInfo = (): ElevationInfo | null => {
   const elevation = useSelectedElevation()
   return useElevationInfo(elevation)
 }
+
 export const useElevationTotems = (): Map<Elevation, number | null> => {
   return useSelector((state: State) => state.summitEcosystem.totems)
 }
 export const useElevationTotem = (elevation: Elevation): number | null => {
   return useSelector((state: State) => state.summitEcosystem.totems[elevationUtils.toInt(elevation)])
-}
-export const useElevationTotemsLockedIn = (): boolean[] => {
-  return useSelector((state: State) => state.summitEcosystem.totemsLockedIn)
-}
-export const useElevationTotemSelected = (elevation: Elevation): boolean => {
-  return useSelector((state: State) => {
-    return state.summitEcosystem.totemsLockedIn[elevationUtils.toInt(elevation)] || false
-  })
 }
 export const useElevationUnlockTimestamp = (elevation: Elevation): number => {
   const elevationInfo = useElevationInfo(elevation)

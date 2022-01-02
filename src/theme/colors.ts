@@ -20,6 +20,7 @@ export const brandColors = {
   EXPEDITION: '#ebf2fd',
 
   AUDIT: '#000418',
+  BETA: '#DB00FF',
 
   textGold: '#F7BA56',
 }

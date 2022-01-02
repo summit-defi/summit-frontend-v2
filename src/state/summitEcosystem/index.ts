@@ -14,10 +14,10 @@ const getLocalStorageVariables = () => {
     activeAccount,
     summitEnabled: JSON.parse(localStorage.getItem('SummitEnabled')) || false,
     totems: elevationUtils.all.map((elevation): number =>
-      JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}totem`)),
+      JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}_totem`)),
     ),
-    totemsLockedIn: elevationUtils.all.map((elevation): boolean =>
-      JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}lockedin`)),
+    totemSelectionRounds: elevationUtils.all.map((elevation): number =>
+      JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}_totem_selection_round`)),
     ),
     chainId: JSON.parse(localStorage.getItem('ChainId')) || '97',
     farmType: (localStorage.getItem('FarmType') || FarmType.All) as FarmType,
@@ -62,12 +62,9 @@ export const SummitEcosystemSlice = createSlice({
       const totemsData = action.payload
       elevationUtils.all.forEach((elevation) => {
         state.totems[elevationUtils.toInt(elevation)] = totemsData[elevation].totem
-        localStorage.setItem(`${state.activeAccount}/${elevation}totem`, `${totemsData[elevation].totem}`)
-      })
-
-      elevationUtils.all.forEach((elevation) => {
-        state.totemsLockedIn[elevationUtils.toInt(elevation)] = totemsData[elevation].totemSelected
-        localStorage.setItem(`${state.activeAccount}/${elevation}lockedin`, `${totemsData[elevation].totemSelected}`)
+        state.totemSelectionRounds[elevationUtils.toInt(elevation)] = totemsData[elevation].totemSelectionRound
+        localStorage.setItem(`${state.activeAccount}/${elevation}_totem`, `${totemsData[elevation].totem}`)
+        localStorage.setItem(`${state.activeAccount}/${elevation}_totem_selection_round`, `${totemsData[elevation].totemSelectionRound}`)
       })
     },
     setElevationsInfo: (state, action) => {
@@ -171,18 +168,10 @@ export const fetchElevationHelperInfoAsync = () => async (dispatch) => {
   if (elevationHelperInfo == null) return
   dispatch(setElevationHelperInfo(elevationHelperInfo))
 }
-export const updateUserTotemAsync = (elevation: Elevation, account: string) => async (dispatch) => {
-  const totems = await fetchUsersTotems(account)
-  if (totems == null) return
-  dispatch(updateElevationInfo({ elevation, elevationInfo: { ...totems[elevation] } }))
-}
 export const updateElevationInfoAsync = (elevation: Elevation) => async (dispatch) => {
   const elevationsInfo = await fetchElevationsData()
   if (elevationsInfo == null) return
   dispatch(updateElevationInfo({ elevation, elevationInfo: { ...elevationsInfo[elevation] } }))
-}
-export const updateUserTotem = (elevation: Elevation, totem: number) => async (dispatch) => {
-  dispatch(updateElevationTotem({ elevation, totem }))
 }
 export const updateFarmType = (farmType: FarmType) => async (dispatch) => {
   dispatch(setFarmType(farmType))

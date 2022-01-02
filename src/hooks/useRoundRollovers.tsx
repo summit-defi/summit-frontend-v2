@@ -3,18 +3,17 @@ import { Elevation } from 'config/constants/types'
 import { useModal } from 'uikit'
 import { ElevationsRolledOverModal } from 'components/ElevationsModals/ElevationsRolledOverModal'
 // import { ElevationUnlockedModal } from 'components/ElevationsModals/ElevationUnlockedModal'
-import { useElevationRoundNumbers, useElevationTotems, useElevationTotemsLockedIn, useWinningTotems } from 'state/hooks'
+import { useElevationRoundNumbers, useElevationTotems, useWinningTotems } from 'state/hooks'
 
 export const useRoundRollovers = () => {
   const [
-    _1,
-    _plainstotemSelected,
-    _mesatotemSelected,
-    _summittotemSelected,
-    expeditiontotemSelected,
-  ] = useElevationTotemsLockedIn()
-  const [_2, _plainsTotem, _mesaTotem, _summitTotem, expeditionTotem] = useElevationTotems()
-  const [_3, _plainsWinningTotem, _mesaWinningTotem, _summitWinningTotem, expeditionWinningTotem] = useWinningTotems()
+    oasisTotem,
+    plainsTotem,
+    mesaTotem,
+    summitTotem,
+    expeditionDeity,
+  ] = useElevationTotems()
+  const [_3, _plainsWinningTotem, _mesaWinningTotem, _summitWinningTotem, expeditionWinningDeity] = useWinningTotems()
   const [_4, _plainsRound, _mesaRound, _summitRound, expeditionRound] = useElevationRoundNumbers()
 
   // const prevPlainsRound = useRef<number | null>()
@@ -161,17 +160,15 @@ export const useRoundRollovers = () => {
     if (prevExpeditionRound.current === 0 && expeditionRound === 1) {
       setUnlockedElevationToShow(Elevation.EXPEDITION)
     } else if (
-      expeditionTotem === expeditionWinningTotem &&
-      expeditiontotemSelected &&
+      expeditionDeity === expeditionWinningDeity &&
       expeditionRound > (prevExpeditionRound.current || 0)
     ) {
       setElevationRolloversToShow((elevations) => [...elevations, Elevation.EXPEDITION])
     }
     prevExpeditionRound.current = expeditionRound
   }, [
-    expeditionTotem,
-    expeditionWinningTotem,
-    expeditiontotemSelected,
+    expeditionDeity,
+    expeditionWinningDeity,
     expeditionRound,
     setElevationRolloversToShow,
     setUnlockedElevationToShow,

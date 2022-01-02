@@ -19,7 +19,7 @@ export const useClaimPool = (farmToken: string, elevation: Elevation) => {
   const handleClaim = useCallback(async () => {
     try {
       setPending(true)
-      await claimPool(cartographer, farmToken, elevationUtils.toInt(elevation), account)
+      await claimPool(cartographer, farmToken, elevation, account)
       toastSuccess('Rewards Claimed Successfully')
     } catch (error) {
       toastError('Error Claiming Rewards', (error as Error).message)

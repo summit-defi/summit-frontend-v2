@@ -26,11 +26,6 @@ export const useTokenSwapV1Summit = () => {
     try {
       setApprovePending(true)
       const v1SummitToken = getContract(ethereum, v1SummitAddress)
-      console.log({
-        v1SummitToken,
-        v1SummitAddress,
-        summitAddress
-      })
       await approve(v1SummitToken, summitAddress, account)
       toastSuccess('SUMMIT V1 Approved')
     } catch (error) {
