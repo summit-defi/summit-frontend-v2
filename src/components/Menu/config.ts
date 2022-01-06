@@ -52,23 +52,12 @@ export const getMenuItems = (
     neverHighlight: true,
   },
   {
-    label: Elevation.OASIS,
+    label: 'ELEVATION|br|FARMS',
     icon: 'totemOtter',
-    href: `/oasis`,
+    href: `/elevations`,
     external: false,
     elevation: Elevation.OASIS,
   },
-  ...elevationUtils.elevationOnly.map((elevation) => ({
-    label: Elevation[elevation],
-    icon: getTotemIcon(
-      elevation,
-      elevationsLocked[elevationUtils.toInt(elevation)],
-      totems[elevation],
-    ),
-    href: `/${elevation.toLowerCase()}`,
-    external: false,
-    elevation,
-  })),
   {
     label: Elevation.EXPEDITION,
     icon: getTotemIcon(

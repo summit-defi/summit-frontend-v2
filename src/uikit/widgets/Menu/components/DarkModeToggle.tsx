@@ -16,8 +16,8 @@ const ToggleWrapper = styled.div<{ disabled: boolean }>`
   position: relative;
   background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
   box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
-  width: 62px;
-  height: 36px;
+  width: 58px;
+  height: 32px;
   border-radius: 20px;
   transition: all 300ms;
 
@@ -32,21 +32,21 @@ const BGSunIcon = styled(SunIcon)`
   position: absolute;
   width: 20px;
   height: 20px;
-  top: 8px;
+  top: 6px;
   right: 6px;
 `
 const BGMoonIcon = styled(MoonIcon)`
   position: absolute;
   width: 20px;
   height: 20px;
-  top: 8px;
-  left: 8px;
+  top: 6px;
+  left: 6px;
 `
 
 const StyledSummitButton = styled(SummitButton)<{ visible: boolean }>`
   position: absolute;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   top: 2px;
   left: ${({ visible }) => (visible ? 28 : 2)}px;
   padding: 0px;

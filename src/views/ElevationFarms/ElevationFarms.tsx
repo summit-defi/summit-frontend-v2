@@ -7,7 +7,7 @@ import { provider } from 'web3-core'
 import { Text, Flex } from 'uikit'
 import FlexLayout from 'components/layout/Flex'
 import Page from 'components/layout/Page'
-import { useElevationLocked, useElevationTotem, useFarms, useFarmsLoaded, useSummitPrice, useUserTokens } from 'state/hooks'
+import { useElevationFarmsTab, useElevationLocked, useElevationsLocked, useElevationTotem, useElevationTotems, useFarms, useFarmsLoaded, useSummitPrice, useUserTokens } from 'state/hooks'
 import useRefresh from 'hooks/useRefresh'
 import { fetchFarmUserDataAsync } from 'state/actions'
 import { Elevation } from 'config/constants/types'
@@ -20,8 +20,9 @@ import PageLoader from 'components/PageLoader'
 import { useFarmType } from 'hooks/useFarmType'
 import { FarmType } from 'state/types'
 import ElevationAndUserVolumes from './components/ElevationAndUserVolumes'
-import { farmId, getFarmType } from 'utils/farmId'
+import { getFarmType } from 'utils/farmId'
 import { fetchTokensUserDataAsync } from 'state/tokens'
+import FarmFilterRow from './components/FarmFilterRow'
 
 const NoFarmsFlex = styled(Flex)`
   padding: 12px;
@@ -33,21 +34,15 @@ const NoFarmsFlex = styled(Flex)`
   box-shadow: 2px 2px 12px -4px rgba(25, 19, 38, 0.4), 2px 2px 8px rgba(25, 19, 38, 0.2);
 `
 
-export interface ElevationFarms {
-  elevation: Elevation
-}
-
-const ElevationFarms: React.FC<ElevationFarms> = (props) => {
+const ElevationFarms: React.FC = () => {
   const { path } = useRouteMatch()
   const farmsLP = useFarms()
   const userTokenInfos = useUserTokens()
   const farmsLoaded = useFarmsLoaded()
   const summitPrice = useSummitPrice()
   const web3 = useWeb3()
+  const elevationTab = useElevationFarmsTab()
   const { farmType, liveFarms } = useFarmType()
-  const { elevation } = props
-  const locked = useElevationLocked(elevation)
-  const userTotem = useElevationTotem(elevation)
 
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
 
@@ -64,11 +59,10 @@ const ElevationFarms: React.FC<ElevationFarms> = (props) => {
     (farmsToFilter) =>
       farmsToFilter.filter(
         (farm) =>
-          farm.elevation === elevation &&
-          liveFarms === ((farm.allocation || 0) > 0 && farm.live) &&
+          liveFarms === ((farm.allocation || 0) > 0) &&
           (farmType === FarmType.All || getFarmType(farm) === farmType),
       ),
-    [farmType, liveFarms, elevation],
+    [farmType, liveFarms],
   )
 
   const filteredFarms = filterAllFarms(farmsLP)
@@ -86,26 +80,31 @@ const ElevationFarms: React.FC<ElevationFarms> = (props) => {
   const farmsList = useCallback(
     (farmsToDisplay, userTokens, removed: boolean) => farmsToDisplay.map((farm) => (
       <FarmCard
-        key={farmId(farm)}
+        key={farm.symbol}
         farm={farm}
+        elevationTab={elevationTab}
         tokenInfo={userTokens[farm.symbol]}
         removed={removed}
         summitPrice={summitPrice}
         ethereum={ethereum}
         account={account}
-        elevation={elevation}
-        elevationLocked={locked}
       />
     )),
-    [account, summitPrice, ethereum, elevation, locked],
+    [account, summitPrice, elevationTab, ethereum],
   )
 
   return (
     <Page>
-      <ElevationAndUserVolumes/>
-      <TotemHeader userTotem={userTotem} account={account} />
-      {!locked && userTotem != null && !farmsLoaded && <PageLoader fill={false} />}
-      {!locked && userTotem != null && farmsLoaded && (
+      <TotemHeader account={account} />
+      {/* TODO: Overview + Elevation Selector */}
+      {/* TODO: Totem header */}
+      {/* TODO: Pass overview / elevation to farm cards */}
+      {/* TODO: Overview staked breakdown */}
+
+      {/* TODO: Farm options row */}
+      <FarmFilterRow />
+
+      {farmsLoaded ?
         <div>
           {farms.length === 0 && (
             <NoFarmsFlex justifyContent="center" mt="56px">
@@ -117,8 +116,9 @@ const ElevationFarms: React.FC<ElevationFarms> = (props) => {
           <FlexLayout>
             <Route path={`${path}/`}>{farmsList(farms, userTokenInfos, false)}</Route>
           </FlexLayout>
-        </div>
-      )}
+        </div> :
+        <PageLoader fill={false} />
+      }
     </Page>
   )
 }

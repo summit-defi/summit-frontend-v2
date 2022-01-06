@@ -8,8 +8,6 @@ import { FarmType } from 'state/types'
 import { darken } from 'polished'
 import { pressableMixin } from 'uikit/util/styledMixins'
 
-const buttonHeight = 28
-
 const SelectorFlex = styled(Flex)`
   flex-direction: row;
   align-items: center;
@@ -21,10 +19,10 @@ const SelectorFlex = styled(Flex)`
 const SelectorWrapper = styled(Flex)`
   justify-content: center;
   margin: 4px 0px;
-  height: ${buttonHeight}px;
+  height: 32px;
   width: 225px;
   border-radius: 22px;
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
   box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
   position: relative;
 `
@@ -57,11 +55,10 @@ const SelectedSummitButton = styled(SummitButton)<{ selectedFarmType: FarmType }
   pointer-events: none;
   position: absolute;
   top: 2px;
-  height: ${buttonHeight - 4}px;
+  height: 28px;
   width: ${({ selectedFarmType }) => getFarmTypeWidth(selectedFarmType)}px;
   left: ${({ selectedFarmType }) => getFarmTypeOffset(selectedFarmType)}px;
   z-index: 3;
-  font-size: 14px;
 `
 
 const TextButton = styled.div<{ width: number }>`
@@ -70,9 +67,9 @@ const TextButton = styled.div<{ width: number }>`
   color: ${({ theme }) => theme.colors.text};
   text-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`};
   font-family: Courier Prime, monospace;
-  font-size: 14px;
-  height: ${buttonHeight}px;
-  line-height: ${buttonHeight}px;
+  font-size: 16px;
+  height: 32px;
+  line-height: 32px;
   text-align: center;
 
   transition: transform 0.2s;
@@ -80,9 +77,40 @@ const TextButton = styled.div<{ width: number }>`
   ${pressableMixin}
 `
 
-const FarmTypeSelector: React.FC = () => {
+const ToggleWrapper = styled(Flex)`
+  margin-left: 8px;
+  justify-content: center;
+  height: 32px;
+  width: 110px;
+  border-radius: 22px;
+  background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
+  box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
+
+  position: relative;
+`
+
+const ToggleSummitButton = styled(SummitButton)<{ live: boolean }>`
+  display: ${({ live }) => (live ? 'flex' : 'none')};
+  position: absolute;
+  top: 2px;
+  height: 28px;
+  width: 106px;
+  left: 2px;
+  z-index: 3;
+`
+
+interface SelectableOption {
+  
+}
+
+interface Props {
+  options: SelectableOption[]
+  selected: string
+}
+
+const HorizontalSelector: React.FC = () => {
   const elevation = useSelectedElevation()
-  const { farmType, onSetFarmType } = useFarmType()
+  const { farmType, liveFarms, onSetFarmType, onSetLive } = useFarmType()
   return (
     <SelectorFlex>
       <SelectorWrapper>
@@ -104,8 +132,17 @@ const FarmTypeSelector: React.FC = () => {
           {FarmType.LP}
         </TextButton>
       </SelectorWrapper>
+
+      <ToggleWrapper>
+        <ToggleSummitButton elevation={elevation} live={liveFarms} padding="0px" onClick={() => onSetLive(false)}>
+          Active
+        </ToggleSummitButton>
+        <TextButton width={120} onClick={() => onSetLive(true)}>
+          Inactive
+        </TextButton>
+      </ToggleWrapper>
     </SelectorFlex>
   )
 }
 
-export default React.memo(FarmTypeSelector)
+export default React.memo(HorizontalSelector)

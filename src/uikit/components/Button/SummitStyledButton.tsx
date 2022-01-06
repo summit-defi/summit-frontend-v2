@@ -22,7 +22,7 @@ const SummitStyledButton = styled(StyledButton)<{
   secondaryColor?: string
 }>`
   position: relative;
-  height: ${({ height }) => height || 42}px;
+  height: ${({ height }) => height || 36}px;
   border-radius: 22px;
   border: none;
   padding: 0px ${({ padding }) => padding || 38}px;

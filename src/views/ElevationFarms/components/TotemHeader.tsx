@@ -21,6 +21,7 @@ import FarmTypeSelector from './FarmTypeSelector'
 import ElevationUserRoundInfo from './ElevationUserRoundInfo'
 import { MobileHeaderCardSelector, MobileSelectedCard } from './HeaderCards/MobileHeaderCardSelector'
 import UnlockButton from 'components/UnlockButton'
+import BoundedProgressBar from './BoundedProgressBar'
 
 const HeaderCardsWrapper = styled(Flex)`
   justify-content: center;
@@ -28,7 +29,7 @@ const HeaderCardsWrapper = styled(Flex)`
   width: 100%;
   gap: 32px;
   margin: 0px auto 32px auto;
-  max-width: 950px;
+  max-width: 850px;
 `
 
 const HeaderWrapper = styled(Flex)`
@@ -36,7 +37,7 @@ const HeaderWrapper = styled(Flex)`
   z-index: 10;
   padding: 16px;
   padding-top: 124px;
-  margin-top: 100px;
+  margin-top: 150px;
   background-color: ${({ theme }) => theme.colors.background};
   border-radius: 4px;
   box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
@@ -82,9 +83,11 @@ const SwitchTotemIcon = styled.div`
 
 const IconButtonText = styled(Text)`
   position: absolute;
-  bottom: -44px;
+  bottom: -28px;
   left: 0;
   right: 0;
+  font-size: 12px;
+  line-height: 12px;
   text-align: center;
   margin: auto;
 `
@@ -122,11 +125,11 @@ const MobileRightSummitIconButton = styled(SummitIconButton)`
 `
 
 interface Props {
-  userTotem: number | null
   account: string
 }
 
-const TotemHeader: React.FC<Props> = ({ userTotem, account }) => {
+const TotemHeader: React.FC<Props> = ({ account }) => {
+  const userTotem = 0
   const elevation = useSelectedElevation()
   const elevationLocked = useElevationLocked(elevation)
   const elevationLockedUntilRollover = useIsElevationLockedUntilRollover()
@@ -155,71 +158,71 @@ const TotemHeader: React.FC<Props> = ({ userTotem, account }) => {
     onPresentSelectTotemModal()
   }
 
-  const isMobile = useMediaQuery('(max-width: 986px)')
+  // const isMobile = useMediaQuery('(max-width: 986px)')
 
-  if (isMobile) {
-    return (
-      <HeaderCardsWrapper>
-        <HeaderWrapper flexDirection="column" alignItems="center" justifyContent="center">
-          {mobileHeaderCardSelector()}
+  // if (isMobile) {
+  //   return (
+  //     <HeaderCardsWrapper>
+  //       <HeaderWrapper flexDirection="column" alignItems="center" justifyContent="center">
+  //         {mobileHeaderCardSelector()}
 
-          {mobileSelectedCard === MobileSelectedCard.ElevationCard ? (
-            <>
-              <ElevationInfo />
+  //         {mobileSelectedCard === MobileSelectedCard.ElevationCard ? (
+  //           <>
+  //             <ElevationInfo />
 
-              <ElevationFarmingExplanation />
-              {account == null &&
-                  <UnlockButton elevation={elevation} />
-              }
-              {account != null && userTotem == null && (
-                <>
-                  <SummitButton elevation={elevation} onClick={onPresentSelectTotemModal}>
-                    {elevation === Elevation.OASIS ? 'SAY HELLO TO THE OTTER' : `CHOOSE YOUR TOTEM`}
-                  </SummitButton>
-                  <br />
-                  <br />
-                </>
-              )}
+  //             <ElevationFarmingExplanation />
+  //             {account == null &&
+  //                 <UnlockButton elevation={elevation} />
+  //             }
+  //             {account != null && userTotem == null && (
+  //               <>
+  //                 <SummitButton elevation={elevation} onClick={onPresentSelectTotemModal}>
+  //                   {elevation === Elevation.OASIS ? 'SAY HELLO TO THE OTTER' : `CHOOSE YOUR TOTEM`}
+  //                 </SummitButton>
+  //                 <br />
+  //                 <br />
+  //               </>
+  //             )}
 
-              <ElevationTimerAndRollover />
+  //             <ElevationTimerAndRollover />
 
-              {userTotem != null && !elevationLocked && <FarmTypeSelector />}
-            </>
-          ) : (
-            <>
-              {isElevationFarm && (
-                <MobileButtonsRow>
-                  {userTotem != null && (
-                    <MobileLeftSummitIconButton
-                      isLocked={false}
-                      elevation={elevation}
-                      onClick={handlePresentSelectTotemModal}
-                    >
-                      <TotemIcon totemName={elevationUtils.getElevationTotemName(elevation, userTotem)} />
-                      <IconButtonText bold monospace>SWITCH<br/>TOTEM</IconButtonText>
-                      <SwitchTotemIcon />
-                      {/* <StyledLock width="28px" /> */}
-                    </MobileLeftSummitIconButton>
-                  )}
-                  {showTotemWinnersModalButton && (
-                    <MobileRightSummitIconButton elevation={elevation} onClick={onPresentTotemWinnersModal}>
-                      <CrownHistoryIcon />
-                      <IconButtonText bold monospace>TOTEM<br/>STATS</IconButtonText>
-                    </MobileRightSummitIconButton>
-                  )}
-                </MobileButtonsRow>
-              )}
-              <ElevationUserRoundInfo />
-            </>
-          )}
-        </HeaderWrapper>
-      </HeaderCardsWrapper>
-    )
-  }
+  //             {userTotem != null && !elevationLocked && <FarmTypeSelector />}
+  //           </>
+  //         ) : (
+  //           <>
+  //             {isElevationFarm && (
+  //               <MobileButtonsRow>
+  //                 {userTotem != null && (
+  //                   <MobileLeftSummitIconButton
+  //                     isLocked={false}
+  //                     elevation={elevation}
+  //                     onClick={handlePresentSelectTotemModal}
+  //                   >
+  //                     <TotemIcon totemName={elevationUtils.getElevationTotemName(elevation, userTotem)} />
+  //                     <IconButtonText bold monospace>SWITCH<br/>TOTEM</IconButtonText>
+  //                     <SwitchTotemIcon />
+  //                     {/* <StyledLock width="28px" /> */}
+  //                   </MobileLeftSummitIconButton>
+  //                 )}
+  //                 {showTotemWinnersModalButton && (
+  //                   <MobileRightSummitIconButton elevation={elevation} onClick={onPresentTotemWinnersModal}>
+  //                     <CrownHistoryIcon />
+  //                     <IconButtonText bold monospace>TOTEM<br/>STATS</IconButtonText>
+  //                   </MobileRightSummitIconButton>
+  //                 )}
+  //               </MobileButtonsRow>
+  //             )}
+  //             <ElevationUserRoundInfo />
+  //           </>
+  //         )}
+  //       </HeaderWrapper>
+  //     </HeaderCardsWrapper>
+  //   )
+  // }
 
   return (
     <HeaderCardsWrapper>
-      <Flex flex="1" flexDirection="column" alignItems="center" alignSelf="stretch" justifyContent="center">
+      {/* <Flex flex="1" flexDirection="column" alignItems="center" alignSelf="stretch" justifyContent="center">
         <HeaderWrapper flexDirection="column" alignItems="center" justifyContent="center">
           <ElevationPuck elevation={elevation}>THE {elevation}</ElevationPuck>
 
@@ -244,46 +247,55 @@ const TotemHeader: React.FC<Props> = ({ userTotem, account }) => {
 
           {userTotem != null && !elevationLocked && <FarmTypeSelector />}
         </HeaderWrapper>
-      </Flex>
-      {userTotem != null && (
-        <Flex flex="1" flexDirection="column" alignItems="center" alignSelf="stretch" justifyContent="center">
-          <HeaderWrapper flexDirection="column" alignItems="center" justifyContent="center">
-            {elevation != null && (
-              <HeaderButtonsRow flexDirection="row" justifyContent="center" alignItems="center">
-                {userTotem != null && isElevationFarm && (
-                  <SummitIconButton
-                    isLocked={false}
-                    elevation={elevation}
-                    onClick={onPresentSelectTotemModal}
-                  >
-                    <TotemIcon totemName={elevationUtils.getElevationTotemName(elevation, userTotem)} />
-                    <SwitchTotemIcon />
-                    <IconButtonText bold monospace>SWITCH<br/>TOTEM</IconButtonText>
-                    {/* {elevationLockedUntilRollover && <StyledLock width="28px" />} */}
-                  </SummitIconButton>
-                )}
-                <HeaderTotemWrapper>
-                  <ArtworkTotem
-                    elevation={elevation}
-                    totem={userTotem}
-                    crowned={userTotem === crownedTotem}
-                    desktopSize="200"
-                    mobileSize="200"
-                  />
-                </HeaderTotemWrapper>
-                {isElevationFarm && showTotemWinnersModalButton && (
-                  <SummitIconButton elevation={elevation} onClick={onPresentTotemWinnersModal}>
-                    <CrownHistoryIcon />
-                    <IconButtonText bold monospace>TOTEM<br/>STATS</IconButtonText>
-                  </SummitIconButton>
-                )}
-              </HeaderButtonsRow>
-            )}
+      </Flex> */}
+      {/* {userTotem != null && ( */}
+        <HeaderWrapper flexDirection="column" alignItems="center" justifyContent="center">
+          {elevation != null && (
+            <HeaderButtonsRow flexDirection="row" justifyContent="center" alignItems="center">
+              {userTotem != null && isElevationFarm && (
+                <SummitIconButton
+                  isLocked={false}
+                  elevation={elevation}
+                  onClick={onPresentSelectTotemModal}
+                >
+                  <TotemIcon totemName={elevationUtils.getElevationTotemName(elevation, userTotem)} />
+                  <SwitchTotemIcon />
+                  <IconButtonText bold monospace>SWITCH<br/>TOTEM</IconButtonText>
+                  {/* {elevationLockedUntilRollover && <StyledLock width="28px" />} */}
+                </SummitIconButton>
+              )}
+              <HeaderTotemWrapper>
+                <ArtworkTotem
+                  elevation={elevation}
+                  totem={userTotem}
+                  crowned={userTotem === crownedTotem}
+                  desktopSize="200"
+                  mobileSize="200"
+                />
+              </HeaderTotemWrapper>
+              {isElevationFarm && (
+                <SummitIconButton elevation={elevation} onClick={onPresentTotemWinnersModal}>
+                  <CrownHistoryIcon />
+                  <IconButtonText bold monospace>TOTEM<br/>STATS</IconButtonText>
+                </SummitIconButton>
+              )}
+            </HeaderButtonsRow>
+          )}
 
-            <ElevationUserRoundInfo />
-          </HeaderWrapper>
-        </Flex>
-      )}
+          <BoundedProgressBar
+            title='TEST'
+            minTitle='NOV 4'
+            maxTitle='NOV 10'
+            minVal='0%'
+            maxVal='5%'
+            currVal='3%'
+            progress={0.6}
+            elevation={elevation}
+          />
+
+          <ElevationUserRoundInfo />
+        </HeaderWrapper>
+      {/* )} */}
     </HeaderCardsWrapper>
   )
 }

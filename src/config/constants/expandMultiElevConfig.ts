@@ -1,7 +1,7 @@
 import { UserTokenData } from 'state/types'
 import { getFarmToken } from 'utils/farmId'
 import addresses from './contracts'
-import { MultiElevFarmConfig, FarmConfig, elevationUtils, Elevation } from './types'
+import { MultiElevFarmConfig, FarmConfig } from './types'
 
 const replaceSummitAddresses = (tokenAddress: string, summitAddress: string, summitLpAddress: string): string => {
   if (tokenAddress === '0xSUMMIT') return summitAddress
@@ -9,9 +9,8 @@ const replaceSummitAddresses = (tokenAddress: string, summitAddress: string, sum
   return tokenAddress
 }
 
-export const expandMultiElevConfig = (chainId: string, config: MultiElevFarmConfig): FarmConfig[] => {
-  console.log('Expand MultiElev Config')
-  const { getUrl, elevationsExistAndLive, tokenAddress, lpAddress, allocation, ...farmConfig } = config
+export const expandMultiElevConfig = (chainId: string, config: MultiElevFarmConfig): FarmConfig => {
+  const { getUrl, tokenAddress, lpAddress, allocation, ...farmConfig } = config
 
   const summitAddress = addresses.summitToken[chainId]
   const summitLpAddress = addresses.summitLpToken[chainId]
@@ -19,24 +18,14 @@ export const expandMultiElevConfig = (chainId: string, config: MultiElevFarmConf
   const trueLpAddress = replaceSummitAddresses(lpAddress, summitAddress, summitLpAddress)
   const farmToken = getFarmToken({ assetType: farmConfig.assetType, tokenAddress: trueTokenAddress, lpAddress: trueLpAddress })
   const trueGetUrl = getUrl.replace('0xSUMMIT', summitAddress)
-  return Object.entries(elevationsExistAndLive)
-    .filter(([_, { exists }]) => exists)
-    .map(([elevation, { live }]) => {
-      const trueFarmWarning = config.farmWarning == null ? null : typeof config.farmWarning === 'string' ? config.farmWarning : config.farmWarning[elevation]
-      const trueFarmComment = config.farmComment == null ? null : typeof config.farmComment === 'string' ? config.farmComment : config.farmComment[elevation]
-      return {
-        farmToken,
-        elevation: elevation as Elevation,
-        allocation: allocation * elevationUtils.allocMultiplier(elevation as Elevation),
-        tokenAddress: trueTokenAddress,
-        lpAddress: trueLpAddress,
-        live,
-        ...farmConfig,
-        getUrl: trueGetUrl,
-        farmWarning: trueFarmWarning,
-        farmComment: trueFarmComment,
-      }
-    })
+
+  return {
+    ...config,
+    farmToken,
+    tokenAddress: trueTokenAddress,
+    lpAddress: trueLpAddress,
+    getUrl: trueGetUrl,
+  }
 }
 
 export const multiElevConfigTokenInfo = (chainId: string, config: MultiElevFarmConfig): UserTokenData => {

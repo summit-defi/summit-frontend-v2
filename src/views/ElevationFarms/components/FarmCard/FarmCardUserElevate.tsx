@@ -29,7 +29,8 @@ const CenteredSummitButton = styled(SummitButton)`
 `
 
 const FarmCardUserElevate: React.FC<Props> = ({ farm, elevationLocked, disabled }) => {
-  const { symbol, elevation, farmToken, decimals } = farm
+  const { symbol, farmToken, decimals } = farm
+  const elevation = Elevation.OASIS
   const summitEnabled = useSummitEnabled()
   const summitLpSymbol = getSummitLpSymbol()
   const availableSisterElevations = useAvailableSisterElevations(symbol)

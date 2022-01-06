@@ -11,7 +11,7 @@ import { Elevation, elevationUtils } from '../../config/constants/types'
 import { SECONDS_PER_YEAR } from 'config'
 import { getFarmConfigs } from 'config/constants'
 import { Farm } from 'state/types'
-import { farmId } from 'utils/farmId'
+import { merge } from 'lodash'
 
 
 export const fetchFarms = async () => {
@@ -19,15 +19,27 @@ export const fetchFarms = async () => {
   const cartographerAddress = getCartographerAddress()
 
   const fetchFarmData = async (farmConfig): Promise<Farm> => {
-    const { farmToken, elevation } = farmConfig
+    const { farmToken } = farmConfig
 
-    const elevationInt = elevationUtils.toInt(farmConfig.elevation)
-    const isOasisFarm = elevation === Elevation.OASIS
-    const subCartographerAddress = getSubCartographerAddress(elevation)
+    /*
+      TOKEN
+        . alloc emission mult
+        . elev emission mult
+        . deposit fee
+        . fairness tax
+        . summit per second
+      OASIS
+        . pool info (live & supply)
+      ELEVATIONS
+        . pool info (live & launched & supply)
+    */
 
     const [
       [allocEmissionMultiplier, elevEmissionMultiplier, tokenDepositFee, tokenWithdrawalTax, summitPerSecond],
-      [poolInfo, [rawTotemSupplies]],
+      [oasisPoolInfo],
+      [plainsPoolInfo],
+      [mesaPoolInfo],
+      [summitPoolInfo],
     ] = await Promise.all([
       await multicall(abi.cartographer, [
         {
@@ -38,7 +50,7 @@ export const fetchFarms = async () => {
         {
           address: cartographerAddress,
           name: 'tokenElevationEmissionMultiplier',
-          params: [farmToken, elevationInt],
+          params: [farmToken, 0],
         },
         {
           address: cartographerAddress,
@@ -55,21 +67,13 @@ export const fetchFarms = async () => {
           name: 'summitPerSecond',
         },
       ]),
-      await multicall(isOasisFarm ? abi.cartographerOasis : abi.cartographerElevation, [
-        {
-          address: subCartographerAddress,
+      ...elevationUtils.all.map(async (elev) => multicall(
+        elev === Elevation.OASIS ? abi.cartographerOasis : abi.cartographerElevation, [{
+          address: getSubCartographerAddress(elev),
           name: 'poolInfo',
           params: [farmToken],
-        },
-        {
-          address: subCartographerAddress,
-          name: isOasisFarm ? 'supply' : 'totemSupplies', // Throwaway for oasis farm
-          params: [farmToken],
-        },
-      ]),
+      }])),
     ])
-
-    const totemSupplies = [].concat(rawTotemSupplies)
 
     const summitPerYear = new BigNumber(summitPerSecond)
       .times(SECONDS_PER_YEAR)
@@ -77,14 +81,35 @@ export const fetchFarms = async () => {
       .times(new BigNumber(allocEmissionMultiplier))
       .div(new BigNumber(10).pow(24))
 
+    
+
+    const elevationsInfo = {
+      [Elevation.OASIS]: {
+        live: oasisPoolInfo.live,
+        supply: new BigNumber(oasisPoolInfo.supply._hex),
+      },
+      [Elevation.PLAINS]: {
+        live: plainsPoolInfo.live,
+        launched: plainsPoolInfo.launched,
+        supply: new BigNumber(plainsPoolInfo.supply._hex),
+      },
+      [Elevation.MESA]: {
+        live: mesaPoolInfo.live,
+        launched: mesaPoolInfo.launched,
+        supply: new BigNumber(mesaPoolInfo.supply._hex),
+      },
+      [Elevation.SUMMIT]: {
+        live: summitPoolInfo.live,
+        launched: summitPoolInfo.launched,
+        supply: new BigNumber(summitPoolInfo.supply._hex),
+      }
+    }
+
     return {
       ...farmConfig,
-      launched: elevation === Elevation.OASIS ? true : poolInfo.launched,
-      live: poolInfo.live,
-      supply: new BigNumber(poolInfo.supply),
+      elevations: merge({}, farmConfig.elevations, elevationsInfo),
       depositFeeBP: new BigNumber(tokenDepositFee),
       taxBP: new BigNumber(tokenWithdrawalTax),
-      totemSupplies: (totemSupplies || []).map((staked) => new BigNumber(staked._hex)),
       summitPerYear,
     }
   }
@@ -99,5 +124,5 @@ export const fetchFarms = async () => {
     return true
   }) as Farm[]
 
-  return groupBy(farmsData, (farm) => farmId(farm))
+  return groupBy(farmsData, (farm) => farm.symbol)
 }

@@ -63,6 +63,7 @@ export type Colors = {
   // Brand colors
   binance: string
 
+  DASH: string
   OASIS: string
   PLAINS: string
   MESA: string

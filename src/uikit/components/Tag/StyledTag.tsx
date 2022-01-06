@@ -20,11 +20,11 @@ export const StyledTag = styled.div<ThemedProps>`
   color: ${({ elevation, theme, outline, variant }) =>
     elevation && outline ? theme.colors[elevation] : getThemeTextColor({ outline, variant, theme })};
   display: inline-flex;
-  font-size: 14px;
-  font-weight: 400;
-  height: 28px;
+  font-size: 12px;
+  font-weight: bold;
+  height: 24px;
   line-height: 1.5;
-  padding: 0 8px;
+  padding: 0 6px;
   white-space: nowrap;
   box-shadow: 1px 1px 3px ${({ theme }) => theme.colors.textShadow};
 

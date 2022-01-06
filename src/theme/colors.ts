@@ -13,6 +13,8 @@ export const baseColors = {
 export const brandColors = {
   binance: '#F0B90B',
 
+  DASH: '#154463',
+
   OASIS: '#88ACC9',
   PLAINS: '#80B145',
   MESA: '#D4916D',
@@ -76,6 +78,7 @@ export const darkColors: Colors = {
 
 export const elevationPalette = {
   BASE: ['#092E4E', '#0E3858', '#154463', '#3E80A2', '#609CB6', '#94BDCC'],
+  DASH: ['#092E4E', '#0E3858', '#154463', '#3E80A2', '#609CB6', '#94BDCC'],
   OASIS: ['#1D4D57', '#35655D', '#638263', '#BBAA6A', '#C8BC89', '#D6CFB1'],
   PLAINS: ['#044820', '#0F6330', '#2F8846', '#94BB68', '#ABC887', '#C6D6B0'],
   MESA: ['#210402', '#370B06', '#5F2214', '#A2663E', '#B68660', '#CCAF94'],

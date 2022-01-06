@@ -14,6 +14,30 @@ export enum Elevation {
   EXPEDITION = 'EXPEDITION',
 }
 
+export enum ElevationFarmTab {
+  DASH = 'DASH',
+  OASIS = 'OASIS',
+  PLAINS = 'PLAINS',
+  MESA = 'MESA',
+  SUMMIT = 'SUMMIT',
+}
+
+export const elevationFarmTabToUrl = {
+  [ElevationFarmTab.DASH]: 'elevations',
+  [ElevationFarmTab.OASIS]: 'oasis',
+  [ElevationFarmTab.PLAINS]: 'plains',
+  [ElevationFarmTab.MESA]: 'mesa',
+  [ElevationFarmTab.SUMMIT]: 'summit'
+}
+
+export const elevationTabToElevation = {
+  [ElevationFarmTab.DASH]: Elevation.OASIS,
+  [ElevationFarmTab.OASIS]: Elevation.OASIS,
+  [ElevationFarmTab.PLAINS]: Elevation.PLAINS,
+  [ElevationFarmTab.MESA]: Elevation.MESA,
+  [ElevationFarmTab.SUMMIT]: Elevation.SUMMIT,
+}
+
 export const ZEROADD = '0x0000000000000000000000000000000000000000'
 
 export const ElevationUnlockRound = {
@@ -314,16 +338,18 @@ export interface Token {
   projectLink?: string
 }
 
-export interface ElevationExistsAndLive {
-  exists: boolean
+export interface FarmElevationConfig {
   live: boolean
+  exists: boolean
+  comment?: string
+  warning?: string
 }
 
-export interface ElevationsExistAndLive {
-  [Elevation.OASIS]: ElevationExistsAndLive
-  [Elevation.PLAINS]: ElevationExistsAndLive
-  [Elevation.MESA]: ElevationExistsAndLive
-  [Elevation.SUMMIT]: ElevationExistsAndLive
+export interface FarmElevationsConfigs {
+  [Elevation.OASIS]: FarmElevationConfig
+  [Elevation.PLAINS]: FarmElevationConfig
+  [Elevation.MESA]: FarmElevationConfig
+  [Elevation.SUMMIT]: FarmElevationConfig
 }
 
 export interface MultiElevAllocationConfig {
@@ -331,42 +357,16 @@ export interface MultiElevAllocationConfig {
   depositFeeBP: number
   taxBP: number
   native: boolean
-  elevationsExistAndLive: ElevationsExistAndLive
+  elevations: FarmElevationsConfigs
 }
 
 export interface MultiElevFarmConfig extends MultiElevAllocationConfig, PriceableToken  {
   passthroughStrategy?: string
   getUrl?: string
-  farmComment?: string | {
-    [Elevation.OASIS]?: string
-    [Elevation.PLAINS]?: string
-    [Elevation.MESA]?: string
-    [Elevation.SUMMIT]?: string
-  }
-  farmWarning?: string | {
-    [Elevation.OASIS]?: string
-    [Elevation.PLAINS]?: string
-    [Elevation.MESA]?: string
-    [Elevation.SUMMIT]?: string
-  }
-  assetType: TokenAssetType
-  balancer3PoolPid?: string
 }
 
-export interface FarmConfig extends PriceableToken {
+export interface FarmConfig extends MultiElevFarmConfig {
   farmToken: string
-  elevation: Elevation
-  
-  allocation: number
-  depositFeeBP: number
-  taxBP: number
-  native: boolean
-  live: boolean
-
-  // UI
-  passthroughStrategy?: string
-  farmComment?: string
-  farmWarning?: string
 }
 
 export enum RevertReasonOutput {

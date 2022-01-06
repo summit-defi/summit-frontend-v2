@@ -11,6 +11,7 @@ import FarmCardUserElevate from './FarmCardUserElevate'
 import FarmCardMobileDepositWithdrawSelector from './FarmCardMobileDepositWithdrawSelector'
 import { useIsElevationLockedUntilRollover, useMediaQuery } from 'state/hooks'
 import { getFarmToken } from 'utils/farmId'
+import { useTraceUpdate } from 'hooks/useTraceUpdate'
 
 const ExpandableSection = styled(Flex)<{ isExpanded: boolean }>`
   flex-direction: column;
@@ -62,7 +63,8 @@ interface Props {
   account?: string
   ethereum?: provider
 }
-const FarmCardUserSection: React.FC<Props> = ({ isExpanded: expanded, elevation, farm, tokenInfo, account, ethereum }) => {
+const FarmCardUserSection: React.FC<Props> = (props) => {
+  const { isExpanded: expanded, elevation, farm, tokenInfo, account, ethereum } = props
   const {
     farmToken,
     depositFeeBP,
@@ -70,10 +72,14 @@ const FarmCardUserSection: React.FC<Props> = ({ isExpanded: expanded, elevation,
     taxBP,
     native,
     symbol,
-    userData,
     passthroughStrategy,
     getUrl,
   } = farm
+
+  const {
+    stakedBalance,
+    claimable
+  } = farm.elevations[elevation] || {}
 
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -86,7 +92,6 @@ const FarmCardUserSection: React.FC<Props> = ({ isExpanded: expanded, elevation,
   const farmTokenAddress = getFarmToken(farm)
   const [mobileDepositWithdraw, setMobileDepositWithdraw] = useState(isMobile ? 0 : -1)
 
-  const { stakedBalance, claimable } = userData || {}
   const { farmAllowance, walletBalance } = tokenInfo
 
   const isApproved = account && farmAllowance && farmAllowance.isGreaterThan(0)
@@ -191,13 +196,13 @@ const FarmCardUserSection: React.FC<Props> = ({ isExpanded: expanded, elevation,
   )
 
   // ELEVATE SECTION
-  const elevateSection = useCallback(
-    () =>
-      (!isMobile || mobileDepositWithdraw === 2) && (
-        <FarmCardUserElevate farm={farm} elevationLocked={elevationLocked} disabled={disabled} />
-      ),
-    [isMobile, mobileDepositWithdraw, elevationLocked, farm, disabled],
-  )
+  // const elevateSection = useCallback(
+  //   () =>
+  //     (!isMobile || mobileDepositWithdraw === 2) && (
+  //       <FarmCardUserElevate farm={farm} elevationLocked={elevationLocked} disabled={disabled} />
+  //     ),
+  //   [isMobile, mobileDepositWithdraw, elevationLocked, farm, disabled],
+  // )
 
   return (
     <ExpandableSection isExpanded={isExpanded}>
@@ -206,7 +211,7 @@ const FarmCardUserSection: React.FC<Props> = ({ isExpanded: expanded, elevation,
         {mobileDepositWithdrawSelector()}
         {depositSection()}
         {withdrawSection()}
-        {elevateSection()}
+        {/* {elevateSection()} */}
       </MobileVerticalFlex>
       <MobileVerticalFlexText width="100%" mt="24px">
         <Flex flexDirection="column" justifyContent="flex-start" alignItems="center">

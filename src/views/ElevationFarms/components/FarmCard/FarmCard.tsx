@@ -4,14 +4,13 @@ import styled, { css } from 'styled-components'
 import { Flex, Text, Skeleton, Tag, TokenSymbolImage, HighlightedText } from 'uikit'
 import { Farm, UserTokenData } from 'state/types'
 import { provider } from 'web3-core'
-import { Elevation } from 'config/constants/types'
+import { Elevation, ElevationFarmTab, elevationFarmTabToUrl, elevationTabToElevation } from 'config/constants/types'
 import { useElevationTotem, usePricesPerToken, useSingleFarmSelected } from 'state/hooks'
 import { NavLink } from 'react-router-dom'
 import FarmCardUserSectionExpander from './FarmCardUserSectionExpander'
 import CardValue from 'views/Home/components/CardValue'
 import { getBalanceNumber, nFormatter } from 'utils'
 import Totem from '../Totem'
-import { farmId } from 'utils/farmId'
 
 const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
   align-self: baseline;
@@ -47,7 +46,7 @@ const PressableFlex = styled(NavLink)<{ $expanded: boolean }>`
   justify-content: center;
   align-items: flex-start;
   flex-direction: column;
-  padding: 28px 24px 28px 24px;
+  padding: 24px 20px 24px 20px;
   cursor: pointer;
   transition: all 300ms;
   flex-wrap: wrap;
@@ -119,47 +118,48 @@ const MultiplierTag = styled(Tag)<{ elevation: Elevation }>`
 interface FarmCardProps {
   farm: Farm
   tokenInfo: UserTokenData
+  elevationTab: ElevationFarmTab
   removed: boolean
   summitPrice?: BigNumber
   ethereum?: provider
   account?: string
-  elevation: Elevation
-  elevationLocked: boolean
 }
 
 const FarmCard: React.FC<FarmCardProps> = ({
   farm,
   tokenInfo,
-  elevation,
+  elevationTab,
   ethereum,
   summitPrice,
   account,
-  elevationLocked,
 }) => {
   const {
     farmToken,
     symbol,
     summitPerYear,
     allocation,
-    userData,
     decimals,
-    farmComment,
-    farmWarning,
-    supply: lpSupply,
   } = farm
 
-  const singleFarmId = useSingleFarmSelected()
-  const pricesPerToken = usePricesPerToken()
-  const expanded = singleFarmId === farmId(farm)
+  const {
+    comment: farmComment,
+    warning: farmWarning,
+    supply: lpSupply,
+    stakedBalance,
+    claimable,
+    yieldContributed,
+  } = farm.elevations[elevationTab]
 
-  const { stakedBalance, claimable, yieldContributed } = userData || {}
-  const { bonusBP = 0, taxBP = 0 } = tokenInfo || {}
+  const elevation = elevationTabToElevation[elevationTab]
+
+  const singleFarmSymbol = useSingleFarmSelected()
+  const pricesPerToken = usePricesPerToken()
+  const expanded = singleFarmSymbol === symbol
+
+  const { bonusBP = 0, taxBP = 0, bonusResetTimestamp, taxResetTimestamp } = tokenInfo || {}
 
   const rawEarned = getBalanceNumber(claimable)
   const rawYieldContribution = getBalanceNumber(yieldContributed)
-
-  const isElevationFarm = elevation !== Elevation.OASIS
-  const userTotem = useElevationTotem(elevation)
 
   const userStakedBalance: BigNumber = useMemo(
     () => {
@@ -195,16 +195,16 @@ const FarmCard: React.FC<FarmCardProps> = ({
     apr &&
     apr / 3.65).toFixed(2)
 
-  const targetUrl = `/${elevation.toLowerCase()}${expanded ? '' : `/${symbol.toLowerCase()}`}`
+  const targetUrl = `/${(elevationFarmTabToUrl[elevationTab] || 'elevations').toLowerCase()}${expanded ? '' : `/${symbol.toLowerCase()}`}`
 
   return (
-    <FCard $locked={elevationLocked} $expanded={expanded}>
+    <FCard $locked={false} $expanded={expanded}>
       <PressableFlex to={targetUrl} $expanded={expanded}>
         { farmComment != null && <Text monospace bold italic fontSize='13px' mb='14px' textAlign='center'>* {farmComment}</Text> }
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }
         <FarmNumericalInfoFlex>
           <SymbolIconFlex justifyContent="flex-start" alignItems="center">
-            <TokenSymbolImage symbol={symbol} width={56} height={56} />
+            <TokenSymbolImage symbol={symbol} width={52} height={52} />
             <Flex flexDirection="column" alignItems="flex-start">
               <Text italic monospace bold fontSize="16px" lineHeight="14px" mb="4px" textAlign="left">
                 {symbol}
@@ -215,8 +215,8 @@ const FarmCard: React.FC<FarmCardProps> = ({
             </Flex>
           </SymbolIconFlex>
           <FlexInfoItem>
-            <Text bold fontSize="14px">
-              Winnings
+            <Text bold small>
+              WINNINGS
             </Text>
             <InfoItemValue>
               <CardValue
@@ -231,10 +231,10 @@ const FarmCard: React.FC<FarmCardProps> = ({
             </InfoItemValue>
           </FlexInfoItem>
 
-          <FlexMobileLineBreak />
+          {/* <FlexMobileLineBreak />
           {isElevationFarm && (
             <FlexInfoItem>
-              <Text bold fontSize="14px">
+              <Text bold small>
                 Yield Contributed
               </Text>
               <YieldContributedWrapper>
@@ -247,37 +247,37 @@ const FarmCard: React.FC<FarmCardProps> = ({
                 </InfoItemValue>
               </YieldContributedWrapper>
             </FlexInfoItem>
-          )}
+          )} */}
 
           { userStakedBalance.gt(0) && bonusBP > 0 &&
             <FlexInfoItem>
-              <Text fontSize="14px">Winnings Bonus</Text>
+              <Text small>Winnings Bonus</Text>
               <InfoItemValue>
-                <CardValue value={bonusBP / 100} postfix='%' decimals={1} elevation={elevation} fontSize="22px" />
+                <CardValue value={bonusBP / 100} postfix='%' decimals={1} elevation={Elevation.OASIS} fontSize="22px" />
               </InfoItemValue>
             </FlexInfoItem>
           }
 
           { userStakedBalance.gt(0) &&
             <FlexInfoItem>
-              <Text fontSize="14px">Fairness Tax</Text>
+              <Text small>Fairness Tax</Text>
               <InfoItemValue>
-                <CardValue value={taxBP / 100} postfix='%' decimals={1} elevation={elevation} fontSize="22px" />
+                <CardValue value={taxBP / 100} postfix='%' decimals={1} elevation={Elevation.OASIS} fontSize="22px" />
               </InfoItemValue>
             </FlexInfoItem>
           }
 
           <FlexInfoItem>
-            <Text fontSize="14px">Deposited</Text>
+            <Text small>Deposited</Text>
             <InfoItemValue>
-              <CardValue value={userStakedBalance.toNumber()} prefix='$' decimals={2} elevation={elevation} fontSize="22px" />
+              <CardValue value={userStakedBalance.toNumber()} prefix='$' decimals={2} elevation={Elevation.OASIS} fontSize="22px" />
             </InfoItemValue>
           </FlexInfoItem>
 
-          { isElevationFarm && <FlexMobileLineBreak /> }
+          {/* { isElevationFarm && <FlexMobileLineBreak /> } */}
 
           <FlexInfoItem>
-            <Text fontSize="14px">APY</Text>
+            <Text small>APY</Text>
             <InfoItemValue>
               <Text bold monospace style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
                 {apy ? `${nFormatter(farmAvgAPY, 2)}%` : <Skeleton height={24} width={80} />}
@@ -288,7 +288,7 @@ const FarmCard: React.FC<FarmCardProps> = ({
             </InfoItemValue>
           </FlexInfoItem>
           <FlexInfoItem>
-            <Text fontSize="14px">TVL</Text>
+            <Text small>TVL</Text>
             <InfoItemValue>
               <Text bold monospace style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
                 {totalValueFormatted}
@@ -298,14 +298,16 @@ const FarmCard: React.FC<FarmCardProps> = ({
         </FarmNumericalInfoFlex>
       </PressableFlex>
 
-      <FarmCardUserSectionExpander
-        isExpanded={expanded}
-        ethereum={ethereum}
-        elevation={elevation}
-        farm={farm}
-        tokenInfo={tokenInfo}
-        account={account}
-      />
+      { elevationTab !== ElevationFarmTab.DASH &&
+        <FarmCardUserSectionExpander
+          isExpanded={expanded}
+          ethereum={ethereum}
+          elevation={elevation}
+          farm={farm}
+          tokenInfo={tokenInfo}
+          account={account}
+        />
+      }
     </FCard>
   )
 }

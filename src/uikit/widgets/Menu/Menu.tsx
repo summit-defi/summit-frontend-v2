@@ -13,6 +13,7 @@ import MenuButton from "./components/MenuButton";
 import { HamburgerCloseIcon, HamburgerIcon } from "./icons";
 import { useSelectedElevation } from "state/hooks";
 import DarkModeToggle from "./components/DarkModeToggle";
+import ElevationFarmsTabSelector from "./components/ElevationFarmsTabSelector";
 
 const Wrapper = styled.div`
   position: relative;
@@ -35,9 +36,15 @@ const StyledNav = styled.nav<{ showMenu: boolean }>`
   z-index: 20;
   transform: translate3d(0, 0, 0);
   background-color: ${({ theme }) => theme.colors.background};
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: 14px;
+  padding-top: 7px;
+
   ${({ theme }) => theme.mediaQueries.nav} {
     background-color: transparent;
     justify-content: space-between;
+    flex-direction: row;
   }
 `;
 
@@ -141,6 +148,8 @@ const Menu: React.FC<NavProps> = ({
           </MenuButton>
         </MobileHamburgerWrapper>
         <Logo isDark={isDark} href={homeLink?.href ?? "/"} elevation={elevation}/>
+
+        <ElevationFarmsTabSelector/>
 
         <MobileExcludedHeaderElements>
           <Flex justifyContent='flex-end' flex='1'>

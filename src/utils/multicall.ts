@@ -42,6 +42,9 @@ export const retryableMulticall = async (abi: any[], calls: Call[], functionName
   const res = (await multicallTx()) as any
 
   if (res.err != null) {
+    console.log({
+      res
+    })
     console.error(`${functionName}:\n\t${res.err.join('\n')}`)
     return null
   }

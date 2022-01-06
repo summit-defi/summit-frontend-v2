@@ -16,7 +16,7 @@ interface Props {
 }
 
 const StyledSummitButton = styled(SummitButton)`
-  height: 36px;
+  height: 32px;
   width: 160px;
   margin-left: 4px;
 `

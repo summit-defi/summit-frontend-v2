@@ -9,7 +9,7 @@ import {
   fetchExpeditionPublicDataAsync,
 } from './actions'
 import { State, Farm, Expedition, ElevationInfo, ExpeditionUserData, UserTokenData } from './types'
-import { Elevation, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired } from '../config/constants/types'
+import { Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
   fetchElevationHelperInfoAsync,
@@ -19,7 +19,6 @@ import {
 import { useLocation } from 'react-router-dom'
 import { getFarmConfigs } from 'config/constants/farms'
 import useTheme from 'hooks/useTheme'
-import { farmId } from 'utils/farmId'
 import { getChainWrappedNativeTokenSymbol, TokenSymbol } from 'config/constants'
 import { fetchExpeditionPotentialWinnings, fetchExpeditionWinnings } from './expeditions/fetchExpeditionUserInfo'
 import { updateExpeditionUserPotentialWinningsAsync, updateExpeditionUserWinnings, updateExpeditionUserWinningsAsync } from './expeditions'
@@ -173,9 +172,14 @@ export const useTotalValue = (elevation?: Elevation): BigNumber => {
 
   return useMemo(
     () => farms
-      .filter((farm) => elevation == null ? true : farm.elevation === elevation)
       .reduce((accumValue, farm) => {
-        return accumValue.plus((farm.supply || new BigNumber(0)).div(new BigNumber(10).pow(farm.decimals || 18)).times(pricesPerToken != null && pricesPerToken[farm.symbol] ? pricesPerToken[farm.symbol] : new BigNumber(1)))
+        let crossElevSupplyRaw = new BigNumber(0)
+        elevationUtils.all
+          .filter((elev) => elevation == null ? true : elev === elevation)
+          .forEach((elev) => {
+            crossElevSupplyRaw = crossElevSupplyRaw.plus(farm.elevations[elev].supply)
+          })
+        return accumValue.plus((crossElevSupplyRaw || new BigNumber(0)).div(new BigNumber(10).pow(farm.decimals || 18)).times(pricesPerToken != null && pricesPerToken[farm.symbol] ? pricesPerToken[farm.symbol] : new BigNumber(1)))
       }, new BigNumber(0)),
     [farms, pricesPerToken, elevation]
   )
@@ -259,16 +263,37 @@ export const useSingleFarmSelected = (): string | null => {
 
   return useMemo(() => {
     const pathSplit = location.pathname.split('/')
-    const elev = pathSplit[1]
     const lpLabel = pathSplit[2]
     if (lpLabel == null) return null
 
     const singleFarm = farmConfigs.find(
-      (farm) => farm.elevation === (elev.toUpperCase() as Elevation) && `${farm.symbol.toLowerCase()}` === lpLabel,
+      (farm) => `${farm.symbol.toLowerCase()}` === lpLabel,
     )
 
-    return singleFarm != null ? farmId(singleFarm) : null
+    return singleFarm != null ? singleFarm.symbol : null
   }, [location, farmConfigs])
+}
+
+export const useElevationFarmsTab = (): ElevationFarmTab | null => {
+  const location = useLocation()
+
+  return useMemo(() => {
+    const keyPath = location.pathname.split('/')[1]
+    switch (keyPath) {
+      case 'elevations': 
+        return ElevationFarmTab.DASH
+      case 'oasis':
+        return ElevationFarmTab.OASIS
+      case 'plains':
+        return ElevationFarmTab.PLAINS
+      case 'mesa':
+        return ElevationFarmTab.MESA
+      case 'summit':
+        return ElevationFarmTab.SUMMIT
+      default:
+        return null
+    }
+  }, [location])
 }
 
 export const useSelectedElevation = (): Elevation | null => {
@@ -277,6 +302,7 @@ export const useSelectedElevation = (): Elevation | null => {
   return useMemo(() => {
     const keyPath = location.pathname.split('/')[1]
     switch (keyPath) {
+
       case 'oasis':
         return Elevation.OASIS
       case 'plains':
@@ -399,16 +425,17 @@ export interface SisterFarms {
   [Elevation.SUMMIT]?: Farm
 }
 export const useSisterFarms = (symbol: string): SisterFarms => {
-  const farms = useFarms()
+  return baseSisterFarms
+  // const farms = useFarms()
 
-  return useMemo(() => {
-    const sisterFarms = baseSisterFarms
-    farms.forEach((farm) => {
-      if (farm.symbol !== symbol || !farm.launched) return
-      sisterFarms[farm.elevation] = farm
-    })
-    return sisterFarms
-  }, [farms, symbol])
+  // return useMemo(() => {
+  //   const sisterFarms = baseSisterFarms
+  //   farms.forEach((farm) => {
+  //     if (farm.symbol !== symbol || !farm.launched) return
+  //     sisterFarms[farm.elevation] = farm
+  //   })
+  //   return sisterFarms
+  // }, [farms, symbol])
 }
 const baseSisterFarmsAvailable = {
   [Elevation.OASIS]: false,

@@ -3,18 +3,16 @@ import { createSlice } from '@reduxjs/toolkit'
 import { getFarmConfigs } from 'config/constants/farms'
 import { fetchFarms } from './fetchFarms'
 import {
-  fetchPoolClaimableRewards,
-  fetchFarmUserStakedBalances,
   fetchElevationsRoundRewards,
   fetchElevClaimableRewards,
   fetchElevPotentialWinnings,
-  fetchPoolYieldContributed,
+  fetchFarmUserData,
 } from './fetchFarmUser'
 import { FarmsState, Farm } from '../types'
 import { groupByAndMap } from 'utils'
 import BigNumber from 'bignumber.js'
 import { BN_ZERO, elevationUtils } from 'config/constants/types'
-import { farmId } from 'utils/farmId'
+import { merge } from 'lodash'
 
 const EMPTY_ELEVATION_FARMS_DATA = {
   claimable: BN_ZERO,
@@ -42,18 +40,15 @@ export const farmsSlice = createSlice({
   initialState,
   reducers: {
     setFarmsPublicData: (state, action) => {
-      const liveFarmsData: Farm[] = action.payload
-      state.data = state.data.map((farm) => ({
-        ...farm,
-        ...liveFarmsData[farmId(farm)]
-      }))
+      const liveFarmsData = action.payload
+      state.data = state.data.map((farm) => merge({}, farm, liveFarmsData[farm.symbol]))
       state.farmsLoaded = true
     },
     setFarmUserData: (state, action) => {
       const { farmsUserData } = action.payload
       state.data = state.data.map((farm) => ({
         ...farm,
-        userData: farmsUserData[farmId(farm)],
+        elevations: merge({}, farm.elevations, farmsUserData[farm.symbol])
       }))
       state.userDataLoaded = true
     },
@@ -81,40 +76,22 @@ export const fetchFarmsPublicDataAsync = () => async (dispatch) => {
 }
 export const fetchFarmUserDataAsync = (account) => async (dispatch) => {
   const farmConfigs = getFarmConfigs()
+  await fetchFarmUserData(account, farmConfigs)
 
   const [
-    stakedBalances,
-    poolClaimableRewards,
-    poolYieldContributed,
+    farmsUserData,
     elevClaimableRewards,
     elevPotentialWinnings,
     elevRoundRewards,
   ] = await Promise.all([
-    await fetchFarmUserStakedBalances(account, farmConfigs),
-    await fetchPoolClaimableRewards(account, farmConfigs),
-    await fetchPoolYieldContributed(account, farmConfigs),
+    await fetchFarmUserData(account, farmConfigs),
     await fetchElevClaimableRewards(account),
     await fetchElevPotentialWinnings(account),
     await fetchElevationsRoundRewards(farmConfigs),
   ])
 
-  const farmsUserData = groupByAndMap(
-    farmConfigs,
-    (farm) => farmId(farm),
-    (farm) => {
-      const id = farmId(farm)
-      return {
-        stakedBalance: stakedBalances[id] || BN_ZERO,
-        claimable: poolClaimableRewards[id] || BN_ZERO,
-        yieldContributed: poolYieldContributed[id] || BN_ZERO,
-      }
-    },
-  )
-
   dispatch(setFarmUserData({ farmsUserData }))
-  dispatch(
-    setElevationFarmsData({ elevClaimableRewards, elevPotentialWinnings, elevRoundRewards }),
-  )
+  dispatch(setElevationFarmsData({ elevClaimableRewards, elevPotentialWinnings, elevRoundRewards }))
 }
 
 export default farmsSlice.reducer

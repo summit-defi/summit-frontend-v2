@@ -19,7 +19,7 @@ const StyledLink = styled(Link)`
   padding: 6px 16px;
   border-radius: 50px;
   .desktop-icon {
-    width: 230px;
+    width: 177px;
     display: block;
   }
   box-shadow: 3px 3px 6px black;

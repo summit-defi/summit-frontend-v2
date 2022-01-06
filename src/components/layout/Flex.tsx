@@ -11,7 +11,7 @@ const FlexLayout = styled.div`
   margin-right: 0px;
 
   & > * {
-    max-width: 950px;
+    max-width: 850px;
   }
 `
 

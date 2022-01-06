@@ -66,7 +66,7 @@ export const fetchElevationsData = async () => {
 
       const roundEndTimestamp = new BigNumber(res[index * 4 + 1]).toNumber()
       const historicInfo = res[index * 4 + 2][0].map((item) => new BigNumber(item._hex).toNumber())
-      const roundNumber = new BigNumber(res[index * 4 + 3][0]._hex).toNumber() - ElevationRoundOffset[elevation]
+      const roundNumber = new BigNumber(res[index * 4 + 3][0]._hex).toNumber()
 
       let prevWinningsMultipliers = []
       if (elevation !== Elevation.EXPEDITION) {
@@ -80,7 +80,7 @@ export const fetchElevationsData = async () => {
         unlockTimestamp,
         roundEndTimestamp,
         roundNumber,
-        totemWinAcc: historicInfo.slice(0, 10).map((wins, i) => wins - ElevationWinnersOffset[elevation][i]),
+        totemWinAcc: historicInfo.slice(0, 10),
         prevWinners: historicInfo.slice(10, 10 + roundNumber - 1),
         prevWinningsMultipliers,
       }

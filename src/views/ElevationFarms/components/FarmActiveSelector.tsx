@@ -8,6 +8,7 @@ import { FarmType } from 'state/types'
 import { darken } from 'polished'
 import { pressableMixin } from 'uikit/util/styledMixins'
 
+const buttonWidth = 120
 const buttonHeight = 28
 
 const SelectorFlex = styled(Flex)`
@@ -22,50 +23,26 @@ const SelectorWrapper = styled(Flex)`
   justify-content: center;
   margin: 4px 0px;
   height: ${buttonHeight}px;
-  width: 225px;
+  width: ${buttonWidth * 2};
   border-radius: 22px;
   background-color: ${({ theme }) => theme.colors.background};
   box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
   position: relative;
 `
 
-const getFarmTypeWidth = (farmType: FarmType): number => {
-  switch (farmType) {
-    case FarmType.Token:
-      return 85
-    case FarmType.LP:
-      return 70
-    default:
-    case FarmType.All:
-      return 70
-  }
-}
-
-const getFarmTypeOffset = (farmType: FarmType): number => {
-  switch (farmType) {
-    case FarmType.Token:
-      return 72
-    case FarmType.LP:
-      return 153
-    default:
-    case FarmType.All:
-      return 2
-  }
-}
-
-const SelectedSummitButton = styled(SummitButton)<{ selectedFarmType: FarmType }>`
+const SelectedSummitButton = styled(SummitButton)<{ selectedIndex: number }>`
   pointer-events: none;
   position: absolute;
   top: 2px;
   height: ${buttonHeight - 4}px;
-  width: ${({ selectedFarmType }) => getFarmTypeWidth(selectedFarmType)}px;
-  left: ${({ selectedFarmType }) => getFarmTypeOffset(selectedFarmType)}px;
+  width: ${buttonWidth - 4}px;
+  left: ${({ selectedIndex }) => selectedIndex * buttonWidth + 2}px;
   z-index: 3;
   font-size: 14px;
 `
 
-const TextButton = styled.div<{ width: number }>`
-  width: ${({ width }) => width}px;
+const TextButton = styled.div`
+  width: ${buttonWidth}px;
   cursor: pointer;
   color: ${({ theme }) => theme.colors.text};
   text-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`};
@@ -80,32 +57,28 @@ const TextButton = styled.div<{ width: number }>`
   ${pressableMixin}
 `
 
-const FarmTypeSelector: React.FC = () => {
+const FarmActiveSelector: React.FC = () => {
   const elevation = useSelectedElevation()
-  const { farmType, onSetFarmType } = useFarmType()
+  const { liveFarms, onSetLive } = useFarmType()
   return (
     <SelectorFlex>
       <SelectorWrapper>
         <SelectedSummitButton
           elevation={elevation}
-          selectedFarmType={farmType}
+          selectedIndex={liveFarms ? 0 : 1}
           padding="0px"
-          onClick={() => onSetFarmType(FarmType.All)}
         >
-          {farmType}
+          {liveFarms ? 'Active' : 'Inactive'}
         </SelectedSummitButton>
-        <TextButton width={getFarmTypeWidth(FarmType.All)} onClick={() => onSetFarmType(FarmType.All)}>
-          {FarmType.All}
+        <TextButton onClick={() => onSetLive(true)}>
+          Active
         </TextButton>
-        <TextButton width={getFarmTypeWidth(FarmType.Token)} onClick={() => onSetFarmType(FarmType.Token)}>
-          {FarmType.Token}
-        </TextButton>
-        <TextButton width={getFarmTypeWidth(FarmType.LP)} onClick={() => onSetFarmType(FarmType.LP)}>
-          {FarmType.LP}
+        <TextButton onClick={() => onSetLive(false)}>
+          Inactive
         </TextButton>
       </SelectorWrapper>
     </SelectorFlex>
   )
 }
 
-export default React.memo(FarmTypeSelector)
+export default React.memo(FarmActiveSelector)

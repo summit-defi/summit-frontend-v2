@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { FarmConfig, Elevation } from 'config/constants/types'
+import { FarmConfig, Elevation, FarmElevationConfig } from 'config/constants/types'
 /* eslint-disable camelcase */
 
 export const NamedChainId = {
@@ -8,15 +8,22 @@ export const NamedChainId = {
   BSC: '56'
 }
 
-export interface FarmUserData {
-  stakedBalance: BigNumber
-  claimable: BigNumber
-  yieldContributed: BigNumber
-}
-export interface Farm extends FarmConfig {
+export interface FarmElevation extends FarmElevationConfig {
   supply?: BigNumber
   launched?: boolean
-  userData?: FarmUserData
+  stakedBalance?: BigNumber
+  claimable?: BigNumber
+  yieldContributed?: BigNumber
+}
+export interface FarmElevations {
+  [Elevation.OASIS]: FarmElevation
+  [Elevation.PLAINS]: FarmElevation
+  [Elevation.MESA]: FarmElevation
+  [Elevation.SUMMIT]: FarmElevation
+}
+export interface Farm extends FarmConfig {
+  elevations: FarmElevations
+
   summitPerYear?: BigNumber
   getUrl?: string
 }

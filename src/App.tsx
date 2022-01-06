@@ -81,11 +81,9 @@ const App: React.FC = () => {
             <Route path='/beta' exact>
               <BetaTokens />
             </Route>
-            {elevationUtils.oasisElevation.map((elevation) => (
-              <Route path={`/${elevation.toLowerCase()}`} key={elevation}>
-                <ElevationFarms elevation={elevation} />
-              </Route>
-            ))}
+            <Route path={['/elevations', '/oasis', '/plains', '/mesa', '/summit']}>
+              <ElevationFarms />
+            </Route>
             <Route path="/expedition">
               <ExpeditionFarms />
             </Route>
