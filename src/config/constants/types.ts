@@ -98,6 +98,13 @@ export const ElevationTotems: { [key in keyof typeof Elevation]: number[] } = {
   [Elevation.SUMMIT]: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
   [Elevation.EXPEDITION]: [0, 1],
 }
+export const ElevationTotemCount: { [key in keyof typeof Elevation]: number } = {
+  [Elevation.OASIS]: 1,
+  [Elevation.PLAINS]: 2,
+  [Elevation.MESA]: 5,
+  [Elevation.SUMMIT]: 10,
+  [Elevation.EXPEDITION]: 2,
+}
 export const ElevationWinnersOffset: { [key in keyof typeof Elevation]: number[] } = {
   [Elevation.OASIS]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [Elevation.PLAINS]: [33, 39, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -208,6 +215,9 @@ export const elevationUtils = {
       case Elevation.PLAINS:
         return 0
     }
+  },
+  totemCount: (elevation: Elevation) => {
+    return ElevationTotemCount[elevation]
   },
   getTotemIcon: (elevation: Elevation, totem: number) => {
     switch (elevation) {

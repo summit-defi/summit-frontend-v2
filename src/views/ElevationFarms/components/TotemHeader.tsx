@@ -23,6 +23,7 @@ import { MobileHeaderCardSelector, MobileSelectedCard } from './HeaderCards/Mobi
 import UnlockButton from 'components/UnlockButton'
 import BoundedProgressBar from './BoundedProgressBar'
 import ContributionBreakdown from './ContributionBreakdown'
+import TotemBattleBreakdown from './TotemBattleBreakdown'
 
 const HeaderCardsWrapper = styled(Flex)`
   justify-content: center;
@@ -182,6 +183,52 @@ const TotemHeader: React.FC<Props> = ({ account }) => {
     }
   ]
 
+  const totemInfos = [
+    {
+      totem: 0,
+      mult: 14.1,
+    },
+    {
+      totem: 1,
+      mult: 12.6
+    },
+    {
+      totem: 2,
+      mult: 8.5
+    },
+    {
+      totem: 3,
+      mult: 10.9
+    },
+    {
+      totem: 4,
+      mult: 8.8
+    },
+    {
+      totem: 5,
+      mult: 7.1,
+    },
+    {
+      totem: 6,
+      mult: 12.6
+    },
+    {
+      totem: 7,
+      mult: 9.5
+    },
+    {
+      totem: 8,
+      mult: 6.8
+    },
+    {
+      totem: 9,
+      mult: 10.9
+    }
+  ]
+  
+    
+    
+
   // const isMobile = useMediaQuery('(max-width: 986px)')
 
   // if (isMobile) {
@@ -320,6 +367,12 @@ const TotemHeader: React.FC<Props> = ({ account }) => {
             currVal='3%'
             progress={0.6}
             elevation={elevation}
+          />
+
+          <TotemBattleBreakdown
+            title='TEST'
+            elevation={Elevation.SUMMIT}
+            totemInfos={totemInfos}
           />
 
           <ElevationUserRoundInfo />

@@ -2,7 +2,7 @@ import { Elevation } from 'config/constants'
 import React from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
-import { Flex, Text } from 'uikit'
+import { Flex, Text, TriangleGrowIcon } from 'uikit'
 
 const EndMarkerHeight = 55
 
@@ -83,6 +83,10 @@ const Wrapper = styled(Flex)`
     width: 300px;
 `
 
+const StyledTriangleGrowIcon = styled(TriangleGrowIcon)`
+    opacity: 0.3;
+`
+
 interface Props {
     title?: string
     minTitle?: string
@@ -128,7 +132,7 @@ const BoundedProgressBar: React.FC<Props> = ({title, minTitle, maxTitle, minVal,
             <>
                 <BarFlex flexDirection='row' alignItems='center'>
                     <EndMarker title={minTitle} val={minVal}/>
-                    <HorizontalBar/>
+                    <StyledTriangleGrowIcon width='100%' height='15px' left={7} right={1}/>
                     <EndMarker title={maxTitle} val={maxVal}/>
                     <Marker val={currVal} progress={progress} elevation={elevation}/>
                 </BarFlex>
