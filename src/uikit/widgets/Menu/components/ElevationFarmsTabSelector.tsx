@@ -1,12 +1,12 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { Flex, Lock } from 'uikit'
-import SummitButton from 'uikit/components/Button/SummitButton'
 import { darken } from 'polished'
+import SummitButton from 'uikit/components/Button/SummitButton'
 import { Elevation, ElevationFarmTab, elevationFarmTabToUrl } from 'config/constants/types'
 import { pressableMixin } from 'uikit/util/styledMixins'
 import { useElevationFarmsTab, useSingleFarmSelected } from 'state/hooks'
 import { NavLink } from 'react-router-dom'
+import Flex from 'uikit/components/Box/Flex'
 
 const buttonWidth = 80
 const buttonHeight = 46

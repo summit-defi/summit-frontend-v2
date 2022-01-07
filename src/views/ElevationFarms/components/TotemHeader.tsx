@@ -22,6 +22,7 @@ import ElevationUserRoundInfo from './ElevationUserRoundInfo'
 import { MobileHeaderCardSelector, MobileSelectedCard } from './HeaderCards/MobileHeaderCardSelector'
 import UnlockButton from 'components/UnlockButton'
 import BoundedProgressBar from './BoundedProgressBar'
+import ContributionBreakdown from './ContributionBreakdown'
 
 const HeaderCardsWrapper = styled(Flex)`
   justify-content: center;
@@ -158,6 +159,29 @@ const TotemHeader: React.FC<Props> = ({ account }) => {
     onPresentSelectTotemModal()
   }
 
+  const contributions = [
+    {
+      token: true,
+      title: 'SUMMIT',
+      key: 0,
+      perc: 38.5,
+      val: '25.25 SUMMIT',
+    },
+    {
+      token: true,
+      title: 'USDC',
+      key: 1,
+      perc: 55.6
+    },
+    {
+      token: true,
+      title: 'EVEREST',
+      key: 2,
+      perc: 5.9,
+      val: '50.22 SUMMIT',
+    }
+  ]
+
   // const isMobile = useMediaQuery('(max-width: 986px)')
 
   // if (isMobile) {
@@ -281,6 +305,11 @@ const TotemHeader: React.FC<Props> = ({ account }) => {
               )}
             </HeaderButtonsRow>
           )}
+
+          <ContributionBreakdown
+            title='TEST'
+            contributions={contributions}
+          />
 
           <BoundedProgressBar
             title='TEST'
