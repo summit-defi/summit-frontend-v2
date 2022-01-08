@@ -24,6 +24,7 @@ import UnlockButton from 'components/UnlockButton'
 import BoundedProgressBar from './BoundedProgressBar'
 import ContributionBreakdown from './ContributionBreakdown'
 import TotemBattleBreakdown from './TotemBattleBreakdown'
+import ElevationContributionBreakdown from './ElevationContributionBreakdown'
 
 const HeaderCardsWrapper = styled(Flex)`
   justify-content: center;
@@ -179,6 +180,32 @@ const TotemHeader: React.FC<Props> = ({ account }) => {
       title: 'EVEREST',
       key: 2,
       perc: 5.9,
+      val: '50.22 SUMMIT',
+    }
+  ]
+
+  const elevationContributions = [
+    {
+      elevation: Elevation.OASIS,
+      key: 0,
+      perc: 48.5,
+      val: '25.25 SUMMIT',
+    },
+    {
+      elevation: Elevation.PLAINS,
+      key: 1,
+      perc: 30.6
+    },
+    {
+      elevation: Elevation.MESA,
+      key: 2,
+      perc: 15.9,
+      val: '50.22 SUMMIT',
+    },
+    {
+      elevation: Elevation.SUMMIT,
+      key: 3,
+      perc: 5,
       val: '50.22 SUMMIT',
     }
   ]
@@ -352,6 +379,11 @@ const TotemHeader: React.FC<Props> = ({ account }) => {
               )}
             </HeaderButtonsRow>
           )}
+
+          <ElevationContributionBreakdown
+            title='TEST'
+            contributions={elevationContributions}
+          />
 
           <ContributionBreakdown
             title='TEST'
