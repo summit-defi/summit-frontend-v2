@@ -79,6 +79,7 @@ export interface ElevationFarmsData {
   potentialWinnings: BigNumber
   roundRewards: BigNumber
   totemRoundRewards: BigNumber[]
+  totemMultipliers: number[]
 }
 
 export interface FarmsState {

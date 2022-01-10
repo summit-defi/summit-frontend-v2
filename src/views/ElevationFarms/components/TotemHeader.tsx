@@ -25,6 +25,8 @@ import BoundedProgressBar from './BoundedProgressBar'
 import ContributionBreakdown from './ContributionBreakdown'
 import TotemBattleBreakdown from './TotemBattleBreakdown'
 import ElevationContributionBreakdown from './ElevationContributionBreakdown'
+import ElevationWinnings from './ElevationWinnings'
+import ElevationTotemBattle from './ElevationTotemBattle'
 
 const HeaderCardsWrapper = styled(Flex)`
   justify-content: center;
@@ -379,6 +381,9 @@ const TotemHeader: React.FC<Props> = ({ account }) => {
               )}
             </HeaderButtonsRow>
           )}
+          
+          <ElevationWinnings/>
+          <ElevationTotemBattle/>
 
           <ElevationContributionBreakdown
             title='TEST'
@@ -394,10 +399,10 @@ const TotemHeader: React.FC<Props> = ({ account }) => {
             title='TEST'
             minTitle='NOV 4'
             maxTitle='NOV 10'
-            minVal='0%'
-            maxVal='5%'
+            minVal='7%'
+            maxVal='1%'
             currVal='3%'
-            progress={0.6}
+            progress={0.4}
             elevation={elevation}
           />
 

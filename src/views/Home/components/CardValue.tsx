@@ -48,7 +48,7 @@ const CardValue: React.FC<CardValueProps> = ({
       {countUp}
       {isMultiplier && 'X'}
       {postfix != null && (
-        <HighlightedText bold elevation={elevation} fontSize={postfixFontSize || fontSize} header ml="6px" gold={gold}>
+        <HighlightedText bold elevation={elevation} fontSize={postfixFontSize || fontSize} header ml="6px" mt='2px' gold={gold}>
           {postfix}
         </HighlightedText>
       )}

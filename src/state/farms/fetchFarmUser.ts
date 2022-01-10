@@ -117,18 +117,22 @@ export const fetchElevationsRoundRewards = async (farmConfigs: FarmConfig[]) => 
     [Elevation.OASIS]: {
       roundRewards: new BigNumber(0),
       totemRoundRewards: [],
+      totemMultipliers: [1],
     },
     [Elevation.PLAINS]: {
       roundRewards: new BigNumber(0),
       totemRoundRewards: [],
+      totemMultipliers: [2, 2],
     },
     [Elevation.MESA]: {
       roundRewards: new BigNumber(0),
       totemRoundRewards: [],
+      totemMultipliers: [5, 5, 5, 5, 5],
     },
     [Elevation.SUMMIT]: {
       roundRewards: new BigNumber(0),
       totemRoundRewards: [],
+      totemMultipliers: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
     },
   }
 
@@ -146,6 +150,18 @@ export const fetchElevationsRoundRewards = async (farmConfigs: FarmConfig[]) => 
           .plus(totemRewards),
       ),
     }
+  })
+
+  onlyElevationsIters.forEach(({ elevation }) => {
+    elevationTotemRoundRewards[elevation].totemMultipliers = elevationTotemRoundRewards[elevation].totemRoundRewards.map((totemRew) => {
+      return elevationTotemRoundRewards[elevation].roundRewards.isEqualTo(0) ?
+        0 : 
+        elevationTotemRoundRewards[elevation].roundRewards.dividedBy(totemRew).toNumber()
+    })
+  })
+
+  console.log({
+    elevationTotemRoundRewards
   })
 
   return elevationTotemRoundRewards

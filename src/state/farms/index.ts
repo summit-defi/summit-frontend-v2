@@ -20,6 +20,7 @@ const EMPTY_ELEVATION_FARMS_DATA = {
   potentialWinnings: BN_ZERO,
   roundRewards: BN_ZERO,
   totemRoundRewards: [],
+  totemMultipliers: [],
 }
 
 const initialState: FarmsState = {
@@ -60,6 +61,7 @@ export const farmsSlice = createSlice({
         potentialWinnings: elevPotentialWinnings[elevation].potentialWinnings as BigNumber,
         roundRewards: elevRoundRewards[elevation].roundRewards as BigNumber,
         totemRoundRewards: elevRoundRewards[elevation].totemRoundRewards as BigNumber[],
+        totemMultipliers: elevRoundRewards[elevation].totemMultipliers as number[],
       }))
       state.elevationDataLoaded = true
     },

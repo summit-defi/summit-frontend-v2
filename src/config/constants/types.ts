@@ -174,6 +174,9 @@ export const elevationUtils = {
     if (totem == null) return 'UNSELECTED'
     return ElevationTotemNames[elevation][totem].split(' ').join(asset ? '_' : ' ')
   },
+  winningsOrEarnings: (elevation: Elevation) => {
+    return elevation === Elevation.OASIS ? 'Earnings' : 'Winnings'
+  },
   toInt: (elevation: Elevation) => ElevationInt[elevation],
   fromInt: (int): Elevation => {
     switch (int) {

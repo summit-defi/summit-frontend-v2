@@ -12,13 +12,14 @@ import { clamp } from 'lodash'
 const TotemHeight = 64;
 const GameAreaHeight = 164;
 
-const TotemBattleAreaWrapper = styled(Flex)`
+const TotemBattleAreaWrapper = styled(Flex)<{ fullWidth: boolean }>`
   flex-direction: row;
   align-items: center;
   justify-content: center;
   position: relative;
   height: ${GameAreaHeight}px;
   margin-top: 15px;
+  width: ${({ fullWidth }) => fullWidth ? '100%' : 'auto'};
 `
 
 const ExpectedMultText = styled(Text)`
@@ -44,6 +45,7 @@ const TotemResultsWrapper = styled(Flex)<{ elevation: Elevation }>`
   padding-right: 18px; 
   margin-left: 6px; 
   gap: ${({ elevation }) => elevation === Elevation.SUMMIT ? 0 : 20}px;
+  flex: 1;
 `
 
 const TotemPosition = styled(Flex)<{ topOffset: number }>`
@@ -74,13 +76,14 @@ const TotemScale = styled.div<{ scale: number }>`
   transform-origin: center;
 `
 
-const TotemBreakdownWrapper = styled.div`
+const TotemBreakdownWrapper = styled.div<{ fullWidth: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-top: 32px;
   margin-bottom: 32px;
+  width: ${({ fullWidth }) => fullWidth ? '100%' : 'auto'};
 `
 
 const TotemResultWrapper = styled(Flex)`
@@ -105,7 +108,7 @@ const calcScale = (mult, elevation: Elevation) => {
   const maxMult = expectedMult + thirdMult
   const minMult = expectedMult - thirdMult
   const clampedMult = clamp(mult, minMult, maxMult)
-  return 1.1 - (((maxMult - clampedMult) / (maxMult - minMult)) * 0.2)
+  return 1 - (((maxMult - clampedMult) / (maxMult - minMult)) * 0.2)
 }
 
 
@@ -116,10 +119,10 @@ const RulerLine: React.FC<{ i: number, elevation: Elevation }> = ({ i, elevation
   return (<RuleLine topOffset={calcTopOffset(mult, elevation)}/>)
 }
 
-const TotemBattleArea: React.FC<{ elevation: Elevation }> = ({ elevation, children }) => {
+const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean }> = ({ elevation, children, fullWidth }) => {
   const expectedMultiplier = elevationUtils.totemCount(elevation)
   return (
-    <TotemBattleAreaWrapper>
+    <TotemBattleAreaWrapper fullWidth={fullWidth}>
       <ExpectedMultText bold monospace>{expectedMultiplier}x</ExpectedMultText>
       <TotemResultsWrapper elevation={elevation}>
         <RulerLine elevation={elevation} i={0}/>
@@ -171,17 +174,20 @@ interface Props {
   title?: string
   elevation: Elevation
   totemInfos: TotemInfo[]
+  fullWidth?: boolean
 }
 
-const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos }) => {
+const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, fullWidth = true }) => {
   const colorGradient = chroma
     .scale([elevationPalette[elevation][2], elevationPalette[elevation][4]])
     .mode('lch')
     .colors(totemInfos.length)
+  console.log(fullWidth)
   return (
-    <TotemBreakdownWrapper>
+    <TotemBreakdownWrapper fullWidth={fullWidth}>
       { title != null && <Text bold monospace>{title}</Text> }
       <TotemBattleArea
+        fullWidth={fullWidth}
         elevation={elevation}
       >
         {totemInfos.map((totemInfo) => (
