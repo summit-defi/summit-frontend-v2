@@ -36,15 +36,12 @@ const StyledNav = styled.nav<{ showMenu: boolean }>`
   z-index: 20;
   transform: translate3d(0, 0, 0);
   background-color: ${({ theme }) => theme.colors.background};
-  flex-direction: column;
-  justify-content: flex-start;
+  flex-direction: row;
+  justify-content: flex-end;
   gap: 14px;
-  padding-top: 7px;
 
   ${({ theme }) => theme.mediaQueries.nav} {
-    background-color: transparent;
     justify-content: space-between;
-    flex-direction: row;
   }
 `;
 
@@ -131,6 +128,9 @@ const Menu: React.FC<NavProps> = ({
   const [isPushed, setIsPushed] = useState(!isMobile);
   const elevation = useSelectedElevation()
 
+  const keyPath = location.pathname.split('/')[1]
+  const farmTabsVisible = ['elevation', 'oasis', 'plains', 'mesa', 'summit'].includes(keyPath)
+
 
   // Find the home link if provided
   const homeLink = links.find((link) => link.label === "Home");
@@ -147,9 +147,10 @@ const Menu: React.FC<NavProps> = ({
             )}
           </MenuButton>
         </MobileHamburgerWrapper>
-        <Logo isDark={isDark} href={homeLink?.href ?? "/"} elevation={elevation}/>
 
-        <ElevationFarmsTabSelector/>
+        { (!isMobile || !farmTabsVisible) && <Logo isDark={isDark} href={homeLink?.href ?? "/"} elevation={elevation}/> }
+
+        { farmTabsVisible && <ElevationFarmsTabSelector/> }
 
         <MobileExcludedHeaderElements>
           <Flex justifyContent='flex-end' flex='1'>

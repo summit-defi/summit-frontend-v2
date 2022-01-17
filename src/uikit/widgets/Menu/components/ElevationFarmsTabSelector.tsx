@@ -2,13 +2,15 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { darken } from 'polished'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { Elevation, ElevationFarmTab, elevationFarmTabToUrl } from 'config/constants/types'
+import { Elevation, ElevationFarmTab, elevationFarmTabToUrl, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import { pressableMixin } from 'uikit/util/styledMixins'
-import { useElevationFarmsTab, useSingleFarmSelected } from 'state/hooks'
-import { NavLink } from 'react-router-dom'
+import { useElevationFarmsTab, useElevationTotems, useSingleFarmSelected, useWinningTotems } from 'state/hooks'
+import { NavLink, useLocation } from 'react-router-dom'
 import Flex from 'uikit/components/Box/Flex'
+import { Text } from 'uikit/components/Text'
+import ElevationTabTotemIcon from './ElevationTabTotemIcon'
 
-const buttonWidth = 80
+const buttonWidth = 70
 const buttonHeight = 46
 
 const SelectorFlex = styled(Flex)`
@@ -25,7 +27,7 @@ const SelectorWrapper = styled(Flex) <{
   height: ${buttonHeight}px;
   width: ${({ tabsCount }) => buttonWidth * tabsCount}px;
   border-radius: ${buttonHeight}px;
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
   box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
   position: relative;
 `
@@ -45,23 +47,36 @@ const SelectedSummitButton = styled(SummitButton) <{
 `
 
 const TextButton = styled(NavLink)<{
-    tab: string
     selected: boolean
 }>`
     width: ${buttonWidth}px;
+    height: ${buttonHeight}px;
     pointer-events: ${({ selected }) => selected ? 'none' : 'auto'};
     cursor: pointer;
-    color: ${({ theme, tab }) => darken(0.2, theme.colors[tab])};
-    text-shadow: 1px 1px 2px ${({ theme, tab }) => darken(0.2, theme.colors[tab])};
-    font-family: Courier Prime, monospace;
-    font-size: 14px;
-    height: ${buttonHeight}px;
-    line-height: ${buttonHeight}px;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     transition: transform 0.2s;
 
     ${pressableMixin};
+`
+
+const TextButtonText = styled(Text)<{
+    tab: string
+    selected: boolean
+}>`
+    text-align: center;
+    line-height: 14px;
+    color: ${({ theme, tab }) => darken(tab === ElevationFarmTab.DASH ? 0 : 0.2, theme.colors[tab])};
+    text-shadow: 1px 1px 2px ${({ theme, tab }) => darken(0.2, theme.colors[tab])};
+`
+
+const TotemIcon = styled.div<{ iconName: string }>`
+  background-image: ${({ iconName }) => `url("/images/${iconName}")`};
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 `
 
 const tabs = [ElevationFarmTab.DASH, ElevationFarmTab.OASIS, ElevationFarmTab.PLAINS, ElevationFarmTab.MESA, ElevationFarmTab.SUMMIT]
@@ -70,6 +85,11 @@ const ElevationFarmsTabSelector: React.FC = () => {
     const selectedTab = useElevationFarmsTab()
     const singleFarmSymbol = useSingleFarmSelected()
     const selectedIndex = tabs.findIndex((tab) => tab === selectedTab)
+    const userTotems = useElevationTotems()
+
+    console.log({
+        userTotems
+    })
 
     return (
         <SelectorFlex>
@@ -84,6 +104,8 @@ const ElevationFarmsTabSelector: React.FC = () => {
                         elevation={selectedTab}
                     >
                         {selectedTab}
+                        {selectedTab === ElevationFarmTab.DASH && <br/>}
+                        {selectedTab === ElevationFarmTab.DASH && 'BOARD'}
                     </SelectedSummitButton>
                 )}
                 {tabs.map((tab) => {
@@ -91,11 +113,21 @@ const ElevationFarmsTabSelector: React.FC = () => {
                     return (
                         <TextButton
                             key={tab}
-                            tab={tab}
                             to={tabTarget}
                             selected={tab === selectedTab}
                         >
-                            {tab}
+                            { tab === ElevationFarmTab.DASH || userTotems[elevationUtils.tabToInt(tab)] == null ?
+                                <TextButtonText
+                                    monospace
+                                    tab={tab}
+                                    selected={tab === selectedTab}
+                                >
+                                    {tab}
+                                    {tab === ElevationFarmTab.DASH && <br/>}
+                                    {tab === ElevationFarmTab.DASH && 'BOARD'}
+                                </TextButtonText> :
+                                <ElevationTabTotemIcon selected={tab === selectedTab} elevation={elevationTabToElevation[tab]} totem={userTotems[elevationUtils.tabToInt(tab)]}/>
+                            }
                         </TextButton>
                     )
                 })}

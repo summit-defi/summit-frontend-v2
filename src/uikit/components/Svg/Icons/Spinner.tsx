@@ -1,6 +1,16 @@
 import React from 'react'
+import { keyframes } from 'styled-components'
 import Svg from '../Svg'
 import { SvgProps } from '../types'
+
+export const SpinnerKeyframes = keyframes`
+  0%: {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+`
 
 const Spinner: React.FC<SvgProps> = (props) => {
   return (

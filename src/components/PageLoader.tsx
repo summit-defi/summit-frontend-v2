@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { HighlightedText, Token3DFloating } from 'uikit'
+import { Text, Token3DFloating } from 'uikit'
 import Page from './layout/Page'
 
 const Wrapper = styled(Page)<{ fillArea: boolean }>`
@@ -36,8 +36,8 @@ interface Props {
 const PageLoader: React.FC<Props> = ({ fill = true, loadingText }) => {
   return (
     <Wrapper fillArea={fill}>
-      <LogoIcon width="96px" />
-      { loadingText != null && <HighlightedText>{loadingText}...</HighlightedText> }
+      <LogoIcon width="72px" />
+      { loadingText != null && <Text mt='-8px' bold monospace>{loadingText}...</Text> }
     </Wrapper>
   )
 }

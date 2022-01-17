@@ -1,5 +1,5 @@
-import { Elevation, FarmConfig, TokenAssetType } from "config/constants/types"
-import { FarmType } from "state/types"
+import { BN_ZERO, Elevation, FarmConfig, TokenAssetType } from "config/constants/types"
+import { Farm, FarmElevation, FarmType } from "state/types"
 
 export const getFarmToken = ({
     assetType,
@@ -34,6 +34,16 @@ export const getFarmType = ({
         case TokenAssetType.BalancerMultiPool:
         default: return FarmType.Token
     }
+}
+export const getFarmInteracting = (farm: Farm) => {
+    return Object.values(farm.elevations).reduce((interacting, farmElev: FarmElevation) => {
+        if (interacting) return true
+        if (farmElev == null) return false
+        return (farmElev.stakedBalance || BN_ZERO)
+            .plus(farmElev.claimable || BN_ZERO)
+            .plus(farmElev.yieldContributed || BN_ZERO)
+            .isGreaterThan(0)
+    }, false)
 }
 
 export const getFarmAllElevationsIterable = (farmConfigs: FarmConfig[]) => {

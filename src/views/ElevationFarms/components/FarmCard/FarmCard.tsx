@@ -4,13 +4,14 @@ import styled, { css } from 'styled-components'
 import { Flex, Text, Skeleton, Tag, TokenSymbolImage, HighlightedText } from 'uikit'
 import { Farm, UserTokenData } from 'state/types'
 import { provider } from 'web3-core'
-import { Elevation, ElevationFarmTab, elevationFarmTabToUrl, elevationTabToElevation } from 'config/constants/types'
+import { BN_ZERO, Elevation, ElevationFarmTab, elevationFarmTabToUrl, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import { useElevationTotem, usePricesPerToken, useSingleFarmSelected } from 'state/hooks'
 import { NavLink } from 'react-router-dom'
 import FarmCardUserSectionExpander from './FarmCardUserSectionExpander'
 import CardValue from 'views/Home/components/CardValue'
 import { getBalanceNumber, nFormatter } from 'utils'
 import Totem from '../Totem'
+import ElevationContributionBreakdown from '../ElevationContributionBreakdown'
 
 const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
   align-self: baseline;
@@ -46,7 +47,7 @@ const PressableFlex = styled(NavLink)<{ $expanded: boolean }>`
   justify-content: center;
   align-items: flex-start;
   flex-direction: column;
-  padding: 24px 20px 24px 20px;
+  padding: 16px 20px 16px 20px;
   cursor: pointer;
   transition: all 300ms;
   flex-wrap: wrap;
@@ -65,7 +66,7 @@ const PressableFlex = styled(NavLink)<{ $expanded: boolean }>`
 `
 
 const FarmNumericalInfoFlex = styled(Flex)`
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   flex-wrap: wrap;
   flex: 1;
@@ -92,6 +93,7 @@ const FlexInfoItem = styled(Flex)`
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
+  flex: 1;
 `
 
 const InfoItemValue = styled(Flex)`
@@ -119,7 +121,6 @@ interface FarmCardProps {
   farm: Farm
   tokenInfo: UserTokenData
   elevationTab: ElevationFarmTab
-  removed: boolean
   summitPrice?: BigNumber
   ethereum?: provider
   account?: string
@@ -191,11 +192,25 @@ const FarmCard: React.FC<FarmCardProps> = ({
 
   const earnLabel = 'SUMMIT'
   const farmAvgAPY = apy * 100
-  const dailyAPR = (
-    apr &&
-    apr / 3.65).toFixed(2)
+  const dailyAPR = (apr && apr / 3.65)
 
   const targetUrl = `/${(elevationFarmTabToUrl[elevationTab] || 'elevations').toLowerCase()}${expanded ? '' : `/${symbol.toLowerCase()}`}`
+
+  const yearlyAPY = !apy ? null : apy > 1000000000 ? '🔥🔥' : apy > 1000000 ? '🔥' : `${nFormatter(farmAvgAPY, 2)}%`
+  const dailyAPY = !dailyAPR ? null : dailyAPR > 1000000000 ? '🔥🔥' : dailyAPR > 1000000 ? '🔥' : `${nFormatter(dailyAPR, 2)}%`
+
+  const tokenTotalStakedBalance = elevationUtils.all.reduce((acc, elev) => acc.plus(farm.elevations[elev]?.stakedBalance || BN_ZERO), BN_ZERO)
+
+
+  const stakingContributions = tokenTotalStakedBalance.isEqualTo(0) ? [] : elevationUtils.all
+    .map((elev, index) => ({
+      elevation: elev,
+      key: index,
+      perc: (farm.elevations[elev]?.stakedBalance || BN_ZERO).times(100).dividedBy(tokenTotalStakedBalance).toNumber()
+    }))
+    .filter((contrib) => contrib.perc > 0)
+
+
 
   return (
     <FCard $locked={false} $expanded={expanded}>
@@ -214,7 +229,7 @@ const FarmCard: React.FC<FarmCardProps> = ({
               </MultiplierTag>
             </Flex>
           </SymbolIconFlex>
-          <FlexInfoItem>
+          {/* <FlexInfoItem>
             <Text bold small>
               WINNINGS
             </Text>
@@ -229,7 +244,7 @@ const FarmCard: React.FC<FarmCardProps> = ({
                 {earnLabel}
               </HighlightedText>
             </InfoItemValue>
-          </FlexInfoItem>
+          </FlexInfoItem> */}
 
           {/* <FlexMobileLineBreak />
           {isElevationFarm && (
@@ -249,28 +264,17 @@ const FarmCard: React.FC<FarmCardProps> = ({
             </FlexInfoItem>
           )} */}
 
-          { userStakedBalance.gt(0) && bonusBP > 0 &&
-            <FlexInfoItem>
-              <Text small>Winnings Bonus</Text>
-              <InfoItemValue>
-                <CardValue value={bonusBP / 100} postfix='%' decimals={1} elevation={Elevation.OASIS} fontSize="22px" />
-              </InfoItemValue>
-            </FlexInfoItem>
-          }
-
-          { userStakedBalance.gt(0) &&
-            <FlexInfoItem>
-              <Text small>Fairness Tax</Text>
-              <InfoItemValue>
-                <CardValue value={taxBP / 100} postfix='%' decimals={1} elevation={Elevation.OASIS} fontSize="22px" />
-              </InfoItemValue>
-            </FlexInfoItem>
-          }
-
-          <FlexInfoItem>
-            <Text small>Deposited</Text>
-            <InfoItemValue>
-              <CardValue value={userStakedBalance.toNumber()} prefix='$' decimals={2} elevation={Elevation.OASIS} fontSize="22px" />
+          <FlexInfoItem style={{ flex: 3 }}>
+            <Flex alignItems='center' height='18px'>
+              <Text small mr='4px'>Deposited</Text>
+              <CardValue value={userStakedBalance.toNumber()} prefix='$' decimals={2} elevation={Elevation.OASIS} fontSize="18px" />
+            </Flex>
+            <InfoItemValue width='100%'>
+              <ElevationContributionBreakdown
+                contributions={stakingContributions}
+                focused={elevation}
+                center
+              />
             </InfoItemValue>
           </FlexInfoItem>
 
@@ -279,11 +283,11 @@ const FarmCard: React.FC<FarmCardProps> = ({
           <FlexInfoItem>
             <Text small>APY</Text>
             <InfoItemValue>
-              <Text bold monospace style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
-                {apy ? `${nFormatter(farmAvgAPY, 2)}%` : <Skeleton height={24} width={80} />}
+              <Text bold monospace fontSize='12px' style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
+                {yearlyAPY || <Skeleton height={24} width={80} />}
               </Text>
-              <Text bold monospace fontSize='13px' style={{ display: 'flex', alignItems: 'center', lineHeight: '16px' }}>
-                {apy ? `(Daily: ${dailyAPR}%)` : <Skeleton height={24} width={80} />}
+              <Text bold monospace fontSize='11px' style={{ display: 'flex', alignItems: 'center', lineHeight: '16px' }}>
+                {dailyAPY || <Skeleton height={24} width={80} />}
               </Text>
             </InfoItemValue>
           </FlexInfoItem>

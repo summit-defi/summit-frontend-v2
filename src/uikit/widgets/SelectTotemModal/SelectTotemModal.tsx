@@ -61,7 +61,7 @@ const SelectTotemModal: React.FC<Props> = ({
   const { userEarned } = useElevationUserRoundInfo(elevation)
   const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(elevation, userEarned || new BigNumber(0), 'Deposit', RewardsWillBeClaimedType.FullElevation)
 
-  const { pending, onSelectTotem } = useSelectTotem()
+  const { onSelectTotem } = useSelectTotem()
   const [totemToConfirm, setTotemToConfirm] = useState<number | null>(
     elevation === Elevation.OASIS ? 0 : preselectedTotem,
   )
@@ -99,7 +99,7 @@ const SelectTotemModal: React.FC<Props> = ({
             {elevation !== Elevation.EXPEDITION && <StyledCardAccent elevationBackground={elevationBackground} />}
             <ArtworkTotem elevation={elevation} totem={totemToConfirm} desktopSize="200" mobileSize="200" />
           </TotemPadding>
-          <SummitButton isLoading={pending} elevation={elevation} onClick={handleSelectTotem}>
+          <SummitButton elevation={elevation} onClick={handleSelectTotem}>
             CONFIRM
           </SummitButton>
         </Flex>

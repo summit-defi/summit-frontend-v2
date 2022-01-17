@@ -35,6 +35,7 @@ export interface MenuEntry {
   disabled?: boolean
   elevation?: Elevation
   neverHighlight?: boolean
+  keyPaths?: string[]
 }
 
 export interface PanelProps {

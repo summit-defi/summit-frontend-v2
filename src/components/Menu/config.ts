@@ -22,6 +22,7 @@ export const getMenuItems = (
   {
     label: 'HOME',
     href: '/',
+    keyPaths: [''],
   },
   {
     label: 'EXCHANGE',
@@ -42,6 +43,7 @@ export const getMenuItems = (
     label: 'BETA',
     href: '/beta',
     icon: 'totemIcons/BETA.png',
+    keyPaths: ['beta']
   },
 
   {
@@ -57,6 +59,7 @@ export const getMenuItems = (
     href: `/elevations`,
     external: false,
     elevation: Elevation.OASIS,
+    keyPaths: ['elevations', 'oasis', 'plains', 'mesa', 'summit']
   },
   {
     label: Elevation.EXPEDITION,
@@ -68,5 +71,6 @@ export const getMenuItems = (
     href: `/expedition`,
     external: false,
     elevation: Elevation.EXPEDITION,
+    keyPaths: ['expedition'],
   },
 ]

@@ -140,6 +140,9 @@ const ContributionBreakdown: React.FC<Props> = ({title, contributions}) => {
             {contributions.map((contribution) => 
                 <ContributionComponent key={contribution.key} {...contribution} />
             )}
+            {contributions.length === 0 &&
+                <VerticalBar perc={100}/>
+            }
         </BarWrapper>
     </Wrapper>
   )

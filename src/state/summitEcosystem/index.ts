@@ -35,6 +35,7 @@ const initialState: SummitEcosystemState = {
   rolloverRewardInNativeToken: new BigNumber(0),
   expeditionPotTotalValue: 0,
   pendingExpeditionTx: false,
+  pendingTotemSelection: false,
 }
 
 export const SummitEcosystemSlice = createSlice({
@@ -120,6 +121,9 @@ export const SummitEcosystemSlice = createSlice({
     },
     setPendingExpeditionTx: (state, action) => {
       state.pendingExpeditionTx = action.payload
+    },
+    setPendingTotemSelection: (state, action) => {
+      state.pendingTotemSelection = action.payload
     }
   },
 })
@@ -144,6 +148,7 @@ export const {
   setRolloverRewardInNativeToken,
   setExpeditionPot,
   setPendingExpeditionTx,
+  setPendingTotemSelection,
 } = SummitEcosystemSlice.actions
 
 // Thunks
@@ -192,6 +197,9 @@ export const fetchRolloverRewardInNativeTokenAsync = () => async (dispatch) => {
   const rolloverRewardInNativeToken = await fetchRolloverReward()
   if (rolloverRewardInNativeToken == null) return
   dispatch(setRolloverRewardInNativeToken(rolloverRewardInNativeToken))
+}
+export const updatePendingTotemSelection = (pending) => async (dispatch) => {
+  dispatch(setPendingTotemSelection(pending))
 }
 
 export default SummitEcosystemSlice.reducer

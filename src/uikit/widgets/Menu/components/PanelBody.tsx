@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { useLocation } from 'react-router-dom'
 import { MenuEntry, LinkLabel, MenuGap } from './MenuEntry'
@@ -39,25 +39,27 @@ const PanelBody: React.FC<Props> = ({ isPushed, pushNav, isMobile, links }) => {
     }
   }
 
+  const entryIcon = useCallback(
+    (elevation, icon) => {
+      if (elevation == null) {
+        return icon
+      }
+      return `totemIcons/${elevationUtils.getElevationTotemName(
+        elevation,
+        userTotems[elevationUtils.toInt(elevation)],
+      )}.png`
+    },
+    [userTotems]
+  )
+
   return (
     <Container>
       {links.map((entry) => {
         const calloutClass = entry.calloutClass ? entry.calloutClass : undefined
         const elevationInt = elevationUtils.toInt(entry.elevation)
 
-        const isActive = !entry.neverHighlight && entry.icon != null && entry.href.split('/')[1] === keyPath
+        const isActive = !entry.neverHighlight && entry.icon != null && entry.keyPaths.includes(keyPath)
 
-        const getEntryIcon = () => {
-          if (entry.elevation == null) {
-            return entry.icon
-          }
-          return `totemIcons/${elevationUtils.getElevationTotemName(
-            entry.elevation,
-            userTotems[elevationInt],
-          )}.png`
-        }
-
-        const icon = getEntryIcon()
         const backgroundIcon =
           entry.elevation === Elevation.EXPEDITION ? 'totemIcons/expeditionIconBackground.png' : null
 
@@ -87,7 +89,7 @@ const PanelBody: React.FC<Props> = ({ isPushed, pushNav, isMobile, links }) => {
                   }
                   isActive={isActive}
                   elevation={entry.elevation || entry.label}
-                  icon={icon}
+                  icon={entryIcon(entry.elevation, entry.icon)}
                   backgroundIcon={backgroundIcon}
                   elevationLocked={elevationsLocked[elevationInt]}
                 />

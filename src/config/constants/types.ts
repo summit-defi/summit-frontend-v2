@@ -31,7 +31,7 @@ export const elevationFarmTabToUrl = {
 }
 
 export const elevationTabToElevation = {
-  [ElevationFarmTab.DASH]: Elevation.OASIS,
+  [ElevationFarmTab.DASH]: null,
   [ElevationFarmTab.OASIS]: Elevation.OASIS,
   [ElevationFarmTab.PLAINS]: Elevation.PLAINS,
   [ElevationFarmTab.MESA]: Elevation.MESA,
@@ -170,6 +170,10 @@ export const elevationUtils = {
   subHeader: (elevation: Elevation) => ElevationSubHeader[elevation],
   helpLink: (elevation: Elevation) => ElevationHelpLink[elevation],
   totemsArray: (elevation: Elevation) => ElevationTotems[elevation],
+  getTabTotemName: (tab: ElevationFarmTab, totem: number, asset = true) => {
+    if (totem == null) return 'UNSELECTED'
+    return ElevationTotemNames[elevationTabToElevation[tab]][totem].split(' ').join(asset ? '_' : ' ')
+  },
   getElevationTotemName: (elevation: Elevation, totem: number, asset = true) => {
     if (totem == null) return 'UNSELECTED'
     return ElevationTotemNames[elevation][totem].split(' ').join(asset ? '_' : ' ')
@@ -178,6 +182,7 @@ export const elevationUtils = {
     return elevation === Elevation.OASIS ? 'Earnings' : 'Winnings'
   },
   toInt: (elevation: Elevation) => ElevationInt[elevation],
+  tabToInt: (elevationTab: ElevationFarmTab) => ElevationInt[elevationTabToElevation[elevationTab]] || 0,
   fromInt: (int): Elevation => {
     switch (int) {
       case 4:

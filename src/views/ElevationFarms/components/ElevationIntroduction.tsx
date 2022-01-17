@@ -2,7 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import { Elevation } from 'config/constants/types'
 import { Flex, Text } from 'uikit'
-import { useSelectedElevation } from 'state/hooks'
+import { useElevationTotem, useSelectedElevation, useTotemSelectionPending } from 'state/hooks'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
+import SummitButton from 'uikit/components/Button/SummitButton'
+import useSelectTotemModal from 'uikit/widgets/SelectTotemModal/useSelectTotemModal'
 
 const StyledText = styled(Text)`
   padding-top: 16px;
@@ -48,8 +51,20 @@ const Line4 = {
   [Elevation.EXPEDITION]: 'Choose your god, they may spare you yet.',
 }
 
-const ElevationFarmingExplanation: React.FC = () => {
+const ElevationIntroduction: React.FC = () => {
   const elevation = useSelectedElevation()
+  const userTotem = useElevationTotem(elevation)
+  const { account }: { account: string } = useWallet()
+  const { onPresentSelectTotemModal } = useSelectTotemModal(elevation)
+  const totemSelectionPending = useTotemSelectionPending()
+  
+  if (elevation == null || userTotem != null) return null
+
+  const handlePresentSelectTotemModal = () => {
+    if (totemSelectionPending) return
+    onPresentSelectTotemModal()
+  }
+  
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="center">
       <StyledText textAlign="center" fontSize="small">
@@ -71,8 +86,15 @@ const ElevationFarmingExplanation: React.FC = () => {
         <br/>
         <br/>
       </StyledText>
+      { account != null && userTotem == null && <SummitButton
+        elevation={elevation}
+        onClick={handlePresentSelectTotemModal}
+        isLoading={totemSelectionPending}
+      >
+        SELECT TOTEM
+      </SummitButton> }
     </Flex>
   )
 }
 
-export default React.memo(ElevationFarmingExplanation)
+export default React.memo(ElevationIntroduction)

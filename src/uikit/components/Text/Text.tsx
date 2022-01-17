@@ -1,3 +1,4 @@
+import React from 'react';
 import styled, { DefaultTheme } from 'styled-components'
 import { space, typography } from 'styled-system'
 import getThemeValue from '../../util/getThemeValue'
@@ -14,6 +15,10 @@ const getColor = ({ color, gold, theme }: ThemedProps) => {
 
 const getFontSize = ({ fontSize, small }: TextProps) => {
   return small ? '12px' : fontSize || '14px'
+}
+
+export const breakTextBr = (breakableText: string): Array<string | JSX.Element> => {
+  return breakableText.split('|').map((text) => (text === 'br' ? <br key={text} /> : text))
 }
 
 export const Text = styled.div<TextProps>`

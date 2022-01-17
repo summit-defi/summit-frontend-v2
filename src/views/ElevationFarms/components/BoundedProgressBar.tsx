@@ -1,8 +1,8 @@
 import { Elevation } from 'config/constants'
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { darken } from 'polished'
-import { Flex, Text, TriangleGrowIcon } from 'uikit'
+import { breakTextBr, Flex, Text, TriangleGrowIcon } from 'uikit'
 
 const EndMarkerHeight = 55
 
@@ -62,13 +62,20 @@ const VerticalBar = styled.div`
     background-color: ${({ theme }) => theme.colors.text};
 `
 
-const BarFlex = styled(Flex)`
+const BarFlex = styled(Flex)<{ single: boolean }>`
     position: relative;
-    margin-left: 30px;
-    margin-right: 30px;
     flex-direction: row;
     align-items: center;
-    flex: 1;
+
+    ${({ single }) => single ? css`
+        margin-left: 10px;
+        margin-right: 10px;
+    ` : css`
+        margin-left: 20px;
+        margin-right: 20px;
+        flex: 1;
+        min-width: 100px;
+    `}
 `
 const HorizontalBar = styled.div`
     width: 100%;
@@ -76,11 +83,11 @@ const HorizontalBar = styled.div`
     background-color: ${({ theme }) => theme.colors.text};
 `
 
-const Wrapper = styled(Flex)`
+const Wrapper = styled(Flex)<{ single: boolean }>`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 300px;
+    flex: ${({ single }) => single ? 0 : 1};
 `
 
 const StyledTriangleGrowIcon = styled(TriangleGrowIcon)`
@@ -91,57 +98,56 @@ interface Props {
     title?: string
     minTitle?: string
     maxTitle?: string
-    minVal?: string
-    maxVal?: string
-    currVal?: string
-    progress: number
+    leftPerc?: number
+    rightPerc?: number
+    currPerc?: number
     elevation?: Elevation
 }
 
 interface EndMarkerProps {
     title?: string
-    val?: string
+    perc?: number
 }
 
 interface MarkerProps {
-    val?: string
+    perc?: number
     progress: number
     elevation?: Elevation
 }
 
-const EndMarker: React.FC<EndMarkerProps> = ({title, val}) => {
+const EndMarker: React.FC<EndMarkerProps> = ({title, perc}) => {
     return <EndMarkerWrapper>
         {title != null && <EndMarkerText monospace top>{title}</EndMarkerText>}
         <VerticalBar/>
-        {val != null && <EndMarkerText monospace bold top={false}>{val}</EndMarkerText>}
+        {perc != null && <EndMarkerText monospace bold top={false}>{perc}%</EndMarkerText>}
     </EndMarkerWrapper>
 }
 
-const Marker: React.FC<MarkerProps> = ({val, progress, elevation}) => {
+const Marker: React.FC<MarkerProps> = ({perc, progress, elevation}) => {
     return <MarkerWrapper progress={progress}>
-        {val != null && <MarkerText monospace bold>{val}</MarkerText>}
+        {perc != null && <MarkerText monospace bold>{perc}%</MarkerText>}
         <MarkerBar elevation={elevation}/>
     </MarkerWrapper>
 }
 
-const BoundedProgressBar: React.FC<Props> = ({title, minTitle, maxTitle, minVal, maxVal, currVal, progress, elevation}) => {
-  return (
-    <Wrapper>
-        { title != null && <Text bold monospace>{title}</Text> }
-        { (minVal != null && maxVal != null) ?
-            <>
-                <BarFlex flexDirection='row' alignItems='center'>
-                    <EndMarker title={minTitle} val={minVal}/>
-                    <StyledTriangleGrowIcon width='100%' height='15px' left={7} right={1}/>
-                    <EndMarker title={maxTitle} val={maxVal}/>
-                    <Marker val={currVal} progress={progress} elevation={elevation}/>
-                </BarFlex>
-            </> :
-            <>
-            </>
-        }
-    </Wrapper>
-  )
+const BoundedProgressBar: React.FC<Props> = ({title, minTitle, maxTitle, leftPerc, rightPerc, currPerc, elevation}) => {
+    const progress = (currPerc - leftPerc) / (rightPerc - leftPerc)
+    const single = (leftPerc == null && rightPerc == null)
+    return (
+        <Wrapper single={single}>
+            { title != null && <Text bold monospace fontSize='12px' textAlign='center' lineHeight='14px' style={{ width: '70px' }}>{breakTextBr(title)}</Text> }
+            <BarFlex flexDirection='row' alignItems='center' single={single}>
+                { !single &&
+                    <>
+                        <EndMarker title={minTitle} perc={leftPerc}/>
+                        <StyledTriangleGrowIcon width='100%' height='15px' left={leftPerc} right={rightPerc}/>
+                        <EndMarker title={maxTitle} perc={rightPerc}/>
+                    </>
+                }
+                <Marker perc={currPerc} progress={progress} elevation={elevation}/>
+            </BarFlex>
+        </Wrapper>
+    )
 }
 
 export default React.memo(BoundedProgressBar)

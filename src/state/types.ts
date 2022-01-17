@@ -130,6 +130,7 @@ export interface SummitEcosystemState {
   rolloverRewardInNativeToken: BigNumber
   expeditionPotTotalValue: number
   pendingExpeditionTx: boolean
+  pendingTotemSelection: boolean
 }
 
 // API Price State

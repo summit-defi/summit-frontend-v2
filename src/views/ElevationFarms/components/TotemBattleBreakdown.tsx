@@ -10,7 +10,7 @@ import BigNumber from 'bignumber.js'
 import { clamp } from 'lodash'
 
 const TotemHeight = 64;
-const GameAreaHeight = 164;
+const GameAreaHeight = 150;
 
 const TotemBattleAreaWrapper = styled(Flex)<{ fullWidth: boolean }>`
   flex-direction: row;
@@ -22,8 +22,10 @@ const TotemBattleAreaWrapper = styled(Flex)<{ fullWidth: boolean }>`
   width: ${({ fullWidth }) => fullWidth ? '100%' : 'auto'};
 `
 
-const ExpectedMultText = styled(Text)`
+const ExpectedMultText = styled(Text)<{ invis?: boolean }>`
   font-size: 12px;
+  width: 24px;
+  opacity: ${({ invis }) => invis ? 0 : 1};
 `
 
 const TotemMultText = styled(Text)<{ top: boolean }>`
@@ -81,7 +83,6 @@ const TotemBreakdownWrapper = styled.div<{ fullWidth: boolean }>`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 32px;
   margin-bottom: 32px;
   width: ${({ fullWidth }) => fullWidth ? '100%' : 'auto'};
 `
@@ -98,7 +99,7 @@ const calcTopOffset = (mult, elevation: Elevation) => {
   const thirdMult = expectedMult * 0.4
   const maxMult = expectedMult + thirdMult
   const minMult = expectedMult - thirdMult
-  const clampedMult = clamp(mult, minMult, maxMult)
+  const clampedMult = clamp(mult == null ? expectedMult : mult, minMult, maxMult)
   return ((maxMult - clampedMult) / (maxMult - minMult)) * (GameAreaHeight - TotemHeight)
 }
 const calcScale = (mult, elevation: Elevation) => {
@@ -107,7 +108,7 @@ const calcScale = (mult, elevation: Elevation) => {
   const thirdMult = expectedMult * 0.4
   const maxMult = expectedMult + thirdMult
   const minMult = expectedMult - thirdMult
-  const clampedMult = clamp(mult, minMult, maxMult)
+  const clampedMult = clamp(mult == null ? expectedMult : mult, minMult, maxMult)
   return 1 - (((maxMult - clampedMult) / (maxMult - minMult)) * 0.2)
 }
 
@@ -132,6 +133,7 @@ const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean }> = 
         <RulerLine elevation={elevation} i={4}/>
         {children}
       </TotemResultsWrapper>
+      { fullWidth && <ExpectedMultText invis bold monospace>{expectedMultiplier}x</ExpectedMultText> }
     </TotemBattleAreaWrapper>
   )
 }
@@ -164,7 +166,7 @@ const TotemBattleResult: React.FC<TotemResultProps> = ({ totemInfo, elevation, c
             pressable={false}
           />
         </TotemScale>
-        <TotemMultText bold monospace top={topOffset <= ((GameAreaHeight - TotemHeight) / 2)}>{totemInfo.mult}x</TotemMultText>
+        <TotemMultText bold monospace top={topOffset <= ((GameAreaHeight - TotemHeight) / 2)}>{totemInfo.mult == null ? '' : `${totemInfo.mult}x`}</TotemMultText>
       </TotemPosition>
     </TotemResultWrapper>
   )
@@ -175,14 +177,14 @@ interface Props {
   elevation: Elevation
   totemInfos: TotemInfo[]
   fullWidth?: boolean
+  userTotem?: number
 }
 
-const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, fullWidth = true }) => {
+const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, userTotem, fullWidth = true }) => {
   const colorGradient = chroma
     .scale([elevationPalette[elevation][2], elevationPalette[elevation][4]])
     .mode('lch')
     .colors(totemInfos.length)
-  console.log(fullWidth)
   return (
     <TotemBreakdownWrapper fullWidth={fullWidth}>
       { title != null && <Text bold monospace>{title}</Text> }
@@ -191,13 +193,15 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, f
         elevation={elevation}
       >
         {totemInfos.map((totemInfo) => (
-          <TotemBattleResult
-            key={totemInfo.totem}
-            totemInfo={totemInfo}
-            elevation={elevation}
-            color={colorGradient[totemInfo.totem]}
-            selected={false}
-          />
+          <>
+            <TotemBattleResult
+              key={totemInfo.totem}
+              totemInfo={totemInfo}
+              elevation={elevation}
+              color={colorGradient[totemInfo.totem]}
+              selected={totemInfo.totem === userTotem}
+            />
+          </>
         ))}
       </TotemBattleArea>
     </TotemBreakdownWrapper>

@@ -6,19 +6,19 @@ import { Flex, Text } from 'uikit'
 
 const BarHeight = 24
 
-const ElevationBar = styled.div<{ elevation: Elevation, perc: number, focused: Elevation }>`
+const ElevationBar = styled.div<{ elevation?: Elevation, perc: number, focused?: Elevation }>`
     position: relative;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     width: ${({ perc }) => `calc(${perc}% - 2px)`};
-    height: ${({ focused, elevation }) => focused === elevation ? BarHeight + 4 : BarHeight}px;
+    height: ${({ focused, elevation }) => focused != null && focused === elevation ? BarHeight + 4 : BarHeight}px;
     margin-left: 1px;
     margin-right: 1px;
-    background-color: ${({ theme, elevation }) => darken(0, theme.colors[elevation])};
-    filter: ${({ focused, elevation }) => focused == null || focused === elevation ? 'none' : 'grayscale(1)'};
-    opacity: ${({ focused, elevation }) => focused == null || focused === elevation ? 1 : 0.7};
+    background-color: ${({ theme, elevation }) => elevation == null ? theme.colors.text : darken(0, theme.colors[elevation])};
+    /* filter: ${({ focused, elevation }) => focused == null || focused === elevation ? 'none' : 'grayscale(1)'}; */
+    opacity: ${({ focused, elevation }) => elevation == null ? 0.1 : (focused == null || focused === elevation) ? 1 : 0.5};
   
 `
 
@@ -104,13 +104,14 @@ const Wrapper = styled(Flex)`
     width: 100%;
 `
 
-const BarWrapper = styled(Flex)`
+const BarWrapper = styled(Flex)<{ hasTitle: boolean, center: boolean }>`
     flex-direction: row;
-    align-items: center;
+    align-items: ${({ center }) => center ? 'center' : 'flex-start' };
     justify-content: center;
     position: relative;
     width: 100%;
-    height: 75px;
+    height: 40px;
+    margin-top: ${({ hasTitle }) => hasTitle ? 8 : 0}px;
 
     > * {
         &:first-child {
@@ -140,7 +141,9 @@ interface ContFocused {
 const ContributionComponent: React.FC<Contribution & ContFocused> = ({elevation, val, perc, focused}) => {
     return <ElevationBar perc={perc} elevation={elevation} focused={focused}>
         <ElevationText monospace bold fontSize='12px'>{elevation}</ElevationText>
-        <ValueText monospace bold>{val != null ? val : `${perc}%`}</ValueText>
+        { (focused == null || focused === elevation) &&
+            <ValueText monospace bold>{val != null ? val : `${perc}%`}</ValueText>
+        }
     </ElevationBar>
 }
 
@@ -148,16 +151,20 @@ interface Props {
     title?: string
     focused?: Elevation
     contributions: Contribution[]
+    center?: boolean
 }
 
-const ElevationContributionBreakdown: React.FC<Props> = ({title, contributions, focused}) => {
+const ElevationContributionBreakdown: React.FC<Props> = ({title, contributions, focused, center = false}) => {
   return (
     <Wrapper>
         { title != null && <Text bold monospace>{title}</Text> }
-        <BarWrapper>
+        <BarWrapper hasTitle={title != null} center={center}>
             {contributions.map((contribution) => 
                 <ContributionComponent key={contribution.key} {...contribution} focused={focused} />
             )}
+            {contributions.length === 0 &&
+                <ElevationBar perc={100}/>
+            }
         </BarWrapper>
     </Wrapper>
   )

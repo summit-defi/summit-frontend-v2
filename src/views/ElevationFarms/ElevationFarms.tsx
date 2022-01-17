@@ -23,6 +23,8 @@ import ElevationAndUserVolumes from './components/ElevationAndUserVolumes'
 import { getFarmType } from 'utils/farmId'
 import { fetchTokensUserDataAsync } from 'state/tokens'
 import FarmFilterRow from './components/FarmFilterRow'
+import { useFilteredPartitionedFarms } from 'hooks/useElevationFarms'
+import Divider from './components/Divider'
 
 const NoFarmsFlex = styled(Flex)`
   padding: 12px;
@@ -36,13 +38,13 @@ const NoFarmsFlex = styled(Flex)`
 
 const ElevationFarms: React.FC = () => {
   const { path } = useRouteMatch()
-  const farmsLP = useFarms()
   const userTokenInfos = useUserTokens()
   const farmsLoaded = useFarmsLoaded()
   const summitPrice = useSummitPrice()
   const web3 = useWeb3()
   const elevationTab = useElevationFarmsTab()
-  const { farmType, liveFarms } = useFarmType()
+
+  const [stakedFarms, unstakedFarms] = useFilteredPartitionedFarms()
 
   const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
 
@@ -55,58 +57,29 @@ const ElevationFarms: React.FC = () => {
     }
   }, [account, dispatch, fastRefresh, web3])
 
-  const filterAllFarms = useCallback(
-    (farmsToFilter) =>
-      farmsToFilter.filter(
-        (farm) =>
-          liveFarms === ((farm.allocation || 0) > 0) &&
-          (farmType === FarmType.All || getFarmType(farm) === farmType),
-      ),
-    [farmType, liveFarms],
-  )
-
-  const filteredFarms = filterAllFarms(farmsLP)
-
-  const [stakedFarms, unstakedFarms] = partition(filteredFarms, (farm) =>
-    (!account || !farm.userData)
-      ? false
-      : farm.userData.stakedBalance?.isGreaterThan(0) ||
-        farm.userData.claimable?.isGreaterThan(0) ||
-        farm.userData.vestingReward?.isGreaterThan(0),
-  )
-
-  const farms = stakedFarms.concat(unstakedFarms)
-
   const farmsList = useCallback(
-    (farmsToDisplay, userTokens, removed: boolean) => farmsToDisplay.map((farm) => (
+    (farmsToDisplay) => farmsToDisplay.map((farm) => (
       <FarmCard
         key={farm.symbol}
         farm={farm}
         elevationTab={elevationTab}
-        tokenInfo={userTokens[farm.symbol]}
-        removed={removed}
+        tokenInfo={userTokenInfos[farm.symbol]}
         summitPrice={summitPrice}
         ethereum={ethereum}
         account={account}
       />
     )),
-    [account, summitPrice, elevationTab, ethereum],
+    [account, userTokenInfos, summitPrice, elevationTab, ethereum],
   )
 
   return (
     <Page>
-      <TotemHeader account={account} />
-      {/* TODO: Overview + Elevation Selector */}
-      {/* TODO: Totem header */}
-      {/* TODO: Pass overview / elevation to farm cards */}
-      {/* TODO: Overview staked breakdown */}
-
-      {/* TODO: Farm options row */}
+      <TotemHeader />
       <FarmFilterRow />
 
       {farmsLoaded ?
         <div>
-          {farms.length === 0 && (
+          {(stakedFarms.length + unstakedFarms.length) === 0 && (
             <NoFarmsFlex justifyContent="center" mt="56px">
               <Text bold monospace fontSize="16px">
                 No elevation farms found
@@ -114,10 +87,16 @@ const ElevationFarms: React.FC = () => {
             </NoFarmsFlex>
           )}
           <FlexLayout>
-            <Route path={`${path}/`}>{farmsList(farms, userTokenInfos, false)}</Route>
+            <Route path={`${path}/`}>
+              { stakedFarms.length > 0 && <Text margin='0px auto 6px 24px' fontSize='12px' bold monospace>YOUR FARMS</Text> }
+              {farmsList(stakedFarms)}
+
+              { stakedFarms.length > 0 && <Text margin='12px auto 6px 24px' fontSize='12px' bold monospace>ALL FARMS</Text> }
+              {farmsList(unstakedFarms)}
+            </Route>
           </FlexLayout>
         </div> :
-        <PageLoader fill={false} />
+        <PageLoader fill={false} loadingText='Loading Farms...'/>
       }
     </Page>
   )

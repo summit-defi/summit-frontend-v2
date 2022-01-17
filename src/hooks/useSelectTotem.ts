@@ -6,9 +6,9 @@ import { Elevation, elevationUtils } from 'config/constants/types'
 import { switchTotem } from 'utils'
 import useToast from './useToast'
 import { useCartographer } from './useContract'
+import { updatePendingTotemSelection } from 'state/summitEcosystem'
 
 export const useSelectTotem = () => {
-  const [pending, setPending] = useState(false)
   const { toastSuccess, toastError } = useToast()
   const dispatch = useDispatch()
   const { account }: { account: string } = useWallet()
@@ -17,19 +17,19 @@ export const useSelectTotem = () => {
   const handleSelectTotem = useCallback(
     async (elevation: Elevation, totem: number) => {
       try {
-        setPending(true)
+        dispatch(updatePendingTotemSelection(true))
         await switchTotem(cartographer, elevation, totem, account)
         toastSuccess(`${elevation} ${elevationUtils.getElevationTotemName(elevation, totem)} Totem Selected`)
       } catch (error) {
         toastError(`${elevation} Totem Selection Failed`, (error as Error).message)
       } finally {
-        setPending(false)
+        dispatch(updatePendingTotemSelection(false))
         dispatch(fetchUserTotemsAsync(account))
       }
       return null
     },
-    [cartographer, account, dispatch, setPending, toastSuccess, toastError],
+    [cartographer, account, dispatch, toastSuccess, toastError],
   )
 
-  return { pending, onSelectTotem: handleSelectTotem }
+  return { onSelectTotem: handleSelectTotem }
 }

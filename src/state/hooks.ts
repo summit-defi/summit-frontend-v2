@@ -91,6 +91,10 @@ export const useElevationUserRoundInfo = (elevation: Elevation) => {
   return useSelector((state: State) => elevation === Elevation.EXPEDITION ? {} : state.farms.elevationData[elevationUtils.toInt(elevation || Elevation.OASIS)])
 }
 
+export const useElevationsStaked = () => {
+  const oasisStaked = useSelector((state: State) => state.farms.elevationData[0])
+}
+
 // User Tokens Data
 export const useUserTokens = () => {
   const selectorTokens: UserTokenData[] = useSelector((state: State) => state.tokens.data)
@@ -321,6 +325,10 @@ export const useSelectedElevation = (): Elevation | null => {
 export const useSelectedElevationInfo = (): ElevationInfo | null => {
   const elevation = useSelectedElevation()
   return useElevationInfo(elevation)
+}
+
+export const useTotemSelectionPending = (): boolean => {
+  return useSelector((state: State) => state.summitEcosystem.pendingTotemSelection)
 }
 
 export const useElevationTotems = (): Map<Elevation, number | null> => {

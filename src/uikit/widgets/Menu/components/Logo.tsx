@@ -15,14 +15,11 @@ interface Props {
 const StyledLink = styled(Link)`
   display: flex;
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.background};
-  padding: 6px 16px;
-  border-radius: 50px;
+  padding: 6px 0px;
   .desktop-icon {
     width: 177px;
     display: block;
   }
-  box-shadow: 3px 3px 6px black;
   transition: transform 0.2s;
 
   ${pressableMixin}
@@ -30,11 +27,9 @@ const StyledLink = styled(Link)`
 
 const Logo: React.FC<Props> = ({ isDark, href, elevation }) => {
   return (
-    <Flex>
-      <StyledLink as="a" href={href} aria-label="Summit home page">
-        <LogoWithText isDark={isDark} className="desktop-icon" elevation={elevation} />
-      </StyledLink>
-    </Flex>
+    <StyledLink as="a" href={href} aria-label="Summit home page">
+      <LogoWithText isDark={isDark} className="desktop-icon" elevation={elevation} />
+    </StyledLink>
   )
 }
 
