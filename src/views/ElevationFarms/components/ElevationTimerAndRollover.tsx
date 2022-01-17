@@ -58,7 +58,7 @@ const StyledText = styled(Text)`
 const ElevationTimerAndRollover: React.FC = () => {
   const elevation = useSelectedElevation()
   const summitEnabled = useSummitEnabled()
-  const roundTimeRemaining = useElevationRoundTimeRemaining()
+  const roundTimeRemaining = useElevationRoundTimeRemaining(elevation)
   const elevationLocked = useElevationLocked(elevation)
   const elevationUnlocked = !elevationLocked
   const timeRemainingText = getTimeRemainingText(roundTimeRemaining)

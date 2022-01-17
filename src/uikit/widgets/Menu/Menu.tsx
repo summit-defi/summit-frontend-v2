@@ -14,6 +14,7 @@ import { HamburgerCloseIcon, HamburgerIcon } from "./icons";
 import { useSelectedElevation } from "state/hooks";
 import DarkModeToggle from "./components/DarkModeToggle";
 import ElevationFarmsTabSelector from "./components/ElevationFarmsTabSelector";
+import ElevationRoundProgress from "./components/ElevationRoundProgress";
 
 const Wrapper = styled.div`
   position: relative;
@@ -32,12 +33,12 @@ const StyledNav = styled.nav<{ showMenu: boolean }>`
   padding-right: 16px;
   width: 100vw;
   max-width: 100vw;
-  height: ${MENU_HEIGHT}px;
+  height: ${MENU_HEIGHT - 6}px;
+  padding-bottom: 6px;
   z-index: 20;
   transform: translate3d(0, 0, 0);
   background-color: ${({ theme }) => theme.colors.background};
   flex-direction: row;
-  justify-content: flex-end;
   gap: 14px;
 
   ${({ theme }) => theme.mediaQueries.nav} {
@@ -92,6 +93,13 @@ const MobileOnlyFooter = styled.div`
     display: none;
   }
 `;
+
+const FarmTabsMenuOffset = styled.div`
+  flex-shrink: 2;
+  flex-grow: 2;
+  max-width: 217px;
+  height: 5px;
+`
 
 const MobileExcludedHeaderElements = styled.div`
   display: flex;
@@ -148,9 +156,14 @@ const Menu: React.FC<NavProps> = ({
           </MenuButton>
         </MobileHamburgerWrapper>
 
-        { (!isMobile || !farmTabsVisible) && <Logo isDark={isDark} href={homeLink?.href ?? "/"} elevation={elevation}/> }
+        { (!isMobile || !farmTabsVisible) && 
+          <Logo isDark={isDark} href={homeLink?.href ?? "/"} elevation={elevation}/>
+        }
+
 
         { farmTabsVisible && <ElevationFarmsTabSelector/> }
+
+        { isMobile && !isPushed && <ElevationRoundProgress/> }
 
         <MobileExcludedHeaderElements>
           <Flex justifyContent='flex-end' flex='1'>

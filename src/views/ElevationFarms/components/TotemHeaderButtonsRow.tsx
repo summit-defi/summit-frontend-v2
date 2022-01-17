@@ -98,8 +98,7 @@ const StyledSpinner = styled(Spinner)`
 const TotemHeaderButtonsRow: React.FC = () => {
   const elevation = useSelectedElevation()
   const userTotem = useElevationTotem(elevation)
-  const elevationLocked = useElevationLocked(elevation)
-  const elevationLockedUntilRollover = useIsElevationLockedUntilRollover()
+  const elevationLockedUntilRollover = useIsElevationLockedUntilRollover(elevation)
   const totemSelectionPending = useTotemSelectionPending()
 
   const isElevationFarm = elevation !== Elevation.OASIS

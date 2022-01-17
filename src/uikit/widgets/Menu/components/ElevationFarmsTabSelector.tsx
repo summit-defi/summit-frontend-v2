@@ -1,6 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { darken } from 'polished'
+import { darken, transparentize } from 'polished'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { Elevation, ElevationFarmTab, elevationFarmTabToUrl, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import { pressableMixin } from 'uikit/util/styledMixins'
@@ -9,11 +9,22 @@ import { NavLink, useLocation } from 'react-router-dom'
 import Flex from 'uikit/components/Box/Flex'
 import { Text } from 'uikit/components/Text'
 import ElevationTabTotemIcon from './ElevationTabTotemIcon'
+import ElevationRoundProgress from './ElevationRoundProgress'
+import useMatchBreakpoints from 'uikit/hooks/useMatchBreakpoints'
+import { MENU_HEIGHT } from '../config'
 
-const buttonWidth = 70
+const buttonWidth = 68
 const buttonHeight = 46
 
+const FullHeightWrapper = styled(Flex)`
+    height: ${MENU_HEIGHT}px;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+`
+
 const SelectorFlex = styled(Flex)`
+  position: relative;
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -27,7 +38,7 @@ const SelectorWrapper = styled(Flex) <{
   height: ${buttonHeight}px;
   width: ${({ tabsCount }) => buttonWidth * tabsCount}px;
   border-radius: ${buttonHeight}px;
-  background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
+  background-color: ${({ theme }) => theme.isDark ? theme.colors.cardHover : darken(0.1, theme.colors.background)};
   box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
   position: relative;
 `
@@ -72,13 +83,6 @@ const TextButtonText = styled(Text)<{
     text-shadow: 1px 1px 2px ${({ theme, tab }) => darken(0.2, theme.colors[tab])};
 `
 
-const TotemIcon = styled.div<{ iconName: string }>`
-  background-image: ${({ iconName }) => `url("/images/${iconName}")`};
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-`
-
 const tabs = [ElevationFarmTab.DASH, ElevationFarmTab.OASIS, ElevationFarmTab.PLAINS, ElevationFarmTab.MESA, ElevationFarmTab.SUMMIT]
 
 const ElevationFarmsTabSelector: React.FC = () => {
@@ -86,53 +90,55 @@ const ElevationFarmsTabSelector: React.FC = () => {
     const singleFarmSymbol = useSingleFarmSelected()
     const selectedIndex = tabs.findIndex((tab) => tab === selectedTab)
     const userTotems = useElevationTotems()
-
-    console.log({
-        userTotems
-    })
+    const { isXl } = useMatchBreakpoints();
+    const isMobile = isXl === false;
 
     return (
-        <SelectorFlex>
-            <SelectorWrapper
-                tabsCount={tabs.length}
-            >
-                {selectedTab != null && (
-                    <SelectedSummitButton
-                        tab={selectedTab}
-                        selectedIndex={selectedIndex}
-                        padding="0px"
-                        elevation={selectedTab}
-                    >
-                        {selectedTab}
-                        {selectedTab === ElevationFarmTab.DASH && <br/>}
-                        {selectedTab === ElevationFarmTab.DASH && 'BOARD'}
-                    </SelectedSummitButton>
-                )}
-                {tabs.map((tab) => {
-                    const tabTarget = `/${elevationFarmTabToUrl[tab]}${singleFarmSymbol != null ? `/${singleFarmSymbol.toLowerCase()}` : ''}`
-                    return (
-                        <TextButton
-                            key={tab}
-                            to={tabTarget}
-                            selected={tab === selectedTab}
+        <FullHeightWrapper>
+            <SelectorFlex>
+                <SelectorWrapper
+                    tabsCount={tabs.length}
+                >
+                    {selectedTab != null && (
+                        <SelectedSummitButton
+                            tab={selectedTab}
+                            selectedIndex={selectedIndex}
+                            padding="0px"
+                            elevation={selectedTab}
                         >
-                            { tab === ElevationFarmTab.DASH || userTotems[elevationUtils.tabToInt(tab)] == null ?
-                                <TextButtonText
-                                    monospace
-                                    tab={tab}
-                                    selected={tab === selectedTab}
-                                >
-                                    {tab}
-                                    {tab === ElevationFarmTab.DASH && <br/>}
-                                    {tab === ElevationFarmTab.DASH && 'BOARD'}
-                                </TextButtonText> :
-                                <ElevationTabTotemIcon selected={tab === selectedTab} elevation={elevationTabToElevation[tab]} totem={userTotems[elevationUtils.tabToInt(tab)]}/>
-                            }
-                        </TextButton>
-                    )
-                })}
-            </SelectorWrapper>
-        </SelectorFlex>
+                            {selectedTab}
+                            {selectedTab === ElevationFarmTab.DASH && <br/>}
+                            {selectedTab === ElevationFarmTab.DASH && 'BOARD'}
+                        </SelectedSummitButton>
+                    )}
+                    {tabs.map((tab) => {
+                        const tabTarget = `/${elevationFarmTabToUrl[tab]}${singleFarmSymbol != null ? `/${singleFarmSymbol.toLowerCase()}` : ''}`
+                        return (
+                            <TextButton
+                                key={tab}
+                                to={tabTarget}
+                                selected={tab === selectedTab}
+                            >
+                                { tab === ElevationFarmTab.DASH || userTotems[elevationUtils.tabToInt(tab)] == null ?
+                                    <TextButtonText
+                                        monospace
+                                        tab={tab}
+                                        selected={tab === selectedTab}
+                                    >
+                                        {tab}
+                                        {tab === ElevationFarmTab.DASH && <br/>}
+                                        {tab === ElevationFarmTab.DASH && 'BOARD'}
+                                    </TextButtonText> :
+                                    <ElevationTabTotemIcon selected={tab === selectedTab} elevation={elevationTabToElevation[tab]} totem={userTotems[elevationUtils.tabToInt(tab)]}/>
+                                }
+                            </TextButton>
+                        )
+                    })}
+                </SelectorWrapper>
+
+            </SelectorFlex>
+            { !isMobile && <ElevationRoundProgress/> }
+        </FullHeightWrapper>
     )
 }
 

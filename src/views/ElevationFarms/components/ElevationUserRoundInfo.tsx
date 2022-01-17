@@ -54,7 +54,7 @@ const Divider = styled.div`
 const ElevationUserRoundInfo: React.FC = () => {
   const elevation = useSelectedElevation()
   const userTotem = useElevationTotem(elevation)
-  const elevationLocked = useIsElevationLockedUntilRollover()
+  const elevationLocked = useIsElevationLockedUntilRollover(elevation)
   const { claimable, yieldContributed, potentialWinnings, roundRewards, totemRoundRewards } = useElevationUserRoundInfo(elevation)
   
   const rawClaimable = getBalanceNumber(claimable)

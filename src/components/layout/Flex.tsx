@@ -9,6 +9,8 @@ const FlexLayout = styled.div`
   margin-left: 0px;
   border-radius: 4px;
   margin-right: 0px;
+  flex-direction: column;
+  place-content: center;
 
   & > * {
     max-width: 850px;

@@ -39,7 +39,7 @@ const ProgressBarInner = styled.div<{ progress: number; elevation: string }>`
 
 const UpcomingExpeditionTimer: React.FC = () => {
   const elevation = useSelectedElevation()
-  const roundTimeRemaining = useElevationRoundTimeRemaining()
+  const roundTimeRemaining = useElevationRoundTimeRemaining(elevation)
   const timeRemainingText = getTimeRemainingText(roundTimeRemaining)
   const { onRolloverElevation, pending } = useRolloverElevation()
   const { rolloverRewardInNativeToken, rolloverRewardInSummit } = useRolloverRewards()

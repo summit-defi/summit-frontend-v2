@@ -392,9 +392,8 @@ export const useElevationsLocked = (): boolean[] => {
     [elevationRoundNumbers],
   )
 }
-export const useElevationRoundTimeRemaining = (): number => {
-  const elevationInfo = useSelectedElevationInfo()
-  const elevation = useSelectedElevation()
+export const useElevationRoundTimeRemaining = (elevation: Elevation): number => {
+  const elevationInfo = useElevationInfo(elevation)
   const currentTimestamp = useCurrentTimestamp()
   const elevationUnlockTimestamp = useElevationUnlockTimestamp(elevation)
 
@@ -404,10 +403,12 @@ export const useElevationRoundTimeRemaining = (): number => {
     elevationUnlockTimestamp,
   ])
 }
-export const useIsElevationLockedUntilRollover = (): boolean => {
-  const timeRemaining = useElevationRoundTimeRemaining()
-  const elevation = useSelectedElevation()
-  return timeRemaining <= 60 && elevation !== Elevation.OASIS
+export const useIsElevationLockedUntilRollover = (elevation: Elevation): boolean => {
+  const timeRemaining = useElevationRoundTimeRemaining(elevation)
+  return useMemo(
+    () => timeRemaining <= 60 && elevation !== Elevation.OASIS,
+    [timeRemaining, elevation],
+  )
 }
 
 // EXPEDITION

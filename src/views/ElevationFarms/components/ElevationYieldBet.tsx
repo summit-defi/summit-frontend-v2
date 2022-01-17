@@ -16,7 +16,6 @@ import SummitButton from 'uikit/components/Button/SummitButton'
 
 const ElevationYieldBet: React.FC = () => {
   const elevation = useSelectedElevation()
-  const elevationLocked = useIsElevationLockedUntilRollover()
   const { yieldContributed, potentialWinnings } = useElevationUserRoundInfo(elevation)
   const rawYieldContributed = getBalanceNumber(yieldContributed)
   const rawPotentialWinnings = getBalanceNumber(potentialWinnings)

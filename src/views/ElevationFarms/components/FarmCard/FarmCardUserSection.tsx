@@ -88,7 +88,7 @@ const FarmCardUserSection: React.FC<Props> = (props) => {
   }, [expanded, setIsExpanded])
 
   const isMobile = useMediaQuery('(max-width: 986px)')
-  const elevationLocked = useIsElevationLockedUntilRollover()
+  const elevationLocked = useIsElevationLockedUntilRollover(elevation)
   const farmTokenAddress = getFarmToken(farm)
   const [mobileDepositWithdraw, setMobileDepositWithdraw] = useState(isMobile ? 0 : -1)
 
