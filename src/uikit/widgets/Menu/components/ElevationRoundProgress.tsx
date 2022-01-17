@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled, { css } from 'styled-components'
-import { grayscale, transparentize } from 'polished'
+import { grayscale, linearGradient, transparentize } from 'polished'
 import Flex from 'uikit/components/Box/Flex'
 import { Text } from 'uikit/components/Text'
 import { useElevationRoundTimeRemaining, useSelectedElevation } from 'state/hooks'
 import { Elevation } from 'config/constants'
+import { getElevationGradientStops, getTimeRemainingText } from 'utils'
+import { clamp } from 'lodash'
 
 const RoundProgressBar = styled(Flex)<{ timedElevation: boolean }>`
     position: absolute;
@@ -43,7 +45,10 @@ const VerticalBar = styled.div<{ right?: boolean }>`
 const ProgressBar = styled.div<{ perc: number }>`
     width: ${({ perc }) => perc}%;
     height: 4px;
-    background-color: ${({ theme }) => theme.colors.textGold};
+    background-color: ${({ theme }) => linearGradient({
+        colorStops: getElevationGradientStops('GOLD'),
+        toDirection: '120deg',
+    })};
     border-radius: 0px 3px 3px 0px;
     z-index: 3;
     position: absolute;
@@ -54,13 +59,13 @@ const ProgressBar = styled.div<{ perc: number }>`
 const ProgressPill = styled.div<{ perc: number }>`
     width: 14px;
     height: 14px;
-    transform: rotate(-45deg);
-    background-color: ${({ theme }) => theme.colors.textGold};
+    transform: rotate(${({ perc }) => perc === 100 ? '45' : '-45'}deg);
+    background-color: #EA9130;
     border-radius: 10px 10px 10px 0px;
-    z-index: 3;
     position: absolute;
-    left: ${({ perc }) => `calc(${perc}% - 6px)`};
+    left: ${({ perc }) => `calc(${perc}% - ${perc * 0.02}px - 7px)`};
     top: -7px;
+    z-index: 4;
 `
 
 const TextBubble = styled.div<{ perc: number }>`
@@ -75,25 +80,45 @@ const TextBubble = styled.div<{ perc: number }>`
     left: ${({ perc }) => perc}%;
     transform: translateX(-50%) translateY(50%);
     bottom: -26px;
+    white-space: nowrap;
 `
 
 const ElevationRoundProgress: React.FC = () => {
-    const perc = 20
     const elevation = useSelectedElevation()
     const timedElevation = [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT].includes(elevation)
     const roundTimeRemaining = useElevationRoundTimeRemaining(Elevation.PLAINS)
-    
 
+    const getTimerText = useCallback(
+        () => {
+            if (roundTimeRemaining === 0) {
+                return 'FINALIZING ROUND'
+            }
+            if (roundTimeRemaining <= 120) {
+                return `ROUND LOCKED - ${getTimeRemainingText(roundTimeRemaining)}`
+            }
+        
+            return getTimeRemainingText(roundTimeRemaining - 120)
+        },
+        [roundTimeRemaining]
+    )
+
+    const perc = useCallback(
+        () => ({
+            pill: clamp(0, 100, roundTimeRemaining / (7200 - 120)),
+            text: 50
+        }),
+        [roundTimeRemaining]
+    )
 
     return (
         <RoundProgressBar timedElevation={timedElevation}>
             <HorizontalBar/>
             <VerticalBar/>
             <VerticalBar right/>
-            <ProgressBar perc={perc}/>
-            <ProgressPill perc={perc}/>
-            <TextBubble perc={perc}>
-                <Text bold monospace>1H 30M</Text>
+            <ProgressBar perc={perc().pill}/>
+            <ProgressPill perc={perc().pill}/>
+            <TextBubble perc={perc().text}>
+                <Text bold monospace>{getTimerText()}</Text>
             </TextBubble>
         </RoundProgressBar>
     )

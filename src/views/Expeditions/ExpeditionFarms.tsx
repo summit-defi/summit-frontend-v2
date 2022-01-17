@@ -46,7 +46,6 @@ const ExpeditionFarms: React.FC = () => {
   const locked = useElevationLocked(Elevation.EXPEDITION)
   const expeditionPotTotalValue = useExpeditionPotTotalValue()
   const expeditionDisbursedValue = useExpeditionDisbursedValue()
-  const expeditionLocked = useIsElevationLockedUntilRollover()
   const { expedition, userData } = useExpedition(account)
   const totem = useElevationTotem(Elevation.EXPEDITION)
   const deityDivider = useExpeditionDivider()

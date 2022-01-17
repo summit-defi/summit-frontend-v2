@@ -5,7 +5,7 @@ export const getElevationGradientColors = (elevation: Elevation | string | null)
   return elevationPalette[elevation || 'BASE']
 }
 
-export const getElevationGradientStops = (elevation: Elevation | null): string[] => {
+export const getElevationGradientStops = (elevation: Elevation | string | null): string[] => {
   const colors = getElevationGradientColors(elevation)
 
   if (elevation === Elevation.EXPEDITION) {

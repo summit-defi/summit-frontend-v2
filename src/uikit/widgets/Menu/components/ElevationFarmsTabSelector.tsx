@@ -94,7 +94,7 @@ const ElevationFarmsTabSelector: React.FC = () => {
     const isMobile = isXl === false;
 
     return (
-        <FullHeightWrapper>
+        <FullHeightWrapper ml={isMobile ? 'auto' : '0px'}>
             <SelectorFlex>
                 <SelectorWrapper
                     tabsCount={tabs.length}

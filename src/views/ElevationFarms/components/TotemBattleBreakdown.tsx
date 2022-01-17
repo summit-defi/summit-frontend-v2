@@ -46,8 +46,12 @@ const TotemResultsWrapper = styled(Flex)<{ elevation: Elevation }>`
   padding-left: 18px;
   padding-right: 18px; 
   margin-left: 6px; 
-  gap: ${({ elevation }) => elevation === Elevation.SUMMIT ? 0 : 20}px;
+  gap: ${({ elevation }) => elevation === Elevation.SUMMIT || elevation === Elevation.MESA ? 0 : 20}px;
   flex: 1;
+
+  ${({ theme }) => theme.mediaQueries.nav} {
+    gap: ${({ elevation }) => elevation === Elevation.SUMMIT ? 0 : 20}px;
+  }
 `
 
 const TotemPosition = styled(Flex)<{ topOffset: number }>`
