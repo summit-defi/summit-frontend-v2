@@ -7,18 +7,18 @@ import { Text, Flex } from 'uikit'
 import Totem from './Totem'
 import chroma from 'chroma-js'
 import BigNumber from 'bignumber.js'
-import { clamp } from 'lodash'
+import { clamp, chunk } from 'lodash'
 
 const TotemHeight = 64;
 const GameAreaHeight = 150;
 
-const TotemBattleAreaWrapper = styled(Flex)<{ fullWidth: boolean }>`
+const TotemBattleAreaWrapper = styled(Flex)<{ fullWidth: boolean, secondRow: boolean }>`
   flex-direction: row;
   align-items: center;
   justify-content: center;
   position: relative;
   height: ${GameAreaHeight}px;
-  margin-top: 15px;
+  margin-top: ${({ secondRow }) => secondRow ? -15 : 15}px;
   width: ${({ fullWidth }) => fullWidth ? '100%' : 'auto'};
 `
 
@@ -46,6 +46,7 @@ const TotemResultsWrapper = styled(Flex)<{ elevation: Elevation }>`
   padding-left: 18px;
   padding-right: 18px; 
   margin-left: 6px; 
+  margin-right: 6px;
   gap: ${({ elevation }) => elevation === Elevation.SUMMIT || elevation === Elevation.MESA ? 0 : 20}px;
   flex: 1;
 
@@ -61,10 +62,10 @@ const TotemPosition = styled(Flex)<{ topOffset: number }>`
   position: relative;
 `
 
-const DashedLine = styled.div`
+const DashedLine = styled.div<{ leftClipped: boolean, rightClipped: boolean }>`
   position: absolute;
-  left: 0px;
-  right: 0px;
+  left: ${({ leftClipped }) => leftClipped ? 18 : 0}px;
+  right: ${({ rightClipped }) => rightClipped ? 18 : 0}px;
   border-top: 1px dashed ${({ theme }) => theme.colors.text};
 `
 
@@ -97,6 +98,36 @@ const TotemResultWrapper = styled(Flex)`
   height: 100%;
 `
 
+const RowCombinerRight = styled.div`
+  border: 1px dashed ${({ theme }) => theme.colors.text};
+  border-left: none;
+  width: 32px;
+  height: 85px;
+  position: absolute;
+  right: 0px;
+  bottom: -10px;
+  border-radius: 0px 32px 32px 0px;
+`
+
+const RowCombinerLeft = styled.div`
+  border: 1px dashed ${({ theme }) => theme.colors.text};
+  border-right: none;
+  width: 32px;
+  height: 84px;
+  position: absolute;
+  left: 0px;
+  top: -8px;
+  border-radius: 32px 0px 0px 32px;
+`
+const RowCombinerMid = styled.div`
+  border-top: 1px dashed ${({ theme }) => theme.colors.text};
+  height: 1px;
+  position: absolute;
+  left: 32px;
+  right: 32px;
+  top: -8px;
+`
+
 const calcTopOffset = (mult, elevation: Elevation) => {
   const expectedMult = elevationUtils.totemCount(elevation)
 
@@ -124,20 +155,23 @@ const RulerLine: React.FC<{ i: number, elevation: Elevation }> = ({ i, elevation
   return (<RuleLine topOffset={calcTopOffset(mult, elevation)}/>)
 }
 
-const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean }> = ({ elevation, children, fullWidth }) => {
+const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, secondRow: boolean }> = ({ elevation, children, fullWidth, secondRow }) => {
   const expectedMultiplier = elevationUtils.totemCount(elevation)
   return (
-    <TotemBattleAreaWrapper fullWidth={fullWidth}>
-      <ExpectedMultText bold monospace>{expectedMultiplier}x</ExpectedMultText>
+    <TotemBattleAreaWrapper fullWidth={fullWidth} secondRow={secondRow}>
+      <ExpectedMultText invis={secondRow} bold monospace>{expectedMultiplier}x</ExpectedMultText>
       <TotemResultsWrapper elevation={elevation}>
         <RulerLine elevation={elevation} i={0}/>
         <RulerLine elevation={elevation} i={1}/>
-        <DashedLine/>
+        <DashedLine leftClipped={secondRow} rightClipped={elevation === Elevation.SUMMIT && !secondRow}/>
         <RulerLine elevation={elevation} i={3}/>
         <RulerLine elevation={elevation} i={4}/>
         {children}
       </TotemResultsWrapper>
-      { fullWidth && <ExpectedMultText invis bold monospace>{expectedMultiplier}x</ExpectedMultText> }
+      { secondRow && <RowCombinerLeft/>}
+      { secondRow && <RowCombinerMid/>}
+      { elevation === Elevation.SUMMIT && !secondRow && <RowCombinerRight/>}
+      { fullWidth && <ExpectedMultText invis={!secondRow} bold monospace>{expectedMultiplier}x</ExpectedMultText> }
     </TotemBattleAreaWrapper>
   )
 }
@@ -189,26 +223,33 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
     .scale([elevationPalette[elevation][2], elevationPalette[elevation][4]])
     .mode('lch')
     .colors(totemInfos.length)
+
+  const chunkedTotems = chunk(totemInfos, 5)
   return (
-    <TotemBreakdownWrapper fullWidth={fullWidth}>
-      { title != null && <Text bold monospace>{title}</Text> }
-      <TotemBattleArea
-        fullWidth={fullWidth}
-        elevation={elevation}
-      >
-        {totemInfos.map((totemInfo) => (
-          <>
-            <TotemBattleResult
-              key={totemInfo.totem}
-              totemInfo={totemInfo}
-              elevation={elevation}
-              color={colorGradient[totemInfo.totem]}
-              selected={totemInfo.totem === userTotem}
-            />
-          </>
-        ))}
-      </TotemBattleArea>
-    </TotemBreakdownWrapper>
+    <>
+    { chunkedTotems.map((totems, chunkIndex) =>
+      <TotemBreakdownWrapper fullWidth={fullWidth} key={totems[0].totem}>
+        { title != null && chunkIndex === 0 && <Text bold monospace>{title}</Text> }
+        <TotemBattleArea
+          fullWidth={fullWidth}
+          elevation={elevation}
+          secondRow={chunkIndex === 1}
+        >
+          {totems.map((totemInfo) => (
+            <>
+              <TotemBattleResult
+                key={totemInfo.totem}
+                totemInfo={totemInfo}
+                elevation={elevation}
+                color={colorGradient[totemInfo.totem]}
+                selected={totemInfo.totem === userTotem}
+              />
+            </>
+          ))}
+        </TotemBattleArea>
+      </TotemBreakdownWrapper>
+    )}
+    </>
   )
 }
 
