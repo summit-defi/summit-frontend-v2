@@ -9,7 +9,9 @@ export const getTimestampDiff = (a: number, b: number): number => {
 }
 export const getTimeRemainingText = (timeRemaining: number): string => {
   return getRoundTimeRemainingBreakdown(timeRemaining)
-    .map((val, index) => (val === 0 && index < 2 ? '' : `${val}${getTimeDenom(index)}`))
+    .map((val, index) => (val === 0 && index < 2 ? '' : `${`00${val}`.slice(-2)}${getTimeDenom(index)}`))
+    .filter((val) => val !== '')
+    .slice(0, 2)
     .join('')
 }
 export const getRoundTimeRemainingBreakdown = (timeRemaining: number): number[] => {

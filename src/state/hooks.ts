@@ -392,12 +392,12 @@ export const useElevationsLocked = (): boolean[] => {
     [elevationRoundNumbers],
   )
 }
-export const useElevationRoundTimeRemaining = (elevation: Elevation): number => {
+export const useElevationRoundTimeRemaining = (elevation: Elevation): number | null => {
   const elevationInfo = useElevationInfo(elevation)
   const currentTimestamp = useCurrentTimestamp()
   const elevationUnlockTimestamp = useElevationUnlockTimestamp(elevation)
 
-  return useMemo(() => (elevationInfo == null ? 0 : getTimestampDiff(currentTimestamp, Math.max(elevationUnlockTimestamp, elevationInfo.roundEndTimestamp))), [
+  return useMemo(() => (elevationInfo == null ? null : getTimestampDiff(currentTimestamp, Math.max(elevationUnlockTimestamp, elevationInfo.roundEndTimestamp))), [
     elevationInfo,
     currentTimestamp,
     elevationUnlockTimestamp,
