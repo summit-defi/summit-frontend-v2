@@ -23,6 +23,9 @@ const useRolloverElevation = () => {
   const handleRolloverElevation = useCallback(
     async (elevation: Elevation, isUnlock: boolean) => {
       setPending(true)
+      console.log({
+        elevationToRollOver: elevation
+      })
       try {
         await rolloverElevation(cartographer, elevation, account)
         toastSuccess(

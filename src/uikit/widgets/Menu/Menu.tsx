@@ -137,7 +137,7 @@ const Menu: React.FC<NavProps> = ({
   const elevation = useSelectedElevation()
 
   const keyPath = location.pathname.split('/')[1]
-  const farmTabsVisible = ['elevation', 'oasis', 'plains', 'mesa', 'summit'].includes(keyPath)
+  const farmTabsVisible = ['beta', 'elevation', 'oasis', 'plains', 'mesa', 'summit'].includes(keyPath)
 
 
   // Find the home link if provided

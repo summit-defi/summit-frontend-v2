@@ -93,10 +93,12 @@ const BetaTokenCard: React.FC<BetaTokenCardProps> = ({
           { mintableAmounts.map((mintableAmount) => (
             <SummitButton
               onClick={() => handleMint(mintableAmount)}
-              width='200px'
+              width='160px'
               isLoading={mintPending}
             >
-              MINT {mintableAmount} {symbol}
+              MINT
+              <br/>
+              {mintableAmount} {symbol}
             </SummitButton>
           ))}
         </FarmNumericalInfoFlex>

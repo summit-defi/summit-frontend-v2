@@ -2,16 +2,8 @@ import { Elevation } from 'config/constants/types'
 import { linearGradient } from 'polished'
 import styled, { keyframes } from 'styled-components'
 import { getElevationGradientStops } from 'utils'
+import { SpinnerKeyframes } from '../Svg/Icons/Spinner'
 import StyledButton from './StyledButton'
-
-const Spin = keyframes`
-  0%: {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-`
 
 const SummitStyledButton = styled(StyledButton)<{
   height?: number
@@ -44,7 +36,7 @@ const SummitStyledButton = styled(StyledButton)<{
 
   .spinner {
     fill: white;
-    animation: ${Spin} 1.4s infinite linear;
+    animation: ${SpinnerKeyframes} 1.4s infinite linear;
   }
 `
 

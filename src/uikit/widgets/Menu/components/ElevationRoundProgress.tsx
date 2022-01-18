@@ -7,6 +7,8 @@ import { useElevationRoundTimeRemaining, useSelectedElevation } from 'state/hook
 import { Elevation } from 'config/constants'
 import { getElevationGradientStops, getTimeRemainingText } from 'utils'
 import { clamp } from 'lodash'
+import { Spinner } from 'uikit'
+import { SpinnerKeyframes } from 'uikit/components/Svg/Icons/Spinner'
 
 const RoundProgressBar = styled(Flex)<{ timedElevation: boolean }>`
     position: absolute;
@@ -77,10 +79,26 @@ const TextBubble = styled.div<{ perc: number }>`
     border-radius: 4px;
     z-index: 3;
     position: absolute;
-    left: ${({ perc }) => perc}%;
+    left: ${({ perc }) => `clamp(33px, calc(${perc}% - 2px), calc(100% - 33px))`};
     transform: translateX(-50%) translateY(50%);
     bottom: -26px;
     white-space: nowrap;
+
+    ${({ theme }) => theme.mediaQueries.nav} {
+        left: ${({ perc }) => `calc(${perc}% - 2px)`};
+    }
+
+    .spinner {
+        fill: white;
+        animation: ${SpinnerKeyframes} 1.4s infinite linear;
+        margin-right: 12px;
+    }
+`
+
+const StyledSpinner = styled(Spinner)`
+  filter: drop-shadow(0px 0px 4px black);
+  width: 14px;
+  height: 14px;
 `
 
 const ElevationRoundProgress: React.FC = () => {
@@ -103,10 +121,13 @@ const ElevationRoundProgress: React.FC = () => {
     )
 
     const perc = useCallback(
-        () => ({
-            pill: clamp(0, 100, roundTimeRemaining / (7200 - 120)),
-            text: 50
-        }),
+        () => {
+            const pill = clamp((7200 - 120 - roundTimeRemaining) / (72 - 1.2), 0, 100)
+            return {
+                pill,
+                text: roundTimeRemaining === 0 ? 50 : pill
+            }
+        },
         [roundTimeRemaining]
     )
 
@@ -118,6 +139,7 @@ const ElevationRoundProgress: React.FC = () => {
             <ProgressBar perc={perc().pill}/>
             <ProgressPill perc={perc().pill}/>
             <TextBubble perc={perc().text}>
+                { roundTimeRemaining === 0 && <StyledSpinner className="spinner" /> }
                 <Text bold monospace>{getTimerText()}</Text>
             </TextBubble>
         </RoundProgressBar>

@@ -4,6 +4,7 @@ import BetaTokenCard from './BetaTokenCard'
 import styled from 'styled-components'
 import { ElevationPuck, Flex, Text } from 'uikit'
 import { getPriceableTokens, TokenSymbol } from 'config/constants'
+import BetaRoundRollovers from './BetaRoundRollovers'
 
 const BetaTokens = {
   [TokenSymbol.CAKE]: true,
@@ -69,6 +70,7 @@ const BetaTokensList: React.FC = () => {
           <br/>
         </Text>
       </InfoCard>
+      <BetaRoundRollovers/>
       {betaTokens.map((betaToken) => (
         <BetaTokenCard
           key={betaToken.symbol}
