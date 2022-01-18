@@ -40,7 +40,7 @@ const MarkerText = styled(Text)`
     padding-right: 6px;
     top: ${EndMarkerHeight - 18}px;
     bottom: 0px;
-    background-color: ${({ theme }) => theme.colors.background};
+    background-color: ${({ theme }) => theme.colors.cardHover};
 `
 
 const MarkerBar = styled.div<{ elevation?: Elevation }>`

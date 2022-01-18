@@ -99,35 +99,6 @@ const TotemHeader: React.FC = () => {
         <ElevationTotemBattle/>
         { account != null && userTotem != null && elevationTab !== ElevationFarmTab.OASIS && <ElevationYieldBet/> }
         { account != null && userTotem != null && <ElevationWinnings/> }
-
-        {/* <Flex width='100%' flexWrap='wrap' style={{gap: '24px'}}>
-
-          <BoundedProgressBar
-            title='FAIRNESS|br|TAX'
-            minTitle='NOV 4'
-            maxTitle='NOV 10'
-            leftPerc={7}
-            rightPerc={1}
-            currPerc={4.25}
-            elevation={elevation}
-          />
-
-          <BoundedProgressBar
-            title='LOYALTY|br|BONUS'
-            minTitle='NOV 10'
-            maxTitle='NOV 17'
-            leftPerc={0}
-            rightPerc={7}
-            currPerc={3}
-            elevation={elevation}
-          />
-
-          <BoundedProgressBar
-            title='DEPOSIT|br|FEE'
-            currPerc={3}
-            elevation={elevation}
-          />
-        </Flex> */}
       </HeaderWrapper>
     </HeaderCardsWrapper>
   )

@@ -4,6 +4,7 @@ import BigNumber from 'bignumber.js/bignumber'
 import Input, { InputProps } from '../Input'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { Elevation } from 'config/constants/types'
+import { Text } from 'uikit'
 
 interface TokenInputProps extends InputProps {
   elevation?: Elevation
@@ -30,7 +31,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
 }) => {
   return (
     <StyledTokenInput>
-      <StyledMaxText>
+      <StyledMaxText bold monospace>
         {balanceText}: {parseFloat(max.toLocaleString()).toFixed(4)} {symbol}
       </StyledMaxText>
       <Input
@@ -52,10 +53,10 @@ const TokenInput: React.FC<TokenInputProps> = ({
         value={value}
       />
       {depositFeeBP > 0 ? (
-        <StyledFeeText>Deposit Fee: {new BigNumber(value || 0).times(depositFeeBP / 10000).toString()}</StyledFeeText>
+        <StyledFeeText monospace>Deposit Fee: {new BigNumber(value || 0).times(depositFeeBP / 10000).toString()}</StyledFeeText>
       ) : null}
       {withdrawalFee > 0 ? (
-        <StyledFeeText>
+        <StyledFeeText monospace>
           Fairness Tax: {new BigNumber(value || 0).times(withdrawalFee / 10000).toString()}
         </StyledFeeText>
       ) : null}
@@ -76,15 +77,16 @@ const StyledTokenAdornmentWrapper = styled.div`
   display: flex;
 `
 
-const StyledMaxText = styled.div`
+const StyledMaxText = styled(Text)`
   align-items: center;
   color: ${({ theme }) => theme.colors.text};
   display: flex;
   font-style: italic;
   margin-right: 16px;
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 700;
   height: 32px;
+  letter-spacing: 0.15px;
   justify-content: flex-start;
 `
 

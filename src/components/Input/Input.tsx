@@ -50,7 +50,7 @@ const StyledInputWrapper = styled.div<{ disabled: boolean }>`
 
   border-radius: 16px;
   display: flex;
-  height: 72px;
+  height: 62px;
   padding: 0 ${(props) => props.theme.spacing[3]}px;
   box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
 

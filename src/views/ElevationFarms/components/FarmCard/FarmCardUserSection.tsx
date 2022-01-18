@@ -12,6 +12,7 @@ import FarmCardMobileDepositWithdrawSelector from './FarmCardMobileDepositWithdr
 import { useIsElevationLockedUntilRollover, useMediaQuery } from 'state/hooks'
 import { getFarmToken } from 'utils/farmId'
 import { useTraceUpdate } from 'hooks/useTraceUpdate'
+import BoundedProgressBar from '../BoundedProgressBar'
 
 const ExpandableSection = styled(Flex)<{ isExpanded: boolean }>`
   flex-direction: column;
@@ -41,10 +42,11 @@ const MobileVerticalFlex = styled(Flex)`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  gap: 24px;
+  gap: 12px;
 
   ${({ theme }) => theme.mediaQueries.nav} {
     flex-direction: row;
+    align-items: flex-start;
     justify-content: space-between;
   }
 `
@@ -196,38 +198,53 @@ const FarmCardUserSection: React.FC<Props> = (props) => {
   )
 
   // ELEVATE SECTION
-  // const elevateSection = useCallback(
-  //   () =>
-  //     (!isMobile || mobileDepositWithdraw === 2) && (
-  //       <FarmCardUserElevate farm={farm} elevationLocked={elevationLocked} disabled={disabled} />
-  //     ),
-  //   [isMobile, mobileDepositWithdraw, elevationLocked, farm, disabled],
-  // )
+  const elevateSection = useCallback(
+    () =>
+      (!isMobile || mobileDepositWithdraw === 2) && (
+        <FarmCardUserElevate farm={farm} elevationLocked={elevationLocked} disabled={disabled} />
+      ),
+    [isMobile, mobileDepositWithdraw, elevationLocked, farm, disabled],
+  )
 
   return (
     <ExpandableSection isExpanded={isExpanded}>
+      <Divider />
+      <Flex flexWrap='wrap' flexDirection='row' width='100%' mb='18px' mt='6px' style={{gap: '24px'}}>
+        <BoundedProgressBar
+          title='DEPOSIT|br|FEE'
+          currPerc={3}
+          elevation={elevation}
+        />
+
+        <BoundedProgressBar
+          title='FAIRNESS|br|TAX'
+          minTitle='NOV 4'
+          maxTitle='NOV 10'
+          leftPerc={7}
+          rightPerc={1}
+          currPerc={4.25}
+          elevation={elevation}
+        />
+
+        <BoundedProgressBar
+          title='LOYALTY|br|BONUS'
+          minTitle='NOV 10'
+          maxTitle='NOV 17'
+          leftPerc={0}
+          rightPerc={7}
+          currPerc={3}
+          elevation={elevation}
+        />
+      </Flex>
       <Divider />
       <MobileVerticalFlex>
         {mobileDepositWithdrawSelector()}
         {depositSection()}
         {withdrawSection()}
-        {/* {elevateSection()} */}
+        {elevateSection()}
       </MobileVerticalFlex>
       <MobileVerticalFlexText width="100%" mt="24px">
-        <Flex flexDirection="column" justifyContent="flex-start" alignItems="center">
-          { (depositFeeBP || 0) > 0 &&
-            <Text bold monospace>
-              Deposit Fee: {(depositFeeBP || 0) / 100}%
-            </Text>
-          }
-          <Text bold monospace>
-            Fairness Tax: 7% ⮕ {native ? 0 : 1}%
-          </Text>
-          <Text fontSize="13px" bold monospace>
-            (Fairness Tax decays over 7 days)
-          </Text>
-        </Flex>
-        <Flex flexDirection="column" justifyContent="flex-start" alignItems="center">
+        <Flex flexDirection="row" justifyContent="space-around" alignItems="center" width='100%'>
           {passthroughStrategy != null && (
             <ExternalLinkButton elevation={elevation} href={passthroughStrategy}>
               Passthrough Strategy

@@ -18,7 +18,7 @@ interface Props {
 }
 
 const CenteredInfoText = styled(Text)`
-  margin: 38px auto 28px auto;
+  margin: 34px auto 0px auto;
   height: 36px;
   text-align: center;
   line-height: 16px;

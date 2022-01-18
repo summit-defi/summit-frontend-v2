@@ -30,7 +30,7 @@ const MobileHiddenText = styled(Text)`
 `
 
 const CenteredSummitButton = styled(SummitButton)`
-  margin: 34px auto 24px auto;
+  margin: 34px auto 0px auto;
 `
 
 const FarmCardUserWithdraw: React.FC<Props> = ({
@@ -91,7 +91,7 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
 
   return (
     <Flex flexDirection="column" justifyContent="flex-start" alignItems="flex-start">
-      <MobileHiddenText fontSize="14px" mb="20px">
+      <MobileHiddenText fontSize="14px" mb="30px">
         Withdraw:
       </MobileHiddenText>
       <TokenInput

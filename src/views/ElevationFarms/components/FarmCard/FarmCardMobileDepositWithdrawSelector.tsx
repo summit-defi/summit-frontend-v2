@@ -6,7 +6,7 @@ import { darken } from 'polished'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { pressableMixin } from 'uikit/util/styledMixins'
 
-const buttonWidth = 110
+const buttonWidth = 117
 
 const MobileOnlyFlex = styled(Flex)`
   display: flex;
