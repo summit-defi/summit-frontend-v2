@@ -3,7 +3,7 @@ import { Elevation, elevationUtils } from 'config/constants/types'
 import styled, { css } from 'styled-components'
 import { elevationPalette } from 'theme/colors'
 import { chunkArray } from 'utils'
-import { Text, Flex } from 'uikit'
+import { Text, Flex, useMatchBreakpoints } from 'uikit'
 import Totem from './Totem'
 import chroma from 'chroma-js'
 import BigNumber from 'bignumber.js'
@@ -155,7 +155,7 @@ const RulerLine: React.FC<{ i: number, elevation: Elevation }> = ({ i, elevation
   return (<RuleLine topOffset={calcTopOffset(mult, elevation)}/>)
 }
 
-const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, secondRow: boolean }> = ({ elevation, children, fullWidth, secondRow }) => {
+const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, secondRow: boolean, isMobile: boolean }> = ({ elevation, children, fullWidth, secondRow, isMobile }) => {
   const expectedMultiplier = elevationUtils.totemCount(elevation)
   return (
     <TotemBattleAreaWrapper fullWidth={fullWidth} secondRow={secondRow}>
@@ -163,14 +163,14 @@ const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, seco
       <TotemResultsWrapper elevation={elevation}>
         <RulerLine elevation={elevation} i={0}/>
         <RulerLine elevation={elevation} i={1}/>
-        <DashedLine leftClipped={secondRow} rightClipped={elevation === Elevation.SUMMIT && !secondRow}/>
+        <DashedLine leftClipped={secondRow} rightClipped={elevation === Elevation.SUMMIT && !secondRow && isMobile}/>
         <RulerLine elevation={elevation} i={3}/>
         <RulerLine elevation={elevation} i={4}/>
         {children}
       </TotemResultsWrapper>
       { secondRow && <RowCombinerLeft/>}
       { secondRow && <RowCombinerMid/>}
-      { elevation === Elevation.SUMMIT && !secondRow && <RowCombinerRight/>}
+      { elevation === Elevation.SUMMIT && !secondRow && isMobile && <RowCombinerRight/>}
       { fullWidth && <ExpectedMultText invis={!secondRow} bold monospace>{expectedMultiplier}x</ExpectedMultText> }
     </TotemBattleAreaWrapper>
   )
@@ -224,7 +224,10 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
     .mode('lch')
     .colors(totemInfos.length)
 
-  const chunkedTotems = chunk(totemInfos, 5)
+  const { isXl } = useMatchBreakpoints();
+  const isMobile = isXl === false;
+
+  const chunkedTotems = chunk(totemInfos, isMobile ? 5 : 10)
   return (
     <>
     { chunkedTotems.map((totems, chunkIndex) =>
@@ -234,6 +237,7 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
           fullWidth={fullWidth}
           elevation={elevation}
           secondRow={chunkIndex === 1}
+          isMobile={isMobile}
         >
           {totems.map((totemInfo) => (
             <>
