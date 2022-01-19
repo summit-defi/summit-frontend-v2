@@ -43,8 +43,8 @@ const TotemResultsWrapper = styled(Flex)<{ elevation: Elevation }>`
   justify-content: center;
   height: 100%;
   position: relative;
-  padding-left: 18px;
-  padding-right: 18px; 
+  padding-left: 6px;
+  padding-right: 6px; 
   margin-left: 6px; 
   margin-right: 6px;
   gap: ${({ elevation }) => elevation === Elevation.SUMMIT || elevation === Elevation.MESA ? 0 : 20}px;
@@ -64,8 +64,8 @@ const TotemPosition = styled(Flex)<{ topOffset: number }>`
 
 const DashedLine = styled.div<{ leftClipped: boolean, rightClipped: boolean }>`
   position: absolute;
-  left: ${({ leftClipped }) => leftClipped ? 18 : 0}px;
-  right: ${({ rightClipped }) => rightClipped ? 18 : 0}px;
+  left: ${({ leftClipped }) => leftClipped ? 6 : 0}px;
+  right: ${({ rightClipped }) => rightClipped ? 6 : 0}px;
   border-top: 1px dashed ${({ theme }) => theme.colors.text};
 `
 
@@ -155,7 +155,7 @@ const RulerLine: React.FC<{ i: number, elevation: Elevation }> = ({ i, elevation
   return (<RuleLine topOffset={calcTopOffset(mult, elevation)}/>)
 }
 
-const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, secondRow: boolean, isMobile: boolean }> = ({ elevation, children, fullWidth, secondRow, isMobile }) => {
+const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, secondRow: boolean, isMobile: boolean, multiElev: boolean }> = ({ elevation, children, fullWidth, secondRow, isMobile, multiElev }) => {
   const expectedMultiplier = elevationUtils.totemCount(elevation)
   return (
     <TotemBattleAreaWrapper fullWidth={fullWidth} secondRow={secondRow}>
@@ -163,14 +163,14 @@ const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, seco
       <TotemResultsWrapper elevation={elevation}>
         <RulerLine elevation={elevation} i={0}/>
         <RulerLine elevation={elevation} i={1}/>
-        <DashedLine leftClipped={secondRow} rightClipped={elevation === Elevation.SUMMIT && !secondRow && isMobile}/>
+        <DashedLine leftClipped={secondRow} rightClipped={elevation === Elevation.SUMMIT && !secondRow && isMobile && !multiElev}/>
         <RulerLine elevation={elevation} i={3}/>
         <RulerLine elevation={elevation} i={4}/>
         {children}
       </TotemResultsWrapper>
       { secondRow && <RowCombinerLeft/>}
       { secondRow && <RowCombinerMid/>}
-      { elevation === Elevation.SUMMIT && !secondRow && isMobile && <RowCombinerRight/>}
+      { elevation === Elevation.SUMMIT && !secondRow && isMobile && !multiElev && <RowCombinerRight/>}
       { fullWidth && <ExpectedMultText invis={!secondRow} bold monospace>{expectedMultiplier}x</ExpectedMultText> }
     </TotemBattleAreaWrapper>
   )
@@ -216,9 +216,10 @@ interface Props {
   totemInfos: TotemInfo[]
   fullWidth?: boolean
   userTotem?: number
+  multiElev?: boolean
 }
 
-const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, userTotem, fullWidth = true }) => {
+const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, userTotem, fullWidth = true, multiElev = false }) => {
   const colorGradient = chroma
     .scale([elevationPalette[elevation][2], elevationPalette[elevation][4]])
     .mode('lch')
@@ -238,6 +239,7 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
           elevation={elevation}
           secondRow={chunkIndex === 1}
           isMobile={isMobile}
+          multiElev={multiElev}
         >
           {totems.map((totemInfo) => (
             <>

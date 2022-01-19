@@ -5,15 +5,17 @@ import { HighlightedText } from 'uikit/components/Text'
 
 interface Props {
   elevation?: string
+  top?: number
 }
 
-const HeaderCircleWrapper = styled.div`
+const PuckSize = 180
+
+const HeaderCircleWrapper = styled.div<{ top?: number }>`
   z-index: 3;
-  height: 212px;
+  height: ${PuckSize + 12}px;
   position: absolute;
-  left: 0;
-  right: 0;
-  top: -106px;
+  width: ${PuckSize + 12}px;
+  top: ${({ top }) => top != null ? top : -(PuckSize + 12) / 2}px;
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -22,11 +24,11 @@ const HeaderCircleWrapper = styled.div`
 
 const HeaderCircleBackground = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
-  border-radius: 200px;
+  border-radius: ${PuckSize}px;
   box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
   position: absolute;
-  width: 212px;
-  height: 212px;
+  width: ${PuckSize + 12}px;
+  height: ${PuckSize + 12}px;
 `
 
 export const HeaderArtwork = styled.div<{ elevation: string }>`
@@ -34,10 +36,10 @@ export const HeaderArtwork = styled.div<{ elevation: string }>`
   background-image: ${({ elevation }) =>
     `url("/images/summit/elevationArtwork${elevationUtils.isElevation(elevation) ? elevation : 'BASE'}.jpg")`};
   filter: drop-shadow(3px 3px 6px black);
-  border-radius: 200px;
+  border-radius: ${PuckSize}px;
   background-size: cover;
-  width: 200px;
-  height: 200px;
+  width: ${PuckSize}px;
+  height: ${PuckSize}px;
 `
 
 export const HeaderElevationName = styled(HighlightedText)<{ elevationName: string }>`
@@ -53,9 +55,9 @@ export const HeaderElevationName = styled(HighlightedText)<{ elevationName: stri
   flex-direction: column;
 `
 
-export const ElevationPuck: React.FC<Props> = ({ elevation, children }) =>
+export const ElevationPuck: React.FC<Props> = ({ elevation, children, top }) =>
   !elevation ? null : (
-    <HeaderCircleWrapper>
+    <HeaderCircleWrapper top={top}>
       <HeaderCircleBackground />
       <HeaderArtwork elevation={elevation} />
       <HeaderElevationName header elevationName={elevation}>

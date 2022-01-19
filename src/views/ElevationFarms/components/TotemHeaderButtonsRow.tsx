@@ -3,7 +3,7 @@ import { Elevation, elevationTabToElevation, elevationUtils } from 'config/const
 import styled, { css } from 'styled-components'
 import { elevationPalette } from 'theme/colors'
 import { chunkArray, getBalanceNumber, getFormattedBigNumber, getFullDisplayBalance, groupByAndMap } from 'utils'
-import { Text, Flex, Spinner } from 'uikit'
+import { Text, Flex, Spinner, ElevationPuck } from 'uikit'
 import Totem from './Totem'
 import chroma from 'chroma-js'
 import BigNumber from 'bignumber.js'
@@ -129,8 +129,8 @@ const TotemHeaderButtonsRow: React.FC = () => {
           {/* {elevationLockedUntilRollover && <StyledLock width="28px" />} */}
         </SummitIconButton>
       )}
-      <HeaderTotemWrapper isLoading={totemSelectionPending}>
-        { userTotem != null &&
+      { elevation != null ?
+        <HeaderTotemWrapper isLoading={totemSelectionPending}>
           <ArtworkTotem
             elevation={elevation}
             totem={userTotem}
@@ -138,9 +138,16 @@ const TotemHeaderButtonsRow: React.FC = () => {
             desktopSize="180"
             mobileSize="180"
           />
-        }
-        {totemSelectionPending && <StyledSpinner className="spinner" />}
-      </HeaderTotemWrapper>
+          {totemSelectionPending && <StyledSpinner className="spinner" />}
+        </HeaderTotemWrapper> :
+        <ElevationPuck elevation='BASE' top={0}>
+          <Text bold fontSize='24px'>
+            FARMING
+            <br/>
+            DASHBOARD
+          </Text>
+        </ElevationPuck>
+      }
       {isElevationFarm && userTotem != null && (
         <SummitIconButton elevation={elevation} onClick={onPresentTotemWinnersModal}>
           <CrownHistoryIcon />

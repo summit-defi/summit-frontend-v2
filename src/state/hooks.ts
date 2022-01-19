@@ -98,6 +98,21 @@ export const useFarmsLoaded = (): boolean => {
 export const useElevationUserRoundInfo = (elevation: Elevation) => {
   return useSelector((state: State) => elevation === Elevation.EXPEDITION ? {} : state.farms.elevationData[elevationUtils.toInt(elevation || Elevation.OASIS)])
 }
+export const useDashboardTotemBattleInfo = () => {
+  const elevationData = useSelector((state: State) => state.farms.elevationData) 
+  return useMemo(
+    () => {
+      return elevationUtils.all.map((elev) => {
+        const userTotem = 0
+        return [{
+          totem: userTotem,
+          mult: elevationData[elevationUtils.toInt(elev)]?.totemMultipliers[userTotem] || 0
+        }]
+      })
+    },
+    [elevationData]
+  )
+}
 
 export const useElevationsStaked = () => {
   const oasisStaked = useSelector((state: State) => state.farms.elevationData[0])

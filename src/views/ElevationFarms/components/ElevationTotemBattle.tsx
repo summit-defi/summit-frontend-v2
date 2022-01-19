@@ -1,22 +1,37 @@
 import React from 'react'
 import { Elevation, ElevationFarmTab, elevationTabToElevation, elevationUtils } from 'config/constants/types'
-import styled, { css } from 'styled-components'
-import { elevationPalette } from 'theme/colors'
-import { chunkArray, getBalanceNumber, getFormattedBigNumber, getFullDisplayBalance, groupByAndMap } from 'utils'
-import { Text, Flex } from 'uikit'
-import Totem from './Totem'
-import chroma from 'chroma-js'
-import BigNumber from 'bignumber.js'
-import { clamp, orderBy } from 'lodash'
-import { useClaimElevation } from 'hooks/useClaim'
-import { useSelectedElevation, useIsElevationLockedUntilRollover, useElevationUserRoundInfo, useFarms, useElevationTotem, useElevationFarmsTab } from 'state/hooks'
-import CardValue from 'views/Home/components/CardValue'
-import ContributionBreakdown from './ContributionBreakdown'
-import SummitButton from 'uikit/components/Button/SummitButton'
+import { Flex } from 'uikit'
+import { useElevationUserRoundInfo, useElevationTotem, useElevationFarmsTab, useDashboardTotemBattleInfo } from 'state/hooks'
 import TotemBattleBreakdown from './TotemBattleBreakdown'
+import styled from 'styled-components'
+
+const GappedFlex = styled(Flex)`
+  gap: 18px;
+  justify-content: center;
+  align-items: center;
+`
 
 const AllElevationsTotemBattles: React.FC = () => {
-  return null
+  const totemBattleInfo = useDashboardTotemBattleInfo()
+  console.log({
+    totemBattleInfo
+  })
+
+  return (
+    <GappedFlex>
+      { elevationUtils.elevationOnly.map((elev) => (
+        <TotemBattleBreakdown
+          key={elev}
+          elevation={elev}
+          title={elev}
+          totemInfos={totemBattleInfo[elevationUtils.toInt(elev)]}
+          userTotem={-1}
+          fullWidth={false}
+          multiElev
+        />
+      ))}
+    </GappedFlex>
+  )
 }
 
 const SingleElevationTotemBattle: React.FC<{ elevationTab: ElevationFarmTab }> = ({ elevationTab }) => {
