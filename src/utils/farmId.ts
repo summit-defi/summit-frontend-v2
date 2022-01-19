@@ -1,4 +1,5 @@
-import { BN_ZERO, Elevation, FarmConfig, TokenAssetType } from "config/constants/types"
+import BigNumber from "bignumber.js"
+import { BN_ZERO, Elevation, elevationUtils, FarmConfig, TokenAssetType } from "config/constants/types"
 import { Farm, FarmElevation, FarmType } from "state/types"
 
 export const getFarmToken = ({
@@ -65,4 +66,11 @@ export const getFarmOnlyElevationsIterable = (farmConfigs: FarmConfig[]) => {
                 elevation: elevation as Elevation,
             }))
     }).flat()
+}
+
+export const getFarmTotalStakedBalance = (elevations): BigNumber => {
+    return elevationUtils.all.reduce((acc, elev) =>
+        acc.plus(elevations[elev] || BN_ZERO),
+        BN_ZERO
+    )
 }

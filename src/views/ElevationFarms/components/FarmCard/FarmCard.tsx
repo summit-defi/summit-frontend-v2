@@ -12,6 +12,7 @@ import CardValue from 'views/Home/components/CardValue'
 import { capitalizeFirstLetter, getBalanceNumber, nFormatter } from 'utils'
 import Totem from '../Totem'
 import ElevationContributionBreakdown from '../ElevationContributionBreakdown'
+import { getFarmTotalStakedBalance } from 'utils/farmId'
 
 const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
   align-self: baseline;
@@ -146,28 +147,31 @@ const FarmCard: React.FC<FarmCardProps> = ({
     comment: farmComment,
     warning: farmWarning,
     supply: lpSupply,
-    stakedBalance,
-    claimable,
-    yieldContributed,
   } = farm.elevations[elevationTab] || {}
 
+  const farmElevationsStaked = useMemo(
+    () => elevationUtils.all.reduce((acc, elev) => ({
+      ...acc,
+      [elev]: farm.elevations[elev]?.stakedBalance || BN_ZERO,
+    }), {}),
+    [farm]
+  )
+  
   const elevation = elevationTabToElevation[elevationTab]
 
   const singleFarmSymbol = useSingleFarmSelected()
   const pricesPerToken = usePricesPerToken()
   const expanded = singleFarmSymbol === symbol
 
-  const { bonusBP = 0, taxBP = 0, bonusResetTimestamp, taxResetTimestamp } = tokenInfo || {}
-
-  const rawEarned = getBalanceNumber(claimable)
-  const rawYieldContribution = getBalanceNumber(yieldContributed)
-
   const userStakedBalance: BigNumber = useMemo(
     () => {
-      if (stakedBalance == null || pricesPerToken == null) return new BigNumber(0)
-      return stakedBalance.div(new BigNumber(10).pow(decimals)).times(pricesPerToken[symbol])
+      if (pricesPerToken == null) return new BigNumber(0)
+      const totalStaked: BigNumber = elevation == null ?
+        getFarmTotalStakedBalance(farmElevationsStaked) :
+        farmElevationsStaked[elevation]
+      return totalStaked.div(new BigNumber(10).pow(decimals)).times(pricesPerToken[symbol])
     },
-    [stakedBalance, symbol, pricesPerToken, decimals]
+    [elevation, farmElevationsStaked, symbol, pricesPerToken, decimals]
   )
 
   const totalValue: BigNumber = useMemo(
@@ -190,7 +194,6 @@ const FarmCard: React.FC<FarmCardProps> = ({
     ? `$${Number(totalValue).toLocaleString(undefined, { maximumFractionDigits: 0 })}`
     : '-'
 
-  const earnLabel = 'SUMMIT'
   const farmAvgAPY = apy * 100
   const dailyAPR = (apr && apr / 3.65)
 
