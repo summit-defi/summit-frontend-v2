@@ -14,9 +14,17 @@ const ElevationYieldBet: React.FC = () => {
 
   const totalTVL = elevationUtils.all.reduce((acc, elevation) => acc.plus(elevTVL[elevation]), BN_ZERO)
 
+  console.log({
+    totalTVL: totalTVL.toString(),
+    oasisTVL: elevTVL[Elevation.OASIS].toString(),
+    plainsTVL: elevTVL[Elevation.PLAINS].toString(),
+    mesaTVL: elevTVL[Elevation.MESA].toString(),
+    summitTVL: elevTVL[Elevation.SUMMIT].toString(),
+  })
+
   const elevationContributions = elevationUtils.all
     .map((elevation, index) => {
-      const perc = elevTVL[elevation].isGreaterThan(0) ? totalTVL.times(100).dividedBy(elevTVL[elevation]).toNumber() : 0
+      const perc = elevTVL[elevation].isGreaterThan(0) ? elevTVL[elevation].times(100).dividedBy(totalTVL).toNumber() : 0
       return {
         elevation,
         key: index,
