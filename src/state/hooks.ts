@@ -2,14 +2,14 @@ import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
-import { getWeb3NoAccount, getTimestampDiff, groupByAndMap, groupBy } from 'utils'
+import { getWeb3NoAccount, getTimestampDiff, groupByAndMap, groupBy, getFormattedBigNumber } from 'utils'
 import {
   fetchFarmsPublicDataAsync,
   fetchExpeditionUserDataAsync,
   fetchExpeditionPublicDataAsync,
 } from './actions'
 import { State, Farm, Expedition, ElevationInfo, ExpeditionUserData, UserTokenData } from './types'
-import { Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired, RoundLockTime } from '../config/constants/types'
+import { BN_ZERO, Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired, RoundLockTime } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
   fetchElevationHelperInfoAsync,
@@ -102,13 +102,50 @@ export const useDashboardTotemBattleInfo = () => {
   const elevationData = useSelector((state: State) => state.farms.elevationData) 
   return useMemo(
     () => {
-      return elevationUtils.all.map((elev) => {
+      return elevationUtils.elevationOnly.map((elev) => {
         const userTotem = 0
         return [{
           totem: userTotem,
           mult: elevationData[elevationUtils.toInt(elev)]?.totemMultipliers[userTotem] || 0
         }]
       })
+    },
+    [elevationData]
+  )
+}
+
+export const useMultiElevYieldInfo = () => {
+  const elevationData = useSelector((state: State) => state.farms.elevationData) 
+  return useMemo(
+    () => {
+      const elevYieldsRaw = elevationUtils.elevationOnly
+        .map((elev) => {
+          const { yieldContributed, potentialWinnings } = elevationData[elevationUtils.toInt(elev)] || { yieldContributed: BN_ZERO, potentialWinnings: BN_ZERO }
+          return {
+            elev,
+            yieldContributed,
+            potentialWinnings,
+          }
+        })
+        .filter((rawYield) => rawYield.yieldContributed.plus(rawYield.potentialWinnings).isGreaterThan(0))
+
+      const { totalYieldContributed, totalPotentialWinnings } = elevYieldsRaw.reduce((acc, elevYield) => ({
+        totalYieldContributed: acc.totalYieldContributed.plus(elevYield.yieldContributed),
+        totalPotentialWinnings: acc.totalPotentialWinnings.plus(elevYield.potentialWinnings),
+      }), { totalYieldContributed: BN_ZERO, totalPotentialWinnings: BN_ZERO})
+
+      const elevYieldsBreakdown = elevYieldsRaw.map((rawYield, index) => ({
+        title: rawYield.elev,
+        key: elevationUtils.toInt(rawYield.elev),
+        perc: elevYieldsRaw[index].yieldContributed.times(100).div(totalYieldContributed).toNumber(),
+        val: `${getFormattedBigNumber(elevYieldsRaw[index].yieldContributed)} SUMMIT`,
+      }))
+
+      return {
+        elevYieldsBreakdown,
+        totalYieldContributed,
+        totalPotentialWinnings
+      }
     },
     [elevationData]
   )

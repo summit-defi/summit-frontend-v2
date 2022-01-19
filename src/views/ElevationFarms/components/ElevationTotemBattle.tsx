@@ -13,18 +13,15 @@ const GappedFlex = styled(Flex)`
 
 const AllElevationsTotemBattles: React.FC = () => {
   const totemBattleInfo = useDashboardTotemBattleInfo()
-  console.log({
-    totemBattleInfo
-  })
 
   return (
     <GappedFlex>
-      { elevationUtils.elevationOnly.map((elev) => (
+      { elevationUtils.elevationOnly.map((elev, index) => (
         <TotemBattleBreakdown
           key={elev}
           elevation={elev}
           title={elev}
-          totemInfos={totemBattleInfo[elevationUtils.toInt(elev)]}
+          totemInfos={totemBattleInfo[index]}
           userTotem={-1}
           fullWidth={false}
           multiElev

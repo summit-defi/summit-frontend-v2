@@ -33,6 +33,7 @@ import ElevationYieldBet from './ElevationYieldBet'
 import ElevationStakedBreakdown from './ElevationStakedBreakdown'
 import TotemHeaderButtonsRow from './TotemHeaderButtonsRow'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
+import MultiElevYieldBet from './MultiElevYieldBet'
 
 const HeaderCardsWrapper = styled(Flex)`
   justify-content: center;
@@ -61,11 +62,6 @@ const TotemHeader: React.FC = () => {
   const userTotem = useElevationTotem(elevationTabToElevation[elevationTab])
   const { account }: { account: string } = useWallet()
 
-  console.log({
-    userTotem
-  })
-
-
   return (
     <HeaderCardsWrapper>
       <HeaderWrapper flexDirection="column" alignItems="center" justifyContent="center">
@@ -75,6 +71,7 @@ const TotemHeader: React.FC = () => {
         { elevationTab === ElevationFarmTab.DASH && <ElevationStakedBreakdown/> }
         <ElevationTotemBattle/>
         { account != null && userTotem != null && elevationTab !== ElevationFarmTab.OASIS && <ElevationYieldBet/> }
+        { account != null && elevationTab === ElevationFarmTab.DASH && <MultiElevYieldBet/> }
         { account != null && userTotem != null && <ElevationWinnings/> }
       </HeaderWrapper>
     </HeaderCardsWrapper>
