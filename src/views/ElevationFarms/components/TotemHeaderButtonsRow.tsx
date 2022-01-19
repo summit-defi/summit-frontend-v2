@@ -1,5 +1,5 @@
 import React from 'react'
-import { Elevation, elevationUtils } from 'config/constants/types'
+import { Elevation, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import styled, { css } from 'styled-components'
 import { elevationPalette } from 'theme/colors'
 import { chunkArray, getBalanceNumber, getFormattedBigNumber, getFullDisplayBalance, groupByAndMap } from 'utils'
@@ -9,7 +9,7 @@ import chroma from 'chroma-js'
 import BigNumber from 'bignumber.js'
 import { clamp, orderBy } from 'lodash'
 import { useClaimElevation } from 'hooks/useClaim'
-import { useSelectedElevation, useIsElevationLockedUntilRollover, useElevationUserRoundInfo, useFarms, useElevationTotem, useElevationLocked, useSelectedElevationWinningTotem, useTotemSelectionPending } from 'state/hooks'
+import { useSelectedElevation, useIsElevationLockedUntilRollover, useElevationUserRoundInfo, useFarms, useElevationTotem, useElevationLocked, useSelectedElevationWinningTotem, useTotemSelectionPending, useElevationFarmsTab, useElevationWinningTotem } from 'state/hooks'
 import CardValue from 'views/Home/components/CardValue'
 import ContributionBreakdown from './ContributionBreakdown'
 import SummitButton from 'uikit/components/Button/SummitButton'
@@ -96,13 +96,14 @@ const StyledSpinner = styled(Spinner)`
 `
 
 const TotemHeaderButtonsRow: React.FC = () => {
-  const elevation = useSelectedElevation()
+  const elevationTab = useElevationFarmsTab()
+  const elevation = elevationTabToElevation[elevationTab]
   const userTotem = useElevationTotem(elevation)
   const elevationLockedUntilRollover = useIsElevationLockedUntilRollover(elevation)
   const totemSelectionPending = useTotemSelectionPending()
 
   const isElevationFarm = elevation !== Elevation.OASIS
-  const crownedTotem = useSelectedElevationWinningTotem()
+  const crownedTotem = useElevationWinningTotem(elevation)
   const { onPresentTotemWinnersModal, showTotemWinnersModalButton } = useTotemWinnersModal(elevation)
   const { onPresentSelectTotemModal } = useSelectTotemModal(elevation)
 
@@ -129,13 +130,15 @@ const TotemHeaderButtonsRow: React.FC = () => {
         </SummitIconButton>
       )}
       <HeaderTotemWrapper isLoading={totemSelectionPending}>
-        <ArtworkTotem
-          elevation={elevation}
-          totem={userTotem}
-          crowned={userTotem === crownedTotem}
-          desktopSize="180"
-          mobileSize="180"
-        />
+        { userTotem != null &&
+          <ArtworkTotem
+            elevation={elevation}
+            totem={userTotem}
+            crowned={userTotem === crownedTotem}
+            desktopSize="180"
+            mobileSize="180"
+          />
+        }
         {totemSelectionPending && <StyledSpinner className="spinner" />}
       </HeaderTotemWrapper>
       {isElevationFarm && userTotem != null && (

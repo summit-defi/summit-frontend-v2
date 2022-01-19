@@ -40,7 +40,7 @@ const ElevationAndUserVolumes: React.FC = () => {
           value={elevationTotalValue.toNumber()}
           prefix="$"
           decimals={2}
-          fontSize="24px"
+          fontSize="24"
           elevation={elevation}
         />
       </Flex>
@@ -52,7 +52,7 @@ const ElevationAndUserVolumes: React.FC = () => {
           value={rawUserStakedBalanceValue}
           prefix="$"
           decimals={2}
-          fontSize="26px"
+          fontSize="26"
           elevation={elevation}
         />
       </Flex>

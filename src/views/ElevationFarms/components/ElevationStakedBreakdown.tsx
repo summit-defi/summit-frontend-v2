@@ -4,7 +4,6 @@ import { getFormattedBigNumber } from 'utils'
 import { Flex, HighlightedText, Text } from 'uikit'
 import { useIsElevationLockedUntilRollover, useTotalValue } from 'state/hooks'
 import ElevationContributionBreakdown from './ElevationContributionBreakdown'
-import CardValue from 'views/Home/components/CardValue'
 
 const ElevationYieldBet: React.FC = () => {
   const elevTVL = {}

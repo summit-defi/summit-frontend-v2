@@ -46,12 +46,12 @@ const SummitStats = () => {
         </HighlightedText>
         <Row>
           <Text fontSize="14px">Circulating SUMMIT Supply</Text>
-          {summitSupply && <CardValue fontSize="14px" value={summitSupply} decimals={0} elevation={Elevation.OASIS} />}
+          {summitSupply && <CardValue fontSize="14" value={summitSupply} decimals={0} elevation={Elevation.OASIS} />}
         </Row>
         <Row>
           <Text fontSize="14px">Market Cap</Text>
           <CardValue
-            fontSize="14px"
+            fontSize="14"
             value={getBalanceNumber(marketCap)}
             decimals={0}
             prefix="$"
@@ -60,7 +60,7 @@ const SummitStats = () => {
         </Row>
         <Row>
           <Text fontSize="14px">Total SUMMIT Burned</Text>
-          <CardValue fontSize="14px" value={getBalanceNumber(burnedBalance)} decimals={0} elevation={Elevation.OASIS} />
+          <CardValue fontSize="14" value={getBalanceNumber(burnedBalance)} decimals={0} elevation={Elevation.OASIS} />
         </Row>
         <Row>
           <Text fontSize="14px">SUMMIT minted per second</Text>

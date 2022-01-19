@@ -93,7 +93,7 @@ const Home: React.FC = () => {
           value={totalValue.toNumber()}
           prefix="$"
           decimals={2}
-          fontSize="40px"
+          fontSize="40"
           elevation={Elevation.OASIS}
         />
       </Flex>
@@ -110,7 +110,7 @@ const Home: React.FC = () => {
         value={expeditionPotTotalValue}
         prefix="$"
         decimals={2}
-        fontSize="40px"
+        fontSize="40"
         gold
         elevation={Elevation.OASIS}
       />
@@ -121,7 +121,7 @@ const Home: React.FC = () => {
         value={expeditionDisbursedValue}
         prefix="$"
         decimals={2}
-        fontSize="26px"
+        fontSize="26"
         gold
         elevation={Elevation.OASIS}
       />

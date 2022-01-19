@@ -5,6 +5,7 @@ export const ForceElevationRetired = false
 export const BetaFeatures = true
 
 export const BN_ZERO = new BigNumber(0)
+export const RoundLockTime = 120
 
 export enum Elevation {
   OASIS = 'OASIS',

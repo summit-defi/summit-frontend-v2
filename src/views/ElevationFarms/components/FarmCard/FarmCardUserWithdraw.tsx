@@ -99,6 +99,7 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
         value={withdrawVal}
         balanceText="Deposited"
         disabled={disabled}
+        isLocked={elevationLocked}
         onSelectMax={handleSelectMaxWithdraw}
         onChange={handleChangeWithdraw}
         max={fullWithdrawBalance}

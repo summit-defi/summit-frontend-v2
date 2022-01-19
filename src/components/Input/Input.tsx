@@ -2,7 +2,7 @@ import React from 'react'
 import { Elevation, elevationUtils } from 'config/constants/types'
 import { darken } from 'polished'
 import styled, { css } from 'styled-components'
-import { HighlightedText } from 'uikit'
+import { HighlightedText, Lock } from 'uikit'
 
 export interface InputProps {
   endAdornment?: React.ReactNode
@@ -13,6 +13,7 @@ export interface InputProps {
   value: string
   elevation?: Elevation
   disabled?: boolean
+  isLocked?: boolean
 }
 
 const Input: React.FC<InputProps> = ({
@@ -24,13 +25,14 @@ const Input: React.FC<InputProps> = ({
   startAdornment,
   value,
   disabled = false,
+  isLocked = false,
 }) => {
   return (
-    <StyledInputWrapper disabled={disabled}>
+    <StyledInputWrapper disabled={disabled} isLocked={isLocked}>
       {!!startAdornment && startAdornment}
       <InputWrapper>
         <StyledInput
-          disabled={disabled}
+          disabled={disabled || isLocked}
           elevation={elevation}
           placeholder={placeholder}
           value={value}
@@ -39,11 +41,13 @@ const Input: React.FC<InputProps> = ({
         {!!tokenSymbol && <HighlightedText fontSize="12px">{tokenSymbol}</HighlightedText>}
       </InputWrapper>
       {!!endAdornment && endAdornment}
+      {isLocked && <StyledLock width="28px" />}
     </StyledInputWrapper>
   )
 }
 
-const StyledInputWrapper = styled.div<{ disabled: boolean }>`
+const StyledInputWrapper = styled.div<{ disabled: boolean, isLocked: boolean }>`
+  position: relative;
   align-items: center;
 
   background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
@@ -52,7 +56,7 @@ const StyledInputWrapper = styled.div<{ disabled: boolean }>`
   display: flex;
   height: 62px;
   padding: 0 ${(props) => props.theme.spacing[3]}px;
-  box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
+  box-shadow: ${({ theme, isLocked }) => isLocked ? 'none' : `inset 2px 2px 4px ${theme.colors.textShadow}`};
 
   ${({ disabled }) =>
     disabled &&
@@ -60,6 +64,26 @@ const StyledInputWrapper = styled.div<{ disabled: boolean }>`
       box-shadow: none;
       opacity: 0.5;
     `}
+
+  ${({ isLocked }) =>
+    isLocked &&
+    css`
+      filter: grayscale(1);
+      opacity: 0.5;
+    `}
+`
+
+const StyledLock = styled(Lock)`
+  position: absolute;
+  transform: rotate(20deg);
+  fill: white;
+  filter: drop-shadow(0px 0px 8px black) drop-shadow(0px 0px 2px black);
+  z-index: 4;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
 `
 
 const InputWrapper = styled.div`

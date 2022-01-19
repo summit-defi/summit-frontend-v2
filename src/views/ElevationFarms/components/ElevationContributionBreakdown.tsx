@@ -142,7 +142,7 @@ const ContributionComponent: React.FC<Contribution & ContFocused> = ({elevation,
     return <ElevationBar perc={perc} elevation={elevation} focused={focused}>
         <ElevationText monospace bold fontSize='12px'>{elevation}</ElevationText>
         { (focused == null || focused === elevation) &&
-            <ValueText monospace bold>{val != null ? val : `${perc}%`}</ValueText>
+            <ValueText monospace bold>{val != null ? val : `${perc.toFixed(1)}%`}</ValueText>
         }
     </ElevationBar>
 }

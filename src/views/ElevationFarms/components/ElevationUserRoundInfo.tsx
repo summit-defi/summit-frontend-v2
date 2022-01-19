@@ -93,7 +93,7 @@ const ElevationUserRoundInfo: React.FC = () => {
             Contributed
           </Text>
           <InfoItemValue>
-            <CardValue value={rawYieldContributed} decimals={3} elevation={elevation} fontSize="22px" />
+            <CardValue value={rawYieldContributed} decimals={3} elevation={elevation} fontSize="22" />
             <HighlightedText bold monospace mt="-8px" elevation={elevation}>
               {earnLabel}
             </HighlightedText>
@@ -106,7 +106,7 @@ const ElevationUserRoundInfo: React.FC = () => {
             (If Win)
           </Text>
           <InfoItemValue>
-            <CardValue value={rawPotentialWinnings} decimals={3} elevation={elevation} fontSize="22px" />
+            <CardValue value={rawPotentialWinnings} decimals={3} elevation={elevation} fontSize="22" />
             <HighlightedText bold monospace mt="-8px" elevation={elevation}>
               {earnLabel}
             </HighlightedText>
@@ -127,7 +127,7 @@ const ElevationUserRoundInfo: React.FC = () => {
             Winnings
           </Text>
           <InfoItemValue>
-            <CardValue value={rawClaimable} decimals={3} elevation={elevation} fontSize="22px" />
+            <CardValue value={rawClaimable} decimals={3} elevation={elevation} fontSize="22" />
             <HighlightedText bold monospace mt="-8px" elevation={elevation}>
               {earnLabel}
             </HighlightedText>

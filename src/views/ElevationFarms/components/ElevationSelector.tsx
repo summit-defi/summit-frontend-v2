@@ -37,7 +37,7 @@ const SelectorWrapper = styled(Flex)<{
   width: ${({ elevationsCount }) => buttonWidth * elevationsCount}px;
   border-radius: 16px;
   background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
-  box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
+  box-shadow: ${({ theme, isLocked }) => isLocked ? 'none' : `inset 2px 2px 4px ${theme.colors.textShadow}`};
   position: relative;
 
   ${({ vertical, elevationsCount }) =>

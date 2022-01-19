@@ -59,9 +59,9 @@ const ElevationWinnings: React.FC = () => {
             value={rawClaimable}
             decimals={3}
             elevation={elevation}
-            fontSize="18px"
+            fontSize="18"
             postfix='SUMMIT'
-            postfixFontSize='14px'
+            postfixFontSize='14'
           />
         </Flex>
         <SummitButton

@@ -123,6 +123,7 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
         value={depositVal}
         balanceText="Wallet"
         disabled={disabled}
+        isLocked={elevationLocked}
         onSelectMax={handleSelectMaxDeposit}
         onChange={handleChangeDeposit}
         max={fullDepositBalance}

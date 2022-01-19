@@ -15,6 +15,7 @@ interface TokenInputProps extends InputProps {
   depositFeeBP?: number
   withdrawalFee?: number
   disabled?: boolean
+  isLocked?: boolean
 }
 
 const TokenInput: React.FC<TokenInputProps> = ({
@@ -28,6 +29,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
   depositFeeBP = 0,
   withdrawalFee = 0,
   disabled = false,
+  isLocked = false,
 }) => {
   return (
     <StyledTokenInput>
@@ -38,11 +40,12 @@ const TokenInput: React.FC<TokenInputProps> = ({
         disabled={disabled}
         elevation={elevation}
         tokenSymbol={symbol}
+        isLocked={isLocked}
         endAdornment={
           <StyledTokenAdornmentWrapper>
             <StyledSpacer />
             <div>
-              <SummitButton elevation={elevation} disabled={disabled} padding="12px" onClick={onSelectMax}>
+              <SummitButton elevation={elevation} disabled={disabled || isLocked} padding="12px" onClick={onSelectMax}>
                 MAX
               </SummitButton>
             </div>

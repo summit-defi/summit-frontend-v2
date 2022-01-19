@@ -18,7 +18,7 @@ interface CardValueProps {
 const CardValue: React.FC<CardValueProps> = ({
   value,
   decimals,
-  fontSize = '40px',
+  fontSize = '40',
   prefix,
   postfix,
   isMultiplier,

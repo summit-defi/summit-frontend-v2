@@ -9,7 +9,7 @@ import {
   fetchExpeditionPublicDataAsync,
 } from './actions'
 import { State, Farm, Expedition, ElevationInfo, ExpeditionUserData, UserTokenData } from './types'
-import { Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired } from '../config/constants/types'
+import { Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired, RoundLockTime } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
   fetchElevationHelperInfoAsync,
@@ -73,6 +73,14 @@ export const useCurrentTimestamp = (): number => {
       setTimestamp(Math.floor(Date.now() / 1000))
     }, 1000)
     return () => clearInterval(interval)
+  }, [])
+  return timestamp
+}
+
+export const useCurrentTimestampOnce = (): number => {
+  const [timestamp, setTimestamp] = useState<number>(Math.floor(Date.now() / 1000))
+  useEffect(() => {
+    setTimestamp(Math.floor(Date.now() / 1000))
   }, [])
   return timestamp
 }
@@ -406,7 +414,7 @@ export const useElevationRoundTimeRemaining = (elevation: Elevation): number | n
 export const useIsElevationLockedUntilRollover = (elevation: Elevation): boolean => {
   const timeRemaining = useElevationRoundTimeRemaining(elevation)
   return useMemo(
-    () => timeRemaining <= 60 && elevation !== Elevation.OASIS,
+    () => timeRemaining <= RoundLockTime && elevation !== Elevation.OASIS,
     [timeRemaining, elevation],
   )
 }

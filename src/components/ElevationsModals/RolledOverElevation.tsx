@@ -95,8 +95,8 @@ export const RolledOverElevation: React.FC<Props> = ({ elevation, winningTotem, 
           decimals={2}
           postfix="SUMMIT"
           elevation={elevation}
-          fontSize="16px"
-          postfixFontSize="14px"
+          fontSize="16"
+          postfixFontSize="14"
         />
         <br />
         <br />
@@ -110,8 +110,8 @@ export const RolledOverElevation: React.FC<Props> = ({ elevation, winningTotem, 
         decimals={2}
         postfix='MIM'
         elevation={elevation}
-        fontSize="32px"
-        postfixFontSize="24px"
+        fontSize="32"
+        postfixFontSize="24"
         gold
       />
       { elevation !== Elevation.EXPEDITION &&
@@ -121,8 +121,8 @@ export const RolledOverElevation: React.FC<Props> = ({ elevation, winningTotem, 
         decimals={1}
         postfix="MULTIPLIER"
         elevation={elevation}
-        fontSize="24px"
-        postfixFontSize="14px"
+        fontSize="24"
+        postfixFontSize="14"
         gold
       />
       }

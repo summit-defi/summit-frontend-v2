@@ -61,36 +61,13 @@ const TotemHeader: React.FC = () => {
   const userTotem = useElevationTotem(elevationTabToElevation[elevationTab])
   const { account }: { account: string } = useWallet()
 
+  console.log({
+    userTotem
+  })
+
 
   return (
     <HeaderCardsWrapper>
-      {/* <Flex flex="1" flexDirection="column" alignItems="center" alignSelf="stretch" justifyContent="center">
-        <HeaderWrapper flexDirection="column" alignItems="center" justifyContent="center">
-          <ElevationPuck elevation={elevation}>THE {elevation}</ElevationPuck>
-
-          <ElevationInfo />
-
-          <ElevationIntroduction />
-            {account == null && <>
-                  <UnlockButton elevation={elevation} />
-                  <br/>
-                  <br/>
-            </>}
-            {account != null && userTotem == null && (
-                <>
-                    <SummitButton elevation={elevation} onClick={onPresentSelectTotemModal}>
-                        {elevation === Elevation.OASIS ? 'CONFIRM OTTER' : `CHOOSE YOUR TOTEM`}
-                    </SummitButton>
-                    <br />
-                    <br />
-                </>
-          )}
-          <ElevationTimerAndRollover />
-
-          {userTotem != null && !elevationLocked && <FarmTypeSelector />}
-        </HeaderWrapper>
-      </Flex> */}
-      {/* {userTotem != null && ( */}
       <HeaderWrapper flexDirection="column" alignItems="center" justifyContent="center">
         <TotemHeaderButtonsRow/>
         <ElevationIntroduction/>

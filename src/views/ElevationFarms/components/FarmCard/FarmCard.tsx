@@ -9,7 +9,7 @@ import { useElevationTotem, usePricesPerToken, useSingleFarmSelected } from 'sta
 import { NavLink } from 'react-router-dom'
 import FarmCardUserSectionExpander from './FarmCardUserSectionExpander'
 import CardValue from 'views/Home/components/CardValue'
-import { getBalanceNumber, nFormatter } from 'utils'
+import { capitalizeFirstLetter, getBalanceNumber, nFormatter } from 'utils'
 import Totem from '../Totem'
 import ElevationContributionBreakdown from '../ElevationContributionBreakdown'
 
@@ -149,7 +149,7 @@ const FarmCard: React.FC<FarmCardProps> = ({
     stakedBalance,
     claimable,
     yieldContributed,
-  } = farm.elevations[elevationTab]
+  } = farm.elevations[elevationTab] || {}
 
   const elevation = elevationTabToElevation[elevationTab]
 
@@ -229,45 +229,13 @@ const FarmCard: React.FC<FarmCardProps> = ({
               </MultiplierTag>
             </Flex>
           </SymbolIconFlex>
-          {/* <FlexInfoItem>
-            <Text bold small>
-              WINNINGS
-            </Text>
-            <InfoItemValue>
-              <CardValue
-                value={rawEarned}
-                decimals={3}
-                elevation={elevation}
-                fontSize="22px"
-              />
-              <HighlightedText bold monospace mt="-8px" elevation={elevation}>
-                {earnLabel}
-              </HighlightedText>
-            </InfoItemValue>
-          </FlexInfoItem> */}
-
-          {/* <FlexMobileLineBreak />
-          {isElevationFarm && (
-            <FlexInfoItem>
-              <Text bold small>
-                Yield Contributed
-              </Text>
-              <YieldContributedWrapper>
-                <Totem elevation={elevation} totem={userTotem} pressable={false} size="36" navSize="36" margins="0" />
-                <InfoItemValue>
-                  <CardValue value={rawYieldContribution} decimals={3} elevation={elevation} fontSize="22px" />
-                  <HighlightedText bold monospace mt="-8px" elevation={elevation}>
-                    {earnLabel}
-                  </HighlightedText>
-                </InfoItemValue>
-              </YieldContributedWrapper>
-            </FlexInfoItem>
-          )} */}
 
           <FlexInfoItem style={{ flex: 3 }}>
             <Flex alignItems='center' height='18px'>
-              <Text small mr='4px'>Deposited</Text>
-              <CardValue value={userStakedBalance.toNumber()} prefix='$' decimals={2} elevation={Elevation.OASIS} fontSize="18px" />
+              <Text small mr='4px'>{elevation != null ? `${capitalizeFirstLetter(elevation)} ` : ''}Deposited:</Text>
+              <Flex mb='2px'>
+                <CardValue value={userStakedBalance.toNumber()} prefix='$' decimals={2} elevation={Elevation.OASIS} fontSize="18" />
+              </Flex>
             </Flex>
             <InfoItemValue width='100%'>
               <ElevationContributionBreakdown
@@ -277,8 +245,6 @@ const FarmCard: React.FC<FarmCardProps> = ({
               />
             </InfoItemValue>
           </FlexInfoItem>
-
-          {/* { isElevationFarm && <FlexMobileLineBreak /> } */}
 
           <FlexInfoItem>
             <Text small>APY</Text>
@@ -302,16 +268,14 @@ const FarmCard: React.FC<FarmCardProps> = ({
         </FarmNumericalInfoFlex>
       </PressableFlex>
 
-      { elevationTab !== ElevationFarmTab.DASH &&
-        <FarmCardUserSectionExpander
-          isExpanded={expanded}
-          ethereum={ethereum}
-          elevation={elevation}
-          farm={farm}
-          tokenInfo={tokenInfo}
-          account={account}
-        />
-      }
+      <FarmCardUserSectionExpander
+        isExpanded={expanded}
+        ethereum={ethereum}
+        elevation={elevation}
+        farm={farm}
+        tokenInfo={tokenInfo}
+        account={account}
+      />
     </FCard>
   )
 }

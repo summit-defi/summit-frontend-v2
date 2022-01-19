@@ -35,3 +35,7 @@ export const getTimeDenom = (index: number): string => {
       return 'S'
   }
 }
+export const timestampToDate = (timestamp: number): string => {
+  const date = new Date(timestamp * 1000)
+  return date.toLocaleDateString('en', { month: 'short', day: 'numeric' }).toUpperCase()
+}

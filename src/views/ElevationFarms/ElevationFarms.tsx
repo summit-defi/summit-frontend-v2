@@ -88,11 +88,19 @@ const ElevationFarms: React.FC = () => {
           )}
           <FlexLayout>
             <Route path={`${path}/`}>
-              { stakedFarms.length > 0 && <Text margin='0px auto 6px 24px' fontSize='12px' bold monospace>YOUR FARMS</Text> }
-              {farmsList(stakedFarms)}
+              { stakedFarms.length > 0 && 
+                <>
+                  <Text margin='0px auto 6px 24px' fontSize='12px' bold monospace>YOUR FARMS</Text>
+                  <Flex flexDirection='column' width='100%'>
+                    {farmsList(stakedFarms)}
+                  </Flex>
+                </>
+              }
 
               { stakedFarms.length > 0 && <Text margin='12px auto 6px 24px' fontSize='12px' bold monospace>ALL FARMS</Text> }
-              {farmsList(unstakedFarms)}
+              <Flex flexDirection='column' width='100%'>
+                {farmsList(unstakedFarms)}
+              </Flex>
             </Route>
           </FlexLayout>
         </div> :

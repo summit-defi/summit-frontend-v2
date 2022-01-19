@@ -55,9 +55,9 @@ const ElevationYieldBet: React.FC = () => {
             value={rawYieldContributed}
             decimals={3}
             elevation={elevation}
-            fontSize="18px"
+            fontSize="18"
             postfix='SUMMIT'
-            postfixFontSize='14px'
+            postfixFontSize='14'
           />
         </Flex>
         <Flex flexDirection='column' justifyContent='center' alignItems='center'>
@@ -66,9 +66,9 @@ const ElevationYieldBet: React.FC = () => {
             value={rawPotentialWinnings}
             decimals={3}
             elevation={elevation}
-            fontSize="18px"
+            fontSize="18"
             postfix='SUMMIT'
-            postfixFontSize='14px'
+            postfixFontSize='14'
           />
         </Flex>
       </Flex>

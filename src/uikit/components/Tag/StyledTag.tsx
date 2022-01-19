@@ -11,14 +11,14 @@ const getThemeTextColor = ({ outline, variant = 'primary', theme }: ThemedProps)
 
 export const StyledTag = styled.div<ThemedProps>`
   align-items: center;
-  background-color: ${({ outline, theme, elevation, variant = 'primary' }) =>
+  background-color: ${({ outline, theme, elevation }) =>
     // eslint-disable-next-line no-nested-ternary
-    outline ? 'transparent' : elevation ? theme.colors[elevation] : getColor(variant, theme)};
+    outline ? 'transparent' : theme.colors[elevation || 'BASE']};
   border: 2px solid
-    ${({ variant = 'primary', elevation, theme }) => (elevation ? theme.colors[elevation] : getColor(variant, theme))};
+    ${({ elevation, theme }) => theme.colors[elevation || 'BASE']};
   border-radius: 16px;
   color: ${({ elevation, theme, outline, variant }) =>
-    elevation && outline ? theme.colors[elevation] : getThemeTextColor({ outline, variant, theme })};
+    outline ? theme.colors[elevation || 'BASE'] : getThemeTextColor({ outline, variant, theme })};
   display: inline-flex;
   font-size: 12px;
   font-weight: bold;

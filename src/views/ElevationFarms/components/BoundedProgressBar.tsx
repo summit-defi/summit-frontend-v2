@@ -88,6 +88,7 @@ const Wrapper = styled(Flex)<{ single: boolean }>`
     align-items: center;
     justify-content: center;
     flex: ${({ single }) => single ? 0 : 1};
+    max-width: 350px;
 `
 
 const StyledTriangleGrowIcon = styled(TriangleGrowIcon)`
