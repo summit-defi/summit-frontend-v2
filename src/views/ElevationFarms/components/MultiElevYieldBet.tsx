@@ -37,7 +37,7 @@ const MultiElevYieldBet: React.FC = () => {
       </Flex>
 
       <ContributionBreakdown
-        title='YIELD BET BY ELEVATION:'
+        title='YIELD BET BREAKDOWN:'
         contributions={elevYieldsBreakdown}
       />
     </Flex>

@@ -2,7 +2,7 @@ import { Elevation } from 'config/constants'
 import React from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
-import { Flex, Text, TokenSymbolImage } from 'uikit'
+import { ElevationImage, Flex, Text, TokenSymbolImage } from 'uikit'
 
 const BarHeight = 50
 
@@ -107,6 +107,7 @@ const BarWrapper = styled(Flex)`
 
 interface Contribution {
     token?: boolean
+    elevation?: boolean
     title?: string
     val?: string
     html?: JSX.Element
@@ -114,10 +115,11 @@ interface Contribution {
     perc: number
 }
 
-const ContributionComponent: React.FC<Contribution> = ({token = false, title, val, html, perc}) => {
+const ContributionComponent: React.FC<Contribution> = ({token = false, elevation = false, title, val, html, perc}) => {
     return <ContributionWrapper perc={perc}>
         {title != null && <TitleWrapper>
             { token && <TokenSymbolImage symbol={title} width={36} height={36} />}
+            { elevation && <ElevationImage elevation={title} width={36} height={36} />}
             <Text monospace lineHeight='14px' fontSize='12px' textAlign='center'>{title}</Text>
         </TitleWrapper>}
         <VerticalBar perc={100}/>

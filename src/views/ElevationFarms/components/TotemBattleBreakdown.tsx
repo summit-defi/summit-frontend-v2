@@ -38,7 +38,7 @@ const TotemMultText = styled(Text)<{ top: boolean }>`
   `}
 `
 
-const TotemResultsWrapper = styled(Flex)<{ elevation: Elevation }>`
+const TotemResultsWrapper = styled(Flex)<{ elevation: Elevation, multiElev: boolean }>`
   align-items: center;
   justify-content: center;
   height: 100%;
@@ -52,6 +52,8 @@ const TotemResultsWrapper = styled(Flex)<{ elevation: Elevation }>`
 
   ${({ theme }) => theme.mediaQueries.nav} {
     gap: ${({ elevation }) => elevation === Elevation.SUMMIT ? 0 : 20}px;
+    padding-left: ${({ multiElev}) => multiElev ? 32 : 6}px;
+    padding-right: ${({ multiElev}) => multiElev ? 32 : 6}px; 
   }
 `
 
@@ -160,7 +162,7 @@ const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, seco
   return (
     <TotemBattleAreaWrapper fullWidth={fullWidth} secondRow={secondRow}>
       <ExpectedMultText invis={secondRow} bold monospace>{expectedMultiplier}x</ExpectedMultText>
-      <TotemResultsWrapper elevation={elevation}>
+      <TotemResultsWrapper elevation={elevation} multiElev={multiElev}>
         <RulerLine elevation={elevation} i={0}/>
         <RulerLine elevation={elevation} i={1}/>
         <DashedLine leftClipped={secondRow} rightClipped={elevation === Elevation.SUMMIT && !secondRow && isMobile && !multiElev}/>

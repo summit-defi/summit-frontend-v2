@@ -34,7 +34,7 @@ const HeaderCircleBackground = styled.div`
 export const HeaderArtwork = styled.div<{ elevation: string }>`
   position: relative;
   background-image: ${({ elevation }) =>
-    `url("/images/summit/elevationArtwork${elevationUtils.isElevation(elevation) ? elevation : 'BASE'}.jpg")`};
+    `url("/images/summit/elevationArtwork${elevation || 'BASE'}.jpg")`};
   filter: drop-shadow(3px 3px 6px black);
   border-radius: ${PuckSize}px;
   background-size: cover;

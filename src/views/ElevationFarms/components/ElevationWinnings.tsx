@@ -26,6 +26,11 @@ const ElevationWinnings: React.FC = () => {
   const { onClaimElevation, claimPending } = useClaimElevation(elevation)
   const nothingToClaim = !claimable || claimable.isEqualTo(0)
 
+  const handleClaimElevation = () => {
+    if (nothingToClaim || elevationLocked || claimPending) return
+    onClaimElevation()
+  }
+
   const farmsWithClaimable = farms
     .map((farm) => ({
       symbol: farm.symbol,
@@ -70,7 +75,7 @@ const ElevationWinnings: React.FC = () => {
           isLoading={claimPending}
           disabled={nothingToClaim}
           width='200px'
-          onClick={() => onClaimElevation()}
+          onClick={handleClaimElevation}
         >
           CLAIM {elevation}
           <br />

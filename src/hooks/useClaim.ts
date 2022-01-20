@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useDispatch } from 'react-redux'
 import { fetchFarmUserDataAsync } from 'state/actions'
-import { claimPool, claimElevation } from 'utils'
+import { claimPool, claimElevation, capitalizeFirstLetter } from 'utils'
 import { useCartographer } from './useContract'
 import useToast from './useToast'
 import { Elevation, elevationUtils } from 'config/constants/types'
@@ -56,9 +56,9 @@ export const useClaimElevation = (elevation: Elevation) => {
 
         await claimElevation(cartographer, elevation, account)
 
-        toastSuccess(`Winnings Claimed`)
+        toastSuccess(`${capitalizeFirstLetter(elevation)} Claimed`)
       } catch (error) {
-        toastError(`Error Claiming Winnings`, (error as Error).message)
+        toastError(`Error Claiming ${capitalizeFirstLetter(elevation)}`, (error as Error).message)
       } finally {
         dispatch(fetchFarmUserDataAsync(account))
         dispatch(fetchTokensUserDataAsync(account))

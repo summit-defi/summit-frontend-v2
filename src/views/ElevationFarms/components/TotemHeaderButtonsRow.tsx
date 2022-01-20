@@ -140,8 +140,8 @@ const TotemHeaderButtonsRow: React.FC = () => {
           />
           {totemSelectionPending && <StyledSpinner className="spinner" />}
         </HeaderTotemWrapper> :
-        <ElevationPuck elevation='BASE' top={0}>
-          <Text bold fontSize='24px'>
+        <ElevationPuck elevation='BLUE' top={0}>
+          <Text bold fontSize='20px' color='white'>
             FARMING
             <br/>
             DASHBOARD

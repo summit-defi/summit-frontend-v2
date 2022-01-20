@@ -136,6 +136,7 @@ export const useMultiElevYieldInfo = () => {
 
       const elevYieldsBreakdown = elevYieldsRaw.map((rawYield, index) => ({
         title: rawYield.elev,
+        elevation: true,
         key: elevationUtils.toInt(rawYield.elev),
         perc: elevYieldsRaw[index].yieldContributed.times(100).div(totalYieldContributed).toNumber(),
         val: `${getFormattedBigNumber(elevYieldsRaw[index].yieldContributed)} SUMMIT`,
@@ -150,6 +151,63 @@ export const useMultiElevYieldInfo = () => {
     [elevationData]
   )
 }
+
+export const useAllElevationsClaimable = () => {
+  const elevationData = useSelector((state: State) => state.farms.elevationData) 
+  return useMemo(
+    () => {
+      const elevationsClaimable = elevationUtils.all
+        .map((elevation) => ({
+          elevation,
+          claimable: (elevationData[elevationUtils.toInt(elevation)]?.claimable || BN_ZERO) as BigNumber
+        }))
+        .filter((rawClaimable) => rawClaimable.claimable.isGreaterThan(0))
+
+      const totalClaimable = elevationsClaimable
+        .reduce((acc, elevClaimable) => acc.plus(elevClaimable.claimable), BN_ZERO)
+
+      const claimableBreakdown = elevationsClaimable.map((rawClaimable, index) => ({
+        title: rawClaimable.elevation,
+        elevation: true,
+        key: elevationUtils.toInt(rawClaimable.elevation),
+        perc: elevationsClaimable[index].claimable.times(100).div(totalClaimable).toNumber(),
+        val: `${getFormattedBigNumber(elevationsClaimable[index].claimable)} SUMMIT`,
+      }))
+
+      return {
+        elevationsClaimable,
+        totalClaimable,
+        claimableBreakdown,
+      }
+    },
+    [elevationData]
+  )
+}
+
+export const useMultiElevStaked = () => {
+  const { totalTVL, elevTVL } = useUserTVLs()
+  return useMemo(
+    () => {
+      const tvlContributions = Object.entries(elevTVL)
+        .filter(([elevation, tvl]) => tvl.isGreaterThan(0))
+        .map(([elevation, tvl]) => ({
+          title: elevation,
+          elevation: true,
+          key: elevationUtils.toInt(elevation as Elevation),
+          perc: tvl.times(100).div(totalTVL).toNumber(),
+          val: `$${tvl.toFixed(2)}`,
+        }))
+
+      return {
+        totalTVL,
+        tvlContributions,
+      }
+    },
+    [totalTVL, elevTVL]
+  )
+}
+
+
 
 export const useElevationsStaked = () => {
   const oasisStaked = useSelector((state: State) => state.farms.elevationData[0])
@@ -246,6 +304,41 @@ export const useTotalValue = (elevation?: Elevation): BigNumber => {
         return accumValue.plus((crossElevSupplyRaw || new BigNumber(0)).div(new BigNumber(10).pow(farm.decimals || 18)).times(pricesPerToken != null && pricesPerToken[farm.symbol] ? pricesPerToken[farm.symbol] : new BigNumber(1)))
       }, new BigNumber(0)),
     [farms, pricesPerToken, elevation]
+  )
+}
+
+export const useUserTVLs = () => {
+  const farms = useFarms()
+  const pricesPerToken = usePricesPerToken()
+
+  return useMemo(
+    () => {
+      let totalTVL = BN_ZERO
+      const elevTVL = {
+        [Elevation.OASIS]: BN_ZERO,
+        [Elevation.PLAINS]: BN_ZERO,
+        [Elevation.MESA]: BN_ZERO,
+        [Elevation.SUMMIT]: BN_ZERO,
+      }
+
+      farms.forEach((farm) => {
+        const tokenPrice = pricesPerToken != null && pricesPerToken[farm.symbol] ? pricesPerToken[farm.symbol] : new BigNumber(1)
+        const bnDecimals = new BigNumber(10).pow(farm.decimals || 18)
+        elevationUtils.all.forEach((elevation) => {
+          const supply: BigNumber = farm.elevations[elevation]?.supply || BN_ZERO
+          if (supply.isEqualTo(0)) return
+          const value = supply.div(bnDecimals).times(tokenPrice)
+          totalTVL = totalTVL.plus(value)
+          elevTVL[elevation] = elevTVL[elevation].plus(value)
+        })
+      })
+
+      return {
+        totalTVL,
+        elevTVL,
+      }
+    },
+    [farms, pricesPerToken]
   )
 }
 
