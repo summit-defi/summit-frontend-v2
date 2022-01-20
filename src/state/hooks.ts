@@ -100,17 +100,18 @@ export const useElevationUserRoundInfo = (elevation: Elevation) => {
 }
 export const useDashboardTotemBattleInfo = () => {
   const elevationData = useSelector((state: State) => state.farms.elevationData) 
+  const userTotems = useSelector((state: State) => state.summitEcosystem.totems)
   return useMemo(
-    () => {
-      return elevationUtils.elevationOnly.map((elev) => {
-        const userTotem = 0
+    () => elevationUtils.elevationOnly
+      .map((elev) => {
+        const userTotem = userTotems[elevationUtils.toInt(elev)]
+        if (userTotem == null) return []
         return [{
           totem: userTotem,
           mult: elevationData[elevationUtils.toInt(elev)]?.totemMultipliers[userTotem] || 0
         }]
-      })
-    },
-    [elevationData]
+      }),
+    [elevationData, userTotems]
   )
 }
 

@@ -175,7 +175,7 @@ export const elevationUtils = {
     if (totem == null) return 'UNSELECTED'
     return ElevationTotemNames[elevationTabToElevation[tab]][totem].split(' ').join(asset ? '_' : ' ')
   },
-  getElevationTotemName: (elevation: Elevation, totem: number, asset = true) => {
+  getElevationTotemName: (elevation: Elevation, totem: number | null, asset = true) => {
     if (totem == null) return 'UNSELECTED'
     return ElevationTotemNames[elevation][totem].split(' ').join(asset ? '_' : ' ')
   },

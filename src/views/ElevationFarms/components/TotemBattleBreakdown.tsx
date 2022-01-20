@@ -230,6 +230,26 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
   const { isXl } = useMatchBreakpoints();
   const isMobile = isXl === false;
 
+  if (totemInfos.length === 0) return (
+    <TotemBreakdownWrapper fullWidth={fullWidth} multiElev={multiElev}>
+      { title != null && <Text bold monospace>{title}</Text> }
+      <TotemBattleArea
+        fullWidth={fullWidth}
+        elevation={elevation}
+        secondRow={false}
+        isMobile={isMobile}
+        multiElev={multiElev}
+      >
+        <TotemBattleResult
+          totemInfo={{ totem: null, mult: elevationUtils.totemCount(elevation) }}
+          elevation={elevation}
+          color={colorGradient[0]}
+          selected={false}
+        />
+      </TotemBattleArea>
+    </TotemBreakdownWrapper>
+  )
+
   const chunkedTotems = chunk(totemInfos, isMobile ? 5 : 10)
   return (
     <>

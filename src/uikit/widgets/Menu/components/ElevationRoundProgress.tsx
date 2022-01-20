@@ -116,7 +116,7 @@ const ElevationRoundProgress: React.FC = () => {
             if (roundTimeRemaining == null) return ''
             if (roundTimeRemaining === 0) return 'FINALIZING ROUND'
             if (roundTimeRemaining <= 120) {
-                return `ROUND LOCKED - ${getTimeRemainingText(roundTimeRemaining)}`
+                return `LOCKED, FINALIZING IN: ${getTimeRemainingText(roundTimeRemaining)}`
             }
         
             return getTimeRemainingText(roundTimeRemaining - 120)
@@ -129,11 +129,15 @@ const ElevationRoundProgress: React.FC = () => {
             const pill = clamp(((7200 - 120) - (roundTimeRemaining - 120)) / (72 - 1.2), 0, 100)
             return {
                 pill,
-                text: roundTimeRemaining === 0 ? 50 : pill
+                text: roundTimeRemaining <= 120 ? 50 : pill
             }
         },
         [roundTimeRemaining]
     )
+
+    console.log({
+        perc: perc()
+    })
 
     return (
         <RoundProgressBar greyed={elevationTab === ElevationFarmTab.OASIS}>

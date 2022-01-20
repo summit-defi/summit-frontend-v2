@@ -1,32 +1,13 @@
-import React, { useCallback, useState } from 'react'
+import React, { memo } from 'react'
 import styled from 'styled-components'
-import { Elevation, ElevationFarmTab, elevationTabToElevation, elevationUtils } from 'config/constants/types'
-import { ElevationPuck, Flex, Text } from 'uikit'
+import { ElevationFarmTab, elevationTabToElevation } from 'config/constants/types'
+import { Flex } from 'uikit'
 import {
   useElevationFarmsTab,
-  useElevationLocked,
   useElevationTotem,
-  useIsElevationLockedUntilRollover,
-  useMediaQuery,
-  useSelectedElevation,
-  useSelectedElevationWinningTotem,
 } from 'state/hooks'
-import ElevationInfo from './ElevationInfo'
-import ElevationTimerAndRollover from './ElevationTimerAndRollover'
 import ElevationIntroduction from './ElevationIntroduction'
-import ArtworkTotem from './ArtworkTotem'
-import SummitIconButton from 'uikit/components/Button/SummitIconButton'
-import useTotemWinnersModal from 'uikit/widgets/TotemWinnersModal/useTotemWinnersModal'
-import useSelectTotemModal from 'uikit/widgets/SelectTotemModal/useSelectTotemModal'
-import SummitButton from 'uikit/components/Button/SummitButton'
-import FarmTypeSelector from './FarmTypeSelector'
-import ElevationUserRoundInfo from './ElevationUserRoundInfo'
-import { MobileHeaderCardSelector, MobileSelectedCard } from './HeaderCards/MobileHeaderCardSelector'
 import UnlockButton from 'components/UnlockButton'
-import BoundedProgressBar from './BoundedProgressBar'
-import ContributionBreakdown from './ContributionBreakdown'
-import TotemBattleBreakdown from './TotemBattleBreakdown'
-import ElevationContributionBreakdown from './ElevationContributionBreakdown'
 import ElevationWinnings from './ElevationWinnings'
 import ElevationTotemBattle from './ElevationTotemBattle'
 import ElevationYieldBet from './ElevationYieldBet'
@@ -60,9 +41,39 @@ const HeaderWrapper = styled(Flex)`
   gap: 24px;
 `
 
-const TotemHeader: React.FC = () => {
+const ElevSpecificSection = memo(() => {
+  const elevationTab = useElevationFarmsTab()
+  return (
+    <>
+      { elevationTab !== ElevationFarmTab.OASIS && <ElevationYieldBet/> }
+      <ElevationWinnings/>
+    </>
+  )
+})
+
+const MultiElevSection = memo(() => (
+  <>
+    <MultiElevYieldBet/>
+    <MultiElevStaked/>
+    <MultiElevWinningsAndClaim/>
+  </>
+))
+
+const TotemHeaderAccountSection = memo(() => {
   const elevationTab = useElevationFarmsTab()
   const userTotem = useElevationTotem(elevationTabToElevation[elevationTab])
+
+  return (
+    <>
+      <ElevationTotemBattle/>
+      { userTotem != null && <ElevSpecificSection/> }
+      { elevationTab === ElevationFarmTab.DASH && <MultiElevSection/> }
+    </>
+  )
+})
+
+const TotemHeader: React.FC = () => {
+  const elevationTab = useElevationFarmsTab()
   const { account }: { account: string } = useWallet()
 
   return (
@@ -70,13 +81,10 @@ const TotemHeader: React.FC = () => {
       <HeaderWrapper flexDirection="column" alignItems="center" justifyContent="center">
         <TotemHeaderButtonsRow/>
         <ElevationIntroduction/>
-        {account == null && <UnlockButton elevation={elevationTab} /> }
-        <ElevationTotemBattle/>
-        { account != null && userTotem != null && elevationTab !== ElevationFarmTab.OASIS && <ElevationYieldBet/> }
-        { account != null && elevationTab === ElevationFarmTab.DASH && <MultiElevYieldBet/> }
-        { elevationTab === ElevationFarmTab.DASH && <MultiElevStaked/> }
-        { account != null && userTotem != null && <ElevationWinnings/> }
-        { elevationTab === ElevationFarmTab.DASH && <MultiElevWinningsAndClaim/> }
+        { account == null ?
+          <UnlockButton elevation={elevationTab} /> :
+          <TotemHeaderAccountSection/>
+        }
       </HeaderWrapper>
     </HeaderCardsWrapper>
   )
