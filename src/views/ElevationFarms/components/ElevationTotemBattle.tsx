@@ -1,6 +1,6 @@
 import React from 'react'
 import { Elevation, ElevationFarmTab, elevationTabToElevation, elevationUtils } from 'config/constants/types'
-import { Flex } from 'uikit'
+import { Flex, Text } from 'uikit'
 import { useElevationUserRoundInfo, useElevationTotem, useElevationFarmsTab, useDashboardTotemBattleInfo } from 'state/hooks'
 import TotemBattleBreakdown from './TotemBattleBreakdown'
 import styled from 'styled-components'
@@ -11,23 +11,56 @@ const GappedFlex = styled(Flex)`
   align-items: center;
 `
 
+const MultiElevBattleText = styled(Text)`
+  text-align: center;
+  width: 100%;
+  
+  ${({ theme }) => theme.mediaQueries.nav} {
+    width: 150px;
+  }
+`
+
+const MobileVerticalFlex = styled(Flex)`
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+
+  ${({ theme }) => theme.mediaQueries.nav} {
+    flex-direction: row;
+  }
+`
+
+const DesktopOnlyBreak = styled.br`
+  display: none;
+  ${({ theme }) => theme.mediaQueries.nav} {
+    display: inherit;
+  }
+`
+
 const AllElevationsTotemBattles: React.FC = () => {
   const totemBattleInfo = useDashboardTotemBattleInfo()
 
   return (
-    <GappedFlex>
-      { elevationUtils.elevationOnly.map((elev, index) => (
-        <TotemBattleBreakdown
-          key={elev}
-          elevation={elev}
-          title={elev}
-          totemInfos={totemBattleInfo[index]}
-          userTotem={-1}
-          fullWidth={false}
-          multiElev
-        />
-      ))}
-    </GappedFlex>
+    <MobileVerticalFlex>
+      <MultiElevBattleText bold monospace>
+        {'YOUR TOTEMS '}
+        <DesktopOnlyBreak/>
+        {'IN BATTLE '}
+      </MultiElevBattleText>
+      <GappedFlex>
+        { elevationUtils.elevationOnly.map((elev, index) => (
+          <TotemBattleBreakdown
+            key={elev}
+            elevation={elev}
+            totemInfos={totemBattleInfo[index]}
+            userTotem={-1}
+            fullWidth={false}
+            multiElev
+          />
+        ))}
+      </GappedFlex>
+    </MobileVerticalFlex>
   )
 }
 

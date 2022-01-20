@@ -18,7 +18,7 @@ const TotemBattleAreaWrapper = styled(Flex)<{ fullWidth: boolean, secondRow: boo
   justify-content: center;
   position: relative;
   height: ${GameAreaHeight}px;
-  margin-top: ${({ secondRow }) => secondRow ? -15 : 15}px;
+  margin-top: ${({ secondRow }) => secondRow ? -31 : 15}px;
   width: ${({ fullWidth }) => fullWidth ? '100%' : 'auto'};
 `
 
@@ -85,12 +85,12 @@ const TotemScale = styled.div<{ scale: number }>`
   transform-origin: center;
 `
 
-const TotemBreakdownWrapper = styled.div<{ fullWidth: boolean }>`
+const TotemBreakdownWrapper = styled.div<{ fullWidth: boolean, multiElev: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 32px;
+  margin-bottom: ${({ multiElev }) => multiElev ? 0 : 24}px;
   width: ${({ fullWidth }) => fullWidth ? '100%' : 'auto'};
 `
 
@@ -234,7 +234,7 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
   return (
     <>
     { chunkedTotems.map((totems, chunkIndex) =>
-      <TotemBreakdownWrapper fullWidth={fullWidth} key={totems[0].totem}>
+      <TotemBreakdownWrapper fullWidth={fullWidth} key={totems[0].totem} multiElev={multiElev}>
         { title != null && chunkIndex === 0 && <Text bold monospace>{title}</Text> }
         <TotemBattleArea
           fullWidth={fullWidth}

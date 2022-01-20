@@ -15,7 +15,6 @@ const FilterRowFlex = styled(Flex)`
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 12px;
 `
 
 const FarmFilterRow: React.FC = () => {

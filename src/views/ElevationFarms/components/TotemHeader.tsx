@@ -50,12 +50,14 @@ const HeaderWrapper = styled(Flex)`
   z-index: 10;
   padding: 16px;
   padding-top: 112px;
+  padding-bottom: 24px;
   margin-top: 124px;
   background-color: ${({ theme }) => theme.colors.background};
   border-radius: 4px;
   box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
   width: 100%;
   height: 100%;
+  gap: 24px;
 `
 
 const TotemHeader: React.FC = () => {
@@ -69,10 +71,10 @@ const TotemHeader: React.FC = () => {
         <TotemHeaderButtonsRow/>
         <ElevationIntroduction/>
         {account == null && <UnlockButton elevation={elevationTab} /> }
-        { elevationTab === ElevationFarmTab.DASH && <MultiElevStaked/> }
         <ElevationTotemBattle/>
         { account != null && userTotem != null && elevationTab !== ElevationFarmTab.OASIS && <ElevationYieldBet/> }
         { account != null && elevationTab === ElevationFarmTab.DASH && <MultiElevYieldBet/> }
+        { elevationTab === ElevationFarmTab.DASH && <MultiElevStaked/> }
         { account != null && userTotem != null && <ElevationWinnings/> }
         { elevationTab === ElevationFarmTab.DASH && <MultiElevWinningsAndClaim/> }
       </HeaderWrapper>

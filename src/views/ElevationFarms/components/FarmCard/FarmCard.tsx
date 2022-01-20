@@ -67,7 +67,7 @@ const PressableFlex = styled(NavLink)<{ $expanded: boolean }>`
 `
 
 const FarmNumericalInfoFlex = styled(Flex)`
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   flex: 1;
@@ -78,7 +78,7 @@ const FarmNumericalInfoFlex = styled(Flex)`
 const SymbolIconFlex = styled(Flex)`
   flex-direction: row;
   gap: 8px;
-  width: 200px;
+  width: 180px;
 `
 
 const FlexMobileLineBreak = styled.div`
@@ -95,6 +95,19 @@ const FlexInfoItem = styled(Flex)`
   align-items: center;
   justify-content: flex-start;
   flex: 1;
+  max-width: 78px;
+`
+
+const StakingInfoItem = styled(Flex)`
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  order: 10;
+
+  ${({ theme }) => theme.mediaQueries.nav} {
+    order: unset;
+  }
 `
 
 const InfoItemValue = styled(Flex)`
@@ -224,7 +237,7 @@ const FarmCard: React.FC<FarmCardProps> = ({
           <SymbolIconFlex justifyContent="flex-start" alignItems="center">
             <TokenSymbolImage symbol={symbol} width={52} height={52} />
             <Flex flexDirection="column" alignItems="flex-start">
-              <Text italic monospace bold fontSize="16px" lineHeight="14px" mb="4px" textAlign="left">
+              <Text italic monospace bold fontSize="14px" lineHeight="14px" mb="4px" textAlign="left">
                 {symbol}
               </Text>
               <MultiplierTag variant="secondary" elevation={elevation}>
@@ -233,7 +246,7 @@ const FarmCard: React.FC<FarmCardProps> = ({
             </Flex>
           </SymbolIconFlex>
 
-          <FlexInfoItem style={{ flex: 3 }}>
+          <StakingInfoItem style={{ flex: 3 }}>
             <Flex alignItems='center' height='18px'>
               <Text small mr='4px'>{elevation != null ? `${capitalizeFirstLetter(elevation)} ` : ''}Deposited:</Text>
               <Flex mb='2px'>
@@ -247,7 +260,7 @@ const FarmCard: React.FC<FarmCardProps> = ({
                 center
               />
             </InfoItemValue>
-          </FlexInfoItem>
+          </StakingInfoItem>
 
           <FlexInfoItem>
             <Text small>APY</Text>

@@ -11,8 +11,9 @@ import { useClaimElevation } from 'hooks/useClaim'
 import SummitButton from 'uikit/components/Button/SummitButton'
 
 const ButtonsRow = styled(Flex)`
-  gap: 18px;
+  gap: 12px;
   justify-content: space-around;
+  flex-wrap: wrap;
 `
 
 interface ElevProps {
@@ -38,7 +39,7 @@ const ElevClaim: React.FC<ElevProps> = ({ elevation, claimable }) => {
       isLocked={elevationLocked}
       isLoading={claimPending}
       disabled={nothingToClaim}
-      width='180px'
+      width='170px'
       style={{padding: '0px'}}
       onClick={handleClaimElevation}
     >

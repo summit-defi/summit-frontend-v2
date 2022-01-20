@@ -14,8 +14,8 @@ const SelectorFlex = styled(Flex)`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-top: 24px;
-  margin-bottom: 16px;
+  margin-left: 6px;
+  margin-right: 6px;
 `
 
 const SelectorWrapper = styled(Flex)`

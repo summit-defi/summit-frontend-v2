@@ -195,7 +195,7 @@ export const useMultiElevStaked = () => {
           elevation: true,
           key: elevationUtils.toInt(elevation as Elevation),
           perc: tvl.times(100).div(totalTVL).toNumber(),
-          val: `$${tvl.toFixed(2)}`,
+          val: `$${tvl.toFixed(2)} (${tvl.times(100).div(totalTVL).toFixed(1)}%)`,
         }))
 
       return {
