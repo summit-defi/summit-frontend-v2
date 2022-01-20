@@ -16,7 +16,16 @@ const EpochsCard = styled(Flex)`
     width: 100%;
     height: 100%;
     gap: 24px;
-    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+`
+
+const Divider = styled.div`
+    background-color: ${({ theme }) => theme.colors.text};
+    height: 1px;
+    margin: 24px 0px;
+    width: calc(100% - 48px);
+    opacity: 0.5;
 `
 
 const EpochsHeaderCard: React.FC = () => {
@@ -28,7 +37,28 @@ const EpochsHeaderCard: React.FC = () => {
                     GLACIER
                 </Text>
             </ElevationPuck>
-            <CurrentEpochSection/>
+            <Flex gap='24px' width='100%' alignItems='center'>
+                <Flex flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+                    <Text monospace fontSize='12px' textAlign='center'>
+                        The GLACIER holds your SUMMIT winnings from
+                        all elevation farms. All SUMMIT claimed during
+                        an Epoch is frozen for ~4 weeks.
+                        <br/>
+                        <br/>
+                        <br/>
+                        <Text bold monospace fontSize='12px'>Frozen SUMMIT can either be:</Text>
+                        - harvested early for a 50% tax
+                        <br/>
+                        (50% burned, 50% to EVEREST holders)
+                        <br/>
+                        - locked for EVEREST without tax
+                        <br/>(requires lock duration {`>`}= 30 days)
+                    </Text>
+                </Flex>
+                <CurrentEpochSection/>
+            </Flex>
+            <Divider/>
+            <MatureEpochsSection/>
         </EpochsCard>
     )
 }

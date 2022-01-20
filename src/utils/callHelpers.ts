@@ -95,6 +95,16 @@ export const tokenSwapV1Summit = async (summitToken, v1SummitBalance, account) =
   return estimateGasAndExecute(switchTotemCall, account)
 }
 
+// EPOCH
+export const harvestEpoch = async (summitLocking, epochIndex, amount, lockForEverest, account) => {
+  const harvestEpochCall = summitLocking.methods.harvestWinnings(
+    epochIndex,
+    new BigNumber(amount).times(new BigNumber(10).pow(18)).toString(),
+    lockForEverest
+  )
+  return estimateGasAndExecute(harvestEpochCall, account)
+}
+
 // SUMMIT ECOSYSTEM
 export const rolloverElevation = async (cartographer, elevation, account) => {
   const rolloverElevationCall = cartographer.methods.rollover(elevationUtils.toInt(elevation))

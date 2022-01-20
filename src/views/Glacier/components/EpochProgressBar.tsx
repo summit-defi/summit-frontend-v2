@@ -1,10 +1,12 @@
 import { Elevation } from 'config/constants'
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { darken } from 'polished'
-import { breakTextBr, Flex, Text, TriangleGrowIcon } from 'uikit'
+import { Flex, Text } from 'uikit'
+import { getEpochTimestamps, getTimeRemainingText, timestampToDate } from 'utils'
+import { useEpochVariableTickTimestamp } from 'state/hooks'
 
-const EndMarkerHeight = 55
+const EndMarkerHeight = 65
 
 const EndMarkerWrapper = styled.div`
     position: relative;
@@ -40,14 +42,14 @@ const MarkerText = styled(Text)`
     padding-right: 6px;
     top: ${EndMarkerHeight - 18}px;
     bottom: 0px;
-    background-color: ${({ theme }) => theme.colors.cardHover};
+    white-space: nowrap;
 `
 
 const MarkerBar = styled.div<{ elevation?: Elevation }>`
     width: 6px;
     position: absolute;
-    top: 15px;
-    bottom: 15px;
+    top: 20px;
+    bottom: 20px;
     left: -3px;
     border-radius: 3px;
     background-color: ${({ theme, elevation }) => darken(0.1, theme.colors[elevation || 'BASE'])};
@@ -57,8 +59,8 @@ const MarkerBar = styled.div<{ elevation?: Elevation }>`
 const VerticalBar = styled.div`
     width: 1px;
     position: absolute;
-    top: 20px;
-    bottom: 20px;
+    top: 25px;
+    bottom: 25px;
     background-color: ${({ theme }) => theme.colors.text};
 `
 
@@ -81,12 +83,13 @@ const Wrapper = styled(Flex)`
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    flex: 1;
-    max-width: 350px;
+    width: 100%;
+    max-width: 450px;
 `
 
 interface Props {
     epoch: number
+    isCurrentEpoch?: boolean
 }
 
 interface EndMarkerProps {
@@ -114,11 +117,14 @@ const Marker: React.FC<MarkerProps> = ({timeRemainingText, progress}) => {
     </MarkerWrapper>
 }
 
-const EpochProgressBar: React.FC<Props> = ({ epoch }) => {
-    const { startTimestamp, endTimestamp } = getEpochTimestamps(epoch)
+const EpochProgressBar: React.FC<Props> = ({ epoch, isCurrentEpoch = false }) => {
+    const { beginTimestamp, closeTimestamp, thawTimestamp } = getEpochTimestamps(epoch)
+    const startTimestamp = isCurrentEpoch ? beginTimestamp : closeTimestamp
+    const endTimestamp = isCurrentEpoch ? closeTimestamp : thawTimestamp
     const startDate = timestampToDate(startTimestamp)
     const endDate = timestampToDate(endTimestamp)
-    const currentTimestamp = 100
+    const currentTimestamp = useEpochVariableTickTimestamp(epoch)
+    const timeRemainingText = getTimeRemainingText(Math.max(0, endTimestamp - currentTimestamp))
     const progress = (currentTimestamp - startTimestamp) / (endTimestamp - startTimestamp)
     return (
         <Wrapper>
@@ -126,7 +132,7 @@ const EpochProgressBar: React.FC<Props> = ({ epoch }) => {
                 <EndMarker title={startDate}/>
                 <HorizontalBar/>
                 <EndMarker title={endDate}/>
-                <Marker timeRemainingText='02D 06H 21M' progress={progress}/>
+                <Marker timeRemainingText={timeRemainingText} progress={progress}/>
             </BarFlex>
         </Wrapper>
     )

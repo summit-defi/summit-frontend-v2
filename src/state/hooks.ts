@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
-import { getWeb3NoAccount, getTimestampDiff, groupByAndMap, groupBy, getFormattedBigNumber } from 'utils'
+import { getWeb3NoAccount, getTimestampDiff, groupByAndMap, groupBy, getFormattedBigNumber, epochEndTimestamp, epochThawTimestamp } from 'utils'
 import {
   fetchFarmsPublicDataAsync,
   fetchExpeditionUserDataAsync,
@@ -690,37 +690,66 @@ export const usePageForcedDarkMode = () => {
 const useEpochs = () => {
   return [
     {
-      index: 1,
-      winnings: 5000.20
+      index: 2708,
+      winnings: 5000.20,
+      thawed: true,
     },
     {
-      index: 2,
-      winnings: 200.10
+      index: 2709,
+      winnings: 200.10,
+      thawed: true,
     },
     {
-      index: 3,
-      winnings: 764.20
+      index: 2710,
+      winnings: 764.20,
+      thawed: true,
     },
     {
-      index: 4,
-      winnings: 534.20
+      index: 2711,
+      winnings: 534.20,
+      thawed: true,
     },
     {
-      index: 6,
-      winnings: 385.20
+      index: 2713,
+      winnings: 385.20,
+      thawed: false,
     },
     {
-      index: 8,
-      winnings: 527.20
+      index: 2715,
+      winnings: 527.20,
+      thawed: false,
     },
     {
-      index: 9,
-      winnings: 23.20
+      index: 2716,
+      winnings: 23.20,
+      thawed: false,
     }
   ]
 }
 export const useCurrentEpochIndex = () => {
-  return 9
+  return 2716
+}
+export const useEpochVariableTickTimestamp = (epoch: number, toEpochEnd = false) => {
+  const currentTimestamp = useCurrentTimestamp()
+  return useMemo(() => {
+    const maxTimestamp = toEpochEnd ? epochEndTimestamp(epoch) : epochThawTimestamp(epoch)
+    if (currentTimestamp > maxTimestamp) return maxTimestamp
+    if ((maxTimestamp - currentTimestamp) > (24 * 3600)) return (Math.floor(currentTimestamp / 3600) * 3600) + 1800
+    if ((maxTimestamp - currentTimestamp) > 3600) return (Math.floor(currentTimestamp / 60) * 60) + 30
+    return currentTimestamp
+  }, [currentTimestamp, epoch, toEpochEnd])
+}
+export const useEpochByIndex = (epochIndex: number) => {
+  const epochs = useEpochs()
+
+  return useMemo(
+    () => epochs.find((epoch) => epoch.index === epochIndex) || {
+      index: epochIndex,
+      winnings: 0,
+      thawed: false,
+    },
+    [epochs, epochIndex]
+  )
 }
 export const useCurrentEpoch = () => {
   const epochs = useEpochs()
@@ -729,26 +758,23 @@ export const useCurrentEpoch = () => {
   return useMemo(
     () => epochs.find((epoch) => epoch.index === currentEpochIndex) || {
       index: currentEpochIndex,
-      winnings: 0
+      winnings: 0,
+      thawed: false,
     },
     [epochs, currentEpochIndex]
   )
 }
 export const useThawedEpochs = () => {
   const epochs = useEpochs()
-  const currentEpochIndex = useCurrentEpochIndex()
-
   return useMemo(
-    () => epochs.filter((epoch) => epoch.index < currentEpochIndex && epoch.index >= (currentEpochIndex - 4)),
-    [epochs, currentEpochIndex]
+    () => epochs.filter((epoch) => epoch.thawed),
+    [epochs]
   )
 }
 export const useFrozenEpochs = () => {
   const epochs = useEpochs()
-  const currentEpochIndex = useCurrentEpochIndex()
-
   return useMemo(
-    () => epochs.filter((epoch) => epoch.index < (currentEpochIndex - 4)),
-    [epochs, currentEpochIndex]
+    () => epochs.filter((epoch) => !epoch.thawed),
+    [epochs]
   )
 }

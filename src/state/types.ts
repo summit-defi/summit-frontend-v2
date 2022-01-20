@@ -156,6 +156,13 @@ export interface TokensState {
   data: UserTokenData[]
 }
 
+// Glacier State
+export interface Epoch {
+  index: number
+  frozenSummit: BigNumber
+  isThawed: boolean
+}
+
 // Global state
 export interface State {
   farms: FarmsState

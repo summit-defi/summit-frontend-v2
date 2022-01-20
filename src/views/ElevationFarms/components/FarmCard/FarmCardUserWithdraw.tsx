@@ -104,7 +104,8 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
         onChange={handleChangeWithdraw}
         max={fullWithdrawBalance}
         symbol={symbol}
-        withdrawalFee={withdrawalFee}
+        feeText='Fairness Tax'
+        feeBP={withdrawalFee}
       />
       <CenteredSummitButton
         elevation={elevation}

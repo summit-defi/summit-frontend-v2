@@ -12,7 +12,7 @@ export const getTimeRemainingText = (timeRemaining: number): string => {
     .map((val, index) => (val === 0 && index < 2 ? '' : `${`00${val}`.slice(-2)}${getTimeDenom(index)}`))
     .filter((val) => val !== '')
     .slice(0, 2)
-    .join('')
+    .join(' ')
 }
 export const getRoundTimeRemainingBreakdown = (timeRemaining: number): number[] => {
   return [
@@ -24,15 +24,11 @@ export const getRoundTimeRemainingBreakdown = (timeRemaining: number): number[] 
 }
 export const getTimeDenom = (index: number): string => {
   switch (index) {
-    case 0:
-      return 'D '
-    case 1:
-      return 'H '
-    case 2:
-      return 'M '
+    case 0: return 'D'
+    case 1: return 'H'
+    case 2: return 'M'
     default:
-    case 3:
-      return 'S'
+    case 3: return 'S'
   }
 }
 export const timestampToDate = (timestamp: number): string => {

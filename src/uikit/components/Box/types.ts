@@ -9,4 +9,8 @@ export interface BoxProps
     SpaceProps,
     HTMLAttributes<HTMLDivElement> {}
 
-export interface FlexProps extends BoxProps, FlexboxProps {}
+interface GapProps {
+  gap?: string
+}
+
+export interface FlexProps extends BoxProps, FlexboxProps, GapProps {}

@@ -128,7 +128,8 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
         onChange={handleChangeDeposit}
         max={fullDepositBalance}
         symbol={symbol}
-        depositFeeBP={depositFeeBP}
+        feeText='Deposit Fee'
+        feeBP={depositFeeBP}
       />
       {isApproved && (
         <CenteredSummitButton
