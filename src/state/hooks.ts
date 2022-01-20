@@ -724,7 +724,11 @@ const useEpochs = () => {
       winnings: 23.20,
       thawed: false,
     }
-  ]
+  ].map((epoch) => ({
+    index: epoch.index,
+    frozenSummit: new BigNumber(epoch.winnings).times(new BigNumber(10).pow(18)),
+    isThawed: epoch.thawed
+  }))
 }
 export const useCurrentEpochIndex = () => {
   return 2716
@@ -745,8 +749,8 @@ export const useEpochByIndex = (epochIndex: number) => {
   return useMemo(
     () => epochs.find((epoch) => epoch.index === epochIndex) || {
       index: epochIndex,
-      winnings: 0,
-      thawed: false,
+      frozenSummit: BN_ZERO,
+      isThawed: false,
     },
     [epochs, epochIndex]
   )
@@ -758,8 +762,8 @@ export const useCurrentEpoch = () => {
   return useMemo(
     () => epochs.find((epoch) => epoch.index === currentEpochIndex) || {
       index: currentEpochIndex,
-      winnings: 0,
-      thawed: false,
+      frozenSummit: BN_ZERO,
+      isThawed: false,
     },
     [epochs, currentEpochIndex]
   )
@@ -767,14 +771,14 @@ export const useCurrentEpoch = () => {
 export const useThawedEpochs = () => {
   const epochs = useEpochs()
   return useMemo(
-    () => epochs.filter((epoch) => epoch.thawed),
+    () => epochs.filter((epoch) => epoch.isThawed),
     [epochs]
   )
 }
 export const useFrozenEpochs = () => {
   const epochs = useEpochs()
   return useMemo(
-    () => epochs.filter((epoch) => !epoch.thawed),
+    () => epochs.filter((epoch) => !epoch.isThawed),
     [epochs]
   )
 }

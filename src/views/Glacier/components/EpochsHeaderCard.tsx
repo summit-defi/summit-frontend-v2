@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { ElevationPuck, Flex, Text } from 'uikit'
 import { CurrentEpochSection } from './CurrentEpochSection'
+import { ThawedEpochsSection } from './ThawedEpochsSection'
 
 const EpochsCard = styled(Flex)`
     position: relative;
@@ -20,14 +21,6 @@ const EpochsCard = styled(Flex)`
     flex-direction: column;
 `
 
-const Divider = styled.div`
-    background-color: ${({ theme }) => theme.colors.text};
-    height: 1px;
-    margin: 24px 0px;
-    width: calc(100% - 48px);
-    opacity: 0.5;
-`
-
 const EpochsHeaderCard: React.FC = () => {
     return (
         <EpochsCard>
@@ -37,7 +30,7 @@ const EpochsHeaderCard: React.FC = () => {
                     GLACIER
                 </Text>
             </ElevationPuck>
-            <Flex gap='24px' width='100%' alignItems='center'>
+            <Flex gap='24px' mt='12px' mb='16px' width='100%' alignItems='center'>
                 <Flex flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
                     <Text monospace fontSize='12px' textAlign='center'>
                         The GLACIER holds your SUMMIT winnings from
@@ -57,8 +50,7 @@ const EpochsHeaderCard: React.FC = () => {
                 </Flex>
                 <CurrentEpochSection/>
             </Flex>
-            <Divider/>
-            <MatureEpochsSection/>
+            <ThawedEpochsSection/>
         </EpochsCard>
     )
 }

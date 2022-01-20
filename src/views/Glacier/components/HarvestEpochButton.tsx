@@ -1,4 +1,3 @@
-import BigNumber from 'bignumber.js'
 import { useHarvestEpoch } from 'hooks/useHarvestEpoch'
 import React from 'react'
 import { useEpochByIndex } from 'state/hooks'
@@ -8,20 +7,17 @@ import HarvestEpochModal from './HarvestEpochModal'
 
 interface Props {
     epochIndex: number
+    width?: string
+    height?: string
 }
 
-const HarvestEpochButton: React.FC<Props> = ({ epochIndex }) => {
+const HarvestEpochButton: React.FC<Props> = ({ epochIndex, width = '160px', height }) => {
     const epoch = useEpochByIndex(epochIndex)
-    const sanitizedEpoch = {
-        index: epoch.index,
-        frozenSummit: new BigNumber(epoch.winnings).times(new BigNumber(10).pow(18)),
-        isThawed: epoch.thawed,
-    }
-    const nothingToHarvest = epoch.winnings === 0
+    const nothingToHarvest = epoch.frozenSummit.isEqualTo(0)
     const { onHarvestEpoch, harvestEpochPending } = useHarvestEpoch(epochIndex)
     const [onPresentHarvestEpoch] = useModal(
         <HarvestEpochModal
-            epoch={sanitizedEpoch}
+            epoch={epoch}
             onHarvestEpoch={onHarvestEpoch}
         />
     )
@@ -34,7 +30,9 @@ const HarvestEpochButton: React.FC<Props> = ({ epochIndex }) => {
         <SummitButton
             isLoading={harvestEpochPending}
             disabled={nothingToHarvest}
-            width='160px'
+            width={width}
+            padding='0px'
+            height={height}
             onClick={handlePresentHarvestEpoch}
         >
             HARVEST EPOCH

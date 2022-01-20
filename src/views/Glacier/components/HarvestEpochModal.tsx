@@ -113,6 +113,7 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
                     <br/>
                     you will receive 100% of your harvest.
                     <br/>
+                    <br/>
                 </> :
                 <>
                     This SUMMIT is still frozen,

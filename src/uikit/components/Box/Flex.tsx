@@ -19,4 +19,12 @@ export const MobileColumnFlex = styled(Flex)`
   }
 `
 
+export const MobileRowFlex = styled(Flex)`
+  flex-direction: row;
+
+  ${({ theme }) => theme.mediaQueries.nav} {
+    flex-direction: column;
+  }
+`
+
 export default Flex

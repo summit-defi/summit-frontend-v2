@@ -11,7 +11,7 @@ export const CurrentEpochSection: React.FC = () => {
     const currentEpoch = useCurrentEpoch()
     const thawTimestamp = epochThawTimestamp(currentEpoch.index)
     const thawDate = timestampToDate(thawTimestamp)
-    const rawFrozen = getBalanceNumber(new BigNumber(currentEpoch.winnings).times(new BigNumber(10).pow(18)))
+    const rawFrozen = getBalanceNumber(currentEpoch.frozenSummit)
 
     return (
         <Flex gap='24px' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
