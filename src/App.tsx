@@ -24,6 +24,7 @@ import { fetchTokensUserDataAsync } from 'state/tokens'
 
 const Home = lazy(() => import('./views/Home'))
 const ElevationFarms = lazy(() => import('./views/ElevationFarms'))
+const Glacier = lazy(() => import('./views/Glacier'))
 const ExpeditionFarms = lazy(() => import('./views/Expeditions'))
 const NotFound = lazy(() => import('./views/NotFound'))
 const BetaTokens = lazy(() => import('./views/Beta'))
@@ -83,6 +84,9 @@ const App: React.FC = () => {
             </Route>
             <Route path={['/elevations', '/oasis', '/plains', '/mesa', '/summit']}>
               <ElevationFarms />
+            </Route>
+            <Route path='/glacier' exact>
+              <Glacier />
             </Route>
             <Route path="/expedition">
               <ExpeditionFarms />

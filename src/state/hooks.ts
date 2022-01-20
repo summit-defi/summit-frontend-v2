@@ -22,6 +22,7 @@ import useTheme from 'hooks/useTheme'
 import { getChainWrappedNativeTokenSymbol, TokenSymbol } from 'config/constants'
 import { fetchExpeditionPotentialWinnings, fetchExpeditionWinnings } from './expeditions/fetchExpeditionUserInfo'
 import { updateExpeditionUserPotentialWinningsAsync, updateExpeditionUserWinnings, updateExpeditionUserWinningsAsync } from './expeditions'
+import { createSelector } from '@reduxjs/toolkit'
 
 const ZERO = new BigNumber(0)
 
@@ -682,4 +683,72 @@ export const usePageForcedDarkMode = () => {
   const { setPageForcedDark } = useTheme()
 
   useEffect(() => setPageForcedDark(elevation === Elevation.EXPEDITION), [elevation, setPageForcedDark])
+}
+
+
+// EPOCHS
+const useEpochs = () => {
+  return [
+    {
+      index: 1,
+      winnings: 5000.20
+    },
+    {
+      index: 2,
+      winnings: 200.10
+    },
+    {
+      index: 3,
+      winnings: 764.20
+    },
+    {
+      index: 4,
+      winnings: 534.20
+    },
+    {
+      index: 6,
+      winnings: 385.20
+    },
+    {
+      index: 8,
+      winnings: 527.20
+    },
+    {
+      index: 9,
+      winnings: 23.20
+    }
+  ]
+}
+export const useCurrentEpochIndex = () => {
+  return 9
+}
+export const useCurrentEpoch = () => {
+  const epochs = useEpochs()
+  const currentEpochIndex = useCurrentEpochIndex()
+
+  return useMemo(
+    () => epochs.find((epoch) => epoch.index === currentEpochIndex) || {
+      index: currentEpochIndex,
+      winnings: 0
+    },
+    [epochs, currentEpochIndex]
+  )
+}
+export const useThawedEpochs = () => {
+  const epochs = useEpochs()
+  const currentEpochIndex = useCurrentEpochIndex()
+
+  return useMemo(
+    () => epochs.filter((epoch) => epoch.index < currentEpochIndex && epoch.index >= (currentEpochIndex - 4)),
+    [epochs, currentEpochIndex]
+  )
+}
+export const useFrozenEpochs = () => {
+  const epochs = useEpochs()
+  const currentEpochIndex = useCurrentEpochIndex()
+
+  return useMemo(
+    () => epochs.filter((epoch) => epoch.index < (currentEpochIndex - 4)),
+    [epochs, currentEpochIndex]
+  )
 }

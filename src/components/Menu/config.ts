@@ -62,6 +62,13 @@ export const getMenuItems = (
     keyPaths: ['elevations', 'oasis', 'plains', 'mesa', 'summit']
   },
   {
+    label: 'THE GLACIER',
+    icon: '',
+    href: '/glacier',
+    external: false,
+    keyPaths: ['glacier']
+  },
+  {
     label: Elevation.EXPEDITION,
     icon: getTotemIcon(
       Elevation.EXPEDITION,
