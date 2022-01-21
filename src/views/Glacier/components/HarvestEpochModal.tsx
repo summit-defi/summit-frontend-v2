@@ -30,8 +30,8 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
 
   const fullHarvestableBalance = getFullDisplayBalance(frozenSummit, 18)
 
-  const [val, setVal] = useState('')
-  const [invalidVal, setValInvalid] = useState(true)
+  const [val, setVal] = useState(fullHarvestableBalance)
+  const [invalidVal, setValInvalid] = useState(false)
   const [lockForEverest, setLockForEverest] = useState(false)
 
   const validHarvestVal = (testVal, harvestableBalance) => {

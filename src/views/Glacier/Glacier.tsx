@@ -1,8 +1,9 @@
 import React from 'react'
 import Page from 'components/layout/Page'
-import EpochsHeaderCard from './components'
+import EpochsHeaderCard, { FrozenEpochs } from './components'
 import styled from 'styled-components'
 import { Flex } from 'uikit'
+import FlexLayout from 'components/layout/Flex'
 
 const HeaderCardsWrapper = styled(Flex)`
     justify-content: center;
@@ -19,9 +20,9 @@ const Glacier: React.FC = () => {
       <HeaderCardsWrapper>
         <EpochsHeaderCard/>
       </HeaderCardsWrapper>
-      {/* <FlexLayout>
+      <FlexLayout>
         <FrozenEpochs/>
-      </FlexLayout> */}
+      </FlexLayout>
     </Page>
   )
 }

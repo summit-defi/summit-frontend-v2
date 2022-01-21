@@ -777,8 +777,10 @@ export const useThawedEpochs = () => {
 }
 export const useFrozenEpochs = () => {
   const epochs = useEpochs()
+  const currentEpochIndex = useCurrentEpochIndex()
+
   return useMemo(
-    () => epochs.filter((epoch) => !epoch.isThawed),
-    [epochs]
+    () => epochs.filter((epoch) => !epoch.isThawed && epoch.index !== currentEpochIndex),
+    [epochs, currentEpochIndex]
   )
 }
