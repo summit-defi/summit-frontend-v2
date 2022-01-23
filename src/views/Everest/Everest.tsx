@@ -3,23 +3,26 @@ import { useDispatch } from 'react-redux'
 import useWeb3 from 'hooks/useWeb3'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import Page from 'components/layout/Page'
-import EpochsHeaderCard, { FrozenEpochs } from './components'
+import { UserEverestCard } from './components'
 import styled from 'styled-components'
-import { Flex } from 'uikit'
+import { ElevationPuck, Flex, Text } from 'uikit'
 import FlexLayout from 'components/layout/Flex'
 import { fetchUserEpochsAsync } from 'state/glacier'
 import useRefresh from 'hooks/useRefresh'
+import PageLoader from 'components/PageLoader'
+import { useEverestDataLoaded } from 'state/hooks'
 
 const HeaderCardsWrapper = styled(Flex)`
     justify-content: center;
     align-items: flex-start;
     width: 100%;
     gap: 32px;
-    margin: 0px auto 32px auto;
+    margin: 124px auto 0px auto;
     max-width: 850px;
+    position: relative;
 `
 
-const Glacier: React.FC = () => {
+const Everest: React.FC = () => {
   const dispatch = useDispatch()
   const web3 = useWeb3()
   const { account } = useWallet()
@@ -30,17 +33,30 @@ const Glacier: React.FC = () => {
     }
   }, [account, dispatch, fastRefresh, web3])
 
+  const everestDataLoaded = useEverestDataLoaded()
+
+
 
   return (
     <Page>
       <HeaderCardsWrapper>
-        <EpochsHeaderCard/>
+        <ElevationPuck elevation='BLUE'>
+            <Text bold fontSize='24px' color='white'>
+                EVEREST
+            </Text>
+        </ElevationPuck>
       </HeaderCardsWrapper>
       <FlexLayout>
-        <FrozenEpochs/>
+        { everestDataLoaded ?
+          <Flex gap='24px' width='100%' flexWrap='wrap' alignItems='center' justifyContent='center'>
+            <UserEverestCard/>
+            <UserEverestCard/>
+          </Flex> :
+          <PageLoader fill loadingText='Loading Everest Data...'/>
+        }
       </FlexLayout>
     </Page>
   )
 }
 
-export default Glacier
+export default Everest

@@ -105,6 +105,27 @@ export const harvestEpoch = async (summitLocking, epochIndex, amount, lockForEve
   return estimateGasAndExecute(harvestEpochCall, account)
 }
 
+// EVEREST LOCKING
+export const lockSummit = async (everestToken, amount, duration, account) => {
+  const lockSummitCall = everestToken.methods.lockSummit(
+    amount,
+    duration
+  )
+  return estimateGasAndExecute(lockSummitCall, account)
+}
+export const increaseLockedSummit = async (everestToken, amount, account) => {
+  const increaseLockedSummitCall = everestToken.methods.increaseLockedSummit(
+    amount
+  )
+  return estimateGasAndExecute(increaseLockedSummitCall, account)
+}
+export const increaseLockDuration = async (everestToken, duration, account) => {
+  const increaseLockDurationCall = everestToken.methods.increaseLockDuration(
+    duration
+  )
+  return estimateGasAndExecute(increaseLockDurationCall, account)
+}
+
 // SUMMIT ECOSYSTEM
 export const rolloverElevation = async (cartographer, elevation, account) => {
   const rolloverElevationCall = cartographer.methods.rollover(elevationUtils.toInt(elevation))

@@ -8,7 +8,7 @@ import {
   fetchExpeditionUserDataAsync,
   fetchExpeditionPublicDataAsync,
 } from './actions'
-import { State, Farm, Expedition, ElevationInfo, ExpeditionUserData, UserTokenData } from './types'
+import { State, Farm, Expedition, ElevationInfo, ExpeditionUserData, UserTokenData, EverestUserData, EverestState } from './types'
 import { BN_ZERO, Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired, RoundLockTime } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
@@ -687,52 +687,8 @@ export const usePageForcedDarkMode = () => {
 
 
 // EPOCHS
-const useEpochs = () => {
-  return [
-    {
-      index: 2708,
-      winnings: 5000.20,
-      thawed: true,
-    },
-    {
-      index: 2709,
-      winnings: 200.10,
-      thawed: true,
-    },
-    {
-      index: 2710,
-      winnings: 764.20,
-      thawed: true,
-    },
-    {
-      index: 2711,
-      winnings: 534.20,
-      thawed: true,
-    },
-    {
-      index: 2713,
-      winnings: 385.20,
-      thawed: false,
-    },
-    {
-      index: 2715,
-      winnings: 527.20,
-      thawed: false,
-    },
-    {
-      index: 2716,
-      winnings: 23.20,
-      thawed: false,
-    }
-  ].map((epoch) => ({
-    index: epoch.index,
-    frozenSummit: new BigNumber(epoch.winnings).times(new BigNumber(10).pow(18)),
-    isThawed: epoch.thawed
-  }))
-}
-export const useCurrentEpochIndex = () => {
-  return 2716
-}
+const useEpochs = () => useSelector((state: State) => state.glacier.epochs)
+export const useCurrentEpochIndex = () => useSelector((state: State) => state.glacier.currentEpochIndex)
 export const useEpochVariableTickTimestamp = (epoch: number, toEpochEnd = false) => {
   const currentTimestamp = useCurrentTimestamp()
   return useMemo(() => {
@@ -782,5 +738,37 @@ export const useFrozenEpochs = () => {
   return useMemo(
     () => epochs.filter((epoch) => !epoch.isThawed && epoch.index !== currentEpochIndex),
     [epochs, currentEpochIndex]
+  )
+}
+
+
+
+// EVEREST
+export const useEverestInfo = () => {
+  const totalSummitLocked: BigNumber = useSelector((state: State) => state.everest.totalSummitLocked)
+  const averageLockDuration: BigNumber = useSelector((state: State) => state.everest.averageLockDuration)
+  return useMemo(
+    () => ({
+      totalSummitLocked,
+      averageLockDuration,
+    }),
+    [totalSummitLocked, averageLockDuration]
+  )
+}
+export const useEverestUserInfo = (): EverestUserData | undefined => {
+  return useSelector((state: State) => state.everest.userData)
+}
+export const useEverestDataLoaded = () => {
+  const userInfo = useEverestUserInfo()
+  return useMemo(
+    () => userInfo != null,
+    [userInfo]
+  )
+}
+export const useUserHasLockedSummit = () => {
+  const userInfo = useEverestUserInfo()
+  return useMemo(
+    () => (userInfo?.summitLocked || BN_ZERO).isGreaterThan(0),
+    [userInfo]
   )
 }

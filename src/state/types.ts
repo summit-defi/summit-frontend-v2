@@ -162,6 +162,24 @@ export interface Epoch {
   frozenSummit: BigNumber
   isThawed: boolean
 }
+export interface GlacierState {
+  epochs: Epoch[]
+  currentEpochIndex: number
+}
+
+// Everest State
+export interface EverestUserData {
+  everestOwned: BigNumber
+  summitLocked: BigNumber
+  lockRelease: number
+  lockDuration: number
+  everestLockMult: number
+}
+export interface EverestState {
+  totalSummitLocked: BigNumber
+  averageLockDuration: number
+  userData?: EverestUserData
+}
 
 // Global state
 export interface State {
@@ -170,4 +188,25 @@ export interface State {
   expedition: ExpeditionState
   summitEcosystem: SummitEcosystemState
   tokens: TokensState
+  glacier: GlacierState
+  everest: EverestState
+}
+
+
+
+
+
+
+
+
+
+
+// UI
+
+
+
+export enum LockSummitButtonType {
+  LockSummit,
+  IncreaseLockedSummit,
+  IncreaseLockDuration,
 }

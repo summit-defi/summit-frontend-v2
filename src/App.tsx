@@ -5,7 +5,6 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ResetCSS } from 'uikit'
 import BigNumber from 'bignumber.js'
 import { useFetchPriceList, useFetchPublicData, useFetchSummitEnabled } from 'state/hooks'
-import { elevationUtils } from 'config/constants/types'
 import useGetDocumentTitlePrice from './hooks/useGetDocumentTitlePrice'
 import GlobalStyle from './style/Global'
 import Menu from './components/Menu'
@@ -21,10 +20,13 @@ import { useRoundRollovers } from 'hooks/useRoundRollovers'
 import PageForcedDarkComponent from 'PageForcedDarkComponent'
 import { useFetchExpeditionPotTotalValue } from 'hooks/useFetchExpeditionPotTotalValue'
 import { fetchTokensUserDataAsync } from 'state/tokens'
+import { fetchUserEpochsAsync } from 'state/glacier'
+import { fetchEverestDataAsync } from 'state/everest'
 
 const Home = lazy(() => import('./views/Home'))
 const ElevationFarms = lazy(() => import('./views/ElevationFarms'))
 const Glacier = lazy(() => import('./views/Glacier'))
+const Everest = lazy(() => import('./views/Everest'))
 const ExpeditionFarms = lazy(() => import('./views/Expeditions'))
 const NotFound = lazy(() => import('./views/NotFound'))
 const BetaTokens = lazy(() => import('./views/Beta'))
@@ -56,6 +58,8 @@ const App: React.FC = () => {
       dispatch(fetchUserTotemsAsync(account))
       dispatch(fetchTokensUserDataAsync(account))
       dispatch(fetchRolloverRewardInNativeTokenAsync())
+      dispatch(fetchUserEpochsAsync(account))
+      dispatch(fetchEverestDataAsync(account))
     }
   }, [account, dispatch, web3])
 
@@ -87,6 +91,9 @@ const App: React.FC = () => {
             </Route>
             <Route path='/glacier' exact>
               <Glacier />
+            </Route>
+            <Route path='/everest' exact>
+              <Everest />
             </Route>
             <Route path="/expedition">
               <ExpeditionFarms />

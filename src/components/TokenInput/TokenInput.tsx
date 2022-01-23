@@ -64,6 +64,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
 
 const StyledTokenInput = styled.div`
   position: relative;
+  width: 100%;
 `
 
 const StyledSpacer = styled.div`

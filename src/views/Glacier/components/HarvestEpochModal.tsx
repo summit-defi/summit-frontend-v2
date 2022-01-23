@@ -56,6 +56,7 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
 
   const handleConfirmHarvestEpoch = () => {
     if (invalidVal) return
+    onDismiss()
     onHarvestEpoch(val, lockForEverest)
   }
 

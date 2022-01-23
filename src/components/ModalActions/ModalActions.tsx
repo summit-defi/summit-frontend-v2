@@ -17,6 +17,7 @@ const StyledModalActions = styled.div`
   align-items: center;
   background-color: ${(props) => props.theme.colors.primaryDark}00;
   display: flex;
+  gap: 12px;
   margin: 0;
   padding-top: ${(props) => props.theme.spacing[4]}px;
   padding-bottom: 0px;

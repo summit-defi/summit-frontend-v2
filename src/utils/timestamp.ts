@@ -22,6 +22,12 @@ export const getRoundTimeRemainingBreakdown = (timeRemaining: number): number[] 
     timeRemaining % 60,
   ]
 }
+export const lockDurationText = (lockDur: number): string => {
+  return lockDur === 365 ? '1Y' : lockDur > 30 ? `${Math.floor(lockDur / 30)}M` : `${lockDur}D`
+}
+export const lockDurationTextLong = (lockDur: number): string => {
+  return lockDur === 365 ? '1 YEAR' : lockDur > 30 ? `${Math.floor(lockDur / 30)} MONTHS` : `${lockDur} DAYS`
+}
 export const getTimeDenom = (index: number): string => {
   switch (index) {
     case 0: return 'D'
@@ -34,4 +40,8 @@ export const getTimeDenom = (index: number): string => {
 export const timestampToDate = (timestamp: number): string => {
   const date = new Date(timestamp * 1000)
   return date.toLocaleDateString('en', { month: 'short', day: 'numeric' }).toUpperCase()
+}
+export const timestampToDateWithYear = (timestamp: number): string => {
+  const date = new Date(timestamp * 1000)
+  return date.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()
 }
