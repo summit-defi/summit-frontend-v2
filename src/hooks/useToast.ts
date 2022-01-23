@@ -23,6 +23,10 @@ export const useTransactionToasts = () => {
 
   const transactionToastError: ToastSignature = useCallback(
     (title: Toast['title'], description: Toast['description']) => {
+      console.log({
+        title,
+        description
+      })
       const errorTitle = IsSummitRevertReason[description] ? title : 'Wallet / Chain Error'
       toastError(errorTitle, description.split('_').join(' '))
     },

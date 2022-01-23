@@ -1,6 +1,6 @@
-import PageLoader from "components/PageLoader"
+import { BN_ZERO } from "config/constants"
 import React, { memo } from "react"
-import { useEverestDataLoaded, useUserHasLockedSummit } from "state/hooks"
+import { useEverestUserInfo } from "state/hooks"
 import styled from "styled-components"
 import { Flex, HighlightedText } from "uikit"
 import { IncreaseLockDurationSection } from "./IncreaseLockDurationSection"
@@ -27,7 +27,13 @@ export const EverestCard = styled(Flex)`
 
 
 export const UserEverestCard: React.FC = memo(() => {
-    const userHasLockedSummit = useUserHasLockedSummit()
+    const userEverestInfo = useEverestUserInfo()
+    const userHasLockedSummit = (userEverestInfo?.summitLocked || BN_ZERO).isGreaterThan(0)
+    const summitApproved = (userEverestInfo?.summitAllowance || BN_ZERO).isGreaterThan(0)
+
+    console.log({
+        userEverestInfo
+    })
         
     return (
         <EverestCard gap='32px' alignItems='center' justifyContent='center'>
@@ -36,10 +42,13 @@ export const UserEverestCard: React.FC = memo(() => {
             </HighlightedText>
             { userHasLockedSummit ?
                 <>
-                    <IncreaseLockedAmountSection/>
-                    <IncreaseLockDurationSection/>
+                    <IncreaseLockedAmountSection userEverestInfo={userEverestInfo}/>
+                    <IncreaseLockDurationSection userEverestInfo={userEverestInfo}/>
                 </> :
-                <InitialSummitLockSection/>
+                <InitialSummitLockSection
+                    summitBalance={userEverestInfo.summitBalance}
+                    summitApproved={summitApproved}
+                />
             }
         </EverestCard>
     )

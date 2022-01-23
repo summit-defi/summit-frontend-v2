@@ -1,5 +1,7 @@
 import BigNumber from 'bignumber.js'
 import TokenInput from 'components/TokenInput'
+import { useApprove, useApproveAddress } from 'hooks/useApprove'
+import { useSummitToken } from 'hooks/useContract'
 import { useLockSummit } from 'hooks/useLockSummit'
 import { isNumber } from 'lodash'
 import { transparentize } from 'polished'
@@ -9,12 +11,13 @@ import { LockSummitButtonType } from 'state/types'
 import styled from 'styled-components'
 import { Flex, Text, HighlightedText, useModal } from 'uikit'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { getAdditionalEverestAwardForLockDurationIncrease, getExpectedEverestAward, getFormattedBigNumber, getFullDisplayBalance, lockDurationTextLong, timestampToDateWithYear } from 'utils'
+import { getAdditionalEverestAwardForLockDurationIncrease, getEverestTokenAddress, getExpectedEverestAward, getFormattedBigNumber, getFullDisplayBalance, lockDurationTextLong, timestampToDateWithYear } from 'utils'
 import EverestLockDurationSlider from './EverestLockDurationSlider'
 import LockSummitConfirmModal from './LockSummitConfirmModal'
 
 
 interface LockSummitButtonProps {
+    approved: boolean
     disabled: boolean
     type: LockSummitButtonType
     amount: BigNumber | null
@@ -23,7 +26,8 @@ interface LockSummitButtonProps {
     everestAward: BigNumber
 }
 
-const lockSummitButtonText = (type: LockSummitButtonType) => {
+const lockSummitButtonText = (approved: boolean, type: LockSummitButtonType) => {
+    if (!approved) return 'APPROVE SUMMIT'
     switch (type) {
         case LockSummitButtonType.IncreaseLockedSummit: return 'INCREASE LOCKED SUMMIT'
         case LockSummitButtonType.IncreaseLockDuration: return 'INCREASE LOCK DURATION'
@@ -32,14 +36,20 @@ const lockSummitButtonText = (type: LockSummitButtonType) => {
     }
 }
 
-export const LockSummitInfoAndButton: React.FC<LockSummitButtonProps> = ({ disabled, type, amount, duration, everestAward, lockRelease }) => {
+export const LockSummitInfoAndButton: React.FC<LockSummitButtonProps> = ({ approved, disabled, type, amount, duration, everestAward, lockRelease }) => {
+
+    // APPROVAL
+    const everestAddress = getEverestTokenAddress()
+    const summitContract = useSummitToken()
+    const { onApprove, pending: approvalPending } = useApproveAddress(summitContract, everestAddress, 'SUMMIT')
+
     // INFO
     const showLockRelease = type !== LockSummitButtonType.IncreaseLockedSummit
-    const rawEverestAward = everestAward != null ? `${getFormattedBigNumber(everestAward)} EVEREST` : '-'
-    const releaseDate = lockRelease != null ? timestampToDateWithYear(lockRelease) : '-'
+    const rawEverestAward = !disabled && everestAward != null ? `${getFormattedBigNumber(everestAward)} EVEREST` : '-'
+    const releaseDate = !disabled && lockRelease != null ? timestampToDateWithYear(lockRelease) : '-'
     
     // BUTTON
-    const buttonText = lockSummitButtonText(type)
+    const buttonText = lockSummitButtonText(approved, type)
     const { onLockSummit, lockSummitPending } = useLockSummit(type, amount, duration)
     const [onPresentLockSummitConfirmModal] = useModal(
         <LockSummitConfirmModal
@@ -51,8 +61,12 @@ export const LockSummitInfoAndButton: React.FC<LockSummitButtonProps> = ({ disab
         />
     )
 
-    const handlePresentConfirmModal = () => {
+    const handleButtonPress = () => {
         if (lockSummitPending) return
+        if (!approved) {
+            onApprove()
+            return
+        }
         onPresentLockSummitConfirmModal()
     }
     return (
@@ -68,8 +82,9 @@ export const LockSummitInfoAndButton: React.FC<LockSummitButtonProps> = ({ disab
                 <Text bold monospace>{rawEverestAward}</Text>
             </Flex>
             <SummitButton
-                disabled={disabled}
-                onClick={handlePresentConfirmModal}
+                disabled={disabled && approved}
+                onClick={handleButtonPress}
+                isLoading={lockSummitPending || approvalPending}
                 mt='4px'
                 mb='4px'
             >

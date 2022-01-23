@@ -1,18 +1,23 @@
 import BigNumber from 'bignumber.js'
 import React, { memo, useState } from 'react'
 import { useCurrentTimestampOnce } from 'state/hooks'
-import { LockSummitButtonType } from 'state/types'
+import { EverestUserData, LockSummitButtonType } from 'state/types'
 import { Flex, Text } from 'uikit'
 import { getAdditionalEverestAwardForLockDurationIncrease, lockDurationTextLong } from 'utils'
 import EverestLockDurationSlider from './EverestLockDurationSlider'
 import { LockSummitInfoAndButton } from './LockSummitInfoAndButton'
 
+interface Props {
+    userEverestInfo: EverestUserData
+}
 
-export const IncreaseLockDurationSection: React.FC = memo(() => {
+export const IncreaseLockDurationSection: React.FC<Props> = ({ userEverestInfo }) => {
+    const {
+        summitLocked,
+        lockDuration: existingLockDuration,
+        everestOwned: existingEverestOwned,
+    } = userEverestInfo
     const currentTimestamp = useCurrentTimestampOnce()
-    const summitLocked = new BigNumber(500).times(new BigNumber(10).pow(18))
-    const existingLockDuration = 30
-    const existingEverestOwned = new BigNumber(500).times(new BigNumber(10).pow(18))
 
     const [lockDuration, setLockDuration] = useState<number | null>(existingLockDuration)
 
@@ -36,6 +41,7 @@ export const IncreaseLockDurationSection: React.FC = memo(() => {
             />
 
             <LockSummitInfoAndButton
+                approved
                 disabled={!lockDurationIncreased}
                 type={LockSummitButtonType.IncreaseLockDuration}
                 amount={summitLocked}
@@ -45,4 +51,4 @@ export const IncreaseLockDurationSection: React.FC = memo(() => {
             />
         </Flex>
     )
-})
+}

@@ -174,6 +174,10 @@ export interface EverestUserData {
   lockRelease: number
   lockDuration: number
   everestLockMult: number
+  summitBalance: BigNumber
+  summitAllowance: BigNumber
+  everestBalance: BigNumber
+  everestAllowance: BigNumber
 }
 export interface EverestState {
   totalSummitLocked: BigNumber

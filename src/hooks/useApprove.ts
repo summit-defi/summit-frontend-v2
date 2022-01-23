@@ -6,6 +6,7 @@ import { approve } from 'utils/callHelpers'
 import { useCartographer } from './useContract'
 import useToast from './useToast'
 import { fetchTokensUserDataAsync } from 'state/tokens'
+import { fetchEverestDataAsync } from 'state/everest'
 
 // Approve a Farm
 export const useApprove = (lpContract: Contract, tokenName: string) => {
@@ -25,8 +26,33 @@ export const useApprove = (lpContract: Contract, tokenName: string) => {
     } finally {
       setPending(false)
       dispatch(fetchTokensUserDataAsync(account))
+      dispatch(fetchEverestDataAsync(account))
     }
   }, [account, dispatch, lpContract, cartographer, setPending, toastSuccess, toastError, tokenName])
+
+  return { onApprove: handleApprove, pending }
+}
+
+// Approve a Farm
+export const useApproveAddress = (lpContract: Contract, spender: string, tokenName: string) => {
+  const dispatch = useDispatch()
+  const [pending, setPending] = useState(false)
+  const { toastSuccess, toastError } = useToast()
+  const { account }: { account: string } = useWallet()
+
+  const handleApprove = useCallback(async () => {
+    try {
+      setPending(true)
+      await approve(lpContract, spender, account)
+      toastSuccess(`${tokenName} Approved`)
+    } catch (error) {
+      toastError(`${tokenName} Approval Failed`, (error as Error).message)
+    } finally {
+      setPending(false)
+      dispatch(fetchTokensUserDataAsync(account))
+      dispatch(fetchEverestDataAsync(account))
+    }
+  }, [account, dispatch, lpContract, spender, setPending, toastSuccess, toastError, tokenName])
 
   return { onApprove: handleApprove, pending }
 }

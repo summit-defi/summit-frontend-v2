@@ -3,33 +3,26 @@ import TokenInput from 'components/TokenInput'
 import { isNumber } from 'lodash'
 import React, { memo, useCallback, useState } from 'react'
 import { useCurrentTimestampOnce } from 'state/hooks'
-import { LockSummitButtonType } from 'state/types'
-import styled from 'styled-components'
+import { EverestUserData, LockSummitButtonType } from 'state/types'
 import { Flex } from 'uikit'
 import { getExpectedEverestAward, getFullDisplayBalance } from 'utils'
 import { ExistingLockedSummit } from './ExistingLockedSummit'
 import { LockSummitInfoAndButton } from './LockSummitInfoAndButton'
 
-const Gap = styled.div`
-    width: 10px;
-    height: 12px;
-`
+interface Props {
+    userEverestInfo: EverestUserData
+}
 
-
-export const IncreaseLockedAmountSection: React.FC = memo(() => {
-    const currentTimestamp = useCurrentTimestampOnce()
-
-    const summitBalance = new BigNumber(500).times(new BigNumber(10).pow(18))
+export const IncreaseLockedAmountSection: React.FC<Props> = ({ userEverestInfo }) => {
+    const {
+        summitBalance,
+        summitLocked,
+        lockRelease,
+        lockDuration
+    } = userEverestInfo
 
     const [lockAmount, setLockAmount] = useState<BigNumber | null>(null)
-    const [lockDuration, setLockDuration] = useState<number | null>(null)
-
     const everestAward = getExpectedEverestAward(lockAmount, lockDuration)
-
-    const lockRelease = lockDuration != null ?
-        currentTimestamp + (lockDuration * (24 * 3600)) :
-        null
-
 
     // LOCK AMOUNT INPUT
     const fullSummitBalance = getFullDisplayBalance(summitBalance, 18)
@@ -71,11 +64,12 @@ export const IncreaseLockedAmountSection: React.FC = memo(() => {
             />
 
             <ExistingLockedSummit
-                summitLocked={summitBalance}
+                summitLocked={summitLocked}
                 lockRelease={lockRelease}
             />
 
             <LockSummitInfoAndButton
+                approved
                 disabled={invalidVal}
                 type={LockSummitButtonType.IncreaseLockedSummit}
                 amount={lockAmount}
@@ -85,4 +79,4 @@ export const IncreaseLockedAmountSection: React.FC = memo(() => {
             />
         </Flex>
     )
-})
+}

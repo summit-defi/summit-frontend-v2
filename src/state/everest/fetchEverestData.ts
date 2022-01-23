@@ -1,11 +1,10 @@
 import BigNumber from "bignumber.js"
 import { BN_ZERO } from "config/constants"
-import { chunk } from "lodash"
-import { Epoch } from "state/types"
-import { retryableMulticall, abi, getSummitLockingAddress, getEverestTokenAddress } from "utils"
+import { retryableMulticall, abi, getEverestTokenAddress, getSummitTokenAddress } from "utils"
 
 export const fetchEverestData = async (account: string) => {
     const everestAddress = getEverestTokenAddress()
+    const summitAddress = getSummitTokenAddress()
     const calls = [
         {
             address: everestAddress,
@@ -21,27 +20,69 @@ export const fetchEverestData = async (account: string) => {
             params: [account]
         },
     ]
+    const allowanceCalls = [
+        {
+            address: summitAddress,
+            name: 'balanceOf',
+            params: [account]
+        },
+        {
+            address: summitAddress,
+            name: 'allowance',
+            params: [account, everestAddress]
+        },
+        {
+            address: everestAddress,
+            name: 'balanceOf',
+            params: [account]
+        },
+        {
+            address: everestAddress,
+            name: 'allowance',
+            params: [account, everestAddress]
+        },
+    ]
 
-    const res = await retryableMulticall(
-        abi.everestToken,
-        calls,
-        'fetchEverestData'
-    )
+    const [everestDataRes, allowancesRes] = await Promise.all([
+        retryableMulticall(
+            abi.everestToken,
+            calls,
+            'fetchEverestData'
+        ),
+        retryableMulticall(
+            abi.ERC20,
+            allowanceCalls,
+            'fetchEverestAllowances'
+        )
+    ])
 
-    if (res == null) return {
+    if (everestDataRes == null) return {
         totalSummitLocked: BN_ZERO,
         averageLockDuration: 0,
     }
 
+    const allowances = allowancesRes == null ? {
+        summitBalance: BN_ZERO,
+        summitAllowance: BN_ZERO,
+        everestBalance: BN_ZERO,
+        everestAllowance: BN_ZERO,
+    } : {
+        summitBalance: new BigNumber(allowancesRes[0][0]._hex),
+        summitAllowance: new BigNumber(allowancesRes[1][0]._hex),
+        everestBalance: new BigNumber(allowancesRes[2][0]._hex),
+        everestAllowance: new BigNumber(allowancesRes[3][0]._hex),
+    }
+
     return {
-        totalSummitLocked: new BigNumber(res[0][0]._hex),
-        averageLockDuration: new BigNumber(res[1][0]._hex).toNumber(),
+        totalSummitLocked: new BigNumber(everestDataRes[0][0]._hex),
+        averageLockDuration: new BigNumber(everestDataRes[1][0]._hex).toNumber(),
         userData: {
-            everestOwned: new BigNumber(res[2].everestOwned._hex),
-            summitLocked: new BigNumber(res[2].summitLocked._hex),
-            lockRelease: new BigNumber(res[2].lockRelease._hex).toNumber(),
-            lockDuration: new BigNumber(res[2].lockDuration._hex).toNumber(),
-            everestLockMult: new BigNumber(res[2].everestLockMultiplier._hex).toNumber(),
+            everestOwned: new BigNumber(everestDataRes[2].everestOwned._hex),
+            summitLocked: new BigNumber(everestDataRes[2].summitLocked._hex),
+            lockRelease: new BigNumber(everestDataRes[2].lockRelease._hex).toNumber(),
+            lockDuration: Math.round(new BigNumber(everestDataRes[2].lockDuration._hex).toNumber() / (24 * 3600)),
+            everestLockMult: new BigNumber(everestDataRes[2].everestLockMultiplier._hex).toNumber(),
+            ...allowances,
         }
     }
 }

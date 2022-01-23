@@ -3,18 +3,22 @@ import TokenInput from 'components/TokenInput'
 import { isNumber } from 'lodash'
 import React, { memo, useCallback, useState } from 'react'
 import { useCurrentTimestampOnce } from 'state/hooks'
-import { LockSummitButtonType } from 'state/types'
+import { EverestUserData, LockSummitButtonType } from 'state/types'
 import { Flex, Text } from 'uikit'
 import { getExpectedEverestAward, getFullDisplayBalance, lockDurationTextLong } from 'utils'
 import EverestLockDurationSlider from './EverestLockDurationSlider'
 import { LockSummitInfoAndButton } from './LockSummitInfoAndButton'
 
 
-export const InitialSummitLockSection: React.FC = memo(() => {
+interface Props {
+    summitBalance: BigNumber
+    summitApproved: boolean
+}
+
+
+export const InitialSummitLockSection: React.FC<Props> = ({ summitBalance, summitApproved }) => {
     const currentTimestamp = useCurrentTimestampOnce()
-
-    const summitBalance = new BigNumber(500).times(new BigNumber(10).pow(18))
-
+    
     const [lockAmount, setLockAmount] = useState<BigNumber | null>(null)
     const [lockDuration, setLockDuration] = useState<number | null>(null)
 
@@ -73,6 +77,7 @@ export const InitialSummitLockSection: React.FC = memo(() => {
             />
 
             <LockSummitInfoAndButton
+                approved={summitApproved}
                 disabled={invalidVal || lockDuration == null}
                 type={LockSummitButtonType.LockSummit}
                 amount={lockAmount}
@@ -82,4 +87,4 @@ export const InitialSummitLockSection: React.FC = memo(() => {
             />
         </Flex>
     )
-})
+}

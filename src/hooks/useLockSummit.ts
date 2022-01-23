@@ -1,12 +1,12 @@
 import { useCallback, useState } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useDispatch } from 'react-redux'
-import { harvestEpoch, increaseLockDuration, increaseLockedSummit, lockSummit } from 'utils'
+import { increaseLockDuration, increaseLockedSummit, lockSummit } from 'utils'
 import { useEverestToken } from './useContract'
 import { useTransactionToasts } from './useToast'
-import { fetchUserEpochsAsync } from 'state/glacier'
 import { LockSummitButtonType } from 'state/types'
 import BigNumber from 'bignumber.js'
+import { fetchEverestDataAsync } from 'state/everest'
 
 export const useLockSummit = (type: LockSummitButtonType, summitAmount: BigNumber | null, duration: number | null) => {
   const dispatch = useDispatch()
@@ -50,11 +50,11 @@ export const useLockSummit = (type: LockSummitButtonType, summitAmount: BigNumbe
             break
         }
       } finally {
-        // TODO: Refresh in state
+        dispatch(fetchEverestDataAsync(account))
         setLockSummitPending(false)
       }
     },
-    [account, type, summitAmount, duration, everestToken, setLockSummitPending, toastSuccess, toastError],
+    [account, type, summitAmount, duration, everestToken, dispatch, setLockSummitPending, toastSuccess, toastError],
   )
 
   return { onLockSummit: handleLockSummit, lockSummitPending }

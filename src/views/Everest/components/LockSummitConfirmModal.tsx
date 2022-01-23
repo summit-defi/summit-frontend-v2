@@ -1,13 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, {  } from 'react'
 import { Flex, Text, Modal, HighlightedText } from 'uikit'
 import ModalActions from 'components/ModalActions'
-import TokenInput from '../../../components/TokenInput'
-import { getFormattedBigNumber, getFullDisplayBalance } from '../../../utils/formatBalance'
+import { getFormattedBigNumber } from '../../../utils/formatBalance'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { isNumber } from 'lodash'
-import { elevationPalette } from 'theme/colors'
-import { Epoch, LockSummitButtonType } from 'state/types'
-import HarvestLockForEverestSelector from './HarvestLockForEverestSelector'
+import { LockSummitButtonType } from 'state/types'
 import BigNumber from 'bignumber.js'
 import { lockDurationTextLong, timestampToDateWithYear } from 'utils'
 
@@ -23,7 +19,7 @@ interface LockSummitConfirmModalProps {
 const getTitle = (type: LockSummitButtonType) => {
   switch (type) {
     case LockSummitButtonType.IncreaseLockedSummit: return 'INCREASE|br|LOCKED SUMMIT'
-    case LockSummitButtonType.IncreaseLockDuration: return 'INCREASE|br|LOCK DURATION'
+    case LockSummitButtonType.IncreaseLockDuration: return 'INCREASE|br|LOCK|br|DURATION'
     default:
     case LockSummitButtonType.LockSummit: return 'LOCK|br|SUMMIT'
   }
@@ -43,7 +39,10 @@ const LockSummitConfirmModal: React.FC<LockSummitConfirmModalProps> = ({
   const lockDurationString = lockDurationTextLong(lockDuration)
   const releaseDate = timestampToDateWithYear(lockRelease)
 
-  console.log(lockDuration)
+  const handleConfirm = () => {
+    onDismiss()
+    onLockSummit()
+  }
 
   return (
     <Modal
@@ -105,7 +104,7 @@ const LockSummitConfirmModal: React.FC<LockSummitConfirmModalProps> = ({
           CANCEL
         </SummitButton>
         <SummitButton
-          onClick={onLockSummit}
+          onClick={handleConfirm}
         >
           CONFIRM
         </SummitButton>
