@@ -42,9 +42,13 @@ export const HeaderArtwork = styled.div<{ elevation: string }>`
   height: ${PuckSize}px;
 `
 
+const PuckWhiteText = (name: string) => {
+  return elevationUtils.isElevation(name) || name === 'BLUE' || name === 'EVEREST'
+}
+
 export const HeaderElevationName = styled(HighlightedText)<{ elevationName: string }>`
   position: absolute;
-  color: ${({ elevationName, theme }) => ((elevationUtils.isElevation(elevationName) || elevationName === 'BLUE') ? 'white' : theme.colors.text)};
+  color: ${({ elevationName, theme }) => (PuckWhiteText(elevationName) ? 'white' : theme.colors.text)};
   text-shadow: 1px 1px 2px ${({ theme }) => theme.colors.textShadow};
   text-transform: uppercase;
   margin: auto;

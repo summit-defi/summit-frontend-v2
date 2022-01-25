@@ -165,7 +165,7 @@ export const elevationUtils = {
   elevationExpedition: [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT, Elevation.EXPEDITION],
   elevationOnly: [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT],
   isElevation: (elevation: string) => !!ElevationTitle[elevation],
-  modalTitle: (elevation: string) => ElevationTitle[elevation as Elevation] || 'SUMMITDEFI.COM',
+  modalTitle: (elevation: string) => ElevationTitle[elevation as Elevation],
   elevationMultiplier: (elevation: Elevation) => ElevationMultiplier[elevation],
   header: (elevation: Elevation) => ElevationTitle[elevation],
   subHeader: (elevation: Elevation) => ElevationSubHeader[elevation],

@@ -124,40 +124,43 @@ const Modal: React.FC<Props> = ({
   headerless = false,
   elevationGlow,
   elevationCircleHeader,
-}) => (
-  <StyledModal elevationGlow={elevationGlow}>
-    <ElevationPuck elevation={elevationCircleHeader}>
-      <Text fontSize="16px" color="inherit" mb="2px">
-        {elevationUtils.modalTitle(elevationCircleHeader)}
-      </Text>
-      {title.split('|').map((text) => (text === 'br' ? <br key={text} /> : text))}
-    </ElevationPuck>
-    {!headerless && (
-      <ModalHeader>
-        <ModalTitle>
-          {onBack && (
-            <IconButton variant="text" onClick={onBack} area-label="go back" mr="8px">
-              <ArrowBackIcon color="primary" />
+}) => {
+    const elevTitle = elevationUtils.modalTitle(elevationCircleHeader)
+    return (
+    <StyledModal elevationGlow={elevationGlow}>
+      <ElevationPuck elevation={elevationCircleHeader}>
+        { elevTitle != null && <Text fontSize="16px" color="inherit" mb="2px">
+          {elevTitle}
+        </Text> }
+        {title.split('|').map((text) => (text === 'br' ? <br key={text} /> : text))}
+      </ElevationPuck>
+      {!headerless && (
+        <ModalHeader>
+          <ModalTitle>
+            {onBack && (
+              <IconButton variant="text" onClick={onBack} area-label="go back" mr="8px">
+                <ArrowBackIcon color="primary" />
+              </IconButton>
+            )}
+            <Heading>{title}</Heading>
+          </ModalTitle>
+          {!hideCloseButton && (
+            <IconButton variant="text" onClick={onDismiss} aria-label="Close the dialog">
+              <StyledCloseIcon color="primary" />
             </IconButton>
           )}
-          <Heading>{title}</Heading>
-        </ModalTitle>
-        {!hideCloseButton && (
-          <IconButton variant="text" onClick={onDismiss} aria-label="Close the dialog">
-            <StyledCloseIcon color="primary" />
-          </IconButton>
-        )}
-      </ModalHeader>
-    )}
-    <ScrollableContent flexDirection="column" p={bodyPadding} elevationCircleHeader={elevationCircleHeader}>
-      {children}
-      {headerless && !hideCloseButton && (
-        <AbsoluteIconButton variant="text" onClick={onDismiss} aria-label="Close the dialog">
-          <StyledCloseIcon color="primary" />
-        </AbsoluteIconButton>
+        </ModalHeader>
       )}
-    </ScrollableContent>
-  </StyledModal>
-)
+      <ScrollableContent flexDirection="column" p={bodyPadding} elevationCircleHeader={elevationCircleHeader}>
+        {children}
+        {headerless && !hideCloseButton && (
+          <AbsoluteIconButton variant="text" onClick={onDismiss} aria-label="Close the dialog">
+            <StyledCloseIcon color="primary" />
+          </AbsoluteIconButton>
+        )}
+      </ScrollableContent>
+    </StyledModal>
+  )
+}
 
 export default Modal

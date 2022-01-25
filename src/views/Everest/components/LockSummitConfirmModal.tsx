@@ -16,15 +16,6 @@ interface LockSummitConfirmModalProps {
   onDismiss?: () => void
 }
 
-const getTitle = (type: LockSummitButtonType) => {
-  switch (type) {
-    case LockSummitButtonType.IncreaseLockedSummit: return 'INCREASE|br|LOCKED SUMMIT'
-    case LockSummitButtonType.IncreaseLockDuration: return 'INCREASE|br|LOCK|br|DURATION'
-    default:
-    case LockSummitButtonType.LockSummit: return 'LOCK|br|SUMMIT'
-  }
-}
-
 const LockSummitConfirmModal: React.FC<LockSummitConfirmModalProps> = ({
   type,
   lockDuration,
@@ -34,7 +25,6 @@ const LockSummitConfirmModal: React.FC<LockSummitConfirmModalProps> = ({
   onDismiss,
 }) => {
 
-  const title = getTitle(type)
   const rawEverestAward = getFormattedBigNumber(everestAward)
   const lockDurationString = lockDurationTextLong(lockDuration)
   const releaseDate = timestampToDateWithYear(lockRelease)
@@ -46,9 +36,9 @@ const LockSummitConfirmModal: React.FC<LockSummitConfirmModalProps> = ({
 
   return (
     <Modal
-      title={title}
+      title=''
       onDismiss={onDismiss}
-      elevationCircleHeader='BLUE'
+      elevationCircleHeader='EVEREST'
       headerless
     >
       <Flex gap='24px' flexDirection='column' alignItems='center' justifyContent='center'>

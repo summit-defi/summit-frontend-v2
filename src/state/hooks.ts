@@ -746,13 +746,15 @@ export const useFrozenEpochs = () => {
 // EVEREST
 export const useEverestInfo = () => {
   const totalSummitLocked: BigNumber = useSelector((state: State) => state.everest.totalSummitLocked)
-  const averageLockDuration: BigNumber = useSelector((state: State) => state.everest.averageLockDuration)
+  const averageLockDuration: number = useSelector((state: State) => state.everest.averageLockDuration)
+  const everestSupply: BigNumber = useSelector((state: State) => state.everest.everestSupply)
   return useMemo(
     () => ({
       totalSummitLocked,
       averageLockDuration,
+      everestSupply
     }),
-    [totalSummitLocked, averageLockDuration]
+    [totalSummitLocked, averageLockDuration, everestSupply]
   )
 }
 export const useEverestUserInfo = (): EverestUserData | undefined => {

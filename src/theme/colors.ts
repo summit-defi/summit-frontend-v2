@@ -24,6 +24,7 @@ export const brandColors = {
   AUDIT: '#000418',
   BETA: '#DB00FF',
   BASE: '#3e7fa2',
+  EVEREST: '#457BAC',
 
   textGold: '#F7BA56',
 }

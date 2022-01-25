@@ -70,7 +70,7 @@ export const getMenuItems = (
   },
   {
     label: 'EVEREST',
-    icon: '',
+    icon: 'summit/EVERESTicon.png',
     href: './everest',
     external: false,
     keyPaths: ['everest'],

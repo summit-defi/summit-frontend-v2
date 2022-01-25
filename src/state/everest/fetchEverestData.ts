@@ -16,6 +16,10 @@ export const fetchEverestData = async (account: string) => {
         },
         {
             address: everestAddress,
+            name: 'totalSupply'
+        },
+        {
+            address: everestAddress,
             name: 'userEverestInfo',
             params: [account]
         },
@@ -59,6 +63,7 @@ export const fetchEverestData = async (account: string) => {
     if (everestDataRes == null) return {
         totalSummitLocked: BN_ZERO,
         averageLockDuration: 0,
+        everestSupply: BN_ZERO
     }
 
     const allowances = allowancesRes == null ? {
@@ -75,13 +80,14 @@ export const fetchEverestData = async (account: string) => {
 
     return {
         totalSummitLocked: new BigNumber(everestDataRes[0][0]._hex),
-        averageLockDuration: new BigNumber(everestDataRes[1][0]._hex).toNumber(),
+        averageLockDuration: Math.round(new BigNumber(everestDataRes[1][0]._hex).toNumber() / (24 * 3600)),
+        everestSupply: new BigNumber(everestDataRes[2][0]._hex),
         userData: {
-            everestOwned: new BigNumber(everestDataRes[2].everestOwned._hex),
-            summitLocked: new BigNumber(everestDataRes[2].summitLocked._hex),
-            lockRelease: new BigNumber(everestDataRes[2].lockRelease._hex).toNumber(),
-            lockDuration: Math.round(new BigNumber(everestDataRes[2].lockDuration._hex).toNumber() / (24 * 3600)),
-            everestLockMult: new BigNumber(everestDataRes[2].everestLockMultiplier._hex).toNumber(),
+            everestOwned: new BigNumber(everestDataRes[3].everestOwned._hex),
+            summitLocked: new BigNumber(everestDataRes[3].summitLocked._hex),
+            lockRelease: new BigNumber(everestDataRes[3].lockRelease._hex).toNumber(),
+            lockDuration: Math.round(new BigNumber(everestDataRes[3].lockDuration._hex).toNumber() / (24 * 3600)),
+            everestLockMult: new BigNumber(everestDataRes[3].everestLockMultiplier._hex).toNumber(),
             ...allowances,
         }
     }

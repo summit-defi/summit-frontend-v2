@@ -7,6 +7,7 @@ import { fetchEverestData } from './fetchEverestData'
 const initialState: EverestState = {
   totalSummitLocked: BN_ZERO,
   averageLockDuration: 0,
+  everestSupply: BN_ZERO,
 }
 
 export const EverestSlice = createSlice({
@@ -16,6 +17,7 @@ export const EverestSlice = createSlice({
     setEverestData: (state, action) => {
       state.totalSummitLocked = action.payload.totalSummitLocked
       state.averageLockDuration = action.payload.averageLockDuration
+      state.everestSupply = action.payload.everestSupply
       state.userData = action.payload.userData
     }
   },

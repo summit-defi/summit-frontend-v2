@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import useWeb3 from 'hooks/useWeb3'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import Page from 'components/layout/Page'
-import { UserEverestCard } from './components'
+import { UserEverestCard, EverestStatsCard } from './components'
 import styled from 'styled-components'
 import { ElevationPuck, Flex, Text } from 'uikit'
 import FlexLayout from 'components/layout/Flex'
@@ -40,17 +40,13 @@ const Everest: React.FC = () => {
   return (
     <Page>
       <HeaderCardsWrapper>
-        <ElevationPuck elevation='BLUE'>
-            <Text bold fontSize='24px' color='white'>
-                EVEREST
-            </Text>
-        </ElevationPuck>
+        <ElevationPuck elevation='EVEREST'/>
       </HeaderCardsWrapper>
       <FlexLayout>
         { everestDataLoaded ?
-          <Flex gap='24px' width='100%' flexWrap='wrap' alignItems='center' justifyContent='center'>
+          <Flex gap='24px' width='100%' flexWrap='wrap' alignItems='flex-start' justifyContent='center'>
             <UserEverestCard/>
-            <UserEverestCard/>
+            <EverestStatsCard/>
           </Flex> :
           <PageLoader fill loadingText='Loading Everest Data...'/>
         }

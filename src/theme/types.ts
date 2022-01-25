@@ -73,6 +73,7 @@ export type Colors = {
   AUDIT: string
   BETA: string
   BASE: string
+  EVEREST: string
 }
 
 export type ZIndices = {

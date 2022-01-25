@@ -8,7 +8,7 @@ import { IncreaseLockedAmountSection } from "./IncreaseLockedAmountSection"
 import { InitialSummitLockSection } from "./InitialSummitLockSection"
 
 
-export const EverestCard = styled(Flex)`
+const EverestCard = styled(Flex)`
     flex-direction: column;
     justify-content: flex-start;
     background: ${({ theme }) => theme.colors.background};
@@ -31,10 +31,6 @@ export const UserEverestCard: React.FC = memo(() => {
     const userHasLockedSummit = (userEverestInfo?.summitLocked || BN_ZERO).isGreaterThan(0)
     const summitApproved = (userEverestInfo?.summitAllowance || BN_ZERO).isGreaterThan(0)
 
-    console.log({
-        userEverestInfo
-    })
-        
     return (
         <EverestCard gap='32px' alignItems='center' justifyContent='center'>
             <HighlightedText bold monospace textAlign='center'>

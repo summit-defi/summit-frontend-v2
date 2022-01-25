@@ -182,6 +182,7 @@ export interface EverestUserData {
 export interface EverestState {
   totalSummitLocked: BigNumber
   averageLockDuration: number
+  everestSupply: BigNumber
   userData?: EverestUserData
 }
 
