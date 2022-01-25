@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text, TokenSymbolImage } from 'uikit'
 import { getFormattedBigNumber } from 'utils/formatBalance'
-import { Expedition } from 'state/types'
+import { ExpeditionInfo } from 'state/types'
 import UpcomingExpeditionTimer from './UpcomingExpeditionTimer'
 
 const ExpeditionWrapper = styled.div`
@@ -66,7 +66,7 @@ const Glow = styled(Flex)`
 `
 
 interface Props {
-  expedition: Expedition
+  expedition: ExpeditionInfo
 }
 
 const UpcomingExpeditionCard: React.FC<Props> = ({ expedition }) => {

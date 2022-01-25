@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 import { Elevation } from 'config/constants/types'
 import React, { useEffect, useState } from 'react'
 import { usePendingExpeditionTx, useSelectedElevationWinningTotem, useSummitPrice } from 'state/hooks'
-import { Expedition } from 'state/types'
+import { ExpeditionInfo } from 'state/types'
 import styled, { keyframes } from 'styled-components'
 import { Flex, Spinner, Text } from 'uikit'
 import useSelectTotemModal from 'uikit/widgets/SelectTotemModal/useSelectTotemModal'
@@ -121,7 +121,7 @@ const ValueText = styled(Text)<{ fontSize?: string }>`
 interface Props {
   totem: number | null
   deityDivider: number
-  expedition: Expedition | null
+  expedition: ExpeditionInfo | null
 }
 
 const deityValueText = (expedition, totem, deityDivider, summitPrice, bull) => {

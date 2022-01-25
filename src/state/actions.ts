@@ -4,7 +4,7 @@ export {
   fetchExpeditionUserDataAsync,
   updateExpeditionUserPotentialWinningsAsync,
   updateExpeditionUserWinningsAsync
-} from './expeditions'
+} from './expedition'
 export {
   fetchElevationsPublicDataAsync,
   fetchUserTotemsAsync,

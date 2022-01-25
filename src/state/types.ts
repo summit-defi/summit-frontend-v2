@@ -57,8 +57,7 @@ export interface ExpeditionTokenInfo {
   markedForDist: BigNumber
   distributed: BigNumber
 }
-
-export interface Expedition {
+export interface ExpeditionInfo {
   live: boolean
   launched: boolean
 
@@ -92,7 +91,7 @@ export interface FarmsState {
 
 export interface ExpeditionState {
   userData: ExpeditionUserData
-  data: Expedition
+  data: ExpeditionInfo
 }
 
 export interface ElevationInfo {

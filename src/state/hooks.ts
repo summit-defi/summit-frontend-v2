@@ -8,7 +8,7 @@ import {
   fetchExpeditionUserDataAsync,
   fetchExpeditionPublicDataAsync,
 } from './actions'
-import { State, Farm, Expedition, ElevationInfo, ExpeditionUserData, UserTokenData, EverestUserData, EverestState } from './types'
+import { State, Farm, ExpeditionInfo, ElevationInfo, ExpeditionUserData, UserTokenData, EverestUserData, EverestState } from './types'
 import { BN_ZERO, Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired, RoundLockTime } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
@@ -20,8 +20,8 @@ import { useLocation } from 'react-router-dom'
 import { getFarmConfigs } from 'config/constants/farms'
 import useTheme from 'hooks/useTheme'
 import { getChainWrappedNativeTokenSymbol, TokenSymbol } from 'config/constants'
-import { fetchExpeditionPotentialWinnings, fetchExpeditionWinnings } from './expeditions/fetchExpeditionUserInfo'
-import { updateExpeditionUserPotentialWinningsAsync, updateExpeditionUserWinnings, updateExpeditionUserWinningsAsync } from './expeditions'
+import { fetchExpeditionPotentialWinnings, fetchExpeditionWinnings } from './expedition/fetchExpeditionUserInfo'
+import { updateExpeditionUserPotentialWinningsAsync, updateExpeditionUserWinnings, updateExpeditionUserWinningsAsync } from './expedition'
 import { createSelector } from '@reduxjs/toolkit'
 
 const ZERO = new BigNumber(0)
@@ -232,7 +232,7 @@ export const useUserTokens = () => {
 export const useExpedition = (
   account,
 ): {
-  expedition: Expedition
+  expedition: ExpeditionInfo
   userData: ExpeditionUserData
 } => {
   const { slowRefresh } = useRefresh()
@@ -245,7 +245,7 @@ export const useExpedition = (
     }
   }, [account, dispatch, slowRefresh])
 
-  const expedition: Expedition = useSelector((state: State) => state.expedition.data)
+  const expedition: ExpeditionInfo = useSelector((state: State) => state.expedition.data)
   const userData = useSelector((state: State) => state.expedition.userData)
   return {
     expedition,

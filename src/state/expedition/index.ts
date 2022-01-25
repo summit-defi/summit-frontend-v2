@@ -60,14 +60,14 @@ const initialState: ExpeditionState = {
   data: emptyExpedition
 }
 
-export const ExpeditionsSlice = createSlice({
-  name: 'Expeditions',
+export const ExpeditionSlice = createSlice({
+  name: 'Expedition',
   initialState,
   reducers: {
     setExpeditionPublicData: (state, action) => {
       state.data = action.payload
     },
-    setExpeditionsUserData: (state, action) => {
+    setExpeditionUserData: (state, action) => {
       state.userData = {
         ...state.userData,
         ...action.payload,
@@ -91,10 +91,10 @@ export const ExpeditionsSlice = createSlice({
 // Actions
 export const {
   setExpeditionPublicData,
-  setExpeditionsUserData,
+  setExpeditionUserData,
   updateExpeditionUserWinnings,
   updateExpeditionUserPotentialWinnings,
-} = ExpeditionsSlice.actions
+} = ExpeditionSlice.actions
 
 // Thunks
 export const fetchExpeditionPublicDataAsync = () => async (dispatch) => {
@@ -105,7 +105,8 @@ export const fetchExpeditionPublicDataAsync = () => async (dispatch) => {
 
 export const fetchExpeditionUserDataAsync = (account) => async (dispatch) => {
   const userData = await fetchExpeditionUserData(account)
-  dispatch(setExpeditionsUserData(userData))
+  if (userData == null) return
+  dispatch(setExpeditionUserData(userData))
 }
 
 export const updateExpeditionUserWinningsAsync = (account: string) => async (dispatch) => {
@@ -120,4 +121,4 @@ export const updateExpeditionUserPotentialWinningsAsync = (account: string) => a
   dispatch(updateExpeditionUserPotentialWinnings(potentialWinnings))
 }
 
-export default ExpeditionsSlice.reducer
+export default ExpeditionSlice.reducer

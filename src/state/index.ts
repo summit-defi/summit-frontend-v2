@@ -1,6 +1,6 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit'
 import farmsReducer from './farms'
-import expeditionsReducer from './expeditions'
+import expeditionReducer from './expedition'
 import summitEcosystemReducer from './summitEcosystem'
 import pricesReducer from './prices'
 import tokensReducer from './tokens'
@@ -11,7 +11,7 @@ export default configureStore({
   devTools: process.env.NODE_ENV !== 'production',
   reducer: {
     farms: farmsReducer,
-    expeditions: expeditionsReducer,
+    expedition: expeditionReducer,
     summitEcosystem: summitEcosystemReducer,
     prices: pricesReducer,
     tokens: tokensReducer,

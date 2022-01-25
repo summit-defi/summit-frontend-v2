@@ -6,7 +6,7 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import useStake from 'hooks/useStake'
 import useWithdraw from 'hooks/useWithdraw'
 import { useClaimPool } from 'hooks/useClaim'
-import { Expedition } from 'state/types'
+import { ExpeditionInfo } from 'state/types'
 import { FCard } from 'views/ElevationFarms/components/FCard'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { Elevation } from 'config/constants/types'
@@ -83,7 +83,7 @@ const Glow = styled(Flex)`
 `
 
 interface ExpiredExpeditionProps {
-  expedition: Expedition
+  expedition: ExpeditionInfo
   summitAllowance: BigNumber
   summitBalance: BigNumber
   summitLpAllowance: BigNumber

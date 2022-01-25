@@ -4,6 +4,7 @@ import {
   getExpeditionAddress,
 } from 'utils/'
 import BigNumber from 'bignumber.js'
+import { BN_ZERO } from 'config/constants'
 
 export const fetchExpeditionUserData = async (account) => {
   const call = ({
@@ -13,8 +14,24 @@ export const fetchExpeditionUserData = async (account) => {
   })
 
   const res = await retryableMulticall(abi.expedition, [call], 'fetchExpeditionUserData')
+  if (res == null) return null
 
-  return null
+  const rawUserData = res[0]
+
+  return {
+    everestOwned: new BigNumber(rawUserData.everestOwned._hex),
+  
+    deity: rawUserData.deity,
+    deitySelected: rawUserData.deitySelected,
+    deitySelectionRound: new BigNumber(rawUserData.deitySelectionRound._hex),
+    safetyFactor: rawUserData.safetyFactor,
+    safetyFactorSelected: rawUserData.safetyFactorSelected,
+  
+    entered: rawUserData.entered,
+  
+    summitLifetimeWinnings: new BigNumber(rawUserData.summit.lifetimeWinnings._hex),
+    usdcLifetimeWinnings: new BigNumber(rawUserData.usdc.lifetimeWinnings._hex),
+  }
 }
 
 export const fetchExpeditionWinnings = async (account) => {

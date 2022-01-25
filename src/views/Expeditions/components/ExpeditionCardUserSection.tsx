@@ -3,7 +3,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Flex, Text, HighlightedText } from 'uikit'
 import { getBalanceNumber } from 'utils/formatBalance'
-import { Expedition } from 'state/types'
+import { ExpeditionInfo } from 'state/types'
 import { Elevation } from 'config/constants/types'
 import CardValue from 'views/Home/components/CardValue'
 import { useElevationTotem, usePricesPerToken, useSummitPrice } from 'state/hooks'
@@ -50,7 +50,7 @@ const Divider = styled.div`
 `
 
 interface ClaimProps {
-  expedition: Expedition
+  expedition: ExpeditionInfo
   summitAllowance: BigNumber
   summitBalance: BigNumber
   summitLpAllowance: BigNumber

@@ -47,6 +47,7 @@ const ExpeditionFarms: React.FC = () => {
   const expeditionPotTotalValue = useExpeditionPotTotalValue()
   const expeditionDisbursedValue = useExpeditionDisbursedValue()
   const { expedition, userData } = useExpedition(account)
+
   const totem = useElevationTotem(Elevation.EXPEDITION)
   const deityDivider = useExpeditionDivider()
   const expeditionsLoaded = true

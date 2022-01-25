@@ -131,6 +131,10 @@ export const rolloverElevation = async (cartographer, elevation, account) => {
   const rolloverElevationCall = cartographer.methods.rollover(elevationUtils.toInt(elevation))
   return estimateGasAndExecute(rolloverElevationCall, account)
 }
+export const rolloverExpedition = async (expedition, account) => {
+  const rolloverCall = expedition.methods.rollover()
+  return estimateGasAndExecute(rolloverCall, account)
+}
 
 // WRAPPER TO RETRY TRANSACTIONS
 export const retryDecorator = (decoratee, retryCount = 4) => {

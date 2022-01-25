@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Flex, HighlightedText } from 'uikit'
 import { getBalanceNumber } from 'utils/formatBalance'
-import { Expedition } from 'state/types'
+import { ExpeditionInfo } from 'state/types'
 import { Elevation } from 'config/constants/types'
 import CardValue from 'views/Home/components/CardValue'
 import BigNumber from 'bignumber.js'
@@ -36,7 +36,7 @@ const InfoItem = styled.div`
 `
 
 interface ClaimProps {
-  expedition: Expedition
+  expedition: ExpeditionInfo
 }
 
 const ExpeditionWinnings: React.FC<ClaimProps> = ({ expedition }) => {

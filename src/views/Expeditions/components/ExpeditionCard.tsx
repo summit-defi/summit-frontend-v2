@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text, TokenSymbolImage } from 'uikit'
 import { getFormattedBigNumber } from 'utils/formatBalance'
-import { Expedition } from 'state/types'
+import { ExpeditionInfo } from 'state/types'
 import ElevationTimerAndRollover from 'views/ElevationFarms/components/ElevationTimerAndRollover'
 import ExpeditionCardUserSection from './ExpeditionCardUserSection'
 import ExpeditionWinnings from './ExpeditionWinnings'
@@ -68,7 +68,7 @@ const Glow = styled(Flex)`
 `
 
 interface Props {
-  expedition: Expedition
+  expedition: ExpeditionInfo
   summitAllowance: BigNumber
   summitBalance: BigNumber
   summitLpAllowance: BigNumber
