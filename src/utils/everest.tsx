@@ -64,11 +64,6 @@ export const getLockDurationPerc = (days: number | null) => {
     const minIndex = Math.max(maxIndex - 1, 0)
     const minDays = sliderPoints[minIndex]
     const maxDays = sliderPoints[maxIndex]
-    console.log({
-        minDays,
-        maxDays,
-        perc: ((days - minDays) / (maxDays - minDays))
-    })
     return (((days - minDays) / (maxDays - minDays)) + minIndex) * (100 / (sliderPoints.length - 1))
 }
 

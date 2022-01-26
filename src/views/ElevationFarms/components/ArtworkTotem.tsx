@@ -116,7 +116,7 @@ const DeityTotem: React.FC<DeityTotemProps> = ({ totem }) => {
       setTotemSelected(true)
     }, 200)
   }, [])
-  return <Deity totem={totem} selected={totemSelected} />
+  return <Deity deity={totem} selected={totemSelected} />
 }
 
 interface TotemProps {

@@ -100,7 +100,7 @@ const Home: React.FC = () => {
 
       <BackgroundedFlex flexDirection='column' justifyContent="center" alignItems="center" mt="36px">
         <DeityWrapper>
-          <InverseDeity totem={0} selected />
+          <InverseDeity deity={0} selected />
         </DeityWrapper>
 
         <StyledHighlightedText fontSize="16px" letterSpacing="2px" mb='8px'>

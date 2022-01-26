@@ -29,13 +29,11 @@ export interface Farm extends FarmConfig {
 }
 
 export interface ExpeditionUserData {
-  everestStaked: BigNumber
+  everestOwned: BigNumber
 
-  deity: number
-  deitySelected: boolean
+  deity: number | null
   deitySelectionRound: number
-  safetyFactor: number
-  safetyFactorSelected: boolean
+  faithFactor: number | null
 
   entered: boolean
 
@@ -91,7 +89,9 @@ export interface FarmsState {
 
 export interface ExpeditionState {
   userData: ExpeditionUserData
+  userDataLoaded: boolean
   data: ExpeditionInfo
+  expeditionLoaded: boolean
 }
 
 export interface ElevationInfo {

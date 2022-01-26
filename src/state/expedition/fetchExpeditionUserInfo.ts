@@ -4,7 +4,6 @@ import {
   getExpeditionAddress,
 } from 'utils/'
 import BigNumber from 'bignumber.js'
-import { BN_ZERO } from 'config/constants'
 
 export const fetchExpeditionUserData = async (account) => {
   const call = ({
@@ -21,11 +20,9 @@ export const fetchExpeditionUserData = async (account) => {
   return {
     everestOwned: new BigNumber(rawUserData.everestOwned._hex),
   
-    deity: rawUserData.deity,
-    deitySelected: rawUserData.deitySelected,
+    deity: rawUserData.deitySelected ? rawUserData.deity : null,
     deitySelectionRound: new BigNumber(rawUserData.deitySelectionRound._hex),
-    safetyFactor: rawUserData.safetyFactor,
-    safetyFactorSelected: rawUserData.safetyFactorSelected,
+    faithFactor: rawUserData.safetyFactorSelected ? rawUserData.safetyFactor : null,
   
     entered: rawUserData.entered,
   

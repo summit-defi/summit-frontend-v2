@@ -23,6 +23,7 @@ import { getChainWrappedNativeTokenSymbol, TokenSymbol } from 'config/constants'
 import { fetchExpeditionPotentialWinnings, fetchExpeditionWinnings } from './expedition/fetchExpeditionUserInfo'
 import { updateExpeditionUserPotentialWinningsAsync, updateExpeditionUserWinnings, updateExpeditionUserWinningsAsync } from './expedition'
 import { createSelector } from '@reduxjs/toolkit'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 
 const ZERO = new BigNumber(0)
 
@@ -229,27 +230,70 @@ export const useUserTokens = () => {
 
 // Expeditions
 
-export const useExpedition = (
-  account,
-): {
-  expedition: ExpeditionInfo
-  userData: ExpeditionUserData
-} => {
+export const useExpeditionFetching = () => {
+  const { account } = useWallet()
   const { slowRefresh } = useRefresh()
   const dispatch = useDispatch()
   useEffect(() => {
     if (account) {
+      dispatch(fetchExpeditionPublicDataAsync())
       dispatch(fetchExpeditionUserDataAsync(account))
       dispatch(updateExpeditionUserWinningsAsync(account))
       dispatch(updateExpeditionUserPotentialWinningsAsync(account))
     }
   }, [account, dispatch, slowRefresh])
+}
 
-  const expedition: ExpeditionInfo = useSelector((state: State) => state.expedition.data)
-  const userData = useSelector((state: State) => state.expedition.userData)
+export const useExpeditionInfo = () => useSelector((state: State) => state.expedition.data)
+export const useExpeditionUserData = () => useSelector((state: State) => state.expedition.userData)
+
+export const useExpeditionEntered = () => {
+  const { entered } = useExpeditionUserData()
+  return useMemo(
+    () => entered,
+    [entered],
+  )
+}
+export const useExpeditionEntryFlow = (): {
+  deity: number | null,
+  faithFactor: number | null,
+  everestOwned: BigNumber
+} => {
+  const userData = useExpeditionUserData()
+  console.log({
+    userData
+  })
+  const { deity, faithFactor, everestOwned } = useExpeditionUserData()
+  return useMemo(
+    () => ({
+      deity,
+      faithFactor,
+      everestOwned,
+    }),
+    [deity, faithFactor, everestOwned]
+  )
+}
+
+export const useExpeditionTotemHeaderInfo = () => {
+  const { deity } = useExpeditionUserData()
+  const { deitiedEverest, deityEverest } = useExpeditionInfo()
+  return useMemo(
+    () => ({
+      deity,
+      deitiedEverest,
+      deityEverest,
+    }),
+    [deity, deitiedEverest, deityEverest]
+  )
+}
+
+
+export const useExpeditionLoaded = () => {
+  const expeditionLoaded: ExpeditionInfo = useSelector((state: State) => state.expedition.expeditionLoaded)
+  const userDataLoaded = useSelector((state: State) => state.expedition.userDataLoaded)
   return {
-    expedition,
-    userData,
+    expeditionLoaded,
+    userDataLoaded,
   }
 }
 

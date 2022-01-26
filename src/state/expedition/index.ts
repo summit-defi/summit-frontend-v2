@@ -9,18 +9,22 @@ import {
 import { ExpeditionState } from '../types'
 import BigNumber from 'bignumber.js'
 
+const getUserLocalStorageVariables = () => {
+  const activeAccount = JSON.parse(localStorage.getItem('ActiveAccount'))
+  return {
+    deity: JSON.parse(localStorage.getItem(`${activeAccount}/EXPEDITION_deity`)),
+    faithFactor: JSON.parse(localStorage.getItem(`${activeAccount}/EXPEDITION_faithFactor`)),
+    entered: JSON.parse(localStorage.getItem(`${activeAccount}/EXPEDITION_entered`)),
+  }
+}
+
 
 const BN_ZERO = new BigNumber(0)
 const emptyUserData = {
-  everestStaked: BN_ZERO,
+  everestOwned: BN_ZERO,
 
-  deity: 0,
-  deitySelected: false,
   deitySelectionRound: 0,
-  safetyFactor: 0,
-  safetyFactorSelected: false,
-
-  entered: false,
+  ...getUserLocalStorageVariables(),
 
   summitLifetimeWinnings: BN_ZERO,
   usdcLifetimeWinnings: BN_ZERO,
@@ -57,7 +61,9 @@ const emptyExpedition = {
 
 const initialState: ExpeditionState = {
   userData: emptyUserData,
-  data: emptyExpedition
+  userDataLoaded: false,
+  data: emptyExpedition,
+  expeditionLoaded: false,
 }
 
 export const ExpeditionSlice = createSlice({
@@ -66,12 +72,18 @@ export const ExpeditionSlice = createSlice({
   reducers: {
     setExpeditionPublicData: (state, action) => {
       state.data = action.payload
+      state.expeditionLoaded = true
     },
     setExpeditionUserData: (state, action) => {
       state.userData = {
         ...state.userData,
         ...action.payload,
       }
+      state.userDataLoaded = true
+      const activeAccount = JSON.parse(localStorage.getItem('ActiveAccount'))
+      localStorage.setItem(`${activeAccount}/EXPEDITION_deity`, action.payload.deity)
+      localStorage.setItem(`${activeAccount}/EXPEDITION_faithFactor`, action.payload.faithFactor)
+      localStorage.setItem(`${activeAccount}/EXPEDITION_entered`, action.payload.entered)
     },
     updateExpeditionUserWinnings: (state, action) => {
       const { summitWinnings, usdcWinnings } = action.payload

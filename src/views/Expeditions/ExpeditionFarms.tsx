@@ -3,13 +3,16 @@ import styled from 'styled-components'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { HighlightedText, Text, Flex } from 'uikit'
 import {
-  useExpedition,
+  useExpeditionInfo,
   useElevationTotem,
   useElevationLocked,
   useIsElevationLockedUntilRollover,
   useExpeditionDivider,
   useExpeditionPotTotalValue,
   useExpeditionDisbursedValue,
+  useExpeditionLoaded,
+  useExpeditionFetching,
+  useExpeditionEntered,
 } from 'state/hooks'
 import FlexLayout from 'components/layout/Flex'
 import Page from 'components/layout/Page'
@@ -22,6 +25,7 @@ import ElevationFarmingExplanation from 'views/ElevationFarms/components/Elevati
 import { getSummitLpSymbol } from 'config/constants'
 import CardValue from 'views/Home/components/CardValue'
 import ExpiredExpedition from './components/ExpiredExpedition'
+import ExpeditionEntryFlow from './components/ExpeditionEntryFlow'
 
 const StyledPage = styled(Page)`
   padding-top: 48px;
@@ -42,94 +46,42 @@ text-shadow: none;
 `
 
 const ExpeditionFarms: React.FC = () => {
-  const { account } = useWallet()
-  const locked = useElevationLocked(Elevation.EXPEDITION)
-  const expeditionPotTotalValue = useExpeditionPotTotalValue()
-  const expeditionDisbursedValue = useExpeditionDisbursedValue()
-  const { expedition, userData } = useExpedition(account)
+  useExpeditionFetching()
+  const expeditionEntered = useExpeditionEntered()
+  const { expeditionLoaded } = useExpeditionLoaded()
 
-  const totem = useElevationTotem(Elevation.EXPEDITION)
-  const deityDivider = useExpeditionDivider()
-  const expeditionsLoaded = true
+  return (
+    <StyledPage>
+      <HighlightedText elevation={Elevation.EXPEDITION} header mb="24px">
+        THE EXPEDITION
+      </HighlightedText>
 
-  return null
+      <ExpeditionTotems/>
 
-  // return (
-  //   <StyledPage>
-  //     <HighlightedText elevation={Elevation.EXPEDITION} header mb="24px">
-  //       THE EXPEDITION
-  //     </HighlightedText>
+      { !expeditionLoaded && <PageLoader fill loadingText='Loading Expedition ...' /> }
 
-  //     <ExpeditionTotems totem={totem} expedition={activeExpedition} deityDivider={deityDivider} />
+      <ExpeditionEntryFlow/>
 
-
-  //     { (upcomingExpedition == null && activeExpedition == null) && <>
-  //       <StyledHighlightedText fontSize="16px" letterSpacing="2px" mb='8px'>
-  //         EXPEDITION TREASURY:
-  //       </StyledHighlightedText>
-  //       <CardValue
-  //         value={expeditionPotTotalValue}
-  //         prefix="$"
-  //         decimals={2}
-  //         fontSize="40px"
-  //         gold
-  //         elevation={Elevation.OASIS}
-  //       />
-  //       <StyledHighlightedText fontSize="14px" letterSpacing="2px" mt='8px' mb='0px'>
-  //         DISBURSED TO DATE:
-  //       </StyledHighlightedText>
-  //       <CardValue
-  //         value={expeditionDisbursedValue}
-  //         prefix="$"
-  //         decimals={2}
-  //         fontSize="26px"
-  //         gold
-  //         elevation={Elevation.OASIS}
-  //       />
-  //       <Text textAlign='center' bold monospace italic mt='8px' fontSize='16px'>
-  //           100% of the Expedition Treasury
-  //           <br/>
-  //           will be given back exclusively to
-  //           <br/>
-  //           SUMMIT and {getSummitLpSymbol()} holders
-  //         </Text>
-
-
-  //       <Text bold monospace textAlign='center'><br/><br/>. . .<br/><br/></Text>
-
-  //       <ElevationFarmingExplanation />
-  //     </>}
-
-  //     {/* <Text bold monospace textAlign='center'><br/><br/>. . .<br/></Text>
-
-  //     <Flex flexDirection='column' justifyContent='flex-start' maxWidth='500px' margin='36px auto'>
-  //       <Text bold monospace fontSize='16px'>How Expeditions work:</Text>
-  //       <br/>
-  //       <Text bold monospace italic>1. Choose your Deity above.</Text>
-  //       <br/>
-  //       <Text bold monospace italic>2. Deposit your SUMMIT and {getSummitLpSymbol()} to participate. You MUST be deposited at the end of the round for your funds to count.</Text>
-  //       <br/>
-  //       <Text bold monospace italic>3. The combined USD value of your SUMMIT and {getSummitLpSymbol()} will determine your % of the pot you can win.</Text>
-  //     </Flex> */}
-
-  //     {((!locked && totem == null) || !expeditionsLoaded) && <PageLoader fill={false} />}
-  //     {/* <ExpeditionInfo/> */}
-  //     {totem != null && (
-  //       <FlexLayout>
-  //         {activeExpedition != null &&
-  //           <ExpeditionCard
-  //             expedition={activeExpedition}
-  //             expeditionLocked={expeditionLocked}
-  //             summitAllowance={summitAllowance}
-  //             summitLpAllowance={summitLpAllowance}
-  //             summitBalance={summitBalance}
-  //             summitLpBalance={summitLpBalance}
-  //           />
-  //         }
-  //       </FlexLayout>
-  //     )}
-  //   </StyledPage>
-  // )
+      {/* { expeditionLoaded &&
+        <>
+          { !expeditionEntered && <ExpeditionEntryFlow />}
+        </>
+      } */}
+      {/* <ExpeditionInfo/> */}
+      {/* {totem != null && (
+        <FlexLayout>
+            <ExpeditionCard
+              expedition={activeExpedition}
+              expeditionLocked={expeditionLocked}
+              summitAllowance={summitAllowance}
+              summitLpAllowance={summitLpAllowance}
+              summitBalance={summitBalance}
+              summitLpBalance={summitLpBalance}
+            />
+        </FlexLayout>
+      )} */}
+    </StyledPage>
+  )
 }
 
 export default ExpeditionFarms

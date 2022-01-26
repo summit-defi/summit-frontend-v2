@@ -79,7 +79,7 @@ const TotemsLineup = () => {
       </TotemsLineupRow>
       {totems[elevationUtils.toInt(Elevation.EXPEDITION)] != null && (
         <DietyWrapper>
-          <InverseDeity totem={totems[elevationUtils.toInt(Elevation.EXPEDITION)]} selected />
+          <InverseDeity deity={totems[elevationUtils.toInt(Elevation.EXPEDITION)]} selected />
           <InverseDeityText fontSize="20px">
             {elevationUtils.getElevationTotemName(
               Elevation.EXPEDITION,

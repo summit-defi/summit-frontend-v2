@@ -6,7 +6,7 @@ export const InverseDeity = styled(BaseDeity)`
   width: 250px;
   margin-bottom: 64px;
   transition: none;
-  transform: ${({ totem }) => (totem === 0 ? 'scaleX(-1)' : 'none')};
+  transform: ${({ deity: totem }) => (totem === 0 ? 'scaleX(-1)' : 'none')};
   filter: none;
 
   ${({ theme }) => theme.mediaQueries.invNav} {
