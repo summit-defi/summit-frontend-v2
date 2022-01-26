@@ -256,21 +256,21 @@ export const useExpeditionEntered = () => {
 }
 export const useExpeditionEntryFlow = (): {
   deity: number | null,
-  faithFactor: number | null,
+  conviction: number | null,
   everestOwned: BigNumber
 } => {
   const userData = useExpeditionUserData()
   console.log({
     userData
   })
-  const { deity, faithFactor, everestOwned } = useExpeditionUserData()
+  const { deity, conviction, everestOwned } = useExpeditionUserData()
   return useMemo(
     () => ({
       deity,
-      faithFactor,
+      conviction,
       everestOwned,
     }),
-    [deity, faithFactor, everestOwned]
+    [deity, conviction, everestOwned]
   )
 }
 

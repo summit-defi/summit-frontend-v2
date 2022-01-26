@@ -111,6 +111,7 @@ const ElevationRoundProgress: React.FC = () => {
     const elevation = useSelectedElevation()
     const isExpedition = elevation === Elevation.EXPEDITION
     const elevationTab = useElevationFarmsTab()
+    const roundDuration = (isExpedition ? 24 : 2) * 3600
     const roundTimeRemaining = useElevationRoundTimeRemaining(isExpedition ? Elevation.EXPEDITION : Elevation.PLAINS)
 
     const getTimerText = useCallback(
@@ -128,13 +129,13 @@ const ElevationRoundProgress: React.FC = () => {
 
     const perc = useCallback(
         () => {
-            const pill = clamp(((7200 - 120) - (roundTimeRemaining - 120)) / (72 - 1.2), 0, 100)
+            const pill = clamp((100 * ((roundDuration - 120) - (roundTimeRemaining - 120))) / (roundDuration - 120), 0, 100)
             return {
                 pill,
                 text: roundTimeRemaining <= 120 ? 50 : pill
             }
         },
-        [roundTimeRemaining]
+        [roundTimeRemaining, roundDuration]
     )
 
     return (

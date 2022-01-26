@@ -92,6 +92,7 @@ const BetaTokenCard: React.FC<BetaTokenCardProps> = ({
           </SymbolIconFlex>
           { mintableAmounts.map((mintableAmount) => (
             <SummitButton
+              key={mintableAmount}
               onClick={() => handleMint(mintableAmount)}
               width='160px'
               isLoading={mintPending}

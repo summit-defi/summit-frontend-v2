@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { Elevation, elevationUtils } from 'config/constants/types'
-import { useSelectTotem } from 'hooks/useSelectTotem'
+import { useSelectTotemAndOrSafetyFactor } from 'hooks/useSelectTotem'
 import React, { useCallback, useState } from 'react'
 import { useElevationUserRoundInfo } from 'state/hooks'
 import styled, { keyframes } from 'styled-components'
@@ -17,6 +17,8 @@ interface Props {
   elevation: Elevation
   userTotem: number | null
   preselectedTotem?: number
+  alsoSelectFaith?: boolean
+  existingFaith?: number
   onDismiss?: () => void
 }
 
@@ -56,22 +58,32 @@ const SelectTotemModal: React.FC<Props> = ({
   elevation,
   userTotem,
   preselectedTotem = null,
+  alsoSelectFaith = false,
+  existingFaith = null,
   onDismiss = () => null,
 }) => {
   const { userEarned } = useElevationUserRoundInfo(elevation)
   const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(elevation, userEarned || new BigNumber(0), 'Deposit', RewardsWillBeClaimedType.FullElevation)
 
-  const { onSelectTotem } = useSelectTotem()
+  const { onSelectTotem } = useSelectTotemAndOrSafetyFactor()
   const [totemToConfirm, setTotemToConfirm] = useState<number | null>(
     elevation === Elevation.OASIS ? 0 : preselectedTotem,
+  )
+  const [faithToConfirm, setFaithToConfirm] = useState<number | null>(
+    existingFaith
   )
   const elevationBackground = getElevationGradientFarmCardBackground(elevation)
   const handleSelectTotem = useCallback(async () => {
     onDismiss()
     presentRewardsWillBeClaimedModal(
-      { transactionToConfirm: () => onSelectTotem(elevation, totemToConfirm) }
+      { transactionToConfirm: () => onSelectTotem(
+          elevation,
+          totemToConfirm,
+          faithToConfirm === existingFaith ? null : faithToConfirm
+        ) 
+      }
     )
-  }, [onSelectTotem, elevation, totemToConfirm, onDismiss, presentRewardsWillBeClaimedModal])
+  }, [onSelectTotem, elevation, totemToConfirm, faithToConfirm, existingFaith, onDismiss, presentRewardsWillBeClaimedModal])
   const totemToConfirmName = elevationUtils.getElevationTotemName(elevation, totemToConfirm, false)
   const elevationName = `${elevation}`
 

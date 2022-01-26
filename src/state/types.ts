@@ -33,7 +33,7 @@ export interface ExpeditionUserData {
 
   deity: number | null
   deitySelectionRound: number
-  faithFactor: number | null
+  conviction: number | null
 
   entered: boolean
 

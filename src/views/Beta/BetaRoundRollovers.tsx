@@ -78,6 +78,7 @@ const BetaRoundRolloversCard: React.FC = () => {
         <FarmNumericalInfoFlex>
           { [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT, Elevation.EXPEDITION].map((elevation) => (
             <SummitButton
+              key={elevation}
               onClick={() => onRolloverElevation(elevation, roundInfo[elevation].locked)}
               width='160px'
               elevation={elevation}

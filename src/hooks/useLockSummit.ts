@@ -39,14 +39,14 @@ export const useLockSummit = (type: LockSummitButtonType, summitAmount: BigNumbe
       } catch (error) {
         switch (type) {
           case LockSummitButtonType.IncreaseLockedSummit:
-            toastError(`Error Increasing Locked SUMMIT Amount`)
+            toastError(`Error Increasing Locked SUMMIT Amount`, (error as Error).message)
             break
           case LockSummitButtonType.IncreaseLockDuration:
-            toastError(`Error Increasing SUMMIT Lock Duration`)
+            toastError(`Error Increasing SUMMIT Lock Duration`, (error as Error).message)
             break
           default:
           case LockSummitButtonType.LockSummit:
-            toastError(`Error locking SUMMIT for EVEREST`)
+            toastError(`Error locking SUMMIT for EVEREST`, (error as Error).message)
             break
         }
       } finally {

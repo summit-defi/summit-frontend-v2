@@ -195,12 +195,12 @@ const ActiveFlowItem: React.FC<{ activeFlowItem: ExpedEntryFlowItem }> = ({ acti
 
 
 const ExpeditionEntryFlow: React.FC = () => {
-    // const { deity, conviction, everestOwned } = useExpeditionEntryFlow()
-    const { deity, conviction, everestOwned } = {
-        deity: 0,
-        conviction: null,
-        everestOwned: new BigNumber(50),
-    }
+    const { deity, conviction, everestOwned } = useExpeditionEntryFlow()
+    // const { deity, conviction, everestOwned } = {
+    //     deity: 0,
+    //     conviction: null,
+    //     everestOwned: new BigNumber(50),
+    // }
 
     const entryProgress: EntryProgress = {
         [ExpedEntryFlowItem.Deity]: deity != null,

@@ -1,37 +1,21 @@
-import React, { useMemo } from 'react'
+import React from 'react'
 import styled from 'styled-components'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { HighlightedText, Text, Flex } from 'uikit'
+import { HighlightedText } from 'uikit'
 import {
-  useExpeditionInfo,
-  useElevationTotem,
-  useElevationLocked,
-  useIsElevationLockedUntilRollover,
-  useExpeditionDivider,
-  useExpeditionPotTotalValue,
-  useExpeditionDisbursedValue,
   useExpeditionLoaded,
   useExpeditionFetching,
   useExpeditionEntered,
 } from 'state/hooks'
-import FlexLayout from 'components/layout/Flex'
 import Page from 'components/layout/Page'
-import ExpeditionCard from './components/ExpeditionCard'
 import ExpeditionTotems from './components/ExpeditionTotems'
-import { Elevation } from 'config/constants/types'
 import PageLoader from 'components/PageLoader'
-import UpcomingExpeditionCard from './components/UpcomingExpeditionCard'
-import ElevationFarmingExplanation from 'views/ElevationFarms/components/ElevationIntroduction'
-import { getSummitLpSymbol } from 'config/constants'
-import CardValue from 'views/Home/components/CardValue'
-import ExpiredExpedition from './components/ExpiredExpedition'
 import ExpeditionEntryFlow from './components/ExpeditionEntryFlow'
 
 const StyledPage = styled(Page)`
   padding-top: 48px;
 
   ${({ theme }) => theme.mediaQueries.lg} {
-    padding-top: 64px;
+    padding-top: 80px;
     margin-top: -40px;
     padding-bottom: 64px;
   }

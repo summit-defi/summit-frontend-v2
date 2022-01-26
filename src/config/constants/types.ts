@@ -108,15 +108,15 @@ export const ElevationTotemCount: { [key in keyof typeof Elevation]: number } = 
 }
 export const ElevationWinnersOffset: { [key in keyof typeof Elevation]: number[] } = {
   [Elevation.OASIS]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [Elevation.PLAINS]: [33, 39, 0, 0, 0, 0, 0, 0, 0, 0],
-  [Elevation.MESA]: [0, 2, 1, 1, 2, 0, 0, 0, 0, 0],
-  [Elevation.SUMMIT]: [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+  [Elevation.PLAINS]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [Elevation.MESA]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+  [Elevation.SUMMIT]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [Elevation.EXPEDITION]: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 }
 export const ElevationRoundOffset: { [key in keyof typeof Elevation]: number } = {
   [Elevation.OASIS]: 0,
-  [Elevation.PLAINS]: 72,
-  [Elevation.MESA]: 7,
+  [Elevation.PLAINS]: 0,
+  [Elevation.MESA]: 0,
   [Elevation.SUMMIT]: 0,
   [Elevation.EXPEDITION]: 0,
 }

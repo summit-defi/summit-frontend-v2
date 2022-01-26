@@ -46,4 +46,4 @@ const ExpeditionMenuHeader: React.FC = () => {
     )
 }
 
-export default ExpeditionMenuHeader
+export default React.memo(ExpeditionMenuHeader)

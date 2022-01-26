@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { elevationUtils, RevertReasonMap } from 'config/constants/types'
+import { Elevation, elevationUtils, RevertReasonMap } from 'config/constants/types'
 import { ethers } from 'ethers'
 import Web3 from 'web3'
 
@@ -74,9 +74,21 @@ export const claimElevation = async (cartographer, elevation, account) => {
   return estimateGasAndExecute(claimCall, account)
 }
 
-export const switchTotem = async (cartographer, elevation, totem, account) => {
-  const switchTotemCall = cartographer.methods.switchTotem(elevationUtils.toInt(elevation), totem)
-  return estimateGasAndExecute(switchTotemCall, account)
+export const selectTotem = async (cartographer, expedition, elevation, totem, faith, account) => {
+  const isExpedition = elevation === Elevation.EXPEDITION
+  let call
+  if (isExpedition) {
+    if (totem != null && faith != null) {
+      call = expedition.methods.selectDeityAndSafetyFactor(totem, faith)
+    } else if (totem != null) {
+      call = expedition.methods.selectDeity(totem)
+    } else if (faith != null) {
+      call = expedition.methods.selectSafetyFactor(faith)
+    }
+  } else {
+    call = cartographer.methods.switchTotem(elevationUtils.toInt(elevation), totem)
+  }
+  return estimateGasAndExecute(call, account)
 }
 
 export const elevate = async (cartographer, token, sourceElevation, targetElevation, amount, account, decimals) => {
