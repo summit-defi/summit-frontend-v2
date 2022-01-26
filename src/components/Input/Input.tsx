@@ -106,17 +106,8 @@ export const StyledInput = styled.input<{ summitPalette?: ElevOrPalette }>`
   margin: 0;
   padding: 0;
   outline: none;
-  text-shadow: 1px 1px 2px gray;
-  color: ${({ summitPalette, theme }) =>
-    // eslint-disable-next-line no-nested-ternary
-    darken(
-      !theme.isDark ? 0.2 : 0,
-      summitPalette === 'EXPEDITION' ?
-        theme.colors.text :
-        summitPalette ?
-          theme.colors[summitPalette] :
-          theme.colors.text,
-    )};
+  color: ${({ theme }) => theme.colors.text};
+  text-shadow: 1px 1px 2px ${({ theme, summitPalette }) => theme.colors[summitPalette]};
 `
 
 export default Input
