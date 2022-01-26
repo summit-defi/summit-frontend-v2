@@ -1,8 +1,6 @@
 import React from 'react'
-import { Elevation, elevationUtils } from 'config/constants/types'
-import { Modal, Flex, Text, HighlightedText, ExternalLinkButton } from 'uikit'
-import SummitButton from 'uikit/components/Button/SummitButton'
-import ModalActions from 'components/ModalActions'
+import { Elevation, elevationUtils, elevToPalette } from 'config/constants/types'
+import { Modal, Flex, Text, HighlightedText, ExternalLinkButton, SummitButton, ModalActions } from 'uikit'
 import { getSummitLpSymbol } from 'config/constants'
 
 interface Props {
@@ -22,7 +20,7 @@ const ElevationExtendedDescription = {
       <br />
       <br />
       <br />
-      <HighlightedText elevation={Elevation.PLAINS}>
+      <HighlightedText summitPalette={Elevation.PLAINS}>
         2 totems
         <br />
         1 hour rounds
@@ -46,7 +44,7 @@ const ElevationExtendedDescription = {
       <br />
       <br />
       <br />
-      <HighlightedText elevation={Elevation.MESA}>
+      <HighlightedText summitPalette={Elevation.MESA}>
         5 totems
         <br />
         2 hour rounds
@@ -68,7 +66,7 @@ const ElevationExtendedDescription = {
       <br />
       <br />
       <br />
-      <HighlightedText elevation={Elevation.SUMMIT}>
+      <HighlightedText summitPalette={Elevation.SUMMIT}>
         10 totems
         <br />
         4 hour rounds
@@ -96,7 +94,7 @@ const ElevationExtendedDescription = {
       <br />
       <br />
       <br />
-      <HighlightedText elevation={Elevation.SUMMIT} header mb="24px">
+      <HighlightedText summitPalette={Elevation.SUMMIT} header mb="24px">
         COSMIC BEAR
         <br />
         vs
@@ -136,7 +134,7 @@ export const ElevationUnlockedModal: React.FC<Props> = ({ elevation, markShown, 
             <br />
           </Text>
         )}
-        <ExternalLinkButton elevation={elevation} href={elevationUtils.helpLink(elevation)}>
+        <ExternalLinkButton summitPalette={elevToPalette(elevation)} href={elevationUtils.helpLink(elevation)}>
           LEARN MORE ABOUT THE {elevation}
         </ExternalLinkButton>
         <ModalActions>

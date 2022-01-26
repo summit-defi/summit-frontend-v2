@@ -1,10 +1,8 @@
 import React from 'react'
-import { Elevation, elevationUtils } from 'config/constants/types'
+import { Elevation, elevationUtils, SummitPalette } from 'config/constants/types'
 import styled from 'styled-components'
-import { Modal, Flex } from 'uikit'
+import { Modal, Flex, ModalActions, SummitButton } from 'uikit'
 import { useWinningTotems } from 'state/hooks'
-import ModalActions from 'components/ModalActions'
-import SummitButton from 'uikit/components/Button/SummitButton'
 import { RolledOverElevation } from './RolledOverElevation'
 
 interface Props {
@@ -38,7 +36,7 @@ export const ElevationsRolledOverModal: React.FC<Props> = ({ elevations = [], ma
       title="WINNER!"
       onDismiss={dismissModal}
       headerless
-      elevationGlow="GOLD"
+      elevationGlow={SummitPalette.GOLD}
       elevationCircleHeader={elevations.length > 1 ? 'Summit DeFi' : elevations[0]}
     >
       <Flex alignItems="center" flexDirection="column">

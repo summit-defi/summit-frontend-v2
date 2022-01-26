@@ -1,13 +1,11 @@
-import BigNumber from 'bignumber.js'
-import { Elevation } from 'config/constants'
+import { ConvictionSlider } from 'components/SelectTotemModal'
+import { Elevation, SummitPalette } from 'config/constants'
 import { useEnterExpedition } from 'hooks/useEnterExpedition'
 import { useSelectTotemAndOrSafetyFactor } from 'hooks/useSelectTotem'
 import React, { useState } from 'react'
 import { useExpeditionEntryFlow } from 'state/hooks'
 import styled from 'styled-components'
-import { Flex, Text } from 'uikit'
-import SummitButton from 'uikit/components/Button/SummitButton'
-import ConvictionSlider from './ConvictionSlider'
+import { Flex, Text, SummitButton } from 'uikit'
 
 const DivineBonus = 20
 
@@ -170,7 +168,7 @@ const GetEverestFlowItem: React.FC = () => {
         </Text>
         <SummitButton
             onClick={() => null}
-            elevation={Elevation.EXPEDITION}
+            summitPalette={SummitPalette.EVEREST}
             as="a"
             href='/everest'
             mt='12px'

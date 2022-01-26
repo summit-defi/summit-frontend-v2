@@ -36,7 +36,7 @@ const ExpeditionMenuHeader: React.FC = () => {
     return (
         <Wrapper>
             <ExpeditionIcon>
-                <IconText bold monospace lineHeight='14px' textAlign='center'>
+                <IconText bold monospace lineHeight='14px' textAlign='center' color='white'>
                     THE
                     <br/>
                     EXPEDITION

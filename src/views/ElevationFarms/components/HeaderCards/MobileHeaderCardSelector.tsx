@@ -3,7 +3,7 @@ import { Elevation } from 'config/constants/types'
 import { darken } from 'polished'
 import { useSelectedElevationWinningTotem } from 'state/hooks'
 import styled, { css } from 'styled-components'
-import ArtworkTotem from '../ArtworkTotem'
+import ArtworkTotem from '../../../../uikit/components/Totem/ArtworkTotem'
 import { HeaderArtwork, HeaderElevationName } from 'uikit'
 import { pressableMixin } from 'uikit/util/styledMixins'
 

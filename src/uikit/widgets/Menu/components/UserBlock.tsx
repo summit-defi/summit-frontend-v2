@@ -1,7 +1,7 @@
 import { Elevation } from 'config/constants/types'
 import { usePendingTxs } from 'hooks/usePendingTx'
 import React, { useCallback } from 'react'
-import { useSelectedElevation } from 'state/hooks'
+import { useSelectedElevation, useCurrentSummitPalette } from 'state/hooks'
 import styled from 'styled-components'
 import SummitButton from '../../../components/Button/SummitButton'
 import { useWalletModal } from '../../WalletModal'
@@ -23,7 +23,7 @@ const StyledSummitButton = styled(SummitButton)`
 
 const UserBlock: React.FC<Props> = ({ account, login, logout }) => {
   const { onPresentConnectModal, onPresentAccountModal } = useWalletModal(login, logout, account)
-  const elevation = useSelectedElevation()
+  const summitPalette = useCurrentSummitPalette()
   const pendingTxs = usePendingTxs()
   const accountEllipsis = account ? `${account.substring(0, 4)}...${account.substring(account.length - 4)}` : null
 
@@ -34,7 +34,7 @@ const UserBlock: React.FC<Props> = ({ account, login, logout }) => {
   ])
   return (
     <div>
-      <StyledSummitButton onClick={handleUserBlockClicked} elevation={elevation}>
+      <StyledSummitButton onClick={handleUserBlockClicked} summitPalette={summitPalette}>
         {account ? `${accountEllipsis}${pendingTxs.length > 0 ? ` | ${pendingTxs.length} TX` : ''}` : 'CONNECT'}
       </StyledSummitButton>
     </div>

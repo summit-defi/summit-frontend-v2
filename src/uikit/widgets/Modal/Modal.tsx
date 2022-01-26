@@ -5,8 +5,8 @@ import Flex from '../../components/Box/Flex'
 import { ArrowBackIcon, CloseIcon } from '../../components/Svg'
 import { IconButton } from '../../components/Button'
 import { InjectedProps } from './types'
-import { elevationUtils } from 'config/constants/types'
-import { getElevationGradientFarmCardBackground } from 'utils'
+import { elevationUtils, ElevOrPalette } from 'config/constants/types'
+import { getPaletteGradientFarmCardBackground } from 'utils'
 import { Text } from 'uikit/components/Text'
 import { ElevationPuck } from './ElevationPuck'
 
@@ -16,7 +16,7 @@ interface Props extends InjectedProps {
   onBack?: () => void
   bodyPadding?: string
   headerless?: boolean
-  elevationGlow?: string
+  elevationGlow?: ElevOrPalette
   elevationCircleHeader?: string
 }
 
@@ -32,7 +32,7 @@ const RainbowLight = keyframes`
   }
 `
 
-const StyledModal = styled.div<{ elevationGlow?: string }>`
+const StyledModal = styled.div<{ elevationGlow?: ElevOrPalette }>`
   display: flex;
   justify-content: center;
   position: relative;
@@ -57,7 +57,7 @@ const StyledModal = styled.div<{ elevationGlow?: string }>`
     css`
       &:before {
         content: ' ';
-        background: ${getElevationGradientFarmCardBackground(elevationGlow)};
+        background: ${getPaletteGradientFarmCardBackground(elevationGlow)};
 
         background-size: 200% 200%;
         animation: ${RainbowLight} 2s linear infinite;
@@ -88,6 +88,7 @@ const StyledModal = styled.div<{ elevationGlow?: string }>`
 const ScrollableContent = styled(Flex)<{ elevationCircleHeader: string }>`
   overflow: scroll;
   height: 100%;
+  width: 100%;
   padding-top: ${({ elevationCircleHeader }) => (elevationCircleHeader != null ? 130 : 24)}px;
 `
 

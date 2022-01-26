@@ -1,8 +1,8 @@
 import React from 'react'
-import { useModal } from 'uikit'
 import { RewardsWillBeClaimedModal, RewardsWillBeClaimedType } from './RewardsWillBeClaimedModal'
 import { Elevation } from 'config/constants/types'
 import BigNumber from 'bignumber.js'
+import { useModal } from 'uikit'
 
 
 export const useRewardsWillBeClaimedModal = (elevation: Elevation, claimable: BigNumber, transactionName, rewardClaimType: RewardsWillBeClaimedType) => {

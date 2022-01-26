@@ -1,3 +1,4 @@
+import { ElevOrPalette } from 'config/constants'
 import { ComponentProps, ElementType, ReactElement, ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { LayoutProps, SpaceProps } from 'styled-system'
@@ -45,6 +46,7 @@ export interface BaseButtonProps extends LayoutProps, SpaceProps {
   disabled?: boolean
   startIcon?: ReactNode
   endIcon?: ReactNode
+  summitPalette?: ElevOrPalette
 }
 
 export type ButtonProps<P extends ElementType = 'button'> = PolymorphicComponentProps<P, BaseButtonProps>

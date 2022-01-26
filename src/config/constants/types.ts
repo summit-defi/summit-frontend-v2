@@ -15,6 +15,30 @@ export enum Elevation {
   EXPEDITION = 'EXPEDITION',
 }
 
+export enum SummitPalette {
+  BASE = 'BASE',
+  GOLD = 'GOLD',
+  OASIS = 'OASIS',
+  PLAINS = 'PLAINS',
+  MESA = 'MESA',
+  SUMMIT = 'SUMMIT',
+  EXPEDITION = 'EXPEDITION',
+  EVEREST = 'EVEREST',
+}
+
+export type ElevOrPalette = Elevation | SummitPalette
+
+export const elevToPalette = (elevation?: Elevation): SummitPalette => {
+  switch (elevation) {
+    case Elevation.OASIS: return SummitPalette.OASIS
+    case Elevation.PLAINS: return SummitPalette.PLAINS
+    case Elevation.MESA: return SummitPalette.MESA
+    case Elevation.SUMMIT: return SummitPalette.SUMMIT
+    case Elevation.EXPEDITION: return SummitPalette.EXPEDITION
+    default: return SummitPalette.BASE
+  }
+}
+
 export enum ElevationFarmTab {
   DASH = 'DASH',
   OASIS = 'OASIS',

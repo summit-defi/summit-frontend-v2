@@ -7,10 +7,10 @@ const ElevationInfo: React.FC = () => {
   const elevation = useSelectedElevation()
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="center">
-      <HighlightedText elevation={elevation} monospace>
+      <HighlightedText summitPalette={elevation} monospace>
         {elevationUtils.subHeader(elevation)}
       </HighlightedText>
-      <ExternalLinkButton mt="12px" elevation={elevation} href={elevationUtils.helpLink(elevation)}>
+      <ExternalLinkButton mt="12px" summitPalette={elevation} href={elevationUtils.helpLink(elevation)}>
         FARMING AT THE {elevation}
       </ExternalLinkButton>
     </Flex>

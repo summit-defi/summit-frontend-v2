@@ -3,7 +3,7 @@ import { Flex, HighlightedText } from 'uikit'
 import styled from 'styled-components'
 import { useElevationTotems, useWinningTotems } from '../../../state/hooks'
 import { InverseDeity } from 'views/ElevationFarms/components/InverseDeity'
-import ArtworkTotem from 'views/ElevationFarms/components/ArtworkTotem'
+import ArtworkTotem from 'uikit/components/Totem/ArtworkTotem'
 import { Elevation, elevationUtils } from 'config/constants/types'
 
 const TotemsLineupFlex = styled(Flex)`

@@ -43,12 +43,12 @@ const CardValue: React.FC<CardValueProps> = ({
   }, [value, updateValue])
 
   return (
-    <HighlightedText bold monospace fontSize={fontSize} elevation={elevation} header gold={gold}>
+    <HighlightedText bold monospace fontSize={fontSize} summitPalette={elevation} header gold={gold}>
       {prefix}
       {countUp}
       {isMultiplier && 'X'}
       {postfix != null && (
-        <HighlightedText bold elevation={elevation} fontSize={postfixFontSize || fontSize} header ml="6px" mt='2px' gold={gold}>
+        <HighlightedText bold summitPalette={elevation} fontSize={postfixFontSize || fontSize} header ml="6px" mt='2px' gold={gold}>
           {postfix}
         </HighlightedText>
       )}

@@ -29,7 +29,7 @@ const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): 
     disabled,
     secondary,
     children,
-    elevation,
+    summitPalette,
     style,
     onClick,
     ...rest
@@ -56,7 +56,7 @@ const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): 
       $isLoading={isLoading}
       isLocked={isLocked}
       className={classNames.join(' ')}
-      elevation={elevation}
+      summitPalette={summitPalette}
       secondary={secondary}
       disabled={isDisabled || isLocked}
       style={{ ...style }}

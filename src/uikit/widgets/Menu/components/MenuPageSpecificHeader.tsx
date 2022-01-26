@@ -1,7 +1,7 @@
 import React from 'react'
 import ElevationFarmsTabSelector from "./ElevationFarmsTabSelector"
 import { useMatchBreakpoints } from "../../../hooks";
-import { useSelectedElevation } from "state/hooks";
+import { useCurrentSummitPalette, useSelectedElevation } from "state/hooks";
 import Logo from "./Logo";
 import ElevationRoundProgress from "./ElevationRoundProgress";
 import Flex from 'uikit/components/Box/Flex'
@@ -32,7 +32,7 @@ interface Props {
 }
 
 const MenuPageSpecificHeader: React.FC<Props> = ({ isDark, isPushed }) => {
-    const elevation = useSelectedElevation()
+    const summitPalette = useCurrentSummitPalette()
     const { isXl } = useMatchBreakpoints();
     const isMobile = isXl === false;
 
@@ -46,7 +46,7 @@ const MenuPageSpecificHeader: React.FC<Props> = ({ isDark, isPushed }) => {
 
     return (
         <>
-            { logoVisible && <Logo isDark={isDark} href="/" elevation={elevation}/> }
+            { logoVisible && <Logo isDark={isDark} href="/" summitPalette={summitPalette}/> }
             { (isFarmTab || isExpedition) &&
             <>
                 <FullHeightWrapper>

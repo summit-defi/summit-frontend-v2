@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 import TokenInput from 'components/TokenInput'
+import { SummitPalette } from 'config/constants'
 import { isNumber } from 'lodash'
 import React, { memo, useCallback, useState } from 'react'
 import { useCurrentTimestampOnce } from 'state/hooks'
@@ -75,6 +76,7 @@ export const InitialSummitLockSection: React.FC<Props> = ({ summitBalance, summi
                 balanceText='SUMMIT BALANCE'
                 onSelectMax={handleSelectMax}
                 onChange={handleChange}
+                summitPalette={SummitPalette.EVEREST}
                 max={fullSummitBalance}
                 symbol='SUMMIT'
             />

@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 import TokenInput from 'components/TokenInput'
+import { SummitPalette } from 'config/constants'
 import { isNumber } from 'lodash'
 import React, { memo, useCallback, useState } from 'react'
 import { useCurrentTimestampOnce } from 'state/hooks'
@@ -56,6 +57,7 @@ export const IncreaseLockedAmountSection: React.FC<Props> = ({ userEverestInfo }
         <Flex gap='18px' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
             <TokenInput
                 value={val}
+                summitPalette={SummitPalette.EVEREST}
                 balanceText='SUMMIT BALANCE'
                 onSelectMax={handleSelectMax}
                 onChange={handleChange}

@@ -3,13 +3,13 @@ import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import Flex from '../../../components/Box/Flex'
 import { LogoIcon as LogoWithText } from '../icons'
-import { Elevation } from 'config/constants/types'
+import { SummitPalette } from 'config/constants/types'
 import { pressableMixin } from 'uikit/util/styledMixins'
 
 interface Props {
   isDark: boolean
   href: string
-  elevation: Elevation | null
+  summitPalette: SummitPalette | null
 }
 
 const StyledLink = styled(Link)`
@@ -33,12 +33,12 @@ const StyledLink = styled(Link)`
   ${pressableMixin}
 `
 
-const Logo: React.FC<Props> = ({ isDark, href, elevation }) => {
+const Logo: React.FC<Props> = ({ isDark, href, summitPalette }) => {
   return (
     <StyledLink as="a" href={href} aria-label="Summit home page">
-      <LogoWithText isDark={isDark} className="desktop-icon" elevation={elevation} />
+      <LogoWithText isDark={isDark} className="desktop-icon" summitPalette={summitPalette} />
     </StyledLink>
   )
 }
 
-export default React.memo(Logo, (prev, next) => prev.isDark === next.isDark && prev.elevation === next.elevation)
+export default React.memo(Logo, (prev, next) => prev.isDark === next.isDark && prev.summitPalette === next.summitPalette)

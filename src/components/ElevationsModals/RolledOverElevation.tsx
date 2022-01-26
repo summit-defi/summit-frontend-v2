@@ -3,7 +3,7 @@ import { Elevation } from 'config/constants/types'
 import styled from 'styled-components'
 import { HighlightedText } from 'uikit'
 import { useElevationInfo, useElevationUserRoundInfo } from 'state/hooks'
-import ArtworkTotem from 'views/ElevationFarms/components/ArtworkTotem'
+import ArtworkTotem from 'uikit/components/Totem/ArtworkTotem'
 import CardValue from 'views/Home/components/CardValue'
 import { getBalanceNumber } from 'utils'
 
@@ -80,14 +80,14 @@ export const RolledOverElevation: React.FC<Props> = ({ elevation, winningTotem, 
   return (
     <TotemWrapper key={elevation}>
       {multiWin && (
-        <HighlightedText elevation={elevation} header fontSize="18">
+        <HighlightedText summitPalette={elevation} header fontSize="18">
           THE {elevation}:
         </HighlightedText>
       )}
 
       { elevation !== Elevation.EXPEDITION &&
       <>
-        <HighlightedText elevation={elevation} header fontSize="12">
+        <HighlightedText summitPalette={elevation} header fontSize="12">
           YIELD CONTRIBUTED:
         </HighlightedText>
         <CardValue
@@ -102,7 +102,7 @@ export const RolledOverElevation: React.FC<Props> = ({ elevation, winningTotem, 
         <br />
       </>
       }
-      <HighlightedText elevation={elevation} header fontSize="14" gold>
+      <HighlightedText summitPalette={elevation} header fontSize="14" gold>
         { elevation !== Elevation.EXPEDITION ? 'REWARDS:' : 'WINNINGS:' }
       </HighlightedText>
       <CardValue

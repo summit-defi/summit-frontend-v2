@@ -1,12 +1,10 @@
 /* eslint-disable react/no-array-index-key */
 import { Elevation } from 'config/constants/types'
 import React from 'react'
-import { Modal, Flex, HighlightedText, Text } from 'uikit'
 import { getFormattedBigNumber } from 'utils'
 import BigNumber from 'bignumber.js'
-import ModalActions from 'components/ModalActions'
-import SummitButton from 'uikit/components/Button/SummitButton'
 import styled from 'styled-components'
+import { Flex, Modal, ModalActions, HighlightedText, Text, SummitButton  } from 'uikit'
 
 export enum RewardsWillBeClaimedType {
   Farm = 'Farm',
@@ -71,8 +69,8 @@ export const RewardsWillBeClaimedModal: React.FC<Props> = ({
       { (rewardClaimType === RewardsWillBeClaimedType.Farm || rewardClaimType === RewardsWillBeClaimedType.FullElevation) &&
         <>
           <Text bold monospace textAlign='center'>This {transactionName} will also<br/>claim your available</Text>
-          <HighlightedText elevation={elevation} gold fontSize='24px' mt='12px'>{getFormattedBigNumber(claimable)}</HighlightedText>
-          <HighlightedText elevation={elevation} gold fontSize='16px' mb='12px'>SUMMIT</HighlightedText>
+          <HighlightedText summitPalette={elevation} gold fontSize='24px' mt='12px'>{getFormattedBigNumber(claimable)}</HighlightedText>
+          <HighlightedText summitPalette={elevation} gold fontSize='16px' mb='12px'>SUMMIT</HighlightedText>
           <Text bold monospace textAlign='center'>{elevation === Elevation.OASIS ? 'earnings' : 'rewards'} from the {rewardClaimType === RewardsWillBeClaimedType.Farm ? 'Farm' : elevation}</Text>
         </>
       }
@@ -85,16 +83,16 @@ export const RewardsWillBeClaimedModal: React.FC<Props> = ({
           </Text>
           { (elevateInfo?.sourceEarned || new BigNumber(0)).isGreaterThan(0) &&
             <HorizontalDisplayBalance>
-              <HighlightedText elevation={elevateInfo.sourceElevation} fontSize='16px' mr='16px'>THE {elevateInfo.sourceElevation}: </HighlightedText>
-              <HighlightedText elevation={elevateInfo.sourceElevation} fontSize='24px' mb='6px' mr='8px'>{getFormattedBigNumber(elevateInfo.sourceEarned)}</HighlightedText>
-              <HighlightedText elevation={elevateInfo.sourceElevation} fontSize='16px'>SUMMIT</HighlightedText>
+              <HighlightedText summitPalette={elevateInfo.sourceElevation} fontSize='16px' mr='16px'>THE {elevateInfo.sourceElevation}: </HighlightedText>
+              <HighlightedText summitPalette={elevateInfo.sourceElevation} fontSize='24px' mb='6px' mr='8px'>{getFormattedBigNumber(elevateInfo.sourceEarned)}</HighlightedText>
+              <HighlightedText summitPalette={elevateInfo.sourceElevation} fontSize='16px'>SUMMIT</HighlightedText>
             </HorizontalDisplayBalance>
           }
           { (elevateInfo?.targetEarned || new BigNumber(0)).isGreaterThan(0) &&
             <HorizontalDisplayBalance>
-              <HighlightedText elevation={elevateInfo.targetElevation} fontSize='16px' mr='16px'>THE {elevateInfo.targetElevation}: </HighlightedText>
-              <HighlightedText elevation={elevateInfo.targetElevation} fontSize='24px' mb='6px' mr='8px'>{getFormattedBigNumber(elevateInfo.targetEarned)}</HighlightedText>
-              <HighlightedText elevation={elevateInfo.targetElevation} fontSize='16px'>SUMMIT</HighlightedText>
+              <HighlightedText summitPalette={elevateInfo.targetElevation} fontSize='16px' mr='16px'>THE {elevateInfo.targetElevation}: </HighlightedText>
+              <HighlightedText summitPalette={elevateInfo.targetElevation} fontSize='24px' mb='6px' mr='8px'>{getFormattedBigNumber(elevateInfo.targetEarned)}</HighlightedText>
+              <HighlightedText summitPalette={elevateInfo.targetElevation} fontSize='16px'>SUMMIT</HighlightedText>
             </HorizontalDisplayBalance>
           }
         </>

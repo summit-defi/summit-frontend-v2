@@ -1,13 +1,11 @@
-import BigNumber from 'bignumber.js'
 import { Elevation } from 'config/constants/types'
 import React, { useEffect, useState } from 'react'
 import { useExpeditionDivider, useExpeditionTotemHeaderInfo, useSelectedElevationWinningTotem, useTotemSelectionPending } from 'state/hooks'
 import styled from 'styled-components'
-import { Flex, Spinner, Text } from 'uikit'
-import { SpinnerKeyframes } from 'uikit/components/Svg/Icons/Spinner'
-import useSelectTotemModal from 'uikit/widgets/SelectTotemModal/useSelectTotemModal'
+import { Flex, Spinner, Text, SpinnerKeyframes } from 'uikit'
 import { getFormattedBigNumber } from 'utils'
-import { BaseDeity } from 'views/ElevationFarms/components/BaseDeity'
+import { BaseDeity } from 'uikit/components/Totem/BaseDeity'
+import { useSelectTotemModal } from 'components/SelectTotemModal'
 
 const FlexWithSpinner = styled(Flex)`
   position: relative;
@@ -141,7 +139,7 @@ const deityValueText = (deitiedEverest, deityEverest, deity, deityDivider, bull)
 }
 
 const ExpeditionTotems: React.FC = () => {
-  const { deity, deitiedEverest, deityEverest } = useExpeditionTotemHeaderInfo()
+  const { deity, deitiedEverest, deityEverest, conviction } = useExpeditionTotemHeaderInfo()
   const deityDivider = useExpeditionDivider()
 
   const [expeditionTotem, setExpeditionTotem] = useState(null)
@@ -157,8 +155,8 @@ const ExpeditionTotems: React.FC = () => {
       }, 500)
     }
   }, [deity, expeditionTotem])
-  const { onPresentSelectTotemModal: onConfirmBearDeity } = useSelectTotemModal(Elevation.EXPEDITION, 0)
-  const { onPresentSelectTotemModal: onConfirmBullDeity } = useSelectTotemModal(Elevation.EXPEDITION, 1)
+  const { onPresentSelectTotemModal: onConfirmBearDeity } = useSelectTotemModal(Elevation.EXPEDITION, 0, conviction != null, conviction)
+  const { onPresentSelectTotemModal: onConfirmBullDeity } = useSelectTotemModal(Elevation.EXPEDITION, 1, conviction != null, conviction)
 
   const handleConfirmBullDeity = () => {
     if (totemSelectionPending) return

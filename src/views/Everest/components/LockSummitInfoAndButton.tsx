@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 import TokenInput from 'components/TokenInput'
+import { SummitPalette } from 'config/constants'
 import { useApprove, useApproveAddress } from 'hooks/useApprove'
 import { useSummitToken } from 'hooks/useContract'
 import { useLockSummit } from 'hooks/useLockSummit'
@@ -84,6 +85,7 @@ export const LockSummitInfoAndButton: React.FC<LockSummitButtonProps> = ({ appro
             <SummitButton
                 disabled={disabled && approved}
                 onClick={handleButtonPress}
+                summitPalette={SummitPalette.EVEREST}
                 isLoading={lockSummitPending || approvalPending}
                 mt='4px'
                 mb='4px'

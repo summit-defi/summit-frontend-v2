@@ -1,4 +1,4 @@
-import { Elevation } from 'config/constants/types'
+import { SummitPalette, ElevOrPalette } from 'config/constants/types'
 import { darken } from 'polished'
 import React from 'react'
 import styled from 'styled-components'
@@ -7,7 +7,7 @@ import { pressableMixin } from 'uikit/util/styledMixins'
 import { SunIcon, MoonIcon } from '../icons'
 
 interface Props {
-  elevation: Elevation
+  summitPalette: ElevOrPalette
   isDark: boolean
   toggleTheme: () => void
 }
@@ -80,16 +80,16 @@ const StyledMoonIcon = styled(MoonIcon)<{ visible: boolean }>`
   opacity: ${({ visible }) => (visible ? 1 : 0)};
 `
 
-const DarkModeToggle: React.FC<Props> = ({ elevation, isDark, toggleTheme }) => {
+const DarkModeToggle: React.FC<Props> = ({ summitPalette, isDark, toggleTheme }) => {
   const handleToggleTheme = () => {
-    if (elevation === Elevation.EXPEDITION) return
+    if (summitPalette === SummitPalette.EXPEDITION) return
     toggleTheme()
   }
   return (
-    <ToggleWrapper disabled={elevation === Elevation.EXPEDITION} onClick={handleToggleTheme}>
+    <ToggleWrapper disabled={summitPalette === SummitPalette.EXPEDITION} onClick={handleToggleTheme}>
       <BGSunIcon color="white" />
       <BGMoonIcon color="#575757" />
-      <StyledSummitButton elevation={elevation} visible={!isDark} onClick={() => null}>
+      <StyledSummitButton summitPalette={summitPalette} visible={!isDark} onClick={() => null}>
         <StyledSunIcon color="white" visible={!isDark} />
         <StyledMoonIcon color="white" visible={isDark} />
       </StyledSummitButton>

@@ -9,7 +9,7 @@ import {
   fetchExpeditionPublicDataAsync,
 } from './actions'
 import { State, Farm, ExpeditionInfo, ElevationInfo, ExpeditionUserData, UserTokenData, EverestUserData, EverestState } from './types'
-import { BN_ZERO, Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired, RoundLockTime } from '../config/constants/types'
+import { BN_ZERO, Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired, RoundLockTime, SummitPalette } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
   fetchElevationHelperInfoAsync,
@@ -275,15 +275,16 @@ export const useExpeditionEntryFlow = (): {
 }
 
 export const useExpeditionTotemHeaderInfo = () => {
-  const { deity } = useExpeditionUserData()
+  const { deity, conviction } = useExpeditionUserData()
   const { deitiedEverest, deityEverest } = useExpeditionInfo()
   return useMemo(
     () => ({
       deity,
+      conviction,
       deitiedEverest,
       deityEverest,
     }),
-    [deity, deitiedEverest, deityEverest]
+    [deity, deitiedEverest, deityEverest, conviction]
   )
 }
 
@@ -817,4 +818,30 @@ export const useUserHasLockedSummit = () => {
     () => (userInfo?.summitLocked || BN_ZERO).isGreaterThan(0),
     [userInfo]
   )
+}
+
+
+// UI
+export const useCurrentSummitPalette = (): SummitPalette => {
+  const location = useLocation()
+
+  return useMemo(() => {
+    const keyPath = location.pathname.split('/')[1]
+    switch (keyPath) {
+      case 'everest':
+        return SummitPalette.EVEREST
+      case 'oasis':
+        return SummitPalette.OASIS
+      case 'plains':
+        return SummitPalette.PLAINS
+      case 'mesa':
+        return SummitPalette.MESA
+      case 'summit':
+        return SummitPalette.SUMMIT
+      case 'expedition':
+        return SummitPalette.EXPEDITION
+      default:
+        return SummitPalette.BASE
+    }
+  }, [location])
 }

@@ -8,7 +8,7 @@ import styled from 'styled-components'
 import TokenInput from 'components/TokenInput'
 import useWithdraw from 'hooks/useWithdraw'
 import { isNumber } from 'lodash'
-import { useRewardsWillBeClaimedModal, RewardsWillBeClaimedType } from '../RewardsWillBeClaimedModal'
+import { useRewardsWillBeClaimedModal, RewardsWillBeClaimedType } from '../../../../components/RewardsWillBeClaimedModal'
 
 interface Props {
   farmToken: string
@@ -95,7 +95,7 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
         Withdraw:
       </MobileHiddenText>
       <TokenInput
-        elevation={elevation}
+        summitPalette={elevation}
         value={withdrawVal}
         balanceText="Deposited"
         disabled={disabled}

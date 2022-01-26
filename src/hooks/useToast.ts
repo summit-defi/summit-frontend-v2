@@ -1,7 +1,7 @@
 import { IsSummitRevertReason } from 'config/constants/types'
 import { ToastsContext } from 'contexts/ToastsContext'
 import { useContext, useCallback } from 'react'
-import { Toast } from 'uikit'
+import { Toast } from 'uikit/widgets/Toast'
 
 type ToastSignature = (title: Toast['title'], description?: Toast['description']) => void
 

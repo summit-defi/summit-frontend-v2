@@ -1,7 +1,7 @@
-import { Elevation } from 'config/constants/types'
+import { ElevOrPalette } from 'config/constants/types'
 import { linearGradient } from 'polished'
-import styled, { keyframes } from 'styled-components'
-import { getElevationGradientStops } from 'utils'
+import styled from 'styled-components'
+import { getPaletteGradientStops } from 'utils'
 import { SpinnerKeyframes } from '../Svg/Icons/Spinner'
 import StyledButton from './StyledButton'
 
@@ -9,7 +9,7 @@ const SummitStyledButton = styled(StyledButton)<{
   height?: number
   padding?: number
   secondary
-  elevation: Elevation
+  summitPalette?: ElevOrPalette
   isLocked: boolean
   secondaryColor?: string
 }>`
@@ -23,11 +23,11 @@ const SummitStyledButton = styled(StyledButton)<{
     disabled || isLocked ? 'none' : `3px 3px 6px ${theme.colors.textShadow}`};
   font-family: Courier Prime, monospace;
   opacity: ${({ disabled, isLocked }) => (disabled || isLocked ? 0.5 : 1)};
-  background: ${({ secondary, elevation }) =>
+  background: ${({ secondary, summitPalette }) =>
     secondary
       ? 'none'
       : linearGradient({
-          colorStops: getElevationGradientStops(elevation),
+          colorStops: getPaletteGradientStops(summitPalette),
           toDirection: '120deg',
         })};
   border: ${({ theme, secondary, secondaryColor }) =>

@@ -1,14 +1,13 @@
 import React, { useCallback } from 'react'
 import styled, { css } from 'styled-components'
-import { grayscale, linearGradient, transparentize } from 'polished'
+import { linearGradient, transparentize } from 'polished'
 import Flex from 'uikit/components/Box/Flex'
 import { Text } from 'uikit/components/Text'
 import { useElevationFarmsTab, useElevationRoundTimeRemaining, useSelectedElevation } from 'state/hooks'
-import { Elevation, ElevationFarmTab } from 'config/constants'
-import { getElevationGradientStops, getTimeRemainingText } from 'utils'
+import { Elevation, ElevationFarmTab, SummitPalette } from 'config/constants'
+import { getPaletteGradientStops, getTimeRemainingText } from 'utils'
 import { clamp } from 'lodash'
-import { Spinner } from 'uikit'
-import { SpinnerKeyframes } from 'uikit/components/Svg/Icons/Spinner'
+import { Spinner, SpinnerKeyframes } from 'uikit/components/Svg/Icons/Spinner'
 
 const RoundProgressBar = styled(Flex)<{ greyed: boolean }>`
     position: absolute;
@@ -48,7 +47,7 @@ const ProgressBar = styled.div<{ perc: number, isExpedition: boolean }>`
     width: ${({ perc }) => perc}%;
     height: 4px;
     background-color: ${({ isExpedition }) => linearGradient({
-        colorStops: getElevationGradientStops(isExpedition ? Elevation.EXPEDITION : 'GOLD'),
+        colorStops: getPaletteGradientStops(isExpedition ? SummitPalette.EXPEDITION : SummitPalette.GOLD),
         toDirection: '120deg',
     })};
     border-radius: 0px 3px 3px 0px;

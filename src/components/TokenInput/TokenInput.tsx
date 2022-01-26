@@ -2,12 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js/bignumber'
 import Input, { InputProps } from '../Input'
-import SummitButton from 'uikit/components/Button/SummitButton'
-import { Elevation } from 'config/constants/types'
-import { Text } from 'uikit'
+import { ElevOrPalette, SummitPalette } from 'config/constants/types'
+import { Text, SummitButton } from 'uikit'
 
 interface TokenInputProps extends InputProps {
-  elevation?: Elevation
+  summitPalette?: ElevOrPalette
   max: number | string
   symbol: string
   onSelectMax?: () => void
@@ -19,7 +18,7 @@ interface TokenInputProps extends InputProps {
 }
 
 const TokenInput: React.FC<TokenInputProps> = ({
-  elevation,
+  summitPalette = SummitPalette.BASE,
   balanceText = 'Balance',
   max,
   symbol,
@@ -38,14 +37,14 @@ const TokenInput: React.FC<TokenInputProps> = ({
       </StyledMaxText>
       <Input
         disabled={disabled}
-        elevation={elevation}
+        summitPalette={summitPalette}
         tokenSymbol={symbol}
         isLocked={isLocked}
         endAdornment={
           <StyledTokenAdornmentWrapper>
             <StyledSpacer />
             <div>
-              <SummitButton elevation={elevation} disabled={disabled || isLocked} padding="12px" onClick={onSelectMax}>
+              <SummitButton summitPalette={summitPalette} disabled={disabled || isLocked} padding="12px" onClick={onSelectMax}>
                 MAX
               </SummitButton>
             </div>

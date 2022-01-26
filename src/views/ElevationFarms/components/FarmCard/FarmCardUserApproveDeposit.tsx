@@ -11,7 +11,7 @@ import useStake from 'hooks/useStake'
 import { useApprove } from 'hooks/useApprove'
 import { isNumber } from 'lodash'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { useRewardsWillBeClaimedModal, RewardsWillBeClaimedType } from '../RewardsWillBeClaimedModal'
+import { useRewardsWillBeClaimedModal, RewardsWillBeClaimedType } from '../../../../components/RewardsWillBeClaimedModal'
 
 interface Props {
   farmToken: string
@@ -119,7 +119,7 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
         Deposit:
       </MobileHiddenText>
       <TokenInput
-        elevation={elevation}
+        summitPalette={elevation}
         value={depositVal}
         balanceText="Wallet"
         disabled={disabled}

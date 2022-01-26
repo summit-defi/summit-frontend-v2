@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Flex, Text, Modal, ChevronRightIcon } from 'uikit'
-import ModalActions from 'components/ModalActions'
+import { Flex, Text, Modal, ModalActions } from 'uikit'
 import TokenInput from '../../../components/TokenInput'
 import { getFullDisplayBalance } from '../../../utils/formatBalance'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { isNumber } from 'lodash'
-import { elevationPalette } from 'theme/colors'
 import { Epoch } from 'state/types'
 import HarvestLockForEverestSelector from './HarvestLockForEverestSelector'
 

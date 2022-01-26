@@ -67,19 +67,19 @@ const LaunchCard = () => {
 
 
         <Flex flex={1}>
-          <StyledLink elevation={Elevation.OASIS} href="https://github.com/Tibereum/obelisk-audits/blob/main/Summit.pdf">
+          <StyledLink summitPalette={Elevation.OASIS} href="https://github.com/Tibereum/obelisk-audits/blob/main/Summit.pdf">
             Audit
           </StyledLink>
-          <StyledLink elevation={Elevation.OASIS} href="https://docs.summitdefi.com">
+          <StyledLink summitPalette={Elevation.OASIS} href="https://docs.summitdefi.com">
             Docs
           </StyledLink>
-          <StyledLink elevation={Elevation.OASIS} href="https://discord.gg/summitdefi">
+          <StyledLink summitPalette={Elevation.OASIS} href="https://discord.gg/summitdefi">
             Discord
           </StyledLink>
-          <StyledLink elevation={Elevation.OASIS} href="https://twitter.com/summitdefi">
+          <StyledLink summitPalette={Elevation.OASIS} href="https://twitter.com/summitdefi">
             Twitter
           </StyledLink>
-          <StyledLink elevation={Elevation.OASIS} href="https://github.com/summit-defi/summit-contracts-pure">
+          <StyledLink summitPalette={Elevation.OASIS} href="https://github.com/summit-defi/summit-contracts-pure">
             Contracts
           </StyledLink>
         </Flex>

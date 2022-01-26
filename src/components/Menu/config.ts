@@ -71,7 +71,7 @@ export const getMenuItems = (
   {
     label: 'EVEREST',
     icon: 'summit/EVERESTicon.png',
-    href: './everest',
+    href: '/everest',
     external: false,
     keyPaths: ['everest'],
   },

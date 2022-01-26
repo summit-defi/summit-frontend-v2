@@ -5,7 +5,8 @@ import styled from 'styled-components'
 import { darken, linearGradient, transparentize } from 'polished'
 import 'rc-slider/assets/index.css'
 import { pressableMixin } from 'uikit/util/styledMixins'
-import { getElevationGradientStops, getLockDurationPerc, lockDurationSliderMarks, lockDurationSliderPerc, sliderPercLockDuration, sliderPoints  } from 'utils'
+import { getPaletteGradientStops, getLockDurationPerc, lockDurationSliderMarks, lockDurationSliderPerc, sliderPercLockDuration, sliderPoints  } from 'utils'
+import { SummitPalette } from 'config/constants'
 
 const ButtonHeight = 6
 
@@ -102,7 +103,7 @@ const FakeSliderHandle = styled.div<{ perc: number }>`
     margin-top: -6px;
     z-index: 6;
     background: ${linearGradient({
-        colorStops: getElevationGradientStops('BASE'),
+        colorStops: getPaletteGradientStops(SummitPalette.EVEREST),
         toDirection: '120deg',
     })};
     border-radius: 20px;

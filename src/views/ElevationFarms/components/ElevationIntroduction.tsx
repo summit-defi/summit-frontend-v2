@@ -1,11 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Elevation } from 'config/constants/types'
-import { Flex, Text } from 'uikit'
+import { Flex, Text, SummitButton } from 'uikit'
 import { useElevationTotem, useSelectedElevation, useTotemSelectionPending } from 'state/hooks'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import SummitButton from 'uikit/components/Button/SummitButton'
-import useSelectTotemModal from 'uikit/widgets/SelectTotemModal/useSelectTotemModal'
+import { useSelectTotemModal } from 'components/SelectTotemModal'
 
 const StyledText = styled(Text)`
   padding-top: 16px;

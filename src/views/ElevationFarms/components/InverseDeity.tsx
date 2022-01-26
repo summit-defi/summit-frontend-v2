@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import { BaseDeity } from './BaseDeity'
+import { BaseDeity } from '../../../uikit/components/Totem/BaseDeity'
 
 export const InverseDeity = styled(BaseDeity)`
   height: calc(250px / 1.358);

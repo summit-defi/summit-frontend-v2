@@ -1,5 +1,5 @@
 import React from 'react'
-import { Elevation, elevationUtils } from 'config/constants/types'
+import { ElevOrPalette } from 'config/constants/types'
 import { darken } from 'polished'
 import styled, { css } from 'styled-components'
 import { HighlightedText, Lock } from 'uikit'
@@ -11,13 +11,13 @@ export interface InputProps {
   placeholder?: string
   startAdornment?: React.ReactNode
   value: string
-  elevation?: Elevation
+  summitPalette?: ElevOrPalette
   disabled?: boolean
   isLocked?: boolean
 }
 
 const Input: React.FC<InputProps> = ({
-  elevation,
+  summitPalette,
   tokenSymbol,
   endAdornment,
   onChange,
@@ -33,7 +33,7 @@ const Input: React.FC<InputProps> = ({
       <InputWrapper>
         <StyledInput
           disabled={disabled || isLocked}
-          elevation={elevation}
+          summitPalette={summitPalette}
           placeholder={placeholder}
           value={value}
           onChange={onChange}
@@ -94,7 +94,7 @@ const InputWrapper = styled.div`
   align-items: flex-start;
 `
 
-export const StyledInput = styled.input<{ elevation?: Elevation }>`
+export const StyledInput = styled.input<{ summitPalette?: ElevOrPalette }>`
   width: 100%;
   background: none;
   border: 0;
@@ -107,15 +107,15 @@ export const StyledInput = styled.input<{ elevation?: Elevation }>`
   padding: 0;
   outline: none;
   text-shadow: 1px 1px 2px gray;
-  color: ${({ elevation, theme }) =>
+  color: ${({ summitPalette, theme }) =>
     // eslint-disable-next-line no-nested-ternary
     darken(
       !theme.isDark ? 0.2 : 0,
-      elevation === Elevation.EXPEDITION
-        ? theme.colors.text
-        : elevation
-        ? elevationUtils.backgroundColor(elevation, theme)
-        : theme.colors.text,
+      summitPalette === 'EXPEDITION' ?
+        theme.colors.text :
+        summitPalette ?
+          theme.colors[summitPalette] :
+          theme.colors.text,
     )};
 `
 

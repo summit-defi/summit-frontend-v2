@@ -183,11 +183,11 @@ const FarmCardUserInteractionSection: React.FC<Props> = (props) => {
       <MobileVerticalFlexText width="100%" mt="24px">
         <Flex flexDirection="row" justifyContent="space-around" alignItems="center" width='100%'>
           {passthroughStrategy != null && (
-            <ExternalLinkButton elevation={elevation} href={passthroughStrategy}>
+            <ExternalLinkButton summitPalette={elevation} href={passthroughStrategy}>
               Passthrough Strategy
             </ExternalLinkButton>
           )}
-          <ExternalLinkButton elevation={elevation} href={getUrl}>
+          <ExternalLinkButton summitPalette={elevation} href={getUrl}>
             Get {symbol}
           </ExternalLinkButton>
         </Flex>

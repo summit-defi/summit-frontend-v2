@@ -1,18 +1,16 @@
 import BigNumber from 'bignumber.js'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Flex, Text, Modal, ChevronRightIcon } from 'uikit'
-import ModalActions from 'components/ModalActions'
+import { Flex, Text, Modal, ChevronRightIcon, ModalActions, SummitButton } from 'uikit'
 import TokenInput from '../../../components/TokenInput'
 import { getFullDisplayBalance } from '../../../utils/formatBalance'
-import SummitButton from 'uikit/components/Button/SummitButton'
-import { Elevation } from 'config/constants/types'
+import { Elevation, elevToPalette } from 'config/constants/types'
 import ElevationSelector from './ElevationSelector'
 import { useElevationTotem, useSisterFarms } from 'state/hooks'
 import { isNumber } from 'lodash'
 import Totem from './Totem'
 import { elevationPalette } from 'theme/colors'
-import useSelectTotemModal from 'uikit/widgets/SelectTotemModal/useSelectTotemModal'
-import { useRewardsWillBeClaimedModal, RewardsWillBeClaimedType } from './RewardsWillBeClaimedModal'
+import { useRewardsWillBeClaimedModal, RewardsWillBeClaimedType } from 'components/RewardsWillBeClaimedModal'
+import { useSelectTotemModal } from 'components/SelectTotemModal'
 
 interface ElevateModalProps {
   symbol: string
@@ -59,6 +57,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
 
   const [selectedSourceElevation, setSelectedSourceElevation] = useState(sourceElevation || null)
   const [selectedTargetElevation, setSelectedTargetElevation] = useState(targetElevation || null)
+  const targetElevationPalette = elevToPalette(selectedTargetElevation)
   const totem = useElevationTotem(selectedTargetElevation)
   const { onPresentSelectTotemModal } = useSelectTotemModal(selectedTargetElevation)
 
@@ -207,7 +206,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
           AMOUNT TO TRANSFER:
         </Text>
         <TokenInput
-          elevation={selectedTargetElevation}
+          summitPalette={targetElevationPalette}
           value={val}
           onSelectMax={handleSelectMax}
           onChange={handleChange}
@@ -218,11 +217,11 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
       </Flex>
 
       <ModalActions>
-        <SummitButton elevation={selectedTargetElevation} secondary onClick={onDismiss}>
+        <SummitButton summitPalette={targetElevationPalette} secondary onClick={onDismiss}>
           CANCEL
         </SummitButton>
         <SummitButton
-          elevation={selectedTargetElevation}
+          summitPalette={targetElevationPalette}
           disabled={totem == null || invalidVal || selectedSourceElevation == null || selectedTargetElevation == null}
           onClick={handleConfirmElevate}
         >

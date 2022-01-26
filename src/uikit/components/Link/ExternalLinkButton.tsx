@@ -4,22 +4,22 @@ import { OpenNewIcon } from '../Svg'
 import { darken } from 'polished'
 import Link from './Link'
 import { LinkProps } from './types'
-import { Elevation, elevationUtils } from 'config/constants/types'
+import { ElevOrPalette } from 'config/constants/types'
 import { pressableMixin } from 'uikit/util/styledMixins'
 
-const StyledExternalIcon = styled(OpenNewIcon)<{ elevation?: Elevation }>`
-  fill: ${({ theme, elevation }) =>
-    darken(0.2, elevation ? elevationUtils.backgroundColor(elevation, theme) : theme.colors.text)};
+const StyledExternalIcon = styled(OpenNewIcon)<{ summitPalette?: ElevOrPalette }>`
+  fill: ${({ theme, summitPalette: elevation }) =>
+    darken(0.2, elevation ? theme.colors[elevation] : theme.colors.text)};
   filter: drop-shadow(1px 1px 2px ${({ theme }) => theme.colors.OASIS});
 `
 
-const StyleButton = styled(Link)<{ elevation?: Elevation }>`
+const StyleButton = styled(Link)<{ summitPalette?: ElevOrPalette }>`
   position: relative;
   display: flex;
   align-items: center;
   cursor: pointer;
-  color: ${({ theme, elevation }) =>
-    darken(0.2, elevation ? elevationUtils.backgroundColor(elevation, theme) : theme.colors.text)};
+  color: ${({ theme, summitPalette: elevation }) =>
+    darken(0.2, elevation ? theme.colors[elevation] : theme.colors.text)};
   transition: transform 0.2s;
   font-size: 13;
   font-weight: bold;
@@ -28,11 +28,11 @@ const StyleButton = styled(Link)<{ elevation?: Elevation }>`
   ${pressableMixin}
 `
 
-const ExternalLinkButton: React.FC<LinkProps> = ({ children, elevation, ...props }) => {
+const ExternalLinkButton: React.FC<LinkProps> = ({ children, summitPalette, ...props }) => {
   return (
-    <StyleButton external elevation={elevation} rel="noreferrer noopener" target="_blank" {...props}>
+    <StyleButton external summitPalette={summitPalette} rel="noreferrer noopener" target="_blank" {...props}>
       {children}
-      <StyledExternalIcon width="20px" elevation={elevation} ml="8px" />
+      <StyledExternalIcon width="20px" summitPalette={summitPalette} ml="8px" />
     </StyleButton>
   )
 }

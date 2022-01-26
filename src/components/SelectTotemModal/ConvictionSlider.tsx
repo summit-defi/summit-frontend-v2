@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import { Flex, Text } from 'uikit'
 import Slider from 'rc-slider'
-import styled from 'styled-components'
-import { darken, linearGradient } from 'polished'
 import 'rc-slider/assets/index.css'
+import styled, { css } from 'styled-components'
+import { darken, linearGradient } from 'polished'
 import { pressableMixin } from 'uikit/util/styledMixins'
-import { getElevationGradientStops  } from 'utils'
+import { getPaletteGradientStops  } from 'utils'
 import { Elevation } from 'config/constants'
+import { Flex } from 'uikit/components/Box'
+import { Text } from 'uikit/components/Text'
 
 const ButtonHeight = 28
 
@@ -42,7 +43,7 @@ const SliderWrapper = styled(Flex)`
         border: none;
         margin-top: -${(ButtonHeight / 2) - 3}px;
         background: transparent;
-        z-index: 5;
+        z-index: 6;
     }
     .rc-slider-handle:hover {
         box-shadow: none;
@@ -64,7 +65,7 @@ const SliderWrapper = styled(Flex)`
     }
 `
 
-const FakeMarkDot = styled.div<{ perc: number }>`
+const FakeMarkDot = styled.div<{ perc: number, isExisting?: boolean }>`
     transition: transform 0.2s;
     position: absolute;
     left: ${({ perc }) => perc}%;
@@ -86,7 +87,22 @@ const FakeMarkDot = styled.div<{ perc: number }>`
         height: 6px;
         background-color: ${({ theme }) => theme.colors.text};
         box-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`};
+
     }
+
+    ${({ isExisting }) => isExisting === true && css`
+        z-index: 5;
+
+        &:: after {
+            border-radius: 6px;
+            width: 10px;
+            height: 10px;
+            background-color: ${linearGradient({
+                colorStops: getPaletteGradientStops(Elevation.EXPEDITION),
+                toDirection: '120deg',
+            })};
+        }
+    `}
 `
 
 const FakeSliderHandle = styled.div<{ perc: number }>`
@@ -100,13 +116,13 @@ const FakeSliderHandle = styled.div<{ perc: number }>`
     pointer-events: none;
     margin-top: -6px;
     margin-left: -12px;
-    z-index: 6;
+    z-index: 7;
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: ${({ theme }) => `3px 3px 6px ${theme.colors.textShadow}`} !important;
     background: ${linearGradient({
-        colorStops: getElevationGradientStops(Elevation.EXPEDITION),
+        colorStops: getPaletteGradientStops(Elevation.EXPEDITION),
         toDirection: '120deg',
     })};
     border-radius: 20px;
@@ -153,6 +169,13 @@ const ConvictionSlider: React.FC<Props> = ({ existingConviction, setConviction }
                     onClick={() => handleSetConviction(markPerc)}
                 />
             )}
+            { existingConviction != null &&
+                <FakeMarkDot
+                    isExisting
+                    perc={existingConviction}
+                    onClick={() => handleSetConviction(existingConviction)}
+                />
+            }
             { perc != null &&
                 <FakeSliderHandle
                     perc={perc}

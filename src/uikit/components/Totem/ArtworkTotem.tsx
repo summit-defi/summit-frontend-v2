@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Elevation, elevationUtils } from 'config/constants/types'
-import { HighlightedText } from 'uikit'
 import { BaseDeity } from './BaseDeity'
+import { HighlightedText } from 'uikit/components/Text'
 
 const TotemBackground = styled.div<{
   elevation
@@ -159,7 +159,7 @@ const ArtworkTotem: React.FC<TotemProps> = ({
       <ElevationForeground elevation={elevation} crowned={crowned} />
       {crowned && <ArtworkCrown desktopSize={desktopSize} mobileSize={mobileSize} />}
       {withName && totem != null && (
-        <ArtworkName fontSize="16px" gold={crowned} header elevation={elevation}>
+        <ArtworkName fontSize="16px" gold={crowned} header summitPalette={elevation}>
           {elevationUtils.getElevationTotemName(elevation, totem, false)}
         </ArtworkName>
       )}

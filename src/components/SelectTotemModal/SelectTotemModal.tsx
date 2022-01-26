@@ -4,14 +4,11 @@ import { useSelectTotemAndOrSafetyFactor } from 'hooks/useSelectTotem'
 import React, { useCallback, useState } from 'react'
 import { useElevationUserRoundInfo } from 'state/hooks'
 import styled, { keyframes } from 'styled-components'
-import { Flex } from 'uikit'
-import SummitButton from 'uikit/components/Button/SummitButton'
-import { HighlightedText, Text } from 'uikit/components/Text'
-import { getElevationGradientFarmCardBackground } from 'utils'
-import ArtworkTotem from 'views/ElevationFarms/components/ArtworkTotem'
-import InitialSelectionTotems from 'views/ElevationFarms/components/InitialSelectionTotems'
-import { RewardsWillBeClaimedType, useRewardsWillBeClaimedModal } from 'views/ElevationFarms/components/RewardsWillBeClaimedModal'
-import { Modal } from '../Modal'
+import { getPaletteGradientFarmCardBackground } from 'utils'
+import { RewardsWillBeClaimedType, useRewardsWillBeClaimedModal } from 'components/RewardsWillBeClaimedModal'
+import InitialSelectionTotems from './InitialSelectionTotems'
+import ConvictionSlider from './ConvictionSlider'
+import { Flex, Modal, ArtworkTotem, HighlightedText, Text, SummitButton } from 'uikit'
 
 interface Props {
   elevation: Elevation
@@ -50,8 +47,19 @@ const StyledCardAccent = styled.div<{ elevationBackground: string }>`
 `
 
 const TotemPadding = styled.div`
-  margin: 24px;
+  margin: 12px;
+  margin-top: 0px;
   position: relative;
+  z-index: -1;
+`
+
+const ConvictionSliderWrapper = styled.div`
+  margin-top: 8px;
+  margin-bottom: 12px;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
 `
 
 const SelectTotemModal: React.FC<Props> = ({
@@ -72,7 +80,7 @@ const SelectTotemModal: React.FC<Props> = ({
   const [faithToConfirm, setFaithToConfirm] = useState<number | null>(
     existingFaith
   )
-  const elevationBackground = getElevationGradientFarmCardBackground(elevation)
+  const elevationBackground = getPaletteGradientFarmCardBackground(elevation)
   const handleSelectTotem = useCallback(async () => {
     onDismiss()
     presentRewardsWillBeClaimedModal(
@@ -92,6 +100,10 @@ const SelectTotemModal: React.FC<Props> = ({
     setTotemToConfirm(totem)
   }
 
+  const updateConvictionText = (!alsoSelectFaith || existingFaith === faithToConfirm) ?
+    null :
+    '(WITH CONVICTION)'
+
   return (
     <Modal
       title={totemToConfirm != null ? 'CONFIRM|br|TOTEM:' : 'SELECT|br|TOTEM:'}
@@ -101,18 +113,39 @@ const SelectTotemModal: React.FC<Props> = ({
     >
       {totemToConfirm != null ? (
         <Flex alignItems="center" flexDirection="column">
-          <HighlightedText elevation={elevation} header mb="16px">
+          <HighlightedText summitPalette={elevation} header>
             THE {totemToConfirmName}
           </HighlightedText>
-          <HighlightedText elevation={elevation} header={false} mb="36px">
+          <HighlightedText summitPalette={elevation} header={false} mb="24px">
             WILL BE YOUR {elevationName} GUIDE
           </HighlightedText>
           <TotemPadding>
             {elevation !== Elevation.EXPEDITION && <StyledCardAccent elevationBackground={elevationBackground} />}
             <ArtworkTotem elevation={elevation} totem={totemToConfirm} desktopSize="200" mobileSize="200" />
           </TotemPadding>
-          <SummitButton elevation={elevation} onClick={handleSelectTotem}>
+          { alsoSelectFaith &&
+            <>
+              <Text bold monospace small italic mt='-36px' textAlign='center' lineHeight='14px'>
+                Update your CONVICTION
+                <br/>
+                in {totemToConfirmName} (Optional)
+                </Text>
+              <ConvictionSliderWrapper>
+                <ConvictionSlider
+                    existingConviction={existingFaith}
+                    setConviction={setFaithToConfirm}
+                />
+              </ConvictionSliderWrapper>
+            </>
+          }
+          <SummitButton width='200px' padding='0px' mt='12px' summitPalette={elevation} onClick={handleSelectTotem}>
             CONFIRM
+            {updateConvictionText != null &&
+              <>
+                <br/>
+                {updateConvictionText}
+              </>
+            }
           </SummitButton>
         </Flex>
       ) : (

@@ -1,9 +1,9 @@
+import { SummitPalette } from "config/constants"
 import React, { memo, useCallback } from "react"
 import { useEverestInfo, useSummitPrice } from "state/hooks"
 import styled from "styled-components"
-import { Flex, Text, HighlightedText, TokenSymbolImage } from "uikit"
-import SummitButton from "uikit/components/Button/SummitButton"
-import { getBalanceNumber, getEverestTokenAddress, getFormattedBigNumber, } from "utils"
+import { Flex, Text, HighlightedText, TokenSymbolImage, SummitButton } from "uikit"
+import { getBalanceNumber, getEverestTokenAddress } from "utils"
 import CardValue from "views/Home/components/CardValue"
 import EverestLockDurationIndicator from "./EverestLockDurationIndicator"
 
@@ -78,7 +78,13 @@ export const EverestStatsCard: React.FC = memo(() => {
 
             <TokenImageWrapper>
                 <TokenSymbolImage symbol='EVEREST' width={48} height={48}/>
-                <SummitButton onClick={addWatchSummitToken} height={30} padding={22} style={{ marginLeft: '8px' }}>
+                <SummitButton
+                    onClick={addWatchSummitToken}
+                    height={30}
+                    padding={22}
+                    style={{ marginLeft: '8px' }}
+                    summitPalette={SummitPalette.EVEREST}
+                >
                     + <img style={{ marginLeft: 8 }} width={16} src="/images/wallet/metamask.png" alt="metamask logo" />
                 </SummitButton>
             </TokenImageWrapper>

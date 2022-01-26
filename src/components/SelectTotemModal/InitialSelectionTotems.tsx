@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Elevation, elevationUtils } from 'config/constants/types'
-import { Flex } from 'uikit'
-import SelectedTotem from './SelectedTotem'
+import { SelectedTotem } from 'uikit'
 
 const TotemsWrapper = styled.div`
   display: flex;
@@ -11,7 +10,11 @@ const TotemsWrapper = styled.div`
   justify-content: center;
 `
 
-const PaddedFlex = styled(Flex)`
+const PaddedFlex = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
   & > * {
     padding: 6px;
   }
@@ -38,7 +41,7 @@ const renderTotems = (
     case Elevation.SUMMIT:
       return (
         <>
-          <PaddedFlex flexDirection="row" justifyContent="center" flexWrap="wrap">
+          <PaddedFlex>
             {totems.slice(0, 3).map((totem) => (
               <SelectedTotem
                 key={totem}
@@ -52,7 +55,7 @@ const renderTotems = (
             ))}
           </PaddedFlex>
 
-          <PaddedFlexMobileOnly flexDirection="row" justifyContent="center">
+          <PaddedFlexMobileOnly>
             {totems.slice(3, 5).map((totem) => (
               <SelectedTotem
                 key={totem}
@@ -65,7 +68,7 @@ const renderTotems = (
               />
             ))}
           </PaddedFlexMobileOnly>
-          <PaddedFlexMobileOnly flexDirection="row" justifyContent="center">
+          <PaddedFlexMobileOnly>
             {totems.slice(5, 8).map((totem) => (
               <SelectedTotem
                 key={totem}
@@ -78,7 +81,7 @@ const renderTotems = (
               />
             ))}
           </PaddedFlexMobileOnly>
-          <PaddedFlexMobileOnly flexDirection="row" justifyContent="center">
+          <PaddedFlexMobileOnly>
             {totems.slice(8, 10).map((totem) => (
               <SelectedTotem
                 key={totem}
@@ -92,7 +95,7 @@ const renderTotems = (
             ))}
           </PaddedFlexMobileOnly>
 
-          <PaddedFlexDesktopOnly flexDirection="row" justifyContent="center">
+          <PaddedFlexDesktopOnly>
             {totems.slice(3, 7).map((totem) => (
               <SelectedTotem
                 key={totem}
@@ -105,7 +108,7 @@ const renderTotems = (
               />
             ))}
           </PaddedFlexDesktopOnly>
-          <PaddedFlexDesktopOnly flexDirection="row" justifyContent="center">
+          <PaddedFlexDesktopOnly>
             {totems.slice(7, 10).map((totem) => (
               <SelectedTotem
                 key={totem}
@@ -123,7 +126,7 @@ const renderTotems = (
     case Elevation.MESA:
       return (
         <>
-          <PaddedFlex flexDirection="row" justifyContent="center">
+          <PaddedFlex>
             {totems.slice(0, 3).map((totem) => (
               <SelectedTotem
                 key={totem}
@@ -136,7 +139,7 @@ const renderTotems = (
               />
             ))}
           </PaddedFlex>
-          <PaddedFlex flexDirection="row" justifyContent="center">
+          <PaddedFlex>
             {totems.slice(3, 5).map((totem) => (
               <SelectedTotem
                 key={totem}
@@ -153,7 +156,7 @@ const renderTotems = (
       )
     case Elevation.PLAINS:
       return (
-        <PaddedFlex flexDirection="row" justifyContent="center">
+        <PaddedFlex>
           {totems.map((totem) => (
             <SelectedTotem
               key={totem}

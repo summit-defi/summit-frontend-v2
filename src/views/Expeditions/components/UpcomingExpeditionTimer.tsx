@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Elevation, ElevationRoundDuration } from 'config/constants/types'
 import { Flex, Text } from 'uikit'
 import { useElevationRoundTimeRemaining, useSelectedElevation, useRolloverRewards } from 'state/hooks'
-import { getBalanceNumber, getElevationGradientStops, getTimeRemainingText } from 'utils'
+import { getBalanceNumber, getPaletteGradientStops, getTimeRemainingText } from 'utils'
 import { darken, linearGradient } from 'polished'
 import useRolloverElevation from 'hooks/useRolloverElevation'
 import SummitButton from 'uikit/components/Button/SummitButton'
@@ -31,7 +31,7 @@ const ProgressBarInner = styled.div<{ progress: number; elevation: string }>`
   transition: width 0.2s;
   background: ${({ elevation }) =>
     linearGradient({
-      colorStops: getElevationGradientStops(elevation as Elevation),
+      colorStops: getPaletteGradientStops(elevation as Elevation),
       toDirection: '120deg',
     })};
   box-shadow: ${({ theme }) => `3px 3px 6px ${theme.colors.textShadow}`};

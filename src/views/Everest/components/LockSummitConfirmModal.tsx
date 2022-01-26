@@ -1,11 +1,10 @@
 import React, {  } from 'react'
-import { Flex, Text, Modal, HighlightedText } from 'uikit'
-import ModalActions from 'components/ModalActions'
+import { Flex, Text, Modal, HighlightedText, ModalActions, SummitButton } from 'uikit'
 import { getFormattedBigNumber } from '../../../utils/formatBalance'
-import SummitButton from 'uikit/components/Button/SummitButton'
 import { LockSummitButtonType } from 'state/types'
 import BigNumber from 'bignumber.js'
 import { lockDurationTextLong, timestampToDateWithYear } from 'utils'
+import { SummitPalette } from 'config/constants'
 
 interface LockSummitConfirmModalProps {
   type: LockSummitButtonType
@@ -94,6 +93,7 @@ const LockSummitConfirmModal: React.FC<LockSummitConfirmModalProps> = ({
           CANCEL
         </SummitButton>
         <SummitButton
+          summitPalette={SummitPalette.EVEREST}
           onClick={handleConfirm}
         >
           CONFIRM

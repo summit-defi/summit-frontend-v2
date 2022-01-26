@@ -10,7 +10,7 @@ import { MENU_HEIGHT, SIDEBAR_WIDTH_REDUCED, SIDEBAR_WIDTH_FULL } from "./config
 import SummitPrice from "./components/SummitPrice";
 import MenuButton from "./components/MenuButton";
 import { HamburgerCloseIcon, HamburgerIcon } from "./icons";
-import { useSelectedElevation } from "state/hooks";
+import { useCurrentSummitPalette, useSelectedElevation } from "state/hooks";
 import DarkModeToggle from "./components/DarkModeToggle";
 import MenuPageSpecificHeader from "./components/MenuPageSpecificHeader";
 
@@ -133,7 +133,7 @@ const Menu: React.FC<NavProps> = ({
   const { isXl } = useMatchBreakpoints();
   const isMobile = isXl === false;
   const [isPushed, setIsPushed] = useState(!isMobile);
-  const elevation = useSelectedElevation()
+  const summitPalette = useCurrentSummitPalette()
 
   return (
     <Wrapper>
@@ -152,7 +152,7 @@ const Menu: React.FC<NavProps> = ({
 
         <MobileExcludedHeaderElements>
           <Flex justifyContent='flex-end' flex='1'>
-              <DarkModeToggle elevation={elevation} isDark={isDark} toggleTheme={toggleTheme}/>
+              <DarkModeToggle summitPalette={summitPalette} isDark={isDark} toggleTheme={toggleTheme}/>
               <UserBlock account={account} login={login} logout={logout} isDark={isDark} />
           </Flex>
         </MobileExcludedHeaderElements>
@@ -176,7 +176,7 @@ const Menu: React.FC<NavProps> = ({
         <MobileOnlyFooter>
           <SummitPrice summitPriceUsd={summitPriceUsd} />
           <Flex>
-            <DarkModeToggle elevation={elevation} isDark={isDark} toggleTheme={toggleTheme}/>
+            <DarkModeToggle summitPalette={summitPalette} isDark={isDark} toggleTheme={toggleTheme}/>
             <UserBlock account={account} login={login} logout={logout} isDark={isDark} />
           </Flex>
         </MobileOnlyFooter>

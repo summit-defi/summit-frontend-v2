@@ -5,8 +5,8 @@ import React from 'react'
 import styled, { keyframes } from 'styled-components'
 import { Flex } from 'uikit'
 import { HighlightedText, Text } from 'uikit/components/Text'
-import { chunkArray, getElevationGradientFarmCardBackground } from 'utils'
-import ArtworkTotem from 'views/ElevationFarms/components/ArtworkTotem'
+import { chunkArray, getPaletteGradientFarmCardBackground } from 'utils'
+import ArtworkTotem from 'uikit/components/Totem/ArtworkTotem'
 import Totem from 'views/ElevationFarms/components/Totem'
 import { Modal } from '../Modal'
 import { elevationPalette } from 'theme/colors'
@@ -80,10 +80,10 @@ const TotemLabel = styled(Text)<{ elevation: Elevation; header?: boolean; color?
   text-align: center;
   font-size: ${({ header }) => (header ? '22' : '16')}px;
   color: ${({ elevation, theme, header, color }) =>
-    darken(header ? 0.2 : 0, color !== 'text' ? color : elevationUtils.backgroundColor(elevation, theme))};
+    darken(header ? 0.2 : 0, color !== 'text' ? color : theme.colors[elevation])};
   text-shadow: 1px 1px 2px
     ${({ theme, elevation, header, color }) =>
-      darken(header ? 0.2 : 0, color !== 'text' ? color : elevationUtils.backgroundColor(elevation, theme))};
+      darken(header ? 0.2 : 0, color !== 'text' ? color : theme.colors[elevation])};
 `
 
 const WinMultiplierLabel = styled(HighlightedText)`
@@ -154,7 +154,7 @@ const TotemWinnersModal: React.FC<Props> = ({
     )
   }
 
-  const elevationBackground = getElevationGradientFarmCardBackground(elevation)
+  const elevationBackground = getPaletteGradientFarmCardBackground(elevation)
   const recentWinnerName = elevationUtils.getElevationTotemName(elevation, recentWinners[0], false)
   const recentWinnerStreak = getRecentWinnerStreak(recentWinners)
   const winsPerc = getWinsPerc(winsAccum)
@@ -186,7 +186,7 @@ const TotemWinnersModal: React.FC<Props> = ({
             <ArtworkTotem crowned elevation={elevation} totem={recentWinners[0]} desktopSize="200" mobileSize="200" />
           </TotemPadding>
 
-          <WinMultiplierLabel elevation={elevation} header gold>
+          <WinMultiplierLabel summitPalette={elevation} header gold>
             {recentWinningsMultipliers[0].toFixed(1)}X
           </WinMultiplierLabel>
           <Text gold bold monospace fontSize="16px" mb="6px">
