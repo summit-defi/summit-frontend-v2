@@ -91,6 +91,11 @@ export const selectTotem = async (cartographer, expedition, elevation, totem, fa
   return estimateGasAndExecute(call, account)
 }
 
+export const enterExpedition = async (expedition, account) => {
+  const call = expedition.methods.joinExpedition()
+  return estimateGasAndExecute(call, account)
+}
+
 export const elevate = async (cartographer, token, sourceElevation, targetElevation, amount, account, decimals) => {
   const elevateCall = cartographer.methods.elevate(
     token,

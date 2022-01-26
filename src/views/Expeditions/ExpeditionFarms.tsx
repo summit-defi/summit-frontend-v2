@@ -21,14 +21,6 @@ const StyledPage = styled(Page)`
   }
 `
 
-
-const StyledHighlightedText = styled(HighlightedText)<{ fontSize: string; letterSpacing: string }>`
-letter-spacing: ${({ letterSpacing }) => letterSpacing};
-font-weight: 900;
-font-size: ${({ fontSize }) => fontSize};
-text-shadow: none;
-`
-
 const ExpeditionFarms: React.FC = () => {
   useExpeditionFetching()
   const expeditionEntered = useExpeditionEntered()
@@ -40,13 +32,11 @@ const ExpeditionFarms: React.FC = () => {
 
       { !expeditionLoaded && <PageLoader fill loadingText='Loading Expedition ...' /> }
 
-      <ExpeditionEntryFlow/>
-
-      {/* { expeditionLoaded &&
+      { expeditionLoaded &&
         <>
           { !expeditionEntered && <ExpeditionEntryFlow />}
         </>
-      } */}
+      }
       {/* <ExpeditionInfo/> */}
       {/* {totem != null && (
         <FlexLayout>

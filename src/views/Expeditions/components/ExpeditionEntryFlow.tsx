@@ -1,5 +1,7 @@
 import BigNumber from 'bignumber.js'
 import { Elevation } from 'config/constants'
+import { useEnterExpedition } from 'hooks/useEnterExpedition'
+import { useSelectTotemAndOrSafetyFactor } from 'hooks/useSelectTotem'
 import React, { useState } from 'react'
 import { useExpeditionEntryFlow } from 'state/hooks'
 import styled from 'styled-components'
@@ -101,14 +103,16 @@ const SelectDeityFlowItem: React.FC = () => {
 }
 
 const SelectConvictionFlowItem: React.FC = () => {
+    const { pending: convictionPending, onSelectTotemAndOrSafetyFactor: onSelectConviction } = useSelectTotemAndOrSafetyFactor()
     const [ conviction, setConviction ] = useState(null)
 
-    const convictionPending = false
-    const onSelectConviction = () => null
-
     const handleSelectConviction = () => {
-        if (convictionPending) return
-        onSelectConviction()
+        if (convictionPending || conviction == null) return
+        onSelectConviction(
+            Elevation.EXPEDITION,
+            null,
+            conviction
+        )
     }
 
     const convictionText = conviction != null ? `${conviction}%` : '-'
@@ -178,6 +182,38 @@ const GetEverestFlowItem: React.FC = () => {
 
 
 
+
+const EnterTheExpeditionFlowItem: React.FC = () => {
+    const { entryPending, onEnterExpedition } = useEnterExpedition()
+
+    const handleEnterExpedition = () => {
+        if (entryPending) return
+        onEnterExpedition()
+    }
+
+    return <Flex mt='24px' gap='24px' flexDirection='column' alignItems='center' justifyContent='center' pl='24px' pr='24px'>
+        <Text bold monospace small textAlign='center' style={{maxWidth: '500px'}}>
+            The Summit Awaits.
+        </Text>
+
+        <SummitButton
+            onClick={handleEnterExpedition}
+            isLoading={entryPending}
+            elevation={Elevation.EXPEDITION}
+        >
+            ENTER THE
+            <br/>
+            EXPEDITION
+        </SummitButton>
+
+        <Text bold monospace small textAlign='center' mt='24px' style={{maxWidth: '500px'}}>
+            You will only ever need to enter the Expedition once. This Setup Flow simply ensures that users understand and meet the Expedition requirements. You wont ever have to Exit the Expedition either.
+        </Text>
+    </Flex>
+}
+
+
+
 const ActiveFlowItem: React.FC<{ activeFlowItem: ExpedEntryFlowItem }> = ({ activeFlowItem }) => {
     switch (activeFlowItem) {
         case ExpedEntryFlowItem.Deity:
@@ -187,7 +223,7 @@ const ActiveFlowItem: React.FC<{ activeFlowItem: ExpedEntryFlowItem }> = ({ acti
         case ExpedEntryFlowItem.EverestOwned:
             return <GetEverestFlowItem/>
         case ExpedEntryFlowItem.Entered:
-            return <Text>Enter the expedition</Text>
+            return <EnterTheExpeditionFlowItem/>
         default: return null
     }
 }
@@ -196,11 +232,6 @@ const ActiveFlowItem: React.FC<{ activeFlowItem: ExpedEntryFlowItem }> = ({ acti
 
 const ExpeditionEntryFlow: React.FC = () => {
     const { deity, conviction, everestOwned } = useExpeditionEntryFlow()
-    // const { deity, conviction, everestOwned } = {
-    //     deity: 0,
-    //     conviction: null,
-    //     everestOwned: new BigNumber(50),
-    // }
 
     const entryProgress: EntryProgress = {
         [ExpedEntryFlowItem.Deity]: deity != null,

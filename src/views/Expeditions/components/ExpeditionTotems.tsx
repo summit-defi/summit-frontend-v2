@@ -2,20 +2,12 @@ import BigNumber from 'bignumber.js'
 import { Elevation } from 'config/constants/types'
 import React, { useEffect, useState } from 'react'
 import { useExpeditionDivider, useExpeditionTotemHeaderInfo, useSelectedElevationWinningTotem, useTotemSelectionPending } from 'state/hooks'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 import { Flex, Spinner, Text } from 'uikit'
+import { SpinnerKeyframes } from 'uikit/components/Svg/Icons/Spinner'
 import useSelectTotemModal from 'uikit/widgets/SelectTotemModal/useSelectTotemModal'
 import { getFormattedBigNumber } from 'utils'
 import { BaseDeity } from 'views/ElevationFarms/components/BaseDeity'
-
-const Spin = keyframes`
-  0%: {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-`
 
 const FlexWithSpinner = styled(Flex)`
   position: relative;
@@ -24,7 +16,7 @@ const FlexWithSpinner = styled(Flex)`
     position: absolute;
     margin: auto;
     fill: white;
-    animation: ${Spin} 1.4s infinite linear;
+    animation: ${SpinnerKeyframes} 1.4s infinite linear;
     width: 28px;
     height: 28px;
   }
@@ -122,18 +114,11 @@ const ValueText = styled(Text)<{ fontSize?: string }>`
   gap: 6px;
 `
 
-interface Props {
-  deity: number | null
-  deityDivider: number
-  deitiedEverest: BigNumber
-  deityEverest: BigNumber[]
-}
-
 const deityValueText = (deitiedEverest, deityEverest, deity, deityDivider, bull) => {
   if (deity == null || deitiedEverest == null || deityEverest == null) return null
   const ml = bull ? '0px' : '50px'
   const mr = !bull ? '0px' : '50px'
-  const perc = deitiedEverest.isEqualTo(0) ? 0 : deitiedEverest.dividedBy(deityEverest).toFixed(1)
+  const perc = deitiedEverest.isEqualTo(0) ? 0 : deityEverest.times(100).dividedBy(deitiedEverest).toFixed(1)
   const chanceOfWin = bull ? deityDivider : 100 - deityDivider
   const rawDeityEverest = getFormattedBigNumber(deityEverest, 3)
 

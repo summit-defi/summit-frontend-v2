@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useDispatch } from 'react-redux'
 import { fetchExpeditionUserDataAsync, fetchUserTotemsAsync } from 'state/actions'
@@ -45,6 +45,7 @@ const getCallTypeErrorMsg = (callType: CallType, elevation: Elevation): string =
 }
 
 export const useSelectTotemAndOrSafetyFactor = () => {
+  const [pending, setPending] = useState(false)
   const { toastSuccess, toastError } = useTransactionToasts()
   const dispatch = useDispatch()
   const { account }: { account: string } = useWallet()
@@ -55,7 +56,10 @@ export const useSelectTotemAndOrSafetyFactor = () => {
     async (elevation: Elevation, totem: number | null, faith: number | null) => {
       const callType = getCallType(elevation, totem, faith)
       try {
-        dispatch(updatePendingTotemSelection(true))
+        if (callType !== CallType.SelectSafetyFactor) {
+          dispatch(updatePendingTotemSelection(true))
+        }
+        setPending(true)
         await selectTotem(
           cartographer,
           expedition,
@@ -68,7 +72,10 @@ export const useSelectTotemAndOrSafetyFactor = () => {
       } catch (error) {
         toastError(getCallTypeErrorMsg(callType, elevation), (error as Error).message)
       } finally {
-        dispatch(updatePendingTotemSelection(false))
+        setPending(false)
+        if (callType !== CallType.SelectSafetyFactor) {
+          dispatch(updatePendingTotemSelection(false))
+        }
         if (elevation === Elevation.EXPEDITION) {
           dispatch(fetchExpeditionUserDataAsync(account))
         } else {
@@ -77,8 +84,8 @@ export const useSelectTotemAndOrSafetyFactor = () => {
       }
       return null
     },
-    [cartographer, expedition, account, dispatch, toastSuccess, toastError],
+    [cartographer, expedition, account, dispatch, setPending, toastSuccess, toastError],
   )
 
-  return { onSelectTotem: handleSelectTotem }
+  return { onSelectTotemAndOrSafetyFactor: handleSelectTotem, pending }
 }
