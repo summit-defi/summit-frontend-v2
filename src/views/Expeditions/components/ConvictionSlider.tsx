@@ -118,8 +118,8 @@ const HandleText = styled(Text)`
 `
 
 interface Props {
-    existingFaith: number | null
-    setFaith: (number) => void
+    existingConviction: number | null
+    setConviction: (number) => void
 }
 
 const marks = {
@@ -128,12 +128,12 @@ const marks = {
     100: '100%',
 }
 
-const FaithSlider: React.FC<Props> = ({ existingFaith, setFaith }) => {
-    const [perc, setPerc] = useState(existingFaith)
+const ConvictionSlider: React.FC<Props> = ({ existingConviction, setConviction }) => {
+    const [perc, setPerc] = useState(existingConviction)
 
-    const handleSetFaith = (markPerc) => {
+    const handleSetConviction = (markPerc) => {
         setPerc(markPerc)
-        setFaith(markPerc)
+        setConviction(markPerc)
     }
 
     return (
@@ -142,7 +142,7 @@ const FaithSlider: React.FC<Props> = ({ existingFaith, setFaith }) => {
                 min={0}
                 marks={marks}
                 step={1}
-                onChange={handleSetFaith}
+                onChange={handleSetConviction}
                 value={perc}
                 defaultValue={perc}
             />
@@ -150,7 +150,7 @@ const FaithSlider: React.FC<Props> = ({ existingFaith, setFaith }) => {
                 <FakeMarkDot
                     key={markPerc}
                     perc={parseFloat(markPerc)}
-                    onClick={() => handleSetFaith(markPerc)}
+                    onClick={() => handleSetConviction(markPerc)}
                 />
             )}
             { perc != null &&
@@ -164,4 +164,4 @@ const FaithSlider: React.FC<Props> = ({ existingFaith, setFaith }) => {
     )
 }
 
-export default FaithSlider
+export default ConvictionSlider

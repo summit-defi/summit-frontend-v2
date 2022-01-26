@@ -12,7 +12,7 @@ import { SpinnerKeyframes } from 'uikit/components/Svg/Icons/Spinner'
 
 const RoundProgressBar = styled(Flex)<{ greyed: boolean }>`
     position: absolute;
-    bottom: 0px;
+    bottom: 3px;
     width: 150%;
     max-width: calc(100vw - 40px);
     filter: ${({ greyed }) => greyed ? 'grayscale(1) ' : ''}drop-shadow(1px 1px 1px ${transparentize(0.5, 'black')});
@@ -25,9 +25,9 @@ const HorizontalBar = styled.div`
     height: 4px;
     top: -2px;
     background-color: ${({ theme }) => theme.colors.text};
-    `
+`
 
-const VerticalBar = styled.div<{ right?: boolean }>`
+const VerticalBar = styled.div<{ right?: boolean, isExpedition: boolean }>`
     position: absolute;
     top: -7px;
     height: 14px;
@@ -35,20 +35,20 @@ const VerticalBar = styled.div<{ right?: boolean }>`
     border-radius: 4px;
     z-index: 4;
     
-    ${({ right }) => right ? css`
+    ${({ right, isExpedition }) => right ? css`
         right: 0px;
         background-color: ${({ theme }) => theme.colors.text};
         ` : css`
         left: 0px;
-        background-color: ${({ theme }) => theme.colors.textGold};
+        background-color: ${({ theme }) => isExpedition ? '#3B2F60' : theme.colors.textGold};
     `}
 `
 
-const ProgressBar = styled.div<{ perc: number }>`
+const ProgressBar = styled.div<{ perc: number, isExpedition: boolean }>`
     width: ${({ perc }) => perc}%;
     height: 4px;
-    background-color: ${({ theme }) => linearGradient({
-        colorStops: getElevationGradientStops('GOLD'),
+    background-color: ${({ isExpedition }) => linearGradient({
+        colorStops: getElevationGradientStops(isExpedition ? Elevation.EXPEDITION : 'GOLD'),
         toDirection: '120deg',
     })};
     border-radius: 0px 3px 3px 0px;
@@ -58,11 +58,11 @@ const ProgressBar = styled.div<{ perc: number }>`
     top: -2px;
 `
 
-const ProgressPill = styled.div<{ perc: number }>`
+const ProgressPill = styled.div<{ perc: number, isExpedition: boolean }>`
     width: 14px;
     height: 14px;
     transform: rotate(${({ perc }) => perc === 100 ? '45' : '-45'}deg);
-    background-color: #EA9130;
+    background-color: ${({ isExpedition }) => isExpedition ? '#DDA4A8' : '#EA9130'};
     border-radius: 10px 10px 10px 0px;
     position: absolute;
     left: ${({ perc }) => `calc(${perc}% - ${perc * 0.02}px - 7px)`};
@@ -108,8 +108,10 @@ const StyledSpinner = styled(Spinner)`
 `
 
 const ElevationRoundProgress: React.FC = () => {
+    const elevation = useSelectedElevation()
+    const isExpedition = elevation === Elevation.EXPEDITION
     const elevationTab = useElevationFarmsTab()
-    const roundTimeRemaining = useElevationRoundTimeRemaining(Elevation.PLAINS)
+    const roundTimeRemaining = useElevationRoundTimeRemaining(isExpedition ? Elevation.EXPEDITION : Elevation.PLAINS)
 
     const getTimerText = useCallback(
         () => {
@@ -135,17 +137,13 @@ const ElevationRoundProgress: React.FC = () => {
         [roundTimeRemaining]
     )
 
-    console.log({
-        perc: perc()
-    })
-
     return (
         <RoundProgressBar greyed={elevationTab === ElevationFarmTab.OASIS}>
             <HorizontalBar/>
-            <VerticalBar/>
-            <VerticalBar right/>
-            <ProgressBar perc={perc().pill}/>
-            <ProgressPill perc={perc().pill}/>
+            <VerticalBar isExpedition={isExpedition}/>
+            <VerticalBar isExpedition={isExpedition} right/>
+            <ProgressBar isExpedition={isExpedition} perc={perc().pill}/>
+            <ProgressPill isExpedition={isExpedition} perc={perc().pill}/>
             { roundTimeRemaining != null && <TextBubble perc={perc().text}>
                 { roundTimeRemaining === 0 && <StyledSpinner className="spinner" /> }
                 <TimerText bold monospace even={roundTimeRemaining % 2 === 0}>{getTimerText()}</TimerText>

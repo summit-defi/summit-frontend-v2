@@ -1,34 +1,37 @@
+import BigNumber from 'bignumber.js'
 import { Elevation } from 'config/constants'
 import React, { useState } from 'react'
 import { useExpeditionEntryFlow } from 'state/hooks'
 import styled from 'styled-components'
 import { Flex, Text } from 'uikit'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import FaithSlider from './FaithSlider'
+import ConvictionSlider from './ConvictionSlider'
+
+const DivineBonus = 20
 
 enum ExpedEntryFlowItem {
     Deity,
-    FaithFactor,
+    Conviction,
     EverestOwned,
     Entered,
 }
 const OrderedEntryFlow = [
     ExpedEntryFlowItem.Deity,
-    ExpedEntryFlowItem.FaithFactor,
+    ExpedEntryFlowItem.Conviction,
     ExpedEntryFlowItem.EverestOwned,
     ExpedEntryFlowItem.Entered,
 ]
 const ProgressHeaderFlowItems = [
     ExpedEntryFlowItem.Deity,
-    ExpedEntryFlowItem.FaithFactor,
+    ExpedEntryFlowItem.Conviction,
     ExpedEntryFlowItem.EverestOwned,
 ]
 const flowItemTitle = (flowItem: ExpedEntryFlowItem) => {
     switch (flowItem) {
         case ExpedEntryFlowItem.Deity:
             return 'SELECT DEITY'
-        case ExpedEntryFlowItem.FaithFactor:
-            return 'SELECT FAITH'
+        case ExpedEntryFlowItem.Conviction:
+            return 'SELECT CONVICTION'
         case ExpedEntryFlowItem.EverestOwned:
             return 'GET EVEREST'
         default: return ''
@@ -46,9 +49,9 @@ const ActiveFlowItemUnderline = styled.div`
 
 const EntryFlowItem: React.FC<{ flowItem: ExpedEntryFlowItem, flowIndex: number, completed: boolean, active: boolean }> = ({ flowItem, flowIndex, completed, active }) => {
     return (
-        <Flex alignItems='center' justifyContent='center' position='relative'>
-            <Text bold={active} monospace lineHeight='16px'>{flowIndex}.</Text>
-            <Text bold={active} monospace textAlign='center' lineHeight='16px'>{ flowItemTitle(flowItem) }</Text>
+        <Flex gap='6px' alignItems='center' justifyContent='center' position='relative'>
+            <Text gold={completed} bold={active || completed} monospace lineHeight='16px'>{completed ? '✔ ' : `${flowIndex}.`}</Text>
+            <Text gold={completed} bold={active || completed} monospace textAlign='center' lineHeight='16px'>{ flowItemTitle(flowItem) }</Text>
             { active && <ActiveFlowItemUnderline/>}
         </Flex>
     )
@@ -56,7 +59,7 @@ const EntryFlowItem: React.FC<{ flowItem: ExpedEntryFlowItem, flowIndex: number,
 
 interface EntryProgress {
     [ExpedEntryFlowItem.Deity]: boolean
-    [ExpedEntryFlowItem.FaithFactor]: boolean
+    [ExpedEntryFlowItem.Conviction]: boolean
     [ExpedEntryFlowItem.EverestOwned]: boolean
     [ExpedEntryFlowItem.Entered]: boolean
 }
@@ -68,7 +71,7 @@ interface EntryFlowProgressProps {
 
 const EntryFlowProgress: React.FC<EntryFlowProgressProps> = ({ entryProgress, activeFlowItem}) => {
     return (
-        <Flex gap='36px' alignItems='center' justifyContent='center'>
+        <Flex px='24px' gap='36px' alignItems='center' justifyContent='center'>
             { ProgressHeaderFlowItems.map((flowItem, index) =>
                 <EntryFlowItem
                     key={flowItem}
@@ -97,48 +100,48 @@ const SelectDeityFlowItem: React.FC = () => {
     </Flex>
 }
 
-const SelectFaithFactorFlowItem: React.FC = () => {
-    const [ faith, setFaith ] = useState(null)
+const SelectConvictionFlowItem: React.FC = () => {
+    const [ conviction, setConviction ] = useState(null)
 
-    const faithFactorPending = false
-    const onSelectFaithFactor = () => null
+    const convictionPending = false
+    const onSelectConviction = () => null
 
-    const handleSelectFaithFactor = () => {
-        if (faithFactorPending) return
-        onSelectFaithFactor()
+    const handleSelectConviction = () => {
+        if (convictionPending) return
+        onSelectConviction()
     }
 
-    const faithText = faith != null ? `${faith}%` : '-'
-    const invFaithText = faith != null ? `${100 - faith}%` : '-'
+    const convictionText = conviction != null ? `${conviction}%` : '-'
+    const invConvictionText = conviction != null ? `${100 - conviction}%` : '-'
 
     return <Flex gap='24px' flexDirection='column' alignItems='center' justifyContent='center' pl='24px' pr='24px'>
         <Text bold monospace small textAlign='center' style={{maxWidth: '500px'}}>
-            Betting on the DEITIES is risky, and you may not like that risk.
-            Your FAITH determines how much of your winnings is risked with the gods VS guaranteed.
-            Winnings from the DEITIES is given a 20% divine bonus.
+            Betting on the DEITIES is risky, but your risk is up to you.
+            Your CONVICTION determines how much of your winnings is risked with the gods VS guaranteed.
+            Winnings from the DEITIES is given a {DivineBonus}% divine bonus.
         </Text>
 
-        <FaithSlider
-            existingFaith={null}
-            setFaith={setFaith}
+        <ConvictionSlider
+            existingConviction={null}
+            setConviction={setConviction}
         />
         
         <Text bold monospace small textAlign='center' style={{maxWidth: '500px'}}>
-            {invFaithText} of your potential winnings each round are guaranteed.
-            <br/>
-            The rest ({faithText}) will be risked on the DEITIES, and will earn a 20% bonus if your DEITY wins.
+            {convictionText} of your potential winnings each round will be risked on the DEITIES, and will earn a {DivineBonus}% bonus if your DEITY wins.
+            The rest ({invConvictionText}) are guaranteed winnings.
         </Text>
 
         <SummitButton
-            disabled={faith == null}
-            onClick={handleSelectFaithFactor}
-            isLoading={faithFactorPending}
+            disabled={conviction == null}
+            onClick={handleSelectConviction}
+            isLoading={convictionPending}
             elevation={Elevation.EXPEDITION}
+            mt='24px'
         >
-            CONFIRM FAITH
+            CONFIRM CONVICTION
         </SummitButton>
-        <Text bold monospace small textAlign='center' fontSize='10px' style={{maxWidth: '500px'}}>
-            You can change your FAITH at any point without penalty.
+        <Text mt='-12px' bold monospace small textAlign='center' fontSize='10px' style={{maxWidth: '500px'}}>
+            You can change your CONVICTION at any point without penalty.
         </Text>
     </Flex>
 }
@@ -166,6 +169,7 @@ const GetEverestFlowItem: React.FC = () => {
             elevation={Elevation.EXPEDITION}
             as="a"
             href='/everest'
+            mt='12px'
         >
             GET EVEREST
         </SummitButton>
@@ -178,8 +182,8 @@ const ActiveFlowItem: React.FC<{ activeFlowItem: ExpedEntryFlowItem }> = ({ acti
     switch (activeFlowItem) {
         case ExpedEntryFlowItem.Deity:
             return <SelectDeityFlowItem/>
-        case ExpedEntryFlowItem.FaithFactor:
-            return <SelectFaithFactorFlowItem/>
+        case ExpedEntryFlowItem.Conviction:
+            return <SelectConvictionFlowItem/>
         case ExpedEntryFlowItem.EverestOwned:
             return <GetEverestFlowItem/>
         case ExpedEntryFlowItem.Entered:
@@ -191,16 +195,16 @@ const ActiveFlowItem: React.FC<{ activeFlowItem: ExpedEntryFlowItem }> = ({ acti
 
 
 const ExpeditionEntryFlow: React.FC = () => {
-    // const { deity, faithFactor, everestOwned } = useExpeditionEntryFlow()
-    const { deity, faithFactor, everestOwned } = {
+    // const { deity, conviction, everestOwned } = useExpeditionEntryFlow()
+    const { deity, conviction, everestOwned } = {
         deity: 0,
-        faithFactor: 50,
-        everestOwned: null,
+        conviction: null,
+        everestOwned: new BigNumber(50),
     }
 
     const entryProgress: EntryProgress = {
         [ExpedEntryFlowItem.Deity]: deity != null,
-        [ExpedEntryFlowItem.FaithFactor]: faithFactor != null,
+        [ExpedEntryFlowItem.Conviction]: conviction != null,
         [ExpedEntryFlowItem.EverestOwned]: everestOwned != null && everestOwned.isGreaterThan(0),
         [ExpedEntryFlowItem.Entered]: false,
     }
@@ -208,7 +212,7 @@ const ExpeditionEntryFlow: React.FC = () => {
     const activeFlowItem = OrderedEntryFlow.find((flowItem) => !entryProgress[flowItem])
 
     return (
-        <Flex gap='32px' flexDirection='column' alignItems='center' justifyContent='center'>
+        <Flex mt='36px' gap='32px' flexDirection='column' alignItems='center' justifyContent='center'>
             <EntryFlowProgress entryProgress={entryProgress} activeFlowItem={activeFlowItem}/>
             <ActiveFlowItem activeFlowItem={activeFlowItem}/>
         </Flex>

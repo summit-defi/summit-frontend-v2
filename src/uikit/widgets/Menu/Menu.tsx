@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Overlay from "../../components/Overlay/Overlay";
 import Flex from "../../components/Box/Flex";
 import { useMatchBreakpoints } from "../../hooks";
-import Logo from "./components/Logo";
 import Panel from "./components/Panel";
 import UserBlock from "./components/UserBlock";
 import { NavProps } from "./types";
@@ -13,8 +12,7 @@ import MenuButton from "./components/MenuButton";
 import { HamburgerCloseIcon, HamburgerIcon } from "./icons";
 import { useSelectedElevation } from "state/hooks";
 import DarkModeToggle from "./components/DarkModeToggle";
-import ElevationFarmsTabSelector from "./components/ElevationFarmsTabSelector";
-import ElevationRoundProgress from "./components/ElevationRoundProgress";
+import MenuPageSpecificHeader from "./components/MenuPageSpecificHeader";
 
 const Wrapper = styled.div`
   position: relative;
@@ -34,7 +32,7 @@ const StyledNav = styled.nav<{ showMenu: boolean }>`
   width: 100vw;
   max-width: 100vw;
   height: ${MENU_HEIGHT - 6}px;
-  padding-bottom: 6px;
+  padding-bottom: 0px;
   z-index: 20;
   transform: translate3d(0, 0, 0);
   background-color: ${({ theme }) => theme.colors.background};
@@ -113,6 +111,7 @@ const MobileExcludedHeaderElements = styled.div`
 `;
 const MobileHamburgerWrapper = styled.div`
   position: absolute;
+  z-index: 5;
   left: 8px;
   ${({ theme }) => theme.mediaQueries.nav} {
     display: none;
@@ -136,13 +135,6 @@ const Menu: React.FC<NavProps> = ({
   const [isPushed, setIsPushed] = useState(!isMobile);
   const elevation = useSelectedElevation()
 
-  const keyPath = location.pathname.split('/')[1]
-  const farmTabsVisible = ['beta', 'elevations', 'oasis', 'plains', 'mesa', 'summit'].includes(keyPath)
-
-
-  // Find the home link if provided
-  const homeLink = links.find((link) => link.label === "Home");
-
   return (
     <Wrapper>
       <StyledNav showMenu>
@@ -156,14 +148,7 @@ const Menu: React.FC<NavProps> = ({
           </MenuButton>
         </MobileHamburgerWrapper>
 
-        { (!isMobile || !farmTabsVisible) && 
-          <Logo isDark={isDark} href={homeLink?.href ?? "/"} elevation={elevation}/>
-        }
-
-
-        { farmTabsVisible && <ElevationFarmsTabSelector/> }
-
-        { isMobile && !isPushed && <ElevationRoundProgress/> }
+        <MenuPageSpecificHeader isDark={isDark} isPushed={isPushed}/>
 
         <MobileExcludedHeaderElements>
           <Flex justifyContent='flex-end' flex='1'>

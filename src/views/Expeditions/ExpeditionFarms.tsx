@@ -31,7 +31,7 @@ const StyledPage = styled(Page)`
   padding-top: 48px;
 
   ${({ theme }) => theme.mediaQueries.lg} {
-    padding-top: 0px;
+    padding-top: 64px;
     margin-top: -40px;
     padding-bottom: 64px;
   }
@@ -52,10 +52,6 @@ const ExpeditionFarms: React.FC = () => {
 
   return (
     <StyledPage>
-      <HighlightedText elevation={Elevation.EXPEDITION} header mb="24px">
-        THE EXPEDITION
-      </HighlightedText>
-
       <ExpeditionTotems/>
 
       { !expeditionLoaded && <PageLoader fill loadingText='Loading Expedition ...' /> }
