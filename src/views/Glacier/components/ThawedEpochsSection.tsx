@@ -1,11 +1,10 @@
-import React from 'react'
-import { useThawedEpochs } from 'state/hooks'
-import { Epoch } from 'state/types'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import { Flex, HighlightedText, MobileColumnFlex, Text } from 'uikit'
 import { MobileRowFlex } from 'uikit/components/Box/Flex'
-import { getEpochTimestamps, getFormattedBigNumber, getFullDisplayBalance, timestampToDate } from 'utils'
+import { getEpochTimestamps, getFormattedBigNumber, timestampToDate } from 'utils'
 import HarvestEpochButton from './HarvestEpochButton'
+import { makeSelectEpochByIndex, useSelector, useThawedEpochIndices } from 'state/hooksNew'
 
 const MobileBreak = styled.br`
     display: default;
@@ -22,13 +21,16 @@ const Divider = styled.div`
 `
 
 export const StyledMobileColumnFlex = styled(MobileColumnFlex)`
-  ${({ theme }) => theme.mediaQueries.nav} {
-    width: calc(100% - 24px);
-    justify-content: space-between;
-  }
+    ${({ theme }) => theme.mediaQueries.nav} {
+        width: calc(100% - 24px);
+        justify-content: space-between;
+    }
 `
 
-const ThawedEpoch: React.FC<{ epoch: Epoch }> = ({ epoch }) => {
+const ThawedEpoch: React.FC<{ epochIndex: number }> = ({ epochIndex }) => {
+    const epochByIndexSelector = useMemo(makeSelectEpochByIndex, [])
+    const epoch = useSelector((state) => epochByIndexSelector(state, epochIndex))
+    
     const rawFrozen = getFormattedBigNumber(epoch.frozenSummit, 3)
     const { beginTimestamp, closeTimestamp } = getEpochTimestamps(epoch.index)
     const beginDate = timestampToDate(beginTimestamp)
@@ -50,8 +52,8 @@ const ThawedEpoch: React.FC<{ epoch: Epoch }> = ({ epoch }) => {
 }
 
 export const ThawedEpochsSection: React.FC = () => {
-    const thawedEpochs = useThawedEpochs()
-    if (thawedEpochs.length === 0) return null
+    const thawedEpochIndices = useThawedEpochIndices()
+    if (thawedEpochIndices.length === 0) return null
 
     return (
         <>
@@ -59,10 +61,10 @@ export const ThawedEpochsSection: React.FC = () => {
             <Flex gap='24px' flexDirection='column' alignItems='center' justifyContent='center' width='100%'>
                 <Text bold monospace>THAWED EPOCHS:</Text>
                 <MobileRowFlex gap='24px' width='100%' flexWrap='wrap' alignItems='center' justifyContent='center'>
-                    { thawedEpochs.map((thawedEpoch) =>
+                    { thawedEpochIndices.map((thawedEpochIndex) =>
                         <ThawedEpoch
-                            key={thawedEpoch.index}
-                            epoch={thawedEpoch}
+                            key={thawedEpochIndex}
+                            epochIndex={thawedEpochIndex}
                         />
                     )}
                 </MobileRowFlex>

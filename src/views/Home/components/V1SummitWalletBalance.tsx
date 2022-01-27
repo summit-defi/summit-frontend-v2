@@ -16,7 +16,7 @@ const V1SummitWalletBalance = ({ v1SummitBalance }) => {
     )
   }
 
-  return <CardValue value={getBalanceNumber(v1SummitBalance)} fontSize="24" elevation={Elevation.OASIS} />
+  return <CardValue value={getBalanceNumber(v1SummitBalance)} fontSize="24" summitPalette={Elevation.OASIS} />
 }
 
 export default V1SummitWalletBalance

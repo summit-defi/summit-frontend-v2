@@ -17,7 +17,7 @@ const SummitClaimBalance: React.FC<Props> = ({ account, earned }) => {
     )
   }
 
-  return <CardValue value={earned} elevation={Elevation.OASIS} />
+  return <CardValue value={earned} summitPalette={Elevation.OASIS} />
 }
 
 export default SummitClaimBalance

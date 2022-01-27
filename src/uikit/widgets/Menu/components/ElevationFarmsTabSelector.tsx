@@ -92,7 +92,7 @@ const ElevationFarmsTabSelector: React.FC = () => {
                         tab={selectedTab}
                         selectedIndex={selectedIndex}
                         padding="0px"
-                        elevation={selectedTab}
+                        summitPalette={selectedTab}
                     >
                         {selectedTab}
                         {selectedTab === ElevationFarmTab.DASH && <br/>}

@@ -250,7 +250,7 @@ const FarmCard: React.FC<FarmCardProps> = ({
             <Flex alignItems='center' height='18px'>
               <Text small mr='4px'>{elevation != null ? `${capitalizeFirstLetter(elevation)} ` : ''}Deposited:</Text>
               <Flex mb='2px'>
-                <CardValue value={userStakedBalance.toNumber()} prefix='$' decimals={2} elevation={Elevation.OASIS} fontSize="18" />
+                <CardValue value={userStakedBalance.toNumber()} prefix='$' decimals={2} summitPalette={Elevation.OASIS} fontSize="18" />
               </Flex>
             </Flex>
             <InfoItemValue width='100%'>

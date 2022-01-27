@@ -108,7 +108,7 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
         feeBP={withdrawalFee}
       />
       <CenteredSummitButton
-        elevation={elevation}
+        summitPalette={elevation}
         isLocked={elevationLocked}
         isLoading={withdrawPending}
         disabled={invalidWithdraw || disabled}

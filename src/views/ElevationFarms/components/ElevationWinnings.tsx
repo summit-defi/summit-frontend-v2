@@ -63,14 +63,14 @@ const ElevationWinnings: React.FC = () => {
           <CardValue
             value={rawClaimable}
             decimals={3}
-            elevation={elevation}
+            summitPalette={elevation}
             fontSize="18"
             postfix='SUMMIT'
             postfixFontSize='14'
           />
         </Flex>
         <SummitButton
-          elevation={elevation}
+          summitPalette={elevation}
           isLocked={elevationLocked}
           isLoading={claimPending}
           disabled={nothingToClaim}

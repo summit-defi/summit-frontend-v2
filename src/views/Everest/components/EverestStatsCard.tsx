@@ -25,10 +25,10 @@ export const EverestCard = styled(Flex)`
 
 
 const TokenImageWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
 `
 
 
@@ -91,20 +91,20 @@ export const EverestStatsCard: React.FC = memo(() => {
 
             <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
                 <Text monospace small>Everest Supply:</Text>
-                <CardValue value={rawEverestSupply} decimals={3} fontSize="22" />
+                <CardValue summitPalette={SummitPalette.EVEREST} value={rawEverestSupply} decimals={3} fontSize="22" />
             </Flex>
             <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
                 <Text monospace small>Total Summit Locked:</Text>
-                <CardValue value={rawSummitLocked} decimals={3} fontSize="22" />
+                <CardValue summitPalette={SummitPalette.EVEREST} value={rawSummitLocked} decimals={3} fontSize="22" />
             </Flex>
             <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
                 <Text monospace small>Summit Value Locked:</Text>
-                <CardValue prefix="$" value={rawSummitValueLocked} decimals={2} fontSize="22" />
+                <CardValue summitPalette={SummitPalette.EVEREST} prefix="$" value={rawSummitValueLocked} decimals={2} fontSize="22" />
             </Flex>
             <Flex flexDirection='column' alignItems='center' justifyContent='center' width='100%'>
                 <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
                     <Text monospace small>Average Summit Lock Duration:</Text>
-                    <CardValue value={averageLockDuration} postfix="DAYS" decimals={0} fontSize="22" postfixFontSize="16" />
+                    <CardValue summitPalette={SummitPalette.EVEREST} value={averageLockDuration} postfix="DAYS" decimals={0} fontSize="22" postfixFontSize="16" />
                 </Flex>
                 <EverestLockDurationIndicator avgLockDuration={averageLockDuration}/>
             </Flex>

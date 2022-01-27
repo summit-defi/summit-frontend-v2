@@ -1,9 +1,7 @@
-import React from 'react'
-import { useFrozenEpochs, useThawedEpochs } from 'state/hooks'
-import { Epoch } from 'state/types'
+import React, { useMemo } from 'react'
+import { makeSelectEpochByIndex, useFrozenEpochIndices, useSelector } from 'state/hooksNew'
 import styled from 'styled-components'
-import { Flex, HighlightedText, MobileColumnFlex, Text } from 'uikit'
-import { MobileRowFlex } from 'uikit/components/Box/Flex'
+import { Flex, HighlightedText, Text } from 'uikit'
 import { getEpochTimestamps, getBalanceNumber, timestampToDate } from 'utils'
 import CardValue from 'views/Home/components/CardValue'
 import EpochProgressBar from './EpochProgressBar'
@@ -25,7 +23,10 @@ export const FrozenEpochCard = styled(Flex)`
     box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
 `
 
-const FrozenEpoch: React.FC<{ epoch: Epoch }> = ({ epoch }) => {
+const FrozenEpoch: React.FC<{ epochIndex: number }> = ({ epochIndex }) => {
+    const epochByIndexSelector = useMemo(makeSelectEpochByIndex, [])
+    const epoch = useSelector((state) => epochByIndexSelector(state, epochIndex))
+    
     const rawFrozen = getBalanceNumber(epoch.frozenSummit)
     const { beginTimestamp, closeTimestamp, thawTimestamp } = getEpochTimestamps(epoch.index)
     const beginDate = timestampToDate(beginTimestamp)
@@ -65,17 +66,17 @@ const FrozenEpoch: React.FC<{ epoch: Epoch }> = ({ epoch }) => {
 }
 
 export const FrozenEpochs: React.FC = () => {
-    const frozenEpochs = useFrozenEpochs()
-    if (frozenEpochs.length === 0) return null
+    const frozenEpochIndices = useFrozenEpochIndices()
+    if (frozenEpochIndices.length === 0) return null
 
     return (
         <Flex gap='24px' flexDirection='column' alignItems='center' justifyContent='center' width='100%'>
             <Text bold monospace>FROZEN EPOCHS:</Text>
             <Flex gap='24px' width='100%' flexWrap='wrap' alignItems='center' justifyContent='center'>
-                { frozenEpochs.map((frozenEpoch) =>
+                { frozenEpochIndices.map((frozenEpochIndex) =>
                     <FrozenEpoch
-                        key={frozenEpoch.index}
-                        epoch={frozenEpoch}
+                        key={frozenEpochIndex}
+                        epochIndex={frozenEpochIndex}
                     />
                 )}
             </Flex>

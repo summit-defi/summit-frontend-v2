@@ -1,8 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { HighlightedText } from 'uikit'
 import {
-  useExpeditionLoaded,
   useExpeditionFetching,
   useExpeditionEntered,
 } from 'state/hooks'
@@ -10,6 +8,7 @@ import Page from 'components/layout/Page'
 import ExpeditionTotems from './components/ExpeditionTotems'
 import PageLoader from 'components/PageLoader'
 import ExpeditionEntryFlow from './components/ExpeditionEntryFlow'
+import { useExpeditionLoaded } from 'state/hooksNew'
 
 const StyledPage = styled(Page)`
   padding-top: 48px;
@@ -30,7 +29,7 @@ const ExpeditionFarms: React.FC = () => {
     <StyledPage>
       <ExpeditionTotems/>
 
-      { !expeditionLoaded && <PageLoader fill loadingText='Loading Expedition ...' /> }
+      { !expeditionLoaded && <PageLoader loadingText='Loading Expedition ...' /> }
 
       { expeditionLoaded &&
         <>

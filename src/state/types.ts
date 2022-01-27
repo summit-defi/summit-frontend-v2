@@ -135,7 +135,7 @@ export interface SummitEcosystemState {
 // API Price State
 
 export interface PriceState {
-  pricesPerToken?: { [key: string]: number }
+  pricesPerToken?: { [key: string]: BigNumber }
 }
 
 // Tokens

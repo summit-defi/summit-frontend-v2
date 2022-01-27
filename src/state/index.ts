@@ -7,7 +7,7 @@ import tokensReducer from './tokens'
 import glacierReducer from './glacier'
 import everestReducer from './everest'
 
-export default configureStore({
+export const store = configureStore({
   devTools: process.env.NODE_ENV !== 'production',
   reducer: {
     farms: farmsReducer,
@@ -23,3 +23,5 @@ export default configureStore({
     immutableCheck: false,
   }),
 })
+
+export type RootState = ReturnType<typeof store.getState>

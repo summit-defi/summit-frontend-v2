@@ -82,7 +82,7 @@ const TotemHeader: React.FC = () => {
         <TotemHeaderButtonsRow/>
         <ElevationIntroduction/>
         { account == null ?
-          <UnlockButton elevation={elevationTab} /> :
+          <UnlockButton summitPalette={elevationTab} /> :
           <TotemHeaderAccountSection/>
         }
       </HeaderWrapper>

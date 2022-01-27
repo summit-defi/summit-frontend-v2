@@ -94,7 +94,7 @@ const Home: React.FC = () => {
           prefix="$"
           decimals={2}
           fontSize="40"
-          elevation={Elevation.OASIS}
+          summitPalette={Elevation.OASIS}
         />
       </Flex>
 
@@ -112,7 +112,7 @@ const Home: React.FC = () => {
         decimals={2}
         fontSize="40"
         gold
-        elevation={Elevation.OASIS}
+        summitPalette={Elevation.OASIS}
       />
       <StyledHighlightedText fontSize="14px" letterSpacing="2px" mt='8px' mb='0px'>
         DISBURSED TO DATE:
@@ -123,7 +123,7 @@ const Home: React.FC = () => {
         decimals={2}
         fontSize="26"
         gold
-        elevation={Elevation.OASIS}
+        summitPalette={Elevation.OASIS}
       />
         <Text textAlign='center' bold monospace italic mt='8px' fontSize='16px'>
           100% of the Expedition Treasury

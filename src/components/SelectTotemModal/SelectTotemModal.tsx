@@ -70,8 +70,8 @@ const SelectTotemModal: React.FC<Props> = ({
   existingFaith = null,
   onDismiss = () => null,
 }) => {
-  const { userEarned } = useElevationUserRoundInfo(elevation)
-  const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(elevation, userEarned || new BigNumber(0), 'Deposit', RewardsWillBeClaimedType.FullElevation)
+  const { claimable } = useElevationUserRoundInfo(elevation)
+  const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(elevation, claimable || new BigNumber(0), 'Deposit', RewardsWillBeClaimedType.FullElevation)
 
   const { onSelectTotemAndOrSafetyFactor } = useSelectTotemAndOrSafetyFactor()
   const [totemToConfirm, setTotemToConfirm] = useState<number | null>(

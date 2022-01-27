@@ -1,4 +1,4 @@
-import { Elevation } from 'config/constants/types'
+import { ElevOrPalette } from 'config/constants/types'
 import React, { useEffect, useRef } from 'react'
 import { useCountUp } from 'react-countup'
 import { HighlightedText } from 'uikit'
@@ -10,7 +10,7 @@ interface CardValueProps {
   prefix?: string
   postfix?: string
   postfixFontSize?: string
-  elevation?: Elevation
+  summitPalette?: ElevOrPalette
   gold?: boolean
   isMultiplier?: boolean
 }
@@ -23,7 +23,7 @@ const CardValue: React.FC<CardValueProps> = ({
   postfix,
   isMultiplier,
   postfixFontSize,
-  elevation,
+  summitPalette,
   gold = false,
 }) => {
   const { countUp, update } = useCountUp({
@@ -43,12 +43,12 @@ const CardValue: React.FC<CardValueProps> = ({
   }, [value, updateValue])
 
   return (
-    <HighlightedText bold monospace fontSize={fontSize} summitPalette={elevation} header gold={gold}>
+    <HighlightedText bold monospace fontSize={fontSize} summitPalette={summitPalette} header gold={gold}>
       {prefix}
       {countUp}
       {isMultiplier && 'X'}
       {postfix != null && (
-        <HighlightedText bold summitPalette={elevation} fontSize={postfixFontSize || fontSize} header ml="6px" mt='2px' gold={gold}>
+        <HighlightedText bold summitPalette={summitPalette} fontSize={postfixFontSize || fontSize} header ml="6px" mt='2px' gold={gold}>
           {postfix}
         </HighlightedText>
       )}

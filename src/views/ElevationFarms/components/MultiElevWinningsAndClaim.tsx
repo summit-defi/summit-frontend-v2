@@ -35,7 +35,7 @@ const ElevClaim: React.FC<ElevProps> = ({ elevation, claimable }) => {
 
   return (
     <SummitButton
-      elevation={elevation}
+      summitPalette={elevation}
       isLocked={elevationLocked}
       isLoading={claimPending}
       disabled={nothingToClaim}

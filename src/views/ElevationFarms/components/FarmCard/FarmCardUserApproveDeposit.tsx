@@ -133,7 +133,7 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
       />
       {isApproved && (
         <CenteredSummitButton
-          elevation={elevation}
+          summitPalette={elevation}
           isLocked={elevationLocked}
           isLoading={stakePending}
           disabled={disabled || invalidDeposit || elevationForcedDisabled}
@@ -143,7 +143,7 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
         </CenteredSummitButton>
       )}
       {!isApproved && (
-        <CenteredSummitButton isLoading={approvalPending} onClick={onApprove} elevation={elevation}>
+        <CenteredSummitButton isLoading={approvalPending} onClick={onApprove} summitPalette={elevation}>
           APPROVE {symbol}
         </CenteredSummitButton>
       )}

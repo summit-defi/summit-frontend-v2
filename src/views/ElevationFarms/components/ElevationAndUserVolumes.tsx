@@ -41,7 +41,7 @@ const ElevationAndUserVolumes: React.FC = () => {
           prefix="$"
           decimals={2}
           fontSize="24"
-          elevation={elevation}
+          summitPalette={elevation}
         />
       </Flex>
       <Flex justifyContent="center" alignItems="center" mt="0px">
@@ -53,7 +53,7 @@ const ElevationAndUserVolumes: React.FC = () => {
           prefix="$"
           decimals={2}
           fontSize="26"
-          elevation={elevation}
+          summitPalette={elevation}
         />
       </Flex>
     </BackgroundedFlex>

@@ -98,7 +98,7 @@ export const useFarmsLoaded = (): boolean => {
 }
 
 export const useElevationUserRoundInfo = (elevation: Elevation) => {
-  return useSelector((state: State) => elevation === Elevation.EXPEDITION ? {} : state.farms.elevationData[elevationUtils.toInt(elevation || Elevation.OASIS)])
+  return useSelector((state: State) => state.farms.elevationData[elevationUtils.toInt(elevation || Elevation.OASIS)])
 }
 export const useDashboardTotemBattleInfo = () => {
   const elevationData = useSelector((state: State) => state.farms.elevationData) 
@@ -259,10 +259,6 @@ export const useExpeditionEntryFlow = (): {
   conviction: number | null,
   everestOwned: BigNumber
 } => {
-  const userData = useExpeditionUserData()
-  console.log({
-    userData
-  })
   const { deity, conviction, everestOwned } = useExpeditionUserData()
   return useMemo(
     () => ({
@@ -278,25 +274,28 @@ export const useExpeditionTotemHeaderInfo = () => {
   const { deity, conviction } = useExpeditionUserData()
   const { deitiedEverest, deityEverest } = useExpeditionInfo()
   return useMemo(
-    () => ({
-      deity,
-      conviction,
-      deitiedEverest,
-      deityEverest,
-    }),
+    () => {
+      console.log('ExpedTotemHeaderInfo refreshed')
+      return {
+        deity,
+        conviction,
+        deitiedEverest,
+        deityEverest,
+      }
+    },
     [deity, deitiedEverest, deityEverest, conviction]
   )
 }
 
 
-export const useExpeditionLoaded = () => {
-  const expeditionLoaded: ExpeditionInfo = useSelector((state: State) => state.expedition.expeditionLoaded)
-  const userDataLoaded = useSelector((state: State) => state.expedition.userDataLoaded)
-  return {
-    expeditionLoaded,
-    userDataLoaded,
-  }
-}
+// export const useExpeditionLoaded = () => {
+//   const expeditionLoaded: ExpeditionInfo = useSelector((state: State) => state.expedition.expeditionLoaded)
+//   const userDataLoaded = useSelector((state: State) => state.expedition.userDataLoaded)
+//   return {
+//     expeditionLoaded,
+//     userDataLoaded,
+//   }
+// }
 
 // Prices
 export const usePricesPerToken = () => {
@@ -451,7 +450,7 @@ export const useFetchSummitEnabled = () => {
 
 export const useSummitEnabled = () => useSelector((state: State) => state.summitEcosystem.summitEnabled)
 
-export const useElevationsInfo = (): Map<Elevation, ElevationInfo> => {
+export const useElevationsInfo = (): ElevationInfo[] => {
   return useSelector((state: State) => state.summitEcosystem.elevationsInfo)
 }
 export const useElevationInfo = (elevation: Elevation): ElevationInfo | null => {
@@ -531,7 +530,7 @@ export const useTotemSelectionPending = (): boolean => {
   return useSelector((state: State) => state.summitEcosystem.pendingTotemSelection)
 }
 
-export const useElevationTotems = (): Map<Elevation, number | null> => {
+export const useElevationTotems = (): number[] => {
   return useSelector((state: State) => state.summitEcosystem.totems)
 }
 export const useElevationTotem = (elevation: Elevation): number | null => {

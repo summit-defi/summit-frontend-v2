@@ -21,13 +21,11 @@ export const HighlightedText = styled(Text)<{
     ${({ theme, summitPalette: elevation, header, gold }) => {
       // eslint-disable-next-line no-nested-ternary
       if (gold) return darken(0.4, theme.colors.textGold)
-      const color = theme.isDark
+      return theme.isDark
         ? 'BLACK'
         : elevation
         ? theme.colors[elevation]
         : theme.colors.text
-      const darkenAmt = header && !theme.isDark ? 0.2 : 0
-      return darken(darkenAmt, color)
     }};
 `
 

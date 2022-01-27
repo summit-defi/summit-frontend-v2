@@ -87,7 +87,7 @@ const FarmTypeSelector: React.FC = () => {
     <SelectorFlex>
       <SelectorWrapper>
         <SelectedSummitButton
-          elevation={elevation}
+          summitPalette={elevation}
           selectedFarmType={farmType}
           padding="0px"
           onClick={() => onSetFarmType(FarmType.All)}

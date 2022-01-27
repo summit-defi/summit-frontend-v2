@@ -54,7 +54,7 @@ const ElevationYieldBet: React.FC = () => {
           <CardValue
             value={rawYieldContributed}
             decimals={3}
-            elevation={elevation}
+            summitPalette={elevation}
             fontSize="18"
             postfix='SUMMIT'
             postfixFontSize='14'
@@ -65,7 +65,7 @@ const ElevationYieldBet: React.FC = () => {
           <CardValue
             value={rawPotentialWinnings}
             decimals={3}
-            elevation={elevation}
+            summitPalette={elevation}
             fontSize="18"
             postfix='SUMMIT'
             postfixFontSize='14'

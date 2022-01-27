@@ -76,8 +76,8 @@ const LockSummitConfirmModal: React.FC<LockSummitConfirmModalProps> = ({
           <Text monospace small textAlign='center'>
             EVEREST award:
           </Text>
-          <HighlightedText bold monospace fontSize='22px' ml='4px' mr='4px' lineHeight='22px'>{rawEverestAward}</HighlightedText>
-          <HighlightedText bold monospace fontSize='14px' ml='4px' mr='4px' lineHeight='14px'>EVEREST</HighlightedText>
+          <HighlightedText summitPalette={SummitPalette.EVEREST} bold monospace fontSize='22px' ml='4px' mr='4px' lineHeight='22px'>{rawEverestAward}</HighlightedText>
+          <HighlightedText summitPalette={SummitPalette.EVEREST} bold monospace fontSize='14px' ml='4px' mr='4px' lineHeight='14px'>EVEREST</HighlightedText>
         </Flex>
 
         <Text bold monospace textAlign='center'>

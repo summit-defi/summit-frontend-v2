@@ -17,7 +17,7 @@ const SummitVestingBalance: React.FC<Props> = ({ account, vesting }) => {
     )
   }
 
-  return <CardValue value={vesting} elevation={Elevation.OASIS} />
+  return <CardValue value={vesting} summitPalette={Elevation.OASIS} />
 }
 
 export default SummitVestingBalance

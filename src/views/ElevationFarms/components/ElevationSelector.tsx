@@ -185,7 +185,7 @@ const FarmTypeSelector: React.FC<Props> = ({
       >
         {selected != null && (
           <SelectedSummitButton
-            elevation={selected}
+            summitPalette={selected}
             selectedIndex={selectedIndex}
             vertical={vertical}
             disabled={disabled || isLocked}

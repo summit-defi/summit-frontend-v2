@@ -64,7 +64,7 @@ const FarmActiveSelector: React.FC = () => {
     <SelectorFlex>
       <SelectorWrapper>
         <SelectedSummitButton
-          elevation={elevation}
+          summitPalette={elevation}
           selectedIndex={liveFarms ? 0 : 1}
           padding="0px"
         >

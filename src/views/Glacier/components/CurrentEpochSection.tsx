@@ -1,6 +1,5 @@
-import BigNumber from 'bignumber.js'
 import React from 'react'
-import { useCurrentEpoch } from 'state/hooks'
+import { useCurrentEpoch } from 'state/hooksNew'
 import { Flex, HighlightedText, MobileColumnFlex, Text } from 'uikit'
 import { epochThawTimestamp, getBalanceNumber, timestampToDate } from 'utils'
 import CardValue from 'views/Home/components/CardValue'

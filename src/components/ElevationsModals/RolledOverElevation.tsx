@@ -6,6 +6,7 @@ import { useElevationInfo, useElevationUserRoundInfo } from 'state/hooks'
 import ArtworkTotem from 'uikit/components/Totem/ArtworkTotem'
 import CardValue from 'views/Home/components/CardValue'
 import { getBalanceNumber } from 'utils'
+import BigNumber from 'bignumber.js'
 
 interface Props {
   elevation: Elevation
@@ -59,23 +60,15 @@ const TotemWrapper = styled.div`
 `
 
 export const RolledOverElevation: React.FC<Props> = ({ elevation, winningTotem, multiWin }) => {
-  const { userVesting } = useElevationUserRoundInfo(elevation)
-  const [maxUserVesting, setMaxUserVesting] = useState(userVesting)
-
-  useEffect(() => {
-    if (elevation !== Elevation.EXPEDITION && userVesting.isGreaterThan(maxUserVesting)) {
-      setMaxUserVesting(userVesting)
-    }
-  }, [elevation, userVesting, maxUserVesting, setMaxUserVesting])
-
+  const winnings = new BigNumber(30).times(new BigNumber(10).pow(18))
   const elevationInfo = useElevationInfo(elevation)
   let winningsMultiplier = 0
   let rawTotalContributed = 0
   if (elevation !== Elevation.EXPEDITION) {
     winningsMultiplier = elevationInfo.prevWinningsMultipliers[0]
-    rawTotalContributed = getBalanceNumber(maxUserVesting.dividedBy(winningsMultiplier))
+    rawTotalContributed = getBalanceNumber(winnings.dividedBy(winningsMultiplier))
   }
-  const rawTotalEarned = getBalanceNumber(maxUserVesting)
+  const rawTotalEarned = getBalanceNumber(winnings)
 
   return (
     <TotemWrapper key={elevation}>
@@ -94,7 +87,7 @@ export const RolledOverElevation: React.FC<Props> = ({ elevation, winningTotem, 
           value={rawTotalContributed}
           decimals={2}
           postfix="SUMMIT"
-          elevation={elevation}
+          summitPalette={elevation}
           fontSize="16"
           postfixFontSize="14"
         />
@@ -109,7 +102,7 @@ export const RolledOverElevation: React.FC<Props> = ({ elevation, winningTotem, 
         value={rawTotalEarned}
         decimals={2}
         postfix='MIM'
-        elevation={elevation}
+        summitPalette={elevation}
         fontSize="32"
         postfixFontSize="24"
         gold
@@ -120,7 +113,7 @@ export const RolledOverElevation: React.FC<Props> = ({ elevation, winningTotem, 
         isMultiplier
         decimals={1}
         postfix="MULTIPLIER"
-        elevation={elevation}
+        summitPalette={elevation}
         fontSize="24"
         postfixFontSize="14"
         gold
