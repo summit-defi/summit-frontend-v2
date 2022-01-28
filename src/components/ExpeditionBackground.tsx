@@ -10,7 +10,7 @@ const BackgroundImage = styled.div<{ elevation?: Elevation }>`
   background-attachment: fixed;
   background-size: cover;
   background-repeat: no-repeat;
-  height: 100%;
+  height: 120%;
   width: 100%;
   pointer-events: none;
   transition: opacity 0.6s ease-in-out;
@@ -19,7 +19,8 @@ const BackgroundImage = styled.div<{ elevation?: Elevation }>`
   opacity: ${({ elevation }) => (elevation === Elevation.EXPEDITION ? 1 : 0)};
 
   ${({ theme }) => theme.mediaQueries.nav} {
-    transform: translateX(125px) scale(1.16);
+    background-position: center center;
+    transform: translateY(-70px) translateX(100px) scale(1.16);
   }
 `
 

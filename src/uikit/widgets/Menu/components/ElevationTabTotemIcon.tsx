@@ -7,6 +7,7 @@ interface Props {
   elevation: Elevation
   totem: number
   selected: boolean
+  crownedTotem: number
 }
 
 const Wrapper = styled.div`
@@ -46,18 +47,35 @@ const Icon = styled.div<{ elevation: Elevation, totem: number, selected: boolean
   opacity: ${({ selected }) => selected ? 0 : 1};
 `
 
+const IconCrown = styled.div`
+  position: absolute;
+  top: -20px;
+  left: 10px;
+  width: 52px;
+  height: 52px;
+  transform: rotate(10deg);
+  background-image: url('/images/totemIcons/ICONCROWN.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 2;
+  pointer-events: none;
+`
+
 const ElevationTabTotemIcon: React.FC<Props> = ({
   elevation,
   totem,
   selected,
+  crownedTotem,
 }) => (
   <Wrapper className="selectableIcon">
     <Background elevation={elevation} />
     <Icon selected={selected} elevation={elevation} totem={totem} />
+    {crownedTotem === totem && <IconCrown />}
   </Wrapper>
 )
 
 export default React.memo(
   ElevationTabTotemIcon,
-  (prev, next) => prev.totem === next.totem && prev.selected === next.selected
+  (prev, next) => prev.totem === next.totem && prev.selected === next.selected && prev.crownedTotem === next.crownedTotem
 )

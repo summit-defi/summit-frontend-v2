@@ -11,13 +11,13 @@ import ExpeditionMenuHeader from './ExpeditionMenuHeader';
 
 
 
-const FullHeightWrapper = styled(Flex)`
+const FullHeightWrapper = styled(Flex)<{ farmTabSelectorVisible: boolean }>`
     height: ${MENU_HEIGHT}px;
     position: relative;
     align-items: center;
     padding-left: auto;
     width: 100%;
-    justify-content: flex-end;
+    justify-content: ${({farmTabSelectorVisible}) => farmTabSelectorVisible ? 'flex-end' : 'center'};
     
     ${({ theme }) => theme.mediaQueries.nav} {
         padding-left: 0px;
@@ -49,7 +49,7 @@ const MenuPageSpecificHeader: React.FC<Props> = ({ isDark, isPushed }) => {
             { logoVisible && <Logo isDark={isDark} href="/" summitPalette={summitPalette}/> }
             { (isFarmTab || isExpedition) &&
             <>
-                <FullHeightWrapper>
+                <FullHeightWrapper farmTabSelectorVisible={isFarmTab}>
                     { isFarmTab && <ElevationFarmsTabSelector/> }
                     { isExpedition && <ExpeditionMenuHeader /> }
                     { roundProgressVisible && <ElevationRoundProgress/> }

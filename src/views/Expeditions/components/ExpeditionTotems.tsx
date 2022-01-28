@@ -26,8 +26,9 @@ const Deity = styled(BaseDeity)<{ isLoading: boolean }>`
   height: calc(48vw / 1.358);
   width: 48vw;
   opacity: ${({ isLoading }) => isLoading ? 0.5 : 1 };
-
+  
   ${({ theme }) => theme.mediaQueries.nav} {
+    transform: translateX(${({ deity }) => deity === 0 ? '-20px' : '-30px'});
     height: 270px;
     width: 425px;
   }

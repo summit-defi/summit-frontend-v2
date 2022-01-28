@@ -18,7 +18,7 @@ const ExpeditionIcon = styled.div`
     background-image: url("/images/summit/elevationArtworkEXPEDITION.jpg");
     background-size: cover;
     background-repeat: no-repeat;
-    background-position: 75%;
+    background-position: center 17%;
     border-radius: 23px;
     width: 200px;
     height: ${ButtonHeight - 4}px;

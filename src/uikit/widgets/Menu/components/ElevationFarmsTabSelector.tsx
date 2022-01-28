@@ -81,6 +81,10 @@ const ElevationFarmsTabSelector: React.FC = () => {
     const singleFarmSymbol = useSingleFarmSelected()
     const selectedIndex = tabs.findIndex((tab) => tab === selectedTab)
     const userTotems = useElevationTotems()
+    const crownedTotems = useWinningTotems()
+    console.log({
+        crownedTotems
+    })
 
     return (
         <SelectorFlex>
@@ -117,7 +121,12 @@ const ElevationFarmsTabSelector: React.FC = () => {
                                     {tab === ElevationFarmTab.DASH && <br/>}
                                     {tab === ElevationFarmTab.DASH && 'BOARD'}
                                 </TextButtonText> :
-                                <ElevationTabTotemIcon selected={tab === selectedTab} elevation={elevationTabToElevation[tab]} totem={userTotems[elevationUtils.tabToInt(tab)]}/>
+                                <ElevationTabTotemIcon
+                                    selected={tab === selectedTab}
+                                    elevation={elevationTabToElevation[tab]}
+                                    totem={userTotems[elevationUtils.tabToInt(tab)]}
+                                    crownedTotem={crownedTotems[elevationUtils.tabToInt(tab)]}
+                                />
                             }
                         </TextButton>
                     )
