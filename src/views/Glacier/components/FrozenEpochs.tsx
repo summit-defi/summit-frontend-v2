@@ -21,6 +21,7 @@ export const FrozenEpochCard = styled(Flex)`
     padding: 18px;
     flex: 1;
     box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
+    max-width: 401px;
 `
 
 const FrozenEpoch: React.FC<{ epochIndex: number }> = ({ epochIndex }) => {

@@ -8,8 +8,11 @@ export const HighlightedText = styled(Text)<{
   header?: boolean
   fontSize?: string
   gold?: boolean
+  vertical?: boolean
 }>`
   display: flex;
+  flex-direction: ${({ vertical }) => vertical ? 'column' : 'row'};
+  gap: 6px;
   align-items: center;
   justify-content: center;
   font-weight: bold;

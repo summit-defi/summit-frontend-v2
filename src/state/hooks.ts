@@ -256,34 +256,34 @@ export const useExpeditionEntered = () => {
 }
 export const useExpeditionEntryFlow = (): {
   deity: number | null,
-  conviction: number | null,
+  faith: number | null,
   everestOwned: BigNumber
 } => {
-  const { deity, conviction, everestOwned } = useExpeditionUserData()
+  const { deity, faith, everestOwned } = useExpeditionUserData()
   return useMemo(
     () => ({
       deity,
-      conviction,
+      faith,
       everestOwned,
     }),
-    [deity, conviction, everestOwned]
+    [deity, faith, everestOwned]
   )
 }
 
 export const useExpeditionTotemHeaderInfo = () => {
-  const { deity, conviction } = useExpeditionUserData()
+  const { deity, faith } = useExpeditionUserData()
   const { deitiedEverest, deityEverest } = useExpeditionInfo()
   return useMemo(
     () => {
       console.log('ExpedTotemHeaderInfo refreshed')
       return {
         deity,
-        conviction,
+        faith,
         deitiedEverest,
         deityEverest,
       }
     },
-    [deity, deitiedEverest, deityEverest, conviction]
+    [deity, deitiedEverest, deityEverest, faith]
   )
 }
 

@@ -179,8 +179,8 @@ export const ElevationInt: { [key in keyof typeof Elevation]: number } = {
 export const ElevationRoundDuration: { [key in keyof typeof Elevation]: number } = {
   [Elevation.OASIS]: 0,
   [Elevation.PLAINS]: 3600 * 2,
-  [Elevation.MESA]: 3600 * 4,
-  [Elevation.SUMMIT]: 3600 * 8,
+  [Elevation.MESA]: 3600 * 2,
+  [Elevation.SUMMIT]: 3600 * 2,
   [Elevation.EXPEDITION]: 3600 * 24,
 }
 export const elevationUtils = {

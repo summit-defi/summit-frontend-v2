@@ -1,14 +1,14 @@
 import BigNumber from 'bignumber.js'
 import { Elevation, elevationUtils } from 'config/constants/types'
-import { useSelectTotemAndOrSafetyFactor } from 'hooks/useSelectTotem'
+import { useSelectTotemAndOrFaith } from 'hooks/useSelectTotem'
 import React, { useCallback, useState } from 'react'
 import { useElevationUserRoundInfo } from 'state/hooks'
 import styled, { keyframes } from 'styled-components'
 import { getPaletteGradientFarmCardBackground } from 'utils'
 import { RewardsWillBeClaimedType, useRewardsWillBeClaimedModal } from 'components/RewardsWillBeClaimedModal'
 import InitialSelectionTotems from './InitialSelectionTotems'
-import ConvictionSlider from './ConvictionSlider'
 import { Flex, Modal, ArtworkTotem, HighlightedText, Text, SummitButton } from 'uikit'
+import FaithSlider from './FaithSlider'
 
 interface Props {
   elevation: Elevation
@@ -53,7 +53,7 @@ const TotemPadding = styled.div`
   z-index: -1;
 `
 
-const ConvictionSliderWrapper = styled.div`
+const FaithSliderWrapper = styled.div`
   margin-top: 8px;
   margin-bottom: 12px;
   width: 100%;
@@ -73,7 +73,7 @@ const SelectTotemModal: React.FC<Props> = ({
   const { claimable } = useElevationUserRoundInfo(elevation)
   const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(elevation, claimable || new BigNumber(0), 'Deposit', RewardsWillBeClaimedType.FullElevation)
 
-  const { onSelectTotemAndOrSafetyFactor } = useSelectTotemAndOrSafetyFactor()
+  const { onSelectTotemAndOrSafetyFactor } = useSelectTotemAndOrFaith()
   const [totemToConfirm, setTotemToConfirm] = useState<number | null>(
     elevation === Elevation.OASIS ? 0 : preselectedTotem,
   )
@@ -100,9 +100,9 @@ const SelectTotemModal: React.FC<Props> = ({
     setTotemToConfirm(totem)
   }
 
-  const updateConvictionText = (!alsoSelectFaith || existingFaith === faithToConfirm) ?
+  const updateFaithText = (!alsoSelectFaith || existingFaith === faithToConfirm) ?
     null :
-    '(WITH CONVICTION)'
+    '(WITH FAITH)'
 
   return (
     <Modal
@@ -126,24 +126,24 @@ const SelectTotemModal: React.FC<Props> = ({
           { alsoSelectFaith &&
             <>
               <Text bold monospace small italic mt='-36px' textAlign='center' lineHeight='14px'>
-                Update your CONVICTION
+                Update your FAITH
                 <br/>
                 in {totemToConfirmName} (Optional)
                 </Text>
-              <ConvictionSliderWrapper>
-                <ConvictionSlider
-                    existingConviction={existingFaith}
-                    setConviction={setFaithToConfirm}
+              <FaithSliderWrapper>
+                <FaithSlider
+                    existingFaith={existingFaith}
+                    setFaith={setFaithToConfirm}
                 />
-              </ConvictionSliderWrapper>
+              </FaithSliderWrapper>
             </>
           }
           <SummitButton width='200px' padding='0px' mt='12px' summitPalette={elevation} onClick={handleSelectTotem}>
             CONFIRM
-            {updateConvictionText != null &&
+            {updateFaithText != null &&
               <>
                 <br/>
-                {updateConvictionText}
+                {updateFaithText}
               </>
             }
           </SummitButton>

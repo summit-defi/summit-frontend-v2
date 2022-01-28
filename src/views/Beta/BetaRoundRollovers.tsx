@@ -81,7 +81,7 @@ const BetaRoundRolloversCard: React.FC = () => {
               key={elevation}
               onClick={() => onRolloverElevation(elevation, roundInfo[elevation].locked)}
               width='160px'
-              elevation={elevation}
+              summitPalette={elevation}
               disabled={roundInfo[elevation].time > 0}
               isLoading={pending}
             >

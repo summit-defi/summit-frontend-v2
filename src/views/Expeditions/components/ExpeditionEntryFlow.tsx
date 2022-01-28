@@ -1,37 +1,38 @@
-import { ConvictionSlider } from 'components/SelectTotemModal'
+import React, { useState } from 'react'
+import { FaithSlider } from 'components/SelectTotemModal'
 import { Elevation, SummitPalette } from 'config/constants'
 import { useEnterExpedition } from 'hooks/useEnterExpedition'
-import { useSelectTotemAndOrSafetyFactor } from 'hooks/useSelectTotem'
-import React, { useState } from 'react'
+import { useSelectTotemAndOrFaith } from 'hooks/useSelectTotem'
 import { useExpeditionEntryFlow } from 'state/hooks'
 import styled from 'styled-components'
 import { Flex, Text, SummitButton } from 'uikit'
+import Divider from './Divider'
 
 const DivineBonus = 20
 
 enum ExpedEntryFlowItem {
     Deity,
-    Conviction,
+    Faith,
     EverestOwned,
     Entered,
 }
 const OrderedEntryFlow = [
     ExpedEntryFlowItem.Deity,
-    ExpedEntryFlowItem.Conviction,
+    ExpedEntryFlowItem.Faith,
     ExpedEntryFlowItem.EverestOwned,
     ExpedEntryFlowItem.Entered,
 ]
 const ProgressHeaderFlowItems = [
     ExpedEntryFlowItem.Deity,
-    ExpedEntryFlowItem.Conviction,
+    ExpedEntryFlowItem.Faith,
     ExpedEntryFlowItem.EverestOwned,
 ]
 const flowItemTitle = (flowItem: ExpedEntryFlowItem) => {
     switch (flowItem) {
         case ExpedEntryFlowItem.Deity:
             return 'SELECT DEITY'
-        case ExpedEntryFlowItem.Conviction:
-            return 'SELECT CONVICTION'
+        case ExpedEntryFlowItem.Faith:
+            return 'SELECT FAITH'
         case ExpedEntryFlowItem.EverestOwned:
             return 'GET EVEREST'
         default: return ''
@@ -59,7 +60,7 @@ const EntryFlowItem: React.FC<{ flowItem: ExpedEntryFlowItem, flowIndex: number,
 
 interface EntryProgress {
     [ExpedEntryFlowItem.Deity]: boolean
-    [ExpedEntryFlowItem.Conviction]: boolean
+    [ExpedEntryFlowItem.Faith]: boolean
     [ExpedEntryFlowItem.EverestOwned]: boolean
     [ExpedEntryFlowItem.Entered]: boolean
 }
@@ -100,50 +101,50 @@ const SelectDeityFlowItem: React.FC = () => {
     </Flex>
 }
 
-const SelectConvictionFlowItem: React.FC = () => {
-    const { pending: convictionPending, onSelectTotemAndOrSafetyFactor: onSelectConviction } = useSelectTotemAndOrSafetyFactor()
-    const [ conviction, setConviction ] = useState(null)
+const SelectFaithFlowItem: React.FC = () => {
+    const { pending: faithPending, onSelectTotemAndOrSafetyFactor: onSelectFaith } = useSelectTotemAndOrFaith()
+    const [ faith, setFaith ] = useState(null)
 
-    const handleSelectConviction = () => {
-        if (convictionPending || conviction == null) return
-        onSelectConviction(
+    const handleSelectFaith = () => {
+        if (faithPending || faith == null) return
+        onSelectFaith(
             Elevation.EXPEDITION,
             null,
-            conviction
+            faith
         )
     }
 
-    const convictionText = conviction != null ? `${conviction}%` : '-'
-    const invConvictionText = conviction != null ? `${100 - conviction}%` : '-'
+    const faithText = faith != null ? `${faith}%` : '-'
+    const invFaithText = faith != null ? `${100 - faith}%` : '-'
 
     return <Flex gap='24px' flexDirection='column' alignItems='center' justifyContent='center' pl='24px' pr='24px'>
         <Text bold monospace small textAlign='center' style={{maxWidth: '500px'}}>
             Betting on the DEITIES is risky, but your risk is up to you.
-            Your CONVICTION determines how much of your winnings is risked with the gods VS guaranteed.
+            Your FAITH determines how much of your winnings is risked with the gods VS guaranteed.
             Winnings from the DEITIES is given a {DivineBonus}% divine bonus.
         </Text>
 
-        <ConvictionSlider
-            existingConviction={null}
-            setConviction={setConviction}
+        <FaithSlider
+            existingFaith={null}
+            setFaith={setFaith}
         />
         
         <Text bold monospace small textAlign='center' style={{maxWidth: '500px'}}>
-            {convictionText} of your potential winnings each round will be risked on the DEITIES, and will earn a {DivineBonus}% bonus if your DEITY wins.
-            The rest ({invConvictionText}) are guaranteed winnings.
+            {faithText} of your potential winnings each round will be risked on the DEITIES, and will earn a {DivineBonus}% bonus if your DEITY wins.
+            The rest ({invFaithText}) are guaranteed winnings.
         </Text>
 
         <SummitButton
-            disabled={conviction == null}
-            onClick={handleSelectConviction}
-            isLoading={convictionPending}
-            elevation={Elevation.EXPEDITION}
+            disabled={faith == null}
+            onClick={handleSelectFaith}
+            isLoading={faithPending}
+            summitPalette={Elevation.EXPEDITION}
             mt='24px'
         >
-            CONFIRM CONVICTION
+            CONFIRM FAITH
         </SummitButton>
         <Text mt='-12px' bold monospace small textAlign='center' fontSize='10px' style={{maxWidth: '500px'}}>
-            You can change your CONVICTION at any point without penalty.
+            You can change your FAITH at any point without penalty.
         </Text>
     </Flex>
 }
@@ -197,7 +198,7 @@ const EnterTheExpeditionFlowItem: React.FC = () => {
         <SummitButton
             onClick={handleEnterExpedition}
             isLoading={entryPending}
-            elevation={Elevation.EXPEDITION}
+            summitPalette={Elevation.EXPEDITION}
         >
             ENTER THE
             <br/>
@@ -216,8 +217,8 @@ const ActiveFlowItem: React.FC<{ activeFlowItem: ExpedEntryFlowItem }> = ({ acti
     switch (activeFlowItem) {
         case ExpedEntryFlowItem.Deity:
             return <SelectDeityFlowItem/>
-        case ExpedEntryFlowItem.Conviction:
-            return <SelectConvictionFlowItem/>
+        case ExpedEntryFlowItem.Faith:
+            return <SelectFaithFlowItem/>
         case ExpedEntryFlowItem.EverestOwned:
             return <GetEverestFlowItem/>
         case ExpedEntryFlowItem.Entered:
@@ -227,13 +228,26 @@ const ActiveFlowItem: React.FC<{ activeFlowItem: ExpedEntryFlowItem }> = ({ acti
 }
 
 
+const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 36px;
+
+    ${({ theme }) => theme.mediaQueries.nav} {
+        margin-bottom: 200px;
+    }
+`
+
 
 const ExpeditionEntryFlow: React.FC = () => {
-    const { deity, conviction, everestOwned } = useExpeditionEntryFlow()
+    const { deity, faith, everestOwned } = useExpeditionEntryFlow()
 
     const entryProgress: EntryProgress = {
         [ExpedEntryFlowItem.Deity]: deity != null,
-        [ExpedEntryFlowItem.Conviction]: conviction != null,
+        [ExpedEntryFlowItem.Faith]: faith != null,
         [ExpedEntryFlowItem.EverestOwned]: everestOwned != null && everestOwned.isGreaterThan(0),
         [ExpedEntryFlowItem.Entered]: false,
     }
@@ -241,10 +255,12 @@ const ExpeditionEntryFlow: React.FC = () => {
     const activeFlowItem = OrderedEntryFlow.find((flowItem) => !entryProgress[flowItem])
 
     return (
-        <Flex mt='36px' gap='32px' flexDirection='column' alignItems='center' justifyContent='center'>
+        <Wrapper>
+            <Divider/>
             <EntryFlowProgress entryProgress={entryProgress} activeFlowItem={activeFlowItem}/>
             <ActiveFlowItem activeFlowItem={activeFlowItem}/>
-        </Flex>
+            <Divider/>
+        </Wrapper>
     )
 }
 

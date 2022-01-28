@@ -8,7 +8,9 @@ import Page from 'components/layout/Page'
 import ExpeditionTotems from './components/ExpeditionTotems'
 import PageLoader from 'components/PageLoader'
 import ExpeditionEntryFlow from './components/ExpeditionEntryFlow'
-import { useExpeditionLoaded } from 'state/hooksNew'
+import { useEnteredExpedition, useExpeditionLoaded } from 'state/hooksNew'
+import FlexLayout from 'components/layout/Flex'
+import ExpeditionCard from './components/ExpeditionCard'
 
 const StyledPage = styled(Page)`
   padding-top: 48px;
@@ -22,7 +24,7 @@ const StyledPage = styled(Page)`
 
 const ExpeditionFarms: React.FC = () => {
   useExpeditionFetching()
-  const expeditionEntered = useExpeditionEntered()
+  const expeditionEntered = useEnteredExpedition()
   const { expeditionLoaded } = useExpeditionLoaded()
 
   return (
@@ -34,20 +36,11 @@ const ExpeditionFarms: React.FC = () => {
       { expeditionLoaded &&
         <>
           { !expeditionEntered && <ExpeditionEntryFlow />}
+          <ExpeditionCard/>
         </>
       }
       {/* <ExpeditionInfo/> */}
       {/* {totem != null && (
-        <FlexLayout>
-            <ExpeditionCard
-              expedition={activeExpedition}
-              expeditionLocked={expeditionLocked}
-              summitAllowance={summitAllowance}
-              summitLpAllowance={summitLpAllowance}
-              summitBalance={summitBalance}
-              summitLpBalance={summitLpBalance}
-            />
-        </FlexLayout>
       )} */}
     </StyledPage>
   )

@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js"
+import { BN_ZERO } from "config/constants"
 import { chunk } from "lodash"
 import { Epoch } from "state/types"
 import { retryableMulticall, abi, getSummitLockingAddress } from "utils"
@@ -33,13 +34,22 @@ export const fetchUserEpochs = async (account: string) => {
     if (epochsRes == null) return []
 
     const chunkedRes = chunk(epochsRes, 2)
+    const epochs = chunkedRes.map((resChunk, index): Epoch => ({
+        index: interactingEpochs[index],
+        frozenSummit: new BigNumber(resChunk[0].winnings._hex).minus(new BigNumber(resChunk[0].claimedWinnings._hex)),
+        isThawed: resChunk[1][0]
+    }))
+
+    const { totalFrozenSummit, totalThawedSummit } = epochs.reduce((acc, epoch) => ({
+        totalFrozenSummit: acc.totalFrozenSummit.plus(epoch.isThawed ? BN_ZERO : epoch.frozenSummit),
+        totalThawedSummit: acc.totalThawedSummit.plus(epoch.isThawed ? epoch.frozenSummit : BN_ZERO),
+    }), { totalFrozenSummit: BN_ZERO, totalThawedSummit: BN_ZERO })
+
 
     return {
         currentEpochIndex,
-        epochs: chunkedRes.map((resChunk, index): Epoch => ({
-            index: interactingEpochs[index],
-            frozenSummit: new BigNumber(resChunk[0].winnings._hex).minus(new BigNumber(resChunk[0].claimedWinnings._hex)),
-            isThawed: resChunk[1][0]
-        }))
+        epochs,
+        totalFrozenSummit,
+        totalThawedSummit,
     }
 }

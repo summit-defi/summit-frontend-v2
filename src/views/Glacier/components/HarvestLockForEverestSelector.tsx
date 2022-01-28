@@ -1,3 +1,4 @@
+import { SummitPalette } from 'config/constants'
 import { darken } from 'polished'
 import React from 'react'
 import styled from 'styled-components'
@@ -64,6 +65,7 @@ const HarvestLockForEverestSelector: React.FC<Props> = ({ lockForEverest, select
     <SelectorFlex>
       <SelectorWrapper>
         <SelectedSummitButton
+          summitPalette={lockForEverest ? SummitPalette.EVEREST : SummitPalette.BASE}
           selectedIndex={lockForEverest ? 1 : 0}
           padding="0px"
         >

@@ -1,74 +1,78 @@
-import React from 'react'
-import styled from 'styled-components'
-import { Flex, HighlightedText } from 'uikit'
-import { getBalanceNumber } from 'utils/formatBalance'
-import { ExpeditionInfo } from 'state/types'
-import { Elevation } from 'config/constants/types'
-import CardValue from 'views/Home/components/CardValue'
-import BigNumber from 'bignumber.js'
-import { useClaimPool } from 'hooks/useClaim'
-import SummitButton from 'uikit/components/Button/SummitButton'
+import React, { memo } from "react"
+import { SummitPalette } from "config/constants"
+import useHarvestExpedition from "hooks/useHarvestExpedition"
+import { useExpeditionWinnings } from "state/hooksNew"
+import { Flex, SummitButton, Text } from "uikit"
+import { getBalanceNumber } from "utils"
+import CardValue from "views/Home/components/CardValue"
+import Divider from "./Divider"
 
-const InfoSection = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 56px;
-`
 
-const InfoItem = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 32px;
-  margin-top: 24px;
-  margin-bottom: 12px;
+export const ExpeditionWinnings: React.FC = memo(() => {
+    const {
+        summitWinnings,
+        usdcWinnings,
+    } = useExpeditionWinnings()
+    const { pending, onHarvestExpedition } = useHarvestExpedition()
 
-  ${({ theme }) => theme.mediaQueries.nav} {
-    flex-direction: column;
-    justify-content: center;
-    width: auto;
-    height: auto;
-  }
-`
+    const anySummitWinnings = summitWinnings.isGreaterThan(0)
+    const anyUsdcWinnings = usdcWinnings.isGreaterThan(0)
 
-interface ClaimProps {
-  expedition: ExpeditionInfo
-}
+    if (!anySummitWinnings && !anyUsdcWinnings) return null
 
-const ExpeditionWinnings: React.FC<ClaimProps> = ({ expedition }) => {
+    const rawSummitWinnings = getBalanceNumber(summitWinnings)
+    const rawUsdcWinnings = getBalanceNumber(usdcWinnings, 6)
 
-  return null
-  // const { pid, userData, rewardToken } = expedition
-  // const { claimable } = userData || {}
-  // const winnings = (claimable || new BigNumber(0))
 
-  // const rawWinnings = getBalanceNumber(winnings, rewardToken.decimals)
-  // const { onClaim, pending: claimPending } = useClaimPool(pid)
+    const handleHarvestExpedition = () => {
+        if (!(anySummitWinnings || anyUsdcWinnings) || pending) return
+        onHarvestExpedition()
+    }
 
-  // if (rawWinnings === 0) return null
-
-  // return (
-  //   <InfoSection>
-  //     <InfoItem>
-  //       <HighlightedText mt="4px" fontSize="14px" bold textAlign="center">
-  //         REWARDS:
-  //       </HighlightedText>
-  //       <Flex justifyContent="flex-end" alignItems="center">
-  //         <CardValue value={rawWinnings} decimals={2} elevation={Elevation.EXPEDITION} fontSize="26px" />
-  //         <HighlightedText bold monospace ml="6px" mt="4px">
-  //           {rewardToken.symbol}
-  //         </HighlightedText>
-  //       </Flex>
-  //     </InfoItem>
-  //     <SummitButton elevation="GOLD" isLoading={claimPending} mr="8px" onClick={onClaim}>
-  //       COLLECT REWARDS
-  //     </SummitButton>
-  //   </InfoSection>
-  // )
-}
-
-export default ExpeditionWinnings
+    return (
+        <Flex gap='36px' mt='36px' flexDirection='column' width='100%' maxWidth='650px !important' alignItems='center' justifyContent='center' position='relative'>
+            <Flex width='100%' alignItems='center' justifyContent='center'>
+                <Flex width='50%' gap='6px' flexDirection='column' alignItems='center' justifyContent='center'>
+                    <Text monospace small gold>SUMMIT WINNINGS</Text>
+                    <CardValue
+                    value={rawSummitWinnings}
+                    decimals={3}
+                    fontSize='18'
+                    postfix='SUMMIT'
+                    postfixFontSize='12'
+                    gold
+                    />
+                </Flex>
+                <Flex width='50%' gap='6px' flexDirection='column' alignItems='center' justifyContent='center'>
+                    <Text monospace small gold>USDC WINNINGS</Text>
+                    <CardValue
+                    value={rawUsdcWinnings}
+                    decimals={2}
+                    fontSize='18'
+                    postfix='USDC'
+                    postfixFontSize='12'
+                    gold
+                    />
+                </Flex>
+            </Flex>
+            <SummitButton
+                disabled={!anySummitWinnings && !anyUsdcWinnings}
+                isLoading={pending}
+                summitPalette={SummitPalette.GOLD}
+                width='200px'
+                onClick={handleHarvestExpedition}
+            >
+                { anySummitWinnings && 'CLAIM SUMMIT' }
+                { (anySummitWinnings || anyUsdcWinnings) &&
+                <>
+                    {' AND'}
+                    <br/>
+                </>
+                }
+                { anySummitWinnings && 'HARVEST USDC' }
+                { !anySummitWinnings && !anyUsdcWinnings && 'HARVEST WINNINGS'}
+            </SummitButton>
+            <Divider/>
+        </Flex>
+    )
+})

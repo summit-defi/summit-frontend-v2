@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { BN_ZERO } from 'config/constants'
 import { Epoch } from 'state/types'
-import { stateToEpochs, stateToCurrentEpochIndex } from './base'
+import { stateToEpochs, stateToCurrentEpochIndex, stateToGlacierTotalFrozenSummit, stateToGlacierTotalThawedSummit } from './base'
 import { useSelector } from './utils'
 
 export const makeSelectEpochByIndex = () => createSelector(
@@ -35,9 +35,13 @@ export const useThawedEpochIndices = () => useSelector(selectThawedEpochIndices)
 
 const selectFrozenEpochIndices = createSelector(
     stateToEpochs,
-    (epochs): number[] => epochs
-        .filter((epoch) => !epoch.isThawed)
+    stateToCurrentEpochIndex,
+    (epochs, currentEpochIndex): number[] => epochs
+        .filter((epoch) => !epoch.isThawed && epoch.index !== currentEpochIndex)
         .map((epoch) => epoch.index)
 )
 export const useFrozenEpochIndices = () => useSelector(selectFrozenEpochIndices)
+
+export const useGlacierTotalFrozenSummit = () => useSelector(stateToGlacierTotalFrozenSummit)
+export const useGlacierTotalThawedSummit = () => useSelector(stateToGlacierTotalThawedSummit)
 

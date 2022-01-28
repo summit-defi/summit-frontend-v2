@@ -139,7 +139,7 @@ const deityValueText = (deitiedEverest, deityEverest, deity, deityDivider, bull)
 }
 
 const ExpeditionTotems: React.FC = () => {
-  const { deity, deitiedEverest, deityEverest, conviction } = useExpeditionTotemHeaderInfo()
+  const { deity, deitiedEverest, deityEverest, faith } = useExpeditionTotemHeaderInfo()
   const deityDivider = useExpeditionDivider()
 
   const [expeditionTotem, setExpeditionTotem] = useState(null)
@@ -155,8 +155,8 @@ const ExpeditionTotems: React.FC = () => {
       }, 500)
     }
   }, [deity, expeditionTotem])
-  const { onPresentSelectTotemModal: onConfirmBearDeity } = useSelectTotemModal(Elevation.EXPEDITION, 0, conviction != null, conviction)
-  const { onPresentSelectTotemModal: onConfirmBullDeity } = useSelectTotemModal(Elevation.EXPEDITION, 1, conviction != null, conviction)
+  const { onPresentSelectTotemModal: onConfirmBearDeity } = useSelectTotemModal(Elevation.EXPEDITION, 0, faith != null, faith)
+  const { onPresentSelectTotemModal: onConfirmBullDeity } = useSelectTotemModal(Elevation.EXPEDITION, 1, faith != null, faith)
 
   const handleConfirmBullDeity = () => {
     if (totemSelectionPending) return

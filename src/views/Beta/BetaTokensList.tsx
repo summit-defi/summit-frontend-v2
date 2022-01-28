@@ -35,7 +35,7 @@ const InfoCard = styled(Flex)`
   z-index: 10;
   padding: 16px;
   padding-top: 124px;
-  margin: 100px auto 32px auto;
+  margin: 124px auto 32px auto;
   max-width: 650px;
   background-color: ${({ theme }) => theme.colors.background};
   border-radius: 4px;

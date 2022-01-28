@@ -33,7 +33,7 @@ export interface ExpeditionUserData {
 
   deity: number | null
   deitySelectionRound: number
-  conviction: number | null
+  faith: number | null
 
   entered: boolean
 
@@ -164,6 +164,8 @@ export interface Epoch {
 export interface GlacierState {
   epochs: Epoch[]
   currentEpochIndex: number
+  totalFrozenSummit: BigNumber
+  totalThawedSummit: BigNumber
 }
 
 // Everest State

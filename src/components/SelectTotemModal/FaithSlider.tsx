@@ -134,8 +134,8 @@ const HandleText = styled(Text)`
 `
 
 interface Props {
-    existingConviction: number | null
-    setConviction: (number) => void
+    existingFaith: number | null
+    setFaith: (number) => void
 }
 
 const marks = {
@@ -144,12 +144,12 @@ const marks = {
     100: '100%',
 }
 
-const ConvictionSlider: React.FC<Props> = ({ existingConviction, setConviction }) => {
-    const [perc, setPerc] = useState(existingConviction)
+const FaithSlider: React.FC<Props> = ({ existingFaith, setFaith }) => {
+    const [perc, setPerc] = useState(existingFaith)
 
-    const handleSetConviction = (markPerc) => {
+    const handleSetFaith = (markPerc) => {
         setPerc(markPerc)
-        setConviction(markPerc)
+        setFaith(markPerc)
     }
 
     return (
@@ -158,7 +158,7 @@ const ConvictionSlider: React.FC<Props> = ({ existingConviction, setConviction }
                 min={0}
                 marks={marks}
                 step={1}
-                onChange={handleSetConviction}
+                onChange={handleSetFaith}
                 value={perc}
                 defaultValue={perc}
             />
@@ -166,14 +166,14 @@ const ConvictionSlider: React.FC<Props> = ({ existingConviction, setConviction }
                 <FakeMarkDot
                     key={markPerc}
                     perc={parseFloat(markPerc)}
-                    onClick={() => handleSetConviction(markPerc)}
+                    onClick={() => handleSetFaith(markPerc)}
                 />
             )}
-            { existingConviction != null &&
+            { existingFaith != null &&
                 <FakeMarkDot
                     isExisting
-                    perc={existingConviction}
-                    onClick={() => handleSetConviction(existingConviction)}
+                    perc={existingFaith}
+                    onClick={() => handleSetFaith(existingFaith)}
                 />
             }
             { perc != null &&
@@ -187,4 +187,4 @@ const ConvictionSlider: React.FC<Props> = ({ existingConviction, setConviction }
     )
 }
 
-export default ConvictionSlider
+export default FaithSlider

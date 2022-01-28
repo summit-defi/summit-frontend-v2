@@ -3,7 +3,7 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useDispatch } from 'react-redux'
 import { fetchExpeditionUserDataAsync, fetchUserTotemsAsync } from 'state/actions'
 import { Elevation, elevationUtils } from 'config/constants/types'
-import { capitalizeFirstLetter, selectTotem } from 'utils'
+import { capitalizeFirstLetter, selectTotemAndOrFaith } from 'utils'
 import { useTransactionToasts } from './useToast'
 import { useCartographer, useExpedition } from './useContract'
 import { updatePendingTotemSelection } from 'state/summitEcosystem'
@@ -44,7 +44,7 @@ const getCallTypeErrorMsg = (callType: CallType, elevation: Elevation): string =
   }
 }
 
-export const useSelectTotemAndOrSafetyFactor = () => {
+export const useSelectTotemAndOrFaith = () => {
   const [pending, setPending] = useState(false)
   const { toastSuccess, toastError } = useTransactionToasts()
   const dispatch = useDispatch()
@@ -60,7 +60,7 @@ export const useSelectTotemAndOrSafetyFactor = () => {
           dispatch(updatePendingTotemSelection(true))
         }
         setPending(true)
-        await selectTotem(
+        await selectTotemAndOrFaith(
           cartographer,
           expedition,
           elevation,

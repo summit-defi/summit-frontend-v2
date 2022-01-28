@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { ElevationPuck, Flex, Text } from 'uikit'
 import { CurrentEpochSection } from './CurrentEpochSection'
+import { GlacierTotalSummitAmounts } from './GlacierTotalSummitAmounts'
 import { ThawedEpochsSection } from './ThawedEpochsSection'
 
 const EpochsCard = styled(Flex)`
@@ -30,6 +31,7 @@ const EpochsHeaderCard: React.FC = () => {
                     GLACIER
                 </Text>
             </ElevationPuck>
+            <GlacierTotalSummitAmounts/>
             <Flex gap='24px' mt='12px' mb='16px' width='100%' alignItems='center'>
                 <Flex flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
                     <Text monospace fontSize='12px' textAlign='center'>

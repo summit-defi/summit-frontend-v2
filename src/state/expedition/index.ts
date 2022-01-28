@@ -13,7 +13,7 @@ const getUserLocalStorageVariables = () => {
   const activeAccount = JSON.parse(localStorage.getItem('ActiveAccount'))
   return {
     deity: JSON.parse(localStorage.getItem(`${activeAccount}/EXPEDITION_deity`)),
-    conviction: JSON.parse(localStorage.getItem(`${activeAccount}/EXPEDITION_conviction`)),
+    faith: JSON.parse(localStorage.getItem(`${activeAccount}/EXPEDITION_faith`)),
     entered: JSON.parse(localStorage.getItem(`${activeAccount}/EXPEDITION_entered`)),
   }
 }
@@ -82,7 +82,7 @@ export const ExpeditionSlice = createSlice({
       state.userDataLoaded = true
       const activeAccount = JSON.parse(localStorage.getItem('ActiveAccount'))
       localStorage.setItem(`${activeAccount}/EXPEDITION_deity`, action.payload.deity)
-      localStorage.setItem(`${activeAccount}/EXPEDITION_conviction`, action.payload.conviction)
+      localStorage.setItem(`${activeAccount}/EXPEDITION_faith`, action.payload.faith)
       localStorage.setItem(`${activeAccount}/EXPEDITION_entered`, action.payload.entered)
     },
     updateExpeditionUserWinnings: (state, action) => {

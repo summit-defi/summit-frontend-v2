@@ -6,6 +6,7 @@ import SummitButton from 'uikit/components/Button/SummitButton'
 import { isNumber } from 'lodash'
 import { Epoch } from 'state/types'
 import HarvestLockForEverestSelector from './HarvestLockForEverestSelector'
+import { SummitPalette } from 'config/constants'
 
 interface HarvestEpochModalProps {
   epoch: Epoch
@@ -31,6 +32,7 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
   const [val, setVal] = useState(fullHarvestableBalance)
   const [invalidVal, setValInvalid] = useState(false)
   const [lockForEverest, setLockForEverest] = useState(false)
+  const summitPalette = lockForEverest ? SummitPalette.EVEREST : SummitPalette.BASE
 
   const validHarvestVal = (testVal, harvestableBalance) => {
     return (
@@ -77,6 +79,7 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
         </Text>
         <TokenInput
           value={val}
+          summitPalette={summitPalette}
           balanceText={`EPOCH ${isThawed ? 'THAWED' : 'FROZEN'}`}
           onSelectMax={handleSelectMax}
           onChange={handleChange}
@@ -134,6 +137,7 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
           CANCEL
         </SummitButton>
         <SummitButton
+          summitPalette={summitPalette}
           disabled={invalidVal}
           onClick={handleConfirmHarvestEpoch}
         >

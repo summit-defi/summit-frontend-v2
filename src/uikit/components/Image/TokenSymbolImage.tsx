@@ -19,27 +19,23 @@ const BaseSymbolIcon = styled.div<{ symbol: string; width: number; height: numbe
 `
 
 const SingleSymbolIcon = styled(BaseSymbolIcon)`
-  width: ${({ width }) => width * 0.85}px;
-  height: ${({ height }) => height * 0.85}px;
   left: 50%;
   top: 50%;
-  transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%) scale(0.85);
 `
 
 const LpASymbolIcon = styled(BaseSymbolIcon)`
   top: 0px;
   left: 0px;
   z-index: 1;
-  width: ${({ width }) => width * 0.6}px;
-  height: ${({ height }) => height * 0.6}px;
+  transform: scale(0.6);
 `
 
 const LpBSymbolIcon = styled(BaseSymbolIcon)`
   bottom: 0px;
   right: 0px;
   z-index: 2;
-  width: ${({ width }) => width * 0.8}px;
-  height: ${({ height }) => height * 0.8}px;
+  transform: scale(0.8);
 `
 
 interface Props {

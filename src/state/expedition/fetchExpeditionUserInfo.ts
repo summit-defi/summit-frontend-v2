@@ -22,7 +22,7 @@ export const fetchExpeditionUserData = async (account) => {
   
     deity: rawUserData.deitySelected ? rawUserData.deity : null,
     deitySelectionRound: new BigNumber(rawUserData.deitySelectionRound._hex),
-    conviction: rawUserData.safetyFactorSelected ? rawUserData.safetyFactor : null,
+    faith: rawUserData.safetyFactorSelected ? (100 - rawUserData.safetyFactor) : null,
   
     entered: rawUserData.entered,
   

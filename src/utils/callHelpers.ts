@@ -74,16 +74,16 @@ export const claimElevation = async (cartographer, elevation, account) => {
   return estimateGasAndExecute(claimCall, account)
 }
 
-export const selectTotem = async (cartographer, expedition, elevation, totem, faith, account) => {
+export const selectTotemAndOrFaith = async (cartographer, expedition, elevation, totem, faith, account) => {
   const isExpedition = elevation === Elevation.EXPEDITION
   let call
   if (isExpedition) {
     if (totem != null && faith != null) {
-      call = expedition.methods.selectDeityAndSafetyFactor(totem, faith)
+      call = expedition.methods.selectDeityAndSafetyFactor(totem, 100 - faith)
     } else if (totem != null) {
       call = expedition.methods.selectDeity(totem)
     } else if (faith != null) {
-      call = expedition.methods.selectSafetyFactor(faith)
+      call = expedition.methods.selectSafetyFactor(100 - faith)
     }
   } else {
     call = cartographer.methods.switchTotem(elevationUtils.toInt(elevation), totem)
@@ -93,6 +93,10 @@ export const selectTotem = async (cartographer, expedition, elevation, totem, fa
 
 export const enterExpedition = async (expedition, account) => {
   const call = expedition.methods.joinExpedition()
+  return estimateGasAndExecute(call, account)
+}
+export const harvestExpedition = async (expedition, account) => {
+  const call = expedition.methods.harvestExpedition()
   return estimateGasAndExecute(call, account)
 }
 
