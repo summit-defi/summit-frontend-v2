@@ -6,31 +6,32 @@ import {
   getSubCartographerAddress,
 } from 'utils/'
 import BigNumber from 'bignumber.js'
-import { Elevation, ElevationRoundOffset, elevationUtils, ElevationWinnersOffset } from 'config/constants/types'
+import { Elevation, elevationUtils } from 'config/constants/types'
 
-export const fetchElevationsData = async () => {
+export const fetchElevationsData = async (elevation?: Elevation) => {
   const elevationHelperAddress = getElevationHelperAddress()
-  const calls = elevationUtils.elevationExpedition.map((elevation) => [
+  const elevations = elevation != null ? [elevation] : elevationUtils.elevationExpedition
+  const calls = elevations.map((elev) => [
     {
       address: elevationHelperAddress,
       name: 'unlockTimestamp',
-      params: [elevationUtils.toInt(elevation)],
+      params: [elevationUtils.toInt(elev)],
     },
     {
       address: elevationHelperAddress,
       name: 'roundEndTimestamp',
-      params: [elevationUtils.toInt(elevation)],
+      params: [elevationUtils.toInt(elev)],
     },
     {
       address: elevationHelperAddress,
       name: 'historicalWinningTotems',
-      params: [elevationUtils.toInt(elevation)],
+      params: [elevationUtils.toInt(elev)],
     },
     {
       address: elevationHelperAddress,
       name: 'roundNumber',
-      params: [elevationUtils.toInt(elevation)],
-    },
+      params: [elevationUtils.toInt(elev)],
+    }
   ])
 
   const res = await retryableMulticall(abi.elevationHelper, calls.flat(), 'fetchElevationsData_elevHelper')
@@ -54,9 +55,9 @@ export const fetchElevationsData = async () => {
   // if (prevWinningsMultipliersRes == null) return null
 
   return groupByAndMap(
-    elevationUtils.elevationExpedition,
-    (elevation) => elevation,
-    (elevation, index) => {
+    elevations,
+    (elev) => elev,
+    (elev, index) => {
       const unlockTimestamp = new BigNumber(res[index * 4 + 0]).toNumber()
 
       // Artificially increase unlock timestamp of MESA and SUMMIT
@@ -65,24 +66,30 @@ export const fetchElevationsData = async () => {
       // if (elevation === Elevation.EXPEDITION) unlockTimestamp += 4 * 86400
 
       const roundEndTimestamp = new BigNumber(res[index * 4 + 1]).toNumber()
-      const historicInfo = res[index * 4 + 2][0].map((item) => new BigNumber(item._hex).toNumber())
+      const totemWinAcc = res[index * 4 + 2][0].map((item) => new BigNumber(item._hex).toNumber())
+      const prevWinners = res[index * 4 + 2][1].map((item) => new BigNumber(item._hex).toNumber())
       const roundNumber = new BigNumber(res[index * 4 + 3][0]._hex).toNumber()
 
       let prevWinningsMultipliers = []
-      if (elevation !== Elevation.EXPEDITION) {
+      if (elev !== Elevation.EXPEDITION) {
         prevWinningsMultipliers = [1.1, 1.2, 1.3, 1.4, 1.5, 1.6]
         /// TODO: Re-enable with next testnet deployment
         // prevWinningsMultipliers = prevWinningsMultipliersRes
         //   .slice(index * 6, index * 6 + 6)
         //   .map((item) => new BigNumber(item).dividedBy(new BigNumber(10).pow(12)).toNumber())
       }
+
+      const winningTotem = elev === Elevation.OASIS ?
+        0 :
+        (roundNumber <= 1 || prevWinners.length === 0) ? null : prevWinners[0]
       return {
         unlockTimestamp,
         roundEndTimestamp,
         roundNumber,
-        totemWinAcc: historicInfo.slice(0, 10),
-        prevWinners: historicInfo.slice(10, 10 + roundNumber - 1),
+        totemWinAcc,
+        prevWinners,
         prevWinningsMultipliers,
+        winningTotem,
       }
     },
   )

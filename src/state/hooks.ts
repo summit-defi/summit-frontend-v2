@@ -110,6 +110,7 @@ export const useDashboardTotemBattleInfo = () => {
         if (userTotem == null) return []
         return [{
           totem: userTotem,
+          crowned: true,
           mult: elevationData[elevationUtils.toInt(elev)]?.totemMultipliers[userTotem] || 0
         }]
       }),

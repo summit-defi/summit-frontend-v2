@@ -4,6 +4,7 @@ import { Flex, Text } from 'uikit'
 import { useElevationUserRoundInfo, useElevationTotem, useElevationFarmsTab, useDashboardTotemBattleInfo } from 'state/hooks'
 import TotemBattleBreakdown from './TotemBattleBreakdown'
 import styled from 'styled-components'
+import { useElevationWinningTotem } from 'state/hooksNew'
 
 const GappedFlex = styled(Flex)`
   gap: 18px;
@@ -67,14 +68,14 @@ const AllElevationsTotemBattles: React.FC = () => {
 const SingleElevationTotemBattle: React.FC<{ elevationTab: ElevationFarmTab }> = ({ elevationTab }) => {
   const elevation = elevationTabToElevation[elevationTab]
   const { totemMultipliers } = useElevationUserRoundInfo(elevation)
+  const winningTotem = useElevationWinningTotem(elevation)
   const userTotem = useElevationTotem(elevation)
 
   const totemInfos = elevationUtils.totemsArray(elevation).map((totem) => ({
     totem,
+    crowned: totem === winningTotem,
     mult: totemMultipliers[totem],
   }))
-
-  if (elevation === Elevation.OASIS) return null
 
   return (
     <TotemBattleBreakdown
@@ -91,7 +92,9 @@ const ElevationTotemBattle: React.FC = () => {
 
   if (elevationTab === ElevationFarmTab.DASH) return (
     <AllElevationsTotemBattles/>
-  ) 
+  )
+
+  if (elevationTab === ElevationFarmTab.OASIS) return null
 
   return (
     <SingleElevationTotemBattle elevationTab={elevationTab}/>

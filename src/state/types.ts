@@ -95,13 +95,13 @@ export interface ExpeditionState {
 }
 
 export interface ElevationInfo {
-  round: number
   unlockTimestamp: number
   roundEndTimestamp: number
   roundNumber: number
   totemWinAcc: number[]
   prevWinners: number[]
   prevWinningsMultipliers: number[]
+  winningTotem: number | null
 }
 
 export enum FarmType {
@@ -117,6 +117,7 @@ export interface SummitEcosystemState {
   activeAccount: string
   summitEnabled: boolean
   totems: Array<number | null>
+  winningTotems: Array<number | null>
   totemSelectionRounds: Array<number | null>
   elevationsInfo: ElevationInfo[]
   keywordRound: number

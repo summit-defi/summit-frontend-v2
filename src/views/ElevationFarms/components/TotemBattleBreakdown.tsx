@@ -2,11 +2,9 @@ import React from 'react'
 import { Elevation, elevationUtils } from 'config/constants/types'
 import styled, { css } from 'styled-components'
 import { elevationPalette } from 'theme/colors'
-import { chunkArray } from 'utils'
 import { Text, Flex, useMatchBreakpoints } from 'uikit'
 import Totem from './Totem'
 import chroma from 'chroma-js'
-import BigNumber from 'bignumber.js'
 import { clamp, chunk } from 'lodash'
 
 const TotemHeight = 64;
@@ -28,14 +26,12 @@ const ExpectedMultText = styled(Text)<{ invis?: boolean }>`
   opacity: ${({ invis }) => invis ? 0 : 1};
 `
 
-const TotemMultText = styled(Text)<{ top: boolean }>`
+const TotemMultText = styled(Text)`
   position: absolute;
   font-size: 12px;
-  ${({ top }) => top ? css`
-    top: -16px;
-  ` : css`
-    bottom: -16px;
-  `}
+  bottom: -18px;
+  padding: 2px 4px;
+  background-color: ${({ theme }) => theme.colors.background};
 `
 
 const TotemResultsWrapper = styled(Flex)<{ elevation: Elevation, multiElev: boolean }>`
@@ -83,6 +79,7 @@ const RuleLine = styled.div<{ topOffset: number }>`
 const TotemScale = styled.div<{ scale: number }>`
   transform: scale(${({ scale }) => scale});
   transform-origin: center;
+  position: relative;
 `
 
 const TotemBreakdownWrapper = styled.div<{ fullWidth: boolean, multiElev: boolean }>`
@@ -178,8 +175,25 @@ const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, seco
   )
 }
 
+
+const IconCrown = styled.div`
+  position: absolute;
+  top: -36px;
+  right: -10px;
+  width: 68px;
+  height: 68px;
+  transform: rotate(15deg);
+  background-image: url('/images/totemIcons/ICONCROWN.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 2;
+  pointer-events: none;
+`
+
 interface TotemInfo {
   totem: number
+  crowned: boolean
   mult: number
 }
 
@@ -205,8 +219,9 @@ const TotemBattleResult: React.FC<TotemResultProps> = ({ totemInfo, elevation, c
             selected={selected}
             pressable={false}
           />
+          {totemInfo.crowned && <IconCrown />}
         </TotemScale>
-        <TotemMultText bold monospace top={topOffset <= ((GameAreaHeight - TotemHeight) / 2)}>{totemInfo.mult == null ? '' : `${totemInfo.mult}x`}</TotemMultText>
+        <TotemMultText bold monospace>{totemInfo.mult == null ? '' : `${totemInfo.mult}x`}</TotemMultText>
       </TotemPosition>
     </TotemResultWrapper>
   )
@@ -241,7 +256,7 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
         multiElev={multiElev}
       >
         <TotemBattleResult
-          totemInfo={{ totem: null, mult: elevationUtils.totemCount(elevation) }}
+          totemInfo={{ totem: null, crowned: false, mult: elevationUtils.totemCount(elevation) }}
           elevation={elevation}
           color={colorGradient[0]}
           selected={false}

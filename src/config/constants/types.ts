@@ -185,6 +185,7 @@ export const ElevationRoundDuration: { [key in keyof typeof Elevation]: number }
 }
 export const elevationUtils = {
   all: [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT],
+  allWithExpedition: [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT, Elevation.EXPEDITION],
   oasisElevation: [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT],
   elevationExpedition: [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT, Elevation.EXPEDITION],
   elevationOnly: [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT],

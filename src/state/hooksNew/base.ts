@@ -20,3 +20,8 @@ export const stateToCurrentEpochIndex = (state: State) => state.glacier.currentE
 export const stateToEpochs = (state: State) => state.glacier.epochs
 export const stateToGlacierTotalFrozenSummit = (state: State) => state.glacier.totalFrozenSummit
 export const stateToGlacierTotalThawedSummit = (state: State) => state.glacier.totalThawedSummit
+
+// TOTEM
+export const stateToUserTotems = (state: State) => state.summitEcosystem.totems
+export const stateToExpeditionDeity = (state: State) => state.expedition?.userData?.deity || null
+export const stateToWinningTotems = (state: State) => state.summitEcosystem.winningTotems

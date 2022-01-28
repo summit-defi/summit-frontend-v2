@@ -7,15 +7,17 @@ interface Props {
   elevation: Elevation
   totem: number
   selected: boolean
-  crownedTotem: number
+  crowned: boolean
 }
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ selected: boolean }>`
   width: ${MENU_ENTRY_HEIGHT + 4}px;
   height: ${MENU_ENTRY_HEIGHT + 4}px;
   align-items: center;
   justify-content: center;
   position: relative;
+  transition: opacity 200ms;
+  opacity: ${({ selected }) => selected ? 0 : 1};
 `
 
 const Background = styled.div<{ elevation: string }>`
@@ -33,7 +35,7 @@ const Background = styled.div<{ elevation: string }>`
   background-position: center;
 `
 
-const Icon = styled.div<{ elevation: Elevation, totem: number, selected: boolean }>`
+const Icon = styled.div<{ elevation: Elevation, totem: number }>`
   position: absolute;
   top: 8px;
   left: 8px;
@@ -43,17 +45,15 @@ const Icon = styled.div<{ elevation: Elevation, totem: number, selected: boolean
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  transition: opacity 200ms;
-  opacity: ${({ selected }) => selected ? 0 : 1};
 `
 
 const IconCrown = styled.div`
   position: absolute;
-  top: -20px;
-  left: 10px;
+  top: -18px;
+  right: 0px;
   width: 52px;
   height: 52px;
-  transform: rotate(10deg);
+  transform: rotate(15deg);
   background-image: url('/images/totemIcons/ICONCROWN.png');
   background-size: cover;
   background-repeat: no-repeat;
@@ -66,16 +66,16 @@ const ElevationTabTotemIcon: React.FC<Props> = ({
   elevation,
   totem,
   selected,
-  crownedTotem,
+  crowned,
 }) => (
-  <Wrapper className="selectableIcon">
+  <Wrapper className="selectableIcon" selected={selected}>
     <Background elevation={elevation} />
-    <Icon selected={selected} elevation={elevation} totem={totem} />
-    {crownedTotem === totem && <IconCrown />}
+    <Icon elevation={elevation} totem={totem} />
+    {crowned && <IconCrown />}
   </Wrapper>
 )
 
 export default React.memo(
   ElevationTabTotemIcon,
-  (prev, next) => prev.totem === next.totem && prev.selected === next.selected && prev.crownedTotem === next.crownedTotem
+  (prev, next) => prev.totem === next.totem && prev.selected === next.selected && prev.crowned === next.crowned
 )

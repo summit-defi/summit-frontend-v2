@@ -2,11 +2,12 @@ import React from 'react'
 import { Elevation, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import styled from 'styled-components'
 import { Text, Flex, Spinner, ElevationPuck, ArtworkTotem } from 'uikit'
-import { useIsElevationLockedUntilRollover, useElevationTotem, useTotemSelectionPending, useElevationFarmsTab, useElevationWinningTotem } from 'state/hooks'
+import { useIsElevationLockedUntilRollover, useTotemSelectionPending, useElevationFarmsTab } from 'state/hooks'
 import { useSelectTotemModal } from 'components/SelectTotemModal'
 import SummitIconButton from 'uikit/components/Button/SummitIconButton'
 import { SpinnerKeyframes } from 'uikit/components/Svg/Icons/Spinner'
 import useTotemWinnersModal from 'uikit/widgets/TotemWinnersModal/useTotemWinnersModal'
+import { useElevationUserTotemAndCrowned } from 'state/hooksNew'
 
 const HeaderButtonsRow = styled(Flex)`
   position: absolute;
@@ -87,12 +88,11 @@ const StyledSpinner = styled(Spinner)`
 const TotemHeaderButtonsRow: React.FC = () => {
   const elevationTab = useElevationFarmsTab()
   const elevation = elevationTabToElevation[elevationTab]
-  const userTotem = useElevationTotem(elevation)
+  const { userTotem, crowned } = useElevationUserTotemAndCrowned(elevation)
   const elevationLockedUntilRollover = useIsElevationLockedUntilRollover(elevation)
   const totemSelectionPending = useTotemSelectionPending()
 
   const isElevationFarm = elevation !== Elevation.OASIS
-  const crownedTotem = useElevationWinningTotem(elevation)
   const { onPresentTotemWinnersModal, showTotemWinnersModalButton } = useTotemWinnersModal(elevation)
   const { onPresentSelectTotemModal } = useSelectTotemModal(elevation)
 
@@ -123,7 +123,7 @@ const TotemHeaderButtonsRow: React.FC = () => {
           <ArtworkTotem
             elevation={elevation}
             totem={userTotem}
-            crowned={userTotem === crownedTotem}
+            crowned={crowned}
             desktopSize="180"
             mobileSize="180"
           />

@@ -14,7 +14,12 @@ const getLocalStorageVariables = () => {
     activeAccount,
     summitEnabled: JSON.parse(localStorage.getItem('SummitEnabled')) || false,
     totems: elevationUtils.all.map((elevation): number =>
-      JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}_totem`)),
+      JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}_totem`) || 'null'),
+    ),
+    winningTotems: elevationUtils.allWithExpedition.map((elevation): number =>
+      elevation === Elevation.OASIS ?
+        0 :
+        JSON.parse(localStorage.getItem(`${elevation}_winning_totem`) || 'null')
     ),
     totemSelectionRounds: elevationUtils.all.map((elevation): number =>
       JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}_totem_selection_round`)),
@@ -57,7 +62,11 @@ export const SummitEcosystemSlice = createSlice({
     },
     setElevationsData: (state, action) => {
       const elevationsData = action.payload
-      state.elevationsInfo = elevationUtils.elevationExpedition.map((elevation) => elevationsData[elevation])
+      state.elevationsInfo = elevationUtils.elevationExpedition.map((elevation) => {
+        localStorage.setItem(`${elevation}_winning_totem`, `${elevationsData[elevation].winningTotem}`)
+        state.winningTotems[elevationUtils.toInt(elevation)] = elevationsData[elevation].winningTotem
+        return elevationsData[elevation]
+      })
     },
     setTotemsData: (state, action) => {
       const totemsData = action.payload
@@ -68,20 +77,15 @@ export const SummitEcosystemSlice = createSlice({
         localStorage.setItem(`${state.activeAccount}/${elevation}_totem_selection_round`, `${totemsData[elevation].totemSelectionRound}`)
       })
     },
-    setElevationsInfo: (state, action) => {
-      const elevationsInfo = action.payload
-      state.elevationsInfo = elevationsInfo
-    },
     updateElevationInfo: (state, action) => {
       const { elevation, elevationInfo } = action.payload
-      state.elevationsInfo[elevationUtils.elevationToElevationDataIndex(elevation)] = {
-        ...state.elevationsInfo[elevationUtils.elevationToElevationDataIndex(elevation)],
-        ...elevationInfo,
-      }
+      state.elevationsInfo[elevationUtils.elevationToElevationDataIndex(elevation)] = elevationInfo
+      state.winningTotems[elevationUtils.toInt(elevation)] = elevationInfo.winningTotem
+      localStorage.setItem(`${elevation}_winning_totem`, `${elevationInfo.winningTotem}`)
     },
     updateElevationTotem: (state, action) => {
       const { elevation, totem } = action.payload
-      localStorage.setItem(`${state.activeAccount}/${elevation}totem`, `${totem}`)
+      localStorage.setItem(`${state.activeAccount}/${elevation}_totem`, `${totem}`)
       state.totems[elevationUtils.toInt(elevation)] = totem
     },
     setFarmType: (state, action) => {
@@ -136,7 +140,6 @@ export const {
   setChainId,
   setElevationsData,
   setTotemsData,
-  setElevationsInfo,
   updateElevationInfo,
   updateElevationTotem,
   setFarmType,
@@ -174,7 +177,7 @@ export const fetchElevationHelperInfoAsync = () => async (dispatch) => {
   dispatch(setElevationHelperInfo(elevationHelperInfo))
 }
 export const updateElevationInfoAsync = (elevation: Elevation) => async (dispatch) => {
-  const elevationsInfo = await fetchElevationsData()
+  const elevationsInfo = await fetchElevationsData(elevation)
   if (elevationsInfo == null) return
   dispatch(updateElevationInfo({ elevation, elevationInfo: { ...elevationsInfo[elevation] } }))
 }
