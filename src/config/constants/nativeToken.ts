@@ -21,7 +21,6 @@ const chainWrappedNativeTokenSymbol = {
 }
 
 export const getChainWrappedNativeToken = (): PriceableToken | null => {
-  const chainId = getChainId()
   return bscTestnetTokens[TokenSymbol.wBNB]
 }
 

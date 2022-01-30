@@ -1,30 +1,20 @@
 import React, { useEffect, useCallback } from 'react'
 import { Route, useRouteMatch } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import BigNumber from 'bignumber.js'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { provider } from 'web3-core'
 import { Text, Flex } from 'uikit'
 import FlexLayout from 'components/layout/Flex'
 import Page from 'components/layout/Page'
-import { useElevationFarmsTab, useElevationLocked, useElevationsLocked, useElevationTotem, useElevationTotems, useFarms, useFarmsLoaded, useSummitPrice, useUserTokens } from 'state/hooks'
+import { useFarmsLoaded } from 'state/hooks'
 import useRefresh from 'hooks/useRefresh'
 import { fetchFarmUserDataAsync } from 'state/actions'
-import { Elevation } from 'config/constants/types'
 import FarmCard from './components/FarmCard/FarmCard'
-import useWeb3 from 'hooks/useWeb3'
-import { partition } from 'lodash'
 import styled from 'styled-components'
 import TotemHeader from './components/TotemHeader'
 import PageLoader from 'components/PageLoader'
-import { useFarmType } from 'hooks/useFarmType'
-import { FarmType } from 'state/types'
-import ElevationAndUserVolumes from './components/ElevationAndUserVolumes'
-import { getFarmType } from 'utils/farmId'
 import { fetchTokensUserDataAsync } from 'state/tokens'
 import FarmFilterRow from './components/FarmFilterRow'
-import { useFilteredPartitionedFarms } from 'hooks/useElevationFarms'
-import Divider from './components/Divider'
+import { useFilteredPartitionedFarmSymbols } from 'state/hooksNew'
 
 const NoFarmsFlex = styled(Flex)`
   padding: 12px;
@@ -38,15 +28,10 @@ const NoFarmsFlex = styled(Flex)`
 
 const ElevationFarms: React.FC = () => {
   const { path } = useRouteMatch()
-  const userTokenInfos = useUserTokens()
   const farmsLoaded = useFarmsLoaded()
-  const summitPrice = useSummitPrice()
-  const web3 = useWeb3()
-  const elevationTab = useElevationFarmsTab()
 
-  const [stakedFarms, unstakedFarms] = useFilteredPartitionedFarms()
-
-  const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
+  const { account }: { account: string | null } = useWallet()
+  const [stakedFarms, unstakedFarms] = useFilteredPartitionedFarmSymbols(account)
 
   const dispatch = useDispatch()
   const { fastRefresh } = useRefresh()
@@ -55,21 +40,26 @@ const ElevationFarms: React.FC = () => {
       dispatch(fetchFarmUserDataAsync(account))
       dispatch(fetchTokensUserDataAsync(account))
     }
-  }, [account, dispatch, fastRefresh, web3])
+  }, [account, dispatch, fastRefresh])
 
-  const farmsList = useCallback(
-    (farmsToDisplay) => farmsToDisplay.map((farm) => (
+  const stakedFarmsList = useCallback(
+    (stakedSymbols) => stakedSymbols.map((symbol) => (
       <FarmCard
-        key={farm.symbol}
-        farm={farm}
-        elevationTab={elevationTab}
-        tokenInfo={userTokenInfos[farm.symbol]}
-        summitPrice={summitPrice}
-        ethereum={ethereum}
-        account={account}
+        key={symbol}
+        symbol={symbol}
       />
     )),
-    [account, userTokenInfos, summitPrice, elevationTab, ethereum],
+    [],
+  )
+
+  const unstakedFarmsList = useCallback(
+    (stakedSymbols) => stakedSymbols.map((symbol) => (
+      <FarmCard
+        key={symbol}
+        symbol={symbol}
+      />
+    )),
+    [],
   )
 
   return (
@@ -92,14 +82,14 @@ const ElevationFarms: React.FC = () => {
                 <>
                   <Text margin='0px auto 6px 24px' fontSize='12px' bold monospace>YOUR FARMS</Text>
                   <Flex flexDirection='column' width='100%'>
-                    {farmsList(stakedFarms)}
+                    {stakedFarmsList(stakedFarms)}
                   </Flex>
+                  <Text margin='12px auto 6px 24px' fontSize='12px' bold monospace>ALL FARMS</Text>
                 </>
               }
 
-              { stakedFarms.length > 0 && <Text margin='12px auto 6px 24px' fontSize='12px' bold monospace>ALL FARMS</Text> }
               <Flex flexDirection='column' width='100%'>
-                {farmsList(unstakedFarms)}
+                {unstakedFarmsList(unstakedFarms)}
               </Flex>
             </Route>
           </FlexLayout>

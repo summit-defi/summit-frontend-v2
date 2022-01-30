@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { Farm, UserTokenData } from 'state/types'
-import { Elevation } from 'config/constants/types'
-import { provider } from 'web3-core'
 import FarmCardUserSection from './FarmCardUserSection'
 
 interface Props {
   isExpanded: boolean
-  elevation: Elevation
-  farm: Farm
-  tokenInfo: UserTokenData
-  account?: string
-  ethereum?: provider
+  symbol: string
 }
 
 const FarmCardUserSectionExpander: React.FC<Props> = (props) => {

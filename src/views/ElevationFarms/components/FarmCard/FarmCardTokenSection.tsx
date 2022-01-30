@@ -1,27 +1,29 @@
 import React from 'react'
 import { Flex } from 'uikit'
-import { Elevation } from 'config/constants/types'
 import BoundedProgressBar from '../BoundedProgressBar'
 import { timestampToDate } from 'utils'
-import { clamp } from 'lodash'
-import { useCurrentTimestampOnce } from 'state/hooks'
+import { useFarmUserTokenSectionInfo } from 'state/hooksNew'
 
 interface Props {
-  bonusResetTimestamp: number
-  taxResetTimestamp: number
-  depositFeeBP: number
-  maxTaxBP: number
-  minTaxBP: number
-  currentTaxBP: number
-  maxBonusBP: number
-  currentBonusBP: number
-  native: boolean
-  elevation: Elevation
+  symbol: string
 }
 
 const week = (3600 * 24 * 7)
+const maxBonusBP = 700
 
-const FarmCardTokenSection: React.FC<Props> = ({ bonusResetTimestamp, taxResetTimestamp, depositFeeBP, maxTaxBP, minTaxBP, currentTaxBP, maxBonusBP, currentBonusBP, native, elevation }) => {  
+const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {  
+  const {
+    depositFeeBP,
+
+    maxTaxBP,
+    minTaxBP,
+    currentTaxBP,
+    taxResetTimestamp,
+
+    currentBonusBP,
+    bonusResetTimestamp,
+  } = useFarmUserTokenSectionInfo(symbol)
+
   const taxStartDate = timestampToDate(taxResetTimestamp)
   const taxEndDate = timestampToDate(taxResetTimestamp + week)
   
@@ -35,7 +37,6 @@ const FarmCardTokenSection: React.FC<Props> = ({ bonusResetTimestamp, taxResetTi
         <BoundedProgressBar
           title='DEPOSIT|br|FEE'
           currPerc={depositFeeBP / 100}
-          elevation={elevation}
         />
       }
 
@@ -45,9 +46,8 @@ const FarmCardTokenSection: React.FC<Props> = ({ bonusResetTimestamp, taxResetTi
           minTitle={taxStartDate}
           maxTitle={taxEndDate}
           leftPerc={maxTaxBP / 100}
-          rightPerc={native ? 0 : (minTaxBP / 100)}
+          rightPerc={minTaxBP / 100}
           currPerc={currentTaxBP / 100}
-          elevation={elevation}
         />
       }
 
@@ -58,10 +58,9 @@ const FarmCardTokenSection: React.FC<Props> = ({ bonusResetTimestamp, taxResetTi
         leftPerc={0}
         rightPerc={maxBonusBP / 100}
         currPerc={currentBonusBP / 100}
-        elevation={elevation}
       />
     </Flex>
   )
 }
 
-export default FarmCardTokenSection
+export default React.memo(FarmCardTokenSection)

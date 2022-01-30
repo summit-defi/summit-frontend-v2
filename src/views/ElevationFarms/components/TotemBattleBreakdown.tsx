@@ -279,15 +279,13 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
           multiElev={multiElev}
         >
           {totems.map((totemInfo) => (
-            <>
-              <TotemBattleResult
-                key={totemInfo.totem}
-                totemInfo={totemInfo}
-                elevation={elevation}
-                color={colorGradient[totemInfo.totem]}
-                selected={totemInfo.totem === userTotem}
-              />
-            </>
+            <TotemBattleResult
+              key={totemInfo.totem}
+              totemInfo={totemInfo}
+              elevation={elevation}
+              color={colorGradient[totemInfo.totem]}
+              selected={totemInfo.totem === userTotem}
+            />
           ))}
         </TotemBattleArea>
       </TotemBreakdownWrapper>

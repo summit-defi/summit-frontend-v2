@@ -3,6 +3,7 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import { darken } from 'polished'
 import { breakTextBr, Flex, Text, TriangleGrowIcon } from 'uikit'
+import { useSelectedElevation } from 'state/hooks'
 
 const EndMarkerHeight = 55
 
@@ -102,7 +103,6 @@ interface Props {
     leftPerc?: number
     rightPerc?: number
     currPerc?: number
-    elevation?: Elevation
 }
 
 interface EndMarkerProps {
@@ -131,7 +131,9 @@ const Marker: React.FC<MarkerProps> = ({perc, progress, elevation}) => {
     </MarkerWrapper>
 }
 
-const BoundedProgressBar: React.FC<Props> = ({title, minTitle, maxTitle, leftPerc, rightPerc, currPerc, elevation}) => {
+const BoundedProgressBar: React.FC<Props> = ({title, minTitle, maxTitle, leftPerc, rightPerc, currPerc}) => {
+    const elevation = useSelectedElevation()
+
     const progress = (currPerc - leftPerc) / (rightPerc - leftPerc)
     const single = (leftPerc == null && rightPerc == null)
     return (

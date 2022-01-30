@@ -31,3 +31,12 @@ export const stateToWinningDeity = (state: State) => state.summitEcosystem.winni
 // ECOSYSTEM
 export const stateToDeityDivider = (state: State) => state.summitEcosystem.expeditionDivider
 export const stateToTotemSelectionPending = (state: State) => state.summitEcosystem.pendingTotemSelection
+export const stateToFarmTypeFilter = (state: State) => state.summitEcosystem.farmType
+export const stateToFarmLiveFilter = (state: State) => state.summitEcosystem.liveFarms
+
+// FARMS
+export const stateToFarmsElevationData = (state: State) => state.farms.elevationData
+export const stateToFarms = (state: State) => state.farms.data
+export const stateToFarmsLoaded = (state: State) => state.farms.farmsLoaded
+export const stateToFarmsUserDataLoaded = (state: State) => state.farms.userDataLoaded
+export const stateToTokenInfos = (state: State) => state.tokens.data

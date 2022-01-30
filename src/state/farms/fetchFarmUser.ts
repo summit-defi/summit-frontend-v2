@@ -1,15 +1,12 @@
 import BigNumber from 'bignumber.js'
-import { getFarmConfigs, getFarmTokens } from 'config/constants'
-import { Elevation, elevationUtils, FarmConfig, ForceElevationRetired } from 'config/constants/types'
+import { BN_ZERO, Elevation, elevationUtils, FarmConfig } from 'config/constants/types'
 import {
-  getCartographerAddress,
   retryableMulticall,
   abi,
   groupByAndMap,
-  getCartographerOasisAddress,
   getSubCartographerAddress,
 } from 'utils'
-import { getFarmAllElevationsIterable, getFarmOnlyElevationsIterable } from 'utils/farmId'
+import { getFarmAllElevationsIterable, getFarmOnlyElevationsIterable } from 'utils/farms'
 
 export const fetchFarmUserData = async (account: string, farmConfigs: FarmConfig[]) => {
   const farmElevsIterable = getFarmAllElevationsIterable(farmConfigs)
@@ -70,7 +67,7 @@ export const fetchElevClaimableRewards = async (account: string) => {
   return groupByAndMap(
     elevationUtils.all,
     (elevation) => elevation,
-    (_, index) => res == null ? new BigNumber(0) : new BigNumber(res[index][0]._hex)
+    (_, index) => res == null ? BN_ZERO : new BigNumber(res[index][0]._hex)
   )
 }
 
@@ -85,8 +82,20 @@ export const fetchElevPotentialWinnings = async (account: string) => {
 
   const potentialWinnings = {
     [Elevation.OASIS]: {
-      yieldContributed: new BigNumber(0),
-      potentialWinnings: new BigNumber(0)
+      yieldContributed: BN_ZERO,
+      potentialWinnings: BN_ZERO
+    },
+    [Elevation.PLAINS]: {
+      yieldContributed: BN_ZERO,
+      potentialWinnings: BN_ZERO
+    },
+    [Elevation.MESA]: {
+      yieldContributed: BN_ZERO,
+      potentialWinnings: BN_ZERO
+    },
+    [Elevation.SUMMIT]: {
+      yieldContributed: BN_ZERO,
+      potentialWinnings: BN_ZERO
     }
   }
 
@@ -115,22 +124,22 @@ export const fetchElevationsRoundRewards = async (farmConfigs: FarmConfig[]) => 
 
   const elevationTotemRoundRewards = {
     [Elevation.OASIS]: {
-      roundRewards: new BigNumber(0),
+      roundRewards: BN_ZERO,
       totemRoundRewards: [],
       totemMultipliers: [1],
     },
     [Elevation.PLAINS]: {
-      roundRewards: new BigNumber(0),
+      roundRewards: BN_ZERO,
       totemRoundRewards: [],
       totemMultipliers: [2, 2],
     },
     [Elevation.MESA]: {
-      roundRewards: new BigNumber(0),
+      roundRewards: BN_ZERO,
       totemRoundRewards: [],
       totemMultipliers: [5, 5, 5, 5, 5],
     },
     [Elevation.SUMMIT]: {
-      roundRewards: new BigNumber(0),
+      roundRewards: BN_ZERO,
       totemRoundRewards: [],
       totemMultipliers: [10, 10, 10, 10, 10, 10, 10, 10, 10, 10],
     },
@@ -146,7 +155,7 @@ export const fetchElevationsRoundRewards = async (farmConfigs: FarmConfig[]) => 
     elevationTotemRoundRewards[elevation] = {
       roundRewards: (elevationTotemRoundRewards[elevation].roundRewards).plus(roundRewards),
       totemRoundRewards: totemsRoundRewards.map((totemRewards, totemIndex) =>
-        (elevationTotemRoundRewards[elevation].totemRoundRewards[totemIndex] || new BigNumber(0))
+        (elevationTotemRoundRewards[elevation].totemRoundRewards[totemIndex] || BN_ZERO)
           .plus(totemRewards),
       ),
     }
@@ -158,10 +167,6 @@ export const fetchElevationsRoundRewards = async (farmConfigs: FarmConfig[]) => 
         0 : 
         elevationTotemRoundRewards[elevation].roundRewards.dividedBy(totemRew).toNumber()
     })
-  })
-
-  console.log({
-    elevationTotemRoundRewards
   })
 
   return elevationTotemRoundRewards

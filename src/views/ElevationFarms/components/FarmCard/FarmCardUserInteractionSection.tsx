@@ -9,8 +9,10 @@ import FarmCardUserApproveDeposit from './FarmCardUserApproveDeposit'
 import FarmCardUserWithdraw from './FarmCardUserWithdraw'
 import FarmCardUserElevate from './FarmCardUserElevate'
 import FarmCardMobileDepositWithdrawSelector from './FarmCardMobileDepositWithdrawSelector'
-import { useIsElevationLockedUntilRollover, useMediaQuery } from 'state/hooks'
-import { getFarmToken } from 'utils/farmId'
+import { useIsElevationLockedUntilRollover, useMediaQuery, useSelectedElevation } from 'state/hooks'
+import { getFarmToken } from 'utils/farms'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useFarmAndUserTokenInteractionSectionInfo } from 'state/hooksNew'
 
 const MobileVerticalFlex = styled(Flex)`
   flex-direction: column;
@@ -32,40 +34,38 @@ const MobileVerticalFlexText = styled(MobileVerticalFlex)`
 `
 
 interface Props {
-  elevation: Elevation
-  farm: Farm
-  tokenInfo: UserTokenData
-  account?: string
-  ethereum?: provider
+  symbol: string
 }
-const FarmCardUserInteractionSection: React.FC<Props> = (props) => {
-  const { elevation, farm, tokenInfo, account, ethereum } = props
+const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
+  const elevation = useSelectedElevation()
+  const { account, ethereum }: { account: string | null, ethereum: provider } = useWallet()
+
   const {
+    // FARM INFO
     farmToken,
     depositFeeBP,
     decimals,
     taxBP,
-    symbol,
     passthroughStrategy,
     getUrl,
-  } = farm
 
-  const {
-    stakedBalance,
-    claimable
-  } = farm.elevations[elevation] || {}
+    // FARM ELEVATION INFO
+    elevStaked,
+    elevClaimable,
+
+    // TOKEN INFO
+    farmAllowance,
+    walletBalance,
+  } = useFarmAndUserTokenInteractionSectionInfo(symbol, elevation)
 
   const isMobile = useMediaQuery('(max-width: 986px)')
   const elevationLocked = useIsElevationLockedUntilRollover(elevation)
-  const farmTokenAddress = getFarmToken(farm)
   const [mobileDepositWithdraw, setMobileDepositWithdraw] = useState(isMobile ? 0 : -1)
-
-  const { farmAllowance, walletBalance } = tokenInfo
 
   const isApproved = account && farmAllowance && farmAllowance.isGreaterThan(0)
   const lpContract = useMemo(() => {
-    return getContract(ethereum as provider, farmTokenAddress)
-  }, [ethereum, farmTokenAddress])
+    return getContract(ethereum as provider, farmToken)
+  }, [ethereum, farmToken])
 
   // PENDING STATES
   const [claimPending, setClaimPending] = useState<boolean>(false)
@@ -108,7 +108,7 @@ const FarmCardUserInteractionSection: React.FC<Props> = (props) => {
           isApproved={isApproved}
           disabled={disabled}
           lpContract={lpContract}
-          claimable={claimable}
+          claimable={elevClaimable}
           setPending={setApproveDepositPending}
         />
       ),
@@ -122,7 +122,7 @@ const FarmCardUserInteractionSection: React.FC<Props> = (props) => {
       symbol,
       walletBalance,
       depositFeeBP,
-      claimable,
+      elevClaimable,
       isApproved,
       disabled,
       lpContract,
@@ -139,8 +139,8 @@ const FarmCardUserInteractionSection: React.FC<Props> = (props) => {
           elevation={elevation}
           symbol={symbol}
           elevationLocked={elevationLocked}
-          stakedBalance={stakedBalance}
-          claimable={claimable}
+          stakedBalance={elevStaked}
+          claimable={elevClaimable}
           decimals={decimals}
           withdrawalFee={taxBP}
           disabled={disabled}
@@ -155,8 +155,8 @@ const FarmCardUserInteractionSection: React.FC<Props> = (props) => {
       mobileDepositWithdraw,
       elevationLocked,
       symbol,
-      stakedBalance,
-      claimable,
+      elevStaked,
+      elevClaimable,
       taxBP,
       disabled,
       setWithdrawPending,
@@ -167,9 +167,15 @@ const FarmCardUserInteractionSection: React.FC<Props> = (props) => {
   const elevateSection = useCallback(
     () =>
       (!isMobile || mobileDepositWithdraw === 2) && (
-        <FarmCardUserElevate farm={farm} elevationLocked={elevationLocked} disabled={disabled} />
+        <FarmCardUserElevate
+          symbol={symbol}
+          farmToken={farmToken}
+          decimals={decimals}
+          elevationLocked={elevationLocked}
+          disabled={disabled}
+        />
       ),
-    [isMobile, mobileDepositWithdraw, elevationLocked, farm, disabled],
+    [isMobile, mobileDepositWithdraw, elevationLocked, symbol, farmToken, decimals, disabled],
   )
 
   return (
@@ -196,4 +202,4 @@ const FarmCardUserInteractionSection: React.FC<Props> = (props) => {
   )
 }
 
-export default FarmCardUserInteractionSection
+export default React.memo(FarmCardUserInteractionSection)

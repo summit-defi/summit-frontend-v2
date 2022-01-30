@@ -1,11 +1,10 @@
-import React, { useCallback, useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import { Flex } from 'uikit'
-import { Farm, UserTokenData } from 'state/types'
 import { Elevation } from 'config/constants/types'
-import { provider } from 'web3-core'
 import FarmCardTokenSection from './FarmCardTokenSection'
 import FarmCardUserInteractionSection from './FarmCardUserInteractionSection'
+import { useSelectedElevation } from 'state/hooks'
 
 const ExpandableSection = styled(Flex)<{ isExpanded: boolean, elevation?: Elevation }>`
   flex-direction: column;
@@ -30,78 +29,25 @@ const Divider = styled.div`
   margin-bottom: 12px;
   width: 100%;
 `
-
-const MobileVerticalFlex = styled(Flex)`
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  gap: 12px;
-
-  ${({ theme }) => theme.mediaQueries.nav} {
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
-`
-
-const MobileVerticalFlexText = styled(MobileVerticalFlex)`
-  ${({ theme }) => theme.mediaQueries.nav} {
-    justify-content: space-around;
-  }
-`
-
 interface Props {
   isExpanded: boolean
-  elevation: Elevation
-  farm: Farm
-  tokenInfo: UserTokenData
-  account?: string
-  ethereum?: provider
+  symbol: string
 }
-const FarmCardUserSection: React.FC<Props> = (props) => {
-  const { isExpanded: expanded, elevation, farm, tokenInfo, account, ethereum } = props
-  const {
-    depositFeeBP,
-    taxBP,
-    native,
-  } = farm
 
-  const [isExpanded, setIsExpanded] = useState(false)
-
-  useEffect(() => {
-    setIsExpanded(expanded)
-  }, [expanded, setIsExpanded])
-
-  // FARM TOKEN SECTION
-  const tokenSection = useCallback(
-    () => <FarmCardTokenSection
-      bonusResetTimestamp={tokenInfo.bonusResetTimestamp}
-      taxResetTimestamp={tokenInfo.taxResetTimestamp}
-      depositFeeBP={depositFeeBP}
-      maxTaxBP={taxBP}
-      minTaxBP={100}
-      currentTaxBP={tokenInfo.taxBP}
-      maxBonusBP={700}
-      currentBonusBP={tokenInfo.bonusBP}
-      native={native}
-      elevation={elevation}
-    />,
-    [tokenInfo, depositFeeBP, taxBP, native, elevation]
-  )
+const FarmCardUserSection: React.FC<Props> = ({ isExpanded, symbol }) => {
+  const elevation = useSelectedElevation()
 
   return (
     <ExpandableSection isExpanded={isExpanded} elevation={elevation}>
       <Divider />
-      {tokenSection()}
+      <FarmCardTokenSection
+        symbol={symbol}
+      />
       { elevation != null && 
         <>
           <Divider/>
           <FarmCardUserInteractionSection
-            elevation={elevation}
-            farm={farm}
-            tokenInfo={tokenInfo}
-            account={account}
-            ethereum={ethereum}
+            symbol={symbol}
           />
           <BottomPadding/>
         </>
@@ -110,4 +56,4 @@ const FarmCardUserSection: React.FC<Props> = (props) => {
   )
 }
 
-export default FarmCardUserSection
+export default React.memo(FarmCardUserSection)

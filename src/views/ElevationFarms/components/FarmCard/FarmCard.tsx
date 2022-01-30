@@ -1,18 +1,15 @@
 import React, { useMemo } from 'react'
 import BigNumber from 'bignumber.js'
 import styled, { css } from 'styled-components'
-import { Flex, Text, Skeleton, Tag, TokenSymbolImage, HighlightedText } from 'uikit'
-import { Farm, UserTokenData } from 'state/types'
-import { provider } from 'web3-core'
-import { BN_ZERO, Elevation, ElevationFarmTab, elevationFarmTabToUrl, elevationTabToElevation, elevationUtils } from 'config/constants/types'
-import { useElevationTotem, usePricesPerToken, useSingleFarmSelected } from 'state/hooks'
+import { Flex, Text } from 'uikit'
+import { BN_ZERO, Elevation, elevationFarmTabToUrl, elevationUtils } from 'config/constants/types'
+import { useElevationFarmsTab, useSingleFarmSelected } from 'state/hooks'
 import { NavLink } from 'react-router-dom'
 import FarmCardUserSectionExpander from './FarmCardUserSectionExpander'
-import CardValue from 'views/Home/components/CardValue'
-import { capitalizeFirstLetter, getBalanceNumber, nFormatter } from 'utils'
-import Totem from '../Totem'
-import ElevationContributionBreakdown from '../ElevationContributionBreakdown'
-import { getFarmTotalStakedBalance } from 'utils/farmId'
+import FarmIconAndAllocation from './FarmIconAndAllocation'
+import FarmStakingContribution, { ElevationsStaked } from './FarmStakingContribution'
+import { makeSelectFarmBySymbol, useSelector } from 'state/hooksNew'
+import { FarmAPYBreakdown, FarmTotalValue } from './FarmCardInfoItems'
 
 const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
   align-self: baseline;
@@ -75,85 +72,23 @@ const FarmNumericalInfoFlex = styled(Flex)`
   width: 100%;
 `
 
-const SymbolIconFlex = styled(Flex)`
-  flex-direction: row;
-  gap: 8px;
-  width: 180px;
-`
 
-const FlexMobileLineBreak = styled.div`
-  display: none;
-  ${({ theme }) => theme.mediaQueries.invNav} {
-    display: flex;
-    width: 100%;
-    height: 12px;
-  }
-`
-
-const FlexInfoItem = styled(Flex)`
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  flex: 1;
-  max-width: 78px;
-`
-
-const StakingInfoItem = styled(Flex)`
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  flex: 1;
-  order: 10;
-
-  ${({ theme }) => theme.mediaQueries.nav} {
-    order: unset;
-  }
-`
-
-const InfoItemValue = styled(Flex)`
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-`
-
-const YieldContributedWrapper = styled(Flex)`
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  height: 50px;
-  gap: 8px;
-`
-
-const MultiplierTag = styled(Tag)<{ elevation: Elevation }>`
-  font-family: 'Courier Prime', monospace;
-  background-color: ${({ theme, elevation }) => theme.colors[elevation]};
-  border-color: ${({ theme, elevation }) => theme.colors[elevation]};
-`
 
 interface FarmCardProps {
-  farm: Farm
-  tokenInfo: UserTokenData
-  elevationTab: ElevationFarmTab
-  summitPrice?: BigNumber
-  ethereum?: provider
-  account?: string
+  symbol: string
 }
 
-const FarmCard: React.FC<FarmCardProps> = ({
-  farm,
-  tokenInfo,
-  elevationTab,
-  ethereum,
-  summitPrice,
-  account,
-}) => {
+const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
+  const farmBySymbolSelector = useMemo(makeSelectFarmBySymbol, [])
+  const farm = useSelector((state) => farmBySymbolSelector(state, symbol))
+  const pricePerToken = useSelector((state) => state.prices.pricesPerToken[symbol] || new BigNumber(1))
+  const elevationTab = useElevationFarmsTab()
+
   const {
-    farmToken,
-    symbol,
-    summitPerYear,
     allocation,
     decimals,
+    summitPerYear,
+    elevations,
   } = farm
 
   const {
@@ -162,70 +97,32 @@ const FarmCard: React.FC<FarmCardProps> = ({
     supply: lpSupply,
   } = farm.elevations[elevationTab] || {}
 
+
   const farmElevationsStaked = useMemo(
-    () => elevationUtils.all.reduce((acc, elev) => ({
+    (): ElevationsStaked => elevationUtils.all.reduce((acc, elev) => ({
       ...acc,
-      [elev]: farm.elevations[elev]?.stakedBalance || BN_ZERO,
-    }), {}),
-    [farm]
+      [elev]: elevations[elev]?.stakedBalance || BN_ZERO,
+    }), {
+      [Elevation.OASIS]: BN_ZERO,
+      [Elevation.PLAINS]: BN_ZERO,
+      [Elevation.MESA]: BN_ZERO,
+      [Elevation.SUMMIT]: BN_ZERO,
+    }),
+    [elevations]
   )
   
-  const elevation = elevationTabToElevation[elevationTab]
-
   const singleFarmSymbol = useSingleFarmSelected()
-  const pricesPerToken = usePricesPerToken()
   const expanded = singleFarmSymbol === symbol
-
-  const userStakedBalance: BigNumber = useMemo(
-    () => {
-      if (pricesPerToken == null) return new BigNumber(0)
-      const totalStaked: BigNumber = elevation == null ?
-        getFarmTotalStakedBalance(farmElevationsStaked) :
-        farmElevationsStaked[elevation]
-      return totalStaked.div(new BigNumber(10).pow(decimals)).times(pricesPerToken[symbol])
-    },
-    [elevation, farmElevationsStaked, symbol, pricesPerToken, decimals]
-  )
 
   const totalValue: BigNumber = useMemo(
     () => {
-      if (lpSupply == null || pricesPerToken == null) return new BigNumber(0)
-      return lpSupply.div(new BigNumber(10).pow(decimals)).times(pricesPerToken[symbol])
+      if (lpSupply == null) return new BigNumber(0)
+      return lpSupply.div(new BigNumber(10).pow(decimals)).times(pricePerToken)
     },
-    [lpSupply, symbol, pricesPerToken, decimals]
+    [lpSupply, pricePerToken, decimals]
   )
 
-  const apr = summitPrice
-    .times(summitPerYear)
-    .div(totalValue != null && !totalValue.isNaN() && totalValue.comparedTo(0) > 0 ? totalValue : new BigNumber(1))
-    .toNumber()
-
-  const compoundEventCount = 365
-  const apy = useMemo(() => ((1 + (apr / compoundEventCount)) ** compoundEventCount) - 1, [apr, compoundEventCount])
-
-  const totalValueFormatted = totalValue
-    ? `$${Number(totalValue).toLocaleString(undefined, { maximumFractionDigits: 0 })}`
-    : '-'
-
-  const farmAvgAPY = apy * 100
-  const dailyAPR = (apr && apr / 3.65)
-
   const targetUrl = `/${(elevationFarmTabToUrl[elevationTab] || 'elevations').toLowerCase()}${expanded ? '' : `/${symbol.toLowerCase()}`}`
-
-  const yearlyAPY = !apy ? null : apy > 1000000000 ? '🔥🔥' : apy > 1000000 ? '🔥' : `${nFormatter(farmAvgAPY, 2)}%`
-  const dailyAPY = !dailyAPR ? null : dailyAPR > 1000000000 ? '🔥🔥' : dailyAPR > 1000000 ? '🔥' : `${nFormatter(dailyAPR, 2)}%`
-
-  const tokenTotalStakedBalance = elevationUtils.all.reduce((acc, elev) => acc.plus(farm.elevations[elev]?.stakedBalance || BN_ZERO), BN_ZERO)
-
-
-  const stakingContributions = tokenTotalStakedBalance.isEqualTo(0) ? [] : elevationUtils.all
-    .map((elev, index) => ({
-      elevation: elev,
-      key: index,
-      perc: (farm.elevations[elev]?.stakedBalance || BN_ZERO).times(100).dividedBy(tokenTotalStakedBalance).toNumber()
-    }))
-    .filter((contrib) => contrib.perc > 0)
-
 
 
   return (
@@ -234,66 +131,19 @@ const FarmCard: React.FC<FarmCardProps> = ({
         { farmComment != null && <Text monospace bold italic fontSize='13px' mb='14px' textAlign='center'>* {farmComment}</Text> }
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }
         <FarmNumericalInfoFlex>
-          <SymbolIconFlex justifyContent="flex-start" alignItems="center">
-            <TokenSymbolImage symbol={symbol} width={52} height={52} />
-            <Flex flexDirection="column" alignItems="flex-start">
-              <Text italic monospace bold fontSize="14px" lineHeight="14px" mb="4px" textAlign="left">
-                {symbol}
-              </Text>
-              <MultiplierTag variant="secondary" elevation={elevation}>
-                {(allocation / 100).toFixed(1)}X
-              </MultiplierTag>
-            </Flex>
-          </SymbolIconFlex>
-
-          <StakingInfoItem style={{ flex: 3 }}>
-            <Flex alignItems='center' height='18px'>
-              <Text small mr='4px'>{elevation != null ? `${capitalizeFirstLetter(elevation)} ` : ''}Deposited:</Text>
-              <Flex mb='2px'>
-                <CardValue value={userStakedBalance.toNumber()} prefix='$' decimals={2} summitPalette={Elevation.OASIS} fontSize="18" />
-              </Flex>
-            </Flex>
-            <InfoItemValue width='100%'>
-              <ElevationContributionBreakdown
-                contributions={stakingContributions}
-                focused={elevation}
-                center
-              />
-            </InfoItemValue>
-          </StakingInfoItem>
-
-          <FlexInfoItem>
-            <Text small>APY</Text>
-            <InfoItemValue>
-              <Text bold monospace fontSize='12px' style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
-                {yearlyAPY || <Skeleton height={24} width={80} />}
-              </Text>
-              <Text bold monospace fontSize='11px' style={{ display: 'flex', alignItems: 'center', lineHeight: '16px' }}>
-                {dailyAPY || <Skeleton height={24} width={80} />}
-              </Text>
-            </InfoItemValue>
-          </FlexInfoItem>
-          <FlexInfoItem>
-            <Text small>TVL</Text>
-            <InfoItemValue>
-              <Text bold monospace style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
-                {totalValueFormatted}
-              </Text>
-            </InfoItemValue>
-          </FlexInfoItem>
+          <FarmIconAndAllocation symbol={symbol} allocation={allocation}/>
+          <FarmStakingContribution elevationsStaked={farmElevationsStaked} pricePerToken={pricePerToken} decimals={decimals}/>
+          <FarmAPYBreakdown summitPerYear={summitPerYear} totalValue={totalValue}/>
+          <FarmTotalValue totalValue={totalValue}/>
         </FarmNumericalInfoFlex>
       </PressableFlex>
 
       <FarmCardUserSectionExpander
         isExpanded={expanded}
-        ethereum={ethereum}
-        elevation={elevation}
-        farm={farm}
-        tokenInfo={tokenInfo}
-        account={account}
+        symbol={symbol}
       />
     </FCard>
   )
 }
 
-export default FarmCard
+export default React.memo(FarmCard)

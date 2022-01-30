@@ -1,10 +1,10 @@
 import React from 'react'
 import { Elevation, ElevationFarmTab, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import { Flex, Text } from 'uikit'
-import { useElevationUserRoundInfo, useElevationTotem, useElevationFarmsTab, useDashboardTotemBattleInfo } from 'state/hooks'
+import { useElevationUserRoundInfo, useElevationTotem, useElevationFarmsTab } from 'state/hooks'
 import TotemBattleBreakdown from './TotemBattleBreakdown'
 import styled from 'styled-components'
-import { useElevationWinningTotem } from 'state/hooksNew'
+import { useDashboardTotemBattleInfo, useElevationWinningTotem } from 'state/hooksNew'
 
 const GappedFlex = styled(Flex)`
   gap: 18px;

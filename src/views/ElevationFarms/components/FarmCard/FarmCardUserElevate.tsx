@@ -12,7 +12,9 @@ import { getSummitLpSymbol } from 'config/constants'
 import { useHistory } from 'react-router'
 
 interface Props {
-  farm: Farm
+  symbol: string
+  farmToken: string
+  decimals: number
   elevationLocked: boolean
   disabled: boolean
 }
@@ -28,8 +30,7 @@ const CenteredSummitButton = styled(SummitButton)`
   margin: 34px auto 24px auto;
 `
 
-const FarmCardUserElevate: React.FC<Props> = ({ farm, elevationLocked, disabled }) => {
-  const { symbol, farmToken, decimals } = farm
+const FarmCardUserElevate: React.FC<Props> = ({ symbol, farmToken, decimals, elevationLocked, disabled }) => {
   const elevation = Elevation.OASIS
   const summitEnabled = useSummitEnabled()
   const summitLpSymbol = getSummitLpSymbol()
@@ -78,4 +79,4 @@ const FarmCardUserElevate: React.FC<Props> = ({ farm, elevationLocked, disabled 
   )
 }
 
-export default FarmCardUserElevate
+export default React.memo(FarmCardUserElevate)

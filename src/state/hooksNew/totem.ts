@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { useSelector } from "./utils";
-import { stateToUserTotems, stateToExpeditionDeity, stateToWinningTotems } from './base'
+import { stateToUserTotems, stateToExpeditionDeity, stateToWinningTotems, stateToFarmsElevationData } from './base'
 import { Elevation, elevationUtils } from "config/constants";
 
 export const useExpeditionUserDeity = () => useSelector(stateToExpeditionDeity)
@@ -42,15 +42,25 @@ export const useElevationUserTotemAndCrowned = (elevation: Elevation) => useSele
 export const selectUserTotemsAndCrowns = createSelector(
     stateToUserTotems,
     stateToWinningTotems,
-    (userTotems, winningTotems) => {
-        console.log({
-            userTotems,
-            winningTotems,
-        })
-        return userTotems.map((userTotem, elevIndex) => ({
-            userTotem,
-            crowned: userTotem === winningTotems[elevIndex]
-        }))
-    }
+    (userTotems, winningTotems) => userTotems.map((userTotem, elevIndex) => ({
+        userTotem,
+        crowned: userTotem != null && userTotem === winningTotems[elevIndex]
+    }))
 )
 export const useUserTotemsAndCrowns = () => useSelector(selectUserTotemsAndCrowns)
+
+
+export const selectDashboardTotemBattleInfo = createSelector(
+    selectUserTotemsAndCrowns,
+    stateToFarmsElevationData,
+    (userTotemsAndCrowns, elevationData) => elevationUtils.elevationOnly
+        .map((elev) => {
+            const totemAndCrowned = userTotemsAndCrowns[elevationUtils.toInt(elev)]
+            return [{
+                totem: totemAndCrowned.userTotem,
+                crowned: totemAndCrowned.crowned,
+                mult: elevationData[elevationUtils.toInt(elev)]?.totemMultipliers[totemAndCrowned.userTotem] || 0
+            }]
+        })
+)
+export const useDashboardTotemBattleInfo = () => useSelector(selectDashboardTotemBattleInfo)

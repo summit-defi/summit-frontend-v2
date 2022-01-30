@@ -324,16 +324,6 @@ export const useSummitPrice = (): BigNumber => {
   )
 }
 
-export const useRolloverRewards = () => {
-  const rolloverRewardInNativeToken = useSelector((state: State) => state.summitEcosystem.rolloverRewardInNativeToken)
-  const summitPrice = useSummitPrice()
-  const nativePrice = useNativeTokenPrice()
-
-  return {
-    rolloverRewardInNativeToken,
-    rolloverRewardInSummit: rolloverRewardInNativeToken.div(summitPrice.dividedBy(nativePrice)),
-  }
-}
 export const useTotalValue = (elevation?: Elevation): BigNumber => {
   const farms = useFarms()
   const pricesPerToken = usePricesPerToken()

@@ -4,7 +4,6 @@ import { farmConfigs } from './farmConfigs'
 import { NamedChainId, UserTokenData } from 'state/types'
 import { bscTestnetTokens } from './tokens'
 import { TokenSymbol } from 'config/constants/tokenSymbols'
-import { getFarmToken } from 'utils/farmId'
 
 
 

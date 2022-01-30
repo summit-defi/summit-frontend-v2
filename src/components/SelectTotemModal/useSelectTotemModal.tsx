@@ -2,7 +2,7 @@ import React from 'react'
 import { useModal } from 'uikit'
 import { useElevationTotem } from 'state/hooks'
 import SelectTotemModal from './SelectTotemModal'
-import { Elevation, elevationUtils } from 'config/constants/types'
+import { Elevation } from 'config/constants/types'
 
 interface ReturnType {
   onPresentSelectTotemModal: () => void

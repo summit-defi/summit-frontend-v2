@@ -5,7 +5,7 @@ import { fetchFarmUserDataAsync } from 'state/actions'
 import { claimPool, claimElevation, capitalizeFirstLetter } from 'utils'
 import { useCartographer } from './useContract'
 import useToast from './useToast'
-import { Elevation, elevationUtils } from 'config/constants/types'
+import { Elevation } from 'config/constants/types'
 import { fetchTokensUserDataAsync } from 'state/tokens'
 
 

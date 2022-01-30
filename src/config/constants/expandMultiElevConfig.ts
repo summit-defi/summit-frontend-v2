@@ -1,5 +1,5 @@
 import { UserTokenData } from 'state/types'
-import { getFarmToken } from 'utils/farmId'
+import { getFarmToken } from 'utils/farms'
 import addresses from './contracts'
 import { MultiElevFarmConfig, FarmConfig } from './types'
 
@@ -10,7 +10,7 @@ const replaceSummitAddresses = (tokenAddress: string, summitAddress: string, sum
 }
 
 export const expandMultiElevConfig = (chainId: string, config: MultiElevFarmConfig): FarmConfig => {
-  const { getUrl, tokenAddress, lpAddress, allocation, ...farmConfig } = config
+  const { getUrl, tokenAddress, lpAddress, ...farmConfig } = config
 
   const summitAddress = addresses.summitToken[chainId]
   const summitLpAddress = addresses.summitLpToken[chainId]

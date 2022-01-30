@@ -3,7 +3,7 @@ import { useMemo } from "react"
 import { useFarms } from "state/hooks"
 import { useFarmType } from "./useFarmType"
 import { partition } from 'lodash'
-import { getFarmInteracting, getFarmType } from "utils/farmId"
+import { getFarmInteracting, getFarmType } from "utils/farms"
 import { FarmType } from "state/types"
 
 export const useFilteredPartitionedFarms = () => {
