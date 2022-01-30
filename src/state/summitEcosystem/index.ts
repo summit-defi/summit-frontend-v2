@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import BigNumber from 'bignumber.js'
 import { Elevation, elevationUtils } from 'config/constants/types'
 import { FarmType, SummitEcosystemState } from '../types'
-import { fetchElevationsData, fetchElevationHelperPublicInfo } from './fetchElevationInfo'
+import { fetchElevationsData, fetchDeityDivider } from './fetchElevationInfo'
 import { fetchRolloverReward } from './fetchRolloverRewardInNativeToken'
 import { fetchSummitEnabled } from './fetchSummitEnabled'
 import { fetchUsersTotems } from './fetchUsersTotems'
@@ -14,7 +14,9 @@ const getLocalStorageVariables = () => {
     activeAccount,
     summitEnabled: JSON.parse(localStorage.getItem('SummitEnabled')) || false,
     totems: elevationUtils.all.map((elevation): number =>
-      JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}_totem`) || 'null'),
+      elevation === Elevation.OASIS ?
+        0 :
+        JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}_totem`) || 'null'),
     ),
     winningTotems: elevationUtils.allWithExpedition.map((elevation): number =>
       elevation === Elevation.OASIS ?
@@ -22,7 +24,9 @@ const getLocalStorageVariables = () => {
         JSON.parse(localStorage.getItem(`${elevation}_winning_totem`) || 'null')
     ),
     totemSelectionRounds: elevationUtils.all.map((elevation): number =>
-      JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}_totem_selection_round`)),
+      elevation === Elevation.OASIS ?
+        0 :
+        JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}_totem_selection_round`)),
     ),
     chainId: JSON.parse(localStorage.getItem('ChainId')) || '97',
     farmType: (localStorage.getItem('FarmType') || FarmType.All) as FarmType,
@@ -32,7 +36,6 @@ const getLocalStorageVariables = () => {
 const initialState: SummitEcosystemState = {
   ...getLocalStorageVariables(),
   elevationsInfo: [],
-  keywordRound: 0,
   expeditionDivider: 50,
   liveFarms: true,
   pendingTxs: [],
@@ -55,9 +58,8 @@ export const SummitEcosystemSlice = createSlice({
       state.summitEnabled = action.payload
       localStorage.setItem('SummitEnabled', JSON.stringify(action.payload))
     },
-    setElevationHelperInfo: (state, action) => {
-      const { keywordRound, expeditionDivider } = action.payload
-      state.keywordRound = keywordRound
+    setDeityDivider: (state, action) => {
+      const expeditionDivider = action.payload
       state.expeditionDivider = expeditionDivider
     },
     setElevationsData: (state, action) => {
@@ -136,7 +138,7 @@ export const SummitEcosystemSlice = createSlice({
 export const {
   setActiveAccount,
   setSummitEnabled,
-  setElevationHelperInfo,
+  setDeityDivider,
   setChainId,
   setElevationsData,
   setTotemsData,
@@ -172,9 +174,9 @@ export const fetchUserTotemsAsync = (account) => async (dispatch) => {
   dispatch(setTotemsData(totems))
 }
 export const fetchElevationHelperInfoAsync = () => async (dispatch) => {
-  const elevationHelperInfo = await fetchElevationHelperPublicInfo()
-  if (elevationHelperInfo == null) return
-  dispatch(setElevationHelperInfo(elevationHelperInfo))
+  const deityDivider = await fetchDeityDivider()
+  if (deityDivider == null) return
+  dispatch(setDeityDivider(deityDivider))
 }
 export const updateElevationInfoAsync = (elevation: Elevation) => async (dispatch) => {
   const elevationsInfo = await fetchElevationsData(elevation)

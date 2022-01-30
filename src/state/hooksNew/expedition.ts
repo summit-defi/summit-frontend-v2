@@ -1,6 +1,6 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import { stateToExpeditionUserDataLoaded, stateToExpeditionLoaded, stateToExpeditionSummitRoundEmission, stateToExpeditionUsdcRoundEmission, stateToExpeditionUserData, stateToEnteredExpedition, stateToExpeditionDeitiedSupply, stateToExpeditionDeitySupplies, stateToExpeditionSafeSupply, stateToExpeditionInfo, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings } from './base'
+import { stateToExpeditionUserDataLoaded, stateToExpeditionLoaded, stateToExpeditionSummitRoundEmission, stateToExpeditionUsdcRoundEmission, stateToExpeditionUserData, stateToEnteredExpedition, stateToExpeditionDeitiedSupply, stateToExpeditionDeitySupplies, stateToExpeditionSafeSupply, stateToExpeditionInfo, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToExpeditionFaith, stateToExpeditionDeity, stateToDeityDivider, stateToWinningDeity, stateToTotemSelectionPending } from './base'
 
 const selectExpeditionLoaded = createSelector(
     stateToExpeditionLoaded,
@@ -71,3 +71,21 @@ const selectExpeditionWinnings = createSelector(
     })
 )
 export const useExpeditionWinnings = () => useSelector(selectExpeditionWinnings)
+
+const selectExpeditionTotemHeaderInfo = createSelector(
+    stateToExpeditionDeity,
+    stateToExpeditionFaith,
+    stateToExpeditionDeitySupplies,
+    stateToDeityDivider,
+    stateToWinningDeity,
+    stateToTotemSelectionPending,
+    (deity, faith, deityEverest, deityDivider, winningDeity, totemSelectionPending) => ({
+        deity,
+        faith,
+        deityEverest,
+        deityDivider,
+        winningDeity,
+        totemSelectionPending
+    })
+)
+export const useExpeditionTotemHeaderInfo = () => useSelector(selectExpeditionTotemHeaderInfo)

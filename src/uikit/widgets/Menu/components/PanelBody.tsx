@@ -7,6 +7,7 @@ import { PanelProps, PushedProps } from '../types'
 import { Elevation, elevationUtils } from 'config/constants/types'
 import SelectableIcon from './SelectableIcon'
 import { useElevationsLocked, useElevationTotems, useWinningTotems } from 'state/hooks'
+import { useExpeditionUserDeity, useUserTotemsAndCrowns } from 'state/hooksNew'
 
 interface Props extends PanelProps, PushedProps {
   isMobile: boolean
@@ -28,8 +29,7 @@ const Container = styled.div`
 const PanelBody: React.FC<Props> = ({ isPushed, pushNav, isMobile, links }) => {
   const location = useLocation()
   const keyPath = location.pathname.split('/')[1]
-  const userTotems = useElevationTotems()
-  const winningTotems = useWinningTotems()
+  const userDeity = useExpeditionUserDeity()
   const elevationsLocked = useElevationsLocked()
 
   // Close the menu when a user clicks a link on mobile
@@ -41,15 +41,15 @@ const PanelBody: React.FC<Props> = ({ isPushed, pushNav, isMobile, links }) => {
 
   const entryIcon = useCallback(
     (elevation, icon) => {
-      if (elevation == null) {
-        return icon
-      }
-      return `totemIcons/${elevationUtils.getElevationTotemName(
-        elevation,
-        userTotems[elevationUtils.toInt(elevation)],
+      if (elevation == null) return icon
+      if (elevation === Elevation.OASIS) return 'totemIcons/OTTER.png'
+      if (elevation === Elevation.EXPEDITION) return `totemIcons/${elevationUtils.getElevationTotemName(
+        Elevation.EXPEDITION,
+        userDeity
       )}.png`
+      return ''
     },
-    [userTotems]
+    [userDeity]
   )
 
   return (
@@ -83,10 +83,6 @@ const PanelBody: React.FC<Props> = ({ isPushed, pushNav, isMobile, links }) => {
             >
               {entry.icon != null && (
                 <SelectableIcon
-                  crowned={
-                    entry.elevation != null &&
-                    winningTotems[elevationInt] === userTotems[elevationInt]
-                  }
                   isActive={isActive}
                   elevation={entry.elevation || entry.label}
                   icon={entryIcon(entry.elevation, entry.icon)}

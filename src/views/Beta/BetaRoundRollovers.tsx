@@ -41,7 +41,7 @@ const FarmNumericalInfoFlex = styled(Flex)`
 `
 
 const BetaRoundRolloversCard: React.FC = () => {
-  const { onRolloverElevation, pending } = useRolloverElevation()
+  const { onRolloverElevation, elevsPending } = useRolloverElevation()
 
   const plainsTimeRemaining = useElevationRoundTimeRemaining(Elevation.PLAINS)
   const mesaTimeRemaining = useElevationRoundTimeRemaining(Elevation.MESA)
@@ -83,7 +83,7 @@ const BetaRoundRolloversCard: React.FC = () => {
               width='160px'
               summitPalette={elevation}
               disabled={roundInfo[elevation].time > 0}
-              isLoading={pending}
+              isLoading={elevsPending[elevation]}
             >
               ROLLOVER
               <br/>

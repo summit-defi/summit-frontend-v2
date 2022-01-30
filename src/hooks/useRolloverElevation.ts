@@ -19,11 +19,16 @@ const useRolloverElevation = () => {
   const cartographer = useCartographer()
   const expedition = useExpedition()
   const { toastError, toastSuccess } = useToast()
-  const [pending, setPending] = useState(false)
+  const [elevsPending, setElevsPending] = useState({
+    [Elevation.PLAINS]: false,
+    [Elevation.MESA]: false,
+    [Elevation.SUMMIT]: false,
+    [Elevation.EXPEDITION]: false,
+  })
 
   const handleRolloverElevation = useCallback(
     async (elevation: Elevation, isUnlock: boolean) => {
-      setPending(true)
+      setElevsPending((elevs) => ({ ...elevs, [elevation]: true }))
       try {
         if (elevation === Elevation.EXPEDITION) {
           await rolloverExpedition(expedition, account)
@@ -37,7 +42,7 @@ const useRolloverElevation = () => {
       } catch (error) {
         toastError(`THE ${elevation}: ${isUnlock ? 'Unlock' : 'Rollover'} Failed`, (error as Error).message)
       } finally {
-        setPending(false)
+        setElevsPending((elevs) => ({ ...elevs, [elevation]: false }))
         if (elevation === Elevation.EXPEDITION) {
           dispatch(fetchExpeditionUserDataAsync(account))
         } else {
@@ -48,10 +53,10 @@ const useRolloverElevation = () => {
         dispatch(updateElevationInfoAsync(elevation))
       }
     },
-    [account, dispatch, cartographer, expedition, setPending, toastSuccess, toastError],
+    [account, dispatch, cartographer, expedition, setElevsPending, toastSuccess, toastError],
   )
 
-  return { onRolloverElevation: handleRolloverElevation, pending }
+  return { onRolloverElevation: handleRolloverElevation, elevsPending }
 }
 
 export default useRolloverElevation

@@ -95,7 +95,7 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
   )
 }
 
-export const fetchElevationHelperPublicInfo = async () => {
+export const fetchDeityDivider = async () => {
   const elevationHelperAddress = getElevationHelperAddress()
   const calls = [
     {
@@ -107,8 +107,5 @@ export const fetchElevationHelperPublicInfo = async () => {
   const res = await retryableMulticall(abi.elevationHelper, calls, 'fetchElevationHelperPublicInfo')
   if (res == null) return null
   const [expeditionDivider] = res
-
-  return {
-    expeditionDivider: new BigNumber(expeditionDivider).toNumber(),
-  }
+  return new BigNumber(expeditionDivider).toNumber()
 }

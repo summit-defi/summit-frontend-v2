@@ -3,6 +3,8 @@ import { useSelector } from "./utils";
 import { stateToUserTotems, stateToExpeditionDeity, stateToWinningTotems } from './base'
 import { Elevation, elevationUtils } from "config/constants";
 
+export const useExpeditionUserDeity = () => useSelector(stateToExpeditionDeity)
+
 const selectUserTotems = createSelector(
     stateToUserTotems,
     stateToExpeditionDeity,
@@ -36,3 +38,19 @@ export const selectElevationUserTotemAndCrowned = createSelector(
     })
 )
 export const useElevationUserTotemAndCrowned = (elevation: Elevation) => useSelector((state) => selectElevationUserTotemAndCrowned(state, elevation))
+
+export const selectUserTotemsAndCrowns = createSelector(
+    stateToUserTotems,
+    stateToWinningTotems,
+    (userTotems, winningTotems) => {
+        console.log({
+            userTotems,
+            winningTotems,
+        })
+        return userTotems.map((userTotem, elevIndex) => ({
+            userTotem,
+            crowned: userTotem === winningTotems[elevIndex]
+        }))
+    }
+)
+export const useUserTotemsAndCrowns = () => useSelector(selectUserTotemsAndCrowns)

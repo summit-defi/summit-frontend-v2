@@ -276,7 +276,6 @@ export const useExpeditionTotemHeaderInfo = () => {
   const { deitiedEverest, deityEverest } = useExpeditionInfo()
   return useMemo(
     () => {
-      console.log('ExpedTotemHeaderInfo refreshed')
       return {
         deity,
         faith,

@@ -120,7 +120,6 @@ export interface SummitEcosystemState {
   winningTotems: Array<number | null>
   totemSelectionRounds: Array<number | null>
   elevationsInfo: ElevationInfo[]
-  keywordRound: number
   expeditionDivider: number
   farmType: FarmType
   liveFarms: boolean

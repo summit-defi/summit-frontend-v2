@@ -1,11 +1,12 @@
 import { Elevation } from 'config/constants/types'
 import React, { useEffect, useState } from 'react'
-import { useExpeditionDivider, useExpeditionTotemHeaderInfo, useSelectedElevationWinningTotem, useTotemSelectionPending } from 'state/hooks'
 import styled from 'styled-components'
 import { Flex, Spinner, Text, SpinnerKeyframes } from 'uikit'
 import { getFormattedBigNumber } from 'utils'
 import { BaseDeity } from 'uikit/components/Totem/BaseDeity'
 import { useSelectTotemModal } from 'components/SelectTotemModal'
+import { useExpeditionTotemHeaderInfo } from 'state/hooksNew'
+import BigNumber from 'bignumber.js'
 
 const FlexWithSpinner = styled(Flex)`
   position: relative;
@@ -36,7 +37,7 @@ const Deity = styled(BaseDeity)<{ isLoading: boolean }>`
 
 const BaseCrown = styled.div`
   position: absolute;
-  background-image: url('/images/deityArtwork/CROWN.png');
+  background-image: url('/images/totemArtwork/CROWN.png');
   background-size: cover;
 
   width: calc(${100}px / 1.5);
@@ -54,7 +55,7 @@ const BullCrown = styled(BaseCrown)`
 
   ${({ theme }) => theme.mediaQueries.nav} {
     top: calc(${154}px * -0.425);
-    right: calc(${154}px * -0.125);
+    right: calc(${154}px * 0.025);
   }
 
   animation: pulse 3s ease-in-out infinite;
@@ -80,7 +81,7 @@ const BearCrown = styled(BaseCrown)`
 
   ${({ theme }) => theme.mediaQueries.nav} {
     top: calc(${154}px * -0.425);
-    left: calc(${154}px * 0.125);
+    left: calc(${154}px * -0.025);
   }
 
   animation: pulseMirror 3s ease-in-out infinite;
@@ -113,13 +114,15 @@ const ValueText = styled(Text)<{ fontSize?: string }>`
   gap: 6px;
 `
 
-const deityValueText = (deitiedEverest, deityEverest, deity, deityDivider, bull) => {
-  if (deity == null || deitiedEverest == null || deityEverest == null) return null
+const deityValueText = (deityEverest: BigNumber[], deity, deityDivider, bull) => {
   const ml = bull ? '0px' : '50px'
   const mr = !bull ? '0px' : '50px'
-  const perc = deitiedEverest.isEqualTo(0) ? 0 : deityEverest.times(100).dividedBy(deitiedEverest).toFixed(1)
+  const deitiedEverest = deityEverest[0].plus(deityEverest[1])
+  const perc = deitiedEverest.isEqualTo(0) ?
+    0 :
+    deityEverest[deity].times(100).dividedBy(deitiedEverest).toFixed(1)
   const chanceOfWin = bull ? deityDivider : 100 - deityDivider
-  const rawDeityEverest = getFormattedBigNumber(deityEverest, 3)
+  const rawDeityEverest = getFormattedBigNumber(deityEverest[deity], 3)
 
   return (
     <>
@@ -140,12 +143,9 @@ const deityValueText = (deitiedEverest, deityEverest, deity, deityDivider, bull)
 }
 
 const ExpeditionTotems: React.FC = () => {
-  const { deity, deitiedEverest, deityEverest, faith } = useExpeditionTotemHeaderInfo()
-  const deityDivider = useExpeditionDivider()
+  const { deity, deityEverest, faith, deityDivider, winningDeity, totemSelectionPending } = useExpeditionTotemHeaderInfo()
 
   const [expeditionTotem, setExpeditionTotem] = useState(null)
-  const prevRoundWinningDeity = useSelectedElevationWinningTotem()
-  const totemSelectionPending = useTotemSelectionPending()
 
   useEffect(() => {
     if (expeditionTotem != null) {
@@ -168,20 +168,18 @@ const ExpeditionTotems: React.FC = () => {
     onConfirmBearDeity()
   }
 
-
-
   return (
     <Flex justifyContent="space-around">
       <FlexWithSpinner flexDirection="column" alignItems="center" justifyContent="center" position="relative">
         <Deity deity={0} selected={expeditionTotem === 0} isLoading={totemSelectionPending} onClick={handleConfirmBearDeity} />
-        {prevRoundWinningDeity === 0 && <BullCrown />}
-        {deityValueText(deitiedEverest, deityEverest[0], deity, deityDivider, true)}
+        {winningDeity === 0 && <BullCrown />}
+        {deityValueText(deityEverest, 0, deityDivider, true)}
         {totemSelectionPending && <Spinner ml="6px" mr="12px" className="spinner" />}
       </FlexWithSpinner>
       <FlexWithSpinner flexDirection="column" alignItems="center" justifyContent="center" position="relative">
         <Deity deity={1} selected={expeditionTotem === 1} isLoading={totemSelectionPending} onClick={handleConfirmBullDeity} />
-        {prevRoundWinningDeity === 1 && <BearCrown />}
-        {deityValueText(deitiedEverest, deityEverest[1], deity, deityDivider, false)}
+        {winningDeity === 1 && <BearCrown />}
+        {deityValueText(deityEverest, 1, deityDivider, false)}
         {totemSelectionPending && <Spinner className="spinner" />}
       </FlexWithSpinner>
     </Flex>
