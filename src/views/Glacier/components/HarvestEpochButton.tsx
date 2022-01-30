@@ -1,8 +1,7 @@
 import { useHarvestEpoch } from 'hooks/useHarvestEpoch'
-import React from 'react'
-import { useEpochByIndex } from 'state/hooks'
-import { useModal } from 'uikit'
-import SummitButton from 'uikit/components/Button/SummitButton'
+import React, { useMemo } from 'react'
+import { makeSelectEpochByIndex, useSelector } from 'state/hooksNew'
+import { useModal, SummitButton } from 'uikit'
 import HarvestEpochModal from './HarvestEpochModal'
 
 interface Props {
@@ -12,7 +11,9 @@ interface Props {
 }
 
 const HarvestEpochButton: React.FC<Props> = ({ epochIndex, width = '160px', height }) => {
-    const epoch = useEpochByIndex(epochIndex)
+    const epochByIndexSelector = useMemo(makeSelectEpochByIndex, [])
+    const epoch = useSelector((state) => epochByIndexSelector(state, epochIndex))
+    
     const nothingToHarvest = epoch.frozenSummit.isEqualTo(0)
     const { onHarvestEpoch, harvestEpochPending } = useHarvestEpoch(epochIndex)
     const [onPresentHarvestEpoch] = useModal(

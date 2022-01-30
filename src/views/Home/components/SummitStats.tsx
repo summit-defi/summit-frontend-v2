@@ -5,11 +5,11 @@ import styled from 'styled-components'
 import { getBalanceNumber } from 'utils/formatBalance'
 import { useTotalSummitSupply, useBurnedSummitBalance } from 'hooks/useTokenBalance'
 import CardValue from './CardValue'
-import { useSummitPrice } from '../../../state/hooks'
 import { Elevation } from 'config/constants/types'
 import { useSummitPerSecond } from 'utils'
 import SummitSupplyDoughnut from './SummitSupplyDoughnut'
 import SummitEmissionDoughnut from './SummitEmissionDoughnut'
+import { useSummitPrice } from 'state/hooksNew'
 
 const StyledSummitStats = styled(Card)`
   margin-left: auto;

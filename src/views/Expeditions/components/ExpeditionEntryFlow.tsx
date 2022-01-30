@@ -3,10 +3,10 @@ import { FaithSlider } from 'components/SelectTotemModal'
 import { Elevation, SummitPalette } from 'config/constants'
 import { useEnterExpedition } from 'hooks/useEnterExpedition'
 import { useSelectTotemAndOrFaith } from 'hooks/useSelectTotem'
-import { useExpeditionEntryFlow } from 'state/hooks'
 import styled from 'styled-components'
 import { Flex, Text, SummitButton } from 'uikit'
 import Divider from './Divider'
+import { useExpeditionEntryFlow } from 'state/hooksNew'
 
 const DivineBonus = 20
 

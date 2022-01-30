@@ -13,7 +13,6 @@ const populateLinkSummitAddress = (link: string): string => {
 }
 
 export const getMenuItems = (
-  summitEnabled,
   exchangeLink,
   liqLink,
   totems,

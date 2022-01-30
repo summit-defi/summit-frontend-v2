@@ -8,8 +8,7 @@ import {
   fetchElevPotentialWinnings,
   fetchFarmUserData,
 } from './fetchFarmUser'
-import { FarmsState, Farm } from '../types'
-import { groupByAndMap } from 'utils'
+import { FarmsState } from '../types'
 import BigNumber from 'bignumber.js'
 import { BN_ZERO, elevationUtils } from 'config/constants/types'
 import { merge } from 'lodash'

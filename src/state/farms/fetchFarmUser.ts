@@ -34,7 +34,7 @@ export const fetchFarmUserData = async (account: string, farmConfigs: FarmConfig
   const userDataObject = groupByAndMap(
     farmConfigs,
     (farm) => farm.symbol,
-    (farm, index) => ({
+    () => ({
       [Elevation.OASIS]: {},
       [Elevation.PLAINS]: {},
       [Elevation.MESA]: {},

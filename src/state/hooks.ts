@@ -2,27 +2,24 @@ import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
-import { getWeb3NoAccount, getTimestampDiff, groupByAndMap, groupBy, getFormattedBigNumber, epochEndTimestamp, epochThawTimestamp } from 'utils'
+import { getTimestampDiff, groupBy, getFormattedBigNumber, epochEndTimestamp, epochThawTimestamp } from 'utils'
 import {
   fetchFarmsPublicDataAsync,
   fetchExpeditionUserDataAsync,
   fetchExpeditionPublicDataAsync,
 } from './actions'
-import { State, Farm, ExpeditionInfo, ElevationInfo, ExpeditionUserData, UserTokenData, EverestUserData, EverestState } from './types'
+import { State, Farm, ElevationInfo, UserTokenData, EverestUserData } from './types'
 import { BN_ZERO, Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired, RoundLockTime, SummitPalette } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
   fetchElevationHelperInfoAsync,
   fetchElevationsPublicDataAsync,
-  fetchSummitEcosystemEnabledAsync,
 } from './summitEcosystem'
 import { useLocation } from 'react-router-dom'
 import { getFarmConfigs } from 'config/constants/farms'
 import useTheme from 'hooks/useTheme'
 import { getChainWrappedNativeTokenSymbol, TokenSymbol } from 'config/constants'
-import { fetchExpeditionPotentialWinnings, fetchExpeditionWinnings } from './expedition/fetchExpeditionUserInfo'
-import { updateExpeditionUserPotentialWinningsAsync, updateExpeditionUserWinnings, updateExpeditionUserWinningsAsync } from './expedition'
-import { createSelector } from '@reduxjs/toolkit'
+import { updateExpeditionUserPotentialWinningsAsync, updateExpeditionUserWinningsAsync } from './expedition'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 
 const ZERO = new BigNumber(0)
@@ -65,6 +62,7 @@ export const useFetchPublicData = () => {
     dispatch(fetchExpeditionPublicDataAsync())
     dispatch(fetchElevationsPublicDataAsync())
     dispatch(fetchElevationHelperInfoAsync())
+    dispatch(fetchPricesAsync())
   }, [dispatch, slowRefresh])
 }
 export const useCurrentTimestamp = (): number => {
@@ -211,24 +209,6 @@ export const useMultiElevStaked = () => {
   )
 }
 
-
-
-export const useElevationsStaked = () => {
-  const oasisStaked = useSelector((state: State) => state.farms.elevationData[0])
-}
-
-// User Tokens Data
-export const useUserTokens = () => {
-  const selectorTokens: UserTokenData[] = useSelector((state: State) => state.tokens.data)
-  return useMemo(
-    () => groupBy(
-      selectorTokens,
-      (token) => token.symbol,
-    ),
-    [selectorTokens]
-  )
-}
-
 // Expeditions
 
 export const useExpeditionFetching = () => {
@@ -255,73 +235,10 @@ export const useExpeditionEntered = () => {
     [entered],
   )
 }
-export const useExpeditionEntryFlow = (): {
-  deity: number | null,
-  faith: number | null,
-  everestOwned: BigNumber
-} => {
-  const { deity, faith, everestOwned } = useExpeditionUserData()
-  return useMemo(
-    () => ({
-      deity,
-      faith,
-      everestOwned,
-    }),
-    [deity, faith, everestOwned]
-  )
-}
-
-export const useExpeditionTotemHeaderInfo = () => {
-  const { deity, faith } = useExpeditionUserData()
-  const { deitiedEverest, deityEverest } = useExpeditionInfo()
-  return useMemo(
-    () => {
-      return {
-        deity,
-        faith,
-        deitiedEverest,
-        deityEverest,
-      }
-    },
-    [deity, deitiedEverest, deityEverest, faith]
-  )
-}
-
-
-// export const useExpeditionLoaded = () => {
-//   const expeditionLoaded: ExpeditionInfo = useSelector((state: State) => state.expedition.expeditionLoaded)
-//   const userDataLoaded = useSelector((state: State) => state.expedition.userDataLoaded)
-//   return {
-//     expeditionLoaded,
-//     userDataLoaded,
-//   }
-// }
 
 // Prices
 export const usePricesPerToken = () => {
   return useSelector((state: State) => state.prices.pricesPerToken)
-}
-export const useNativeTokenPrice = (): BigNumber => {
-  const pricesPerToken = usePricesPerToken()
-  return useMemo(
-    () => {
-      const wrappedNativeTokenSymbol = getChainWrappedNativeTokenSymbol()
-      if (pricesPerToken == null || pricesPerToken[wrappedNativeTokenSymbol]) return new BigNumber(2.5)
-      return pricesPerToken[wrappedNativeTokenSymbol]
-    },
-    [pricesPerToken]
-  )
-}
-
-export const useSummitPrice = (): BigNumber => {
-  const pricesPerToken = usePricesPerToken()
-  return useMemo(
-    () => {
-      if (pricesPerToken == null || pricesPerToken[TokenSymbol.SUMMIT] == null) return new BigNumber(1)
-      return pricesPerToken[TokenSymbol.SUMMIT]
-    },
-    [pricesPerToken]
-  )
 }
 
 export const useTotalValue = (elevation?: Elevation): BigNumber => {
@@ -420,23 +337,6 @@ export const useExpeditionDisbursedValue = (): number => {
 }
 
 // Prices
-export const useFetchPriceList = () => {
-  const { slowRefresh } = useRefresh()
-  const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(fetchPricesAsync())
-  }, [dispatch, slowRefresh])
-}
-
-// SummitEcosystem
-export const useFetchSummitEnabled = () => {
-  const { fastRefresh } = useRefresh()
-  const dispatch = useDispatch()
-  useEffect(() => {
-    dispatch(fetchSummitEcosystemEnabledAsync())
-  }, [dispatch, fastRefresh])
-}
 
 export const useSummitEnabled = () => useSelector((state: State) => state.summitEcosystem.summitEnabled)
 
@@ -721,8 +621,6 @@ export const usePageForcedDarkMode = () => {
 
 
 // EPOCHS
-const useEpochs = () => useSelector((state: State) => state.glacier.epochs)
-export const useCurrentEpochIndex = () => useSelector((state: State) => state.glacier.currentEpochIndex)
 export const useEpochVariableTickTimestamp = (epoch: number, toEpochEnd = false) => {
   const currentTimestamp = useCurrentTimestamp()
   return useMemo(() => {
@@ -733,49 +631,6 @@ export const useEpochVariableTickTimestamp = (epoch: number, toEpochEnd = false)
     return currentTimestamp
   }, [currentTimestamp, epoch, toEpochEnd])
 }
-export const useEpochByIndex = (epochIndex: number) => {
-  const epochs = useEpochs()
-
-  return useMemo(
-    () => epochs.find((epoch) => epoch.index === epochIndex) || {
-      index: epochIndex,
-      frozenSummit: BN_ZERO,
-      isThawed: false,
-    },
-    [epochs, epochIndex]
-  )
-}
-export const useCurrentEpoch = () => {
-  const epochs = useEpochs()
-  const currentEpochIndex = useCurrentEpochIndex()
-
-  return useMemo(
-    () => epochs.find((epoch) => epoch.index === currentEpochIndex) || {
-      index: currentEpochIndex,
-      frozenSummit: BN_ZERO,
-      isThawed: false,
-    },
-    [epochs, currentEpochIndex]
-  )
-}
-export const useThawedEpochs = () => {
-  const epochs = useEpochs()
-  return useMemo(
-    () => epochs.filter((epoch) => epoch.isThawed),
-    [epochs]
-  )
-}
-export const useFrozenEpochs = () => {
-  const epochs = useEpochs()
-  const currentEpochIndex = useCurrentEpochIndex()
-
-  return useMemo(
-    () => epochs.filter((epoch) => !epoch.isThawed && epoch.index !== currentEpochIndex),
-    [epochs, currentEpochIndex]
-  )
-}
-
-
 
 // EVEREST
 export const useEverestInfo = () => {

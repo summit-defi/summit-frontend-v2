@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ResetCSS } from 'uikit'
 import BigNumber from 'bignumber.js'
-import { useFetchPriceList, useFetchPublicData, useFetchSummitEnabled } from 'state/hooks'
+import { useFetchPublicData } from 'state/hooks'
 import useGetDocumentTitlePrice from './hooks/useGetDocumentTitlePrice'
 import GlobalStyle from './style/Global'
 import Menu from './components/Menu'
@@ -55,21 +55,20 @@ const App: React.FC = () => {
   useEffect(() => {
     const suggestChainId = async () => {
       const targetChainId = parseInt(process.env.REACT_APP_CHAIN_ID)
-      const existingChainId = await web3.eth.net.getId()
-
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      const provider = window.ethereum
-      if (provider && targetChainId !== existingChainId) {
+      const existingChainId = parseInt(window.ethereum.networkVersion)
+      
+      if (targetChainId !== existingChainId) {
         try {
-          await provider.request({
+          await web3.givenProvider.request({
             method: "wallet_switchEthereumChain",
             params: [{ chainId: '0x61' }],
           });
         } catch (err: any) {
           if (err.code === 4902) {
             try {
-              await provider.request({
+              await web3.givenProvider.request({
                 method: "wallet_addEthereumChain",
                 params: [
                   {
@@ -109,10 +108,8 @@ const App: React.FC = () => {
   }, [account, dispatch, web3])
 
   useFetchPublicData()
-  useFetchPriceList()
   useGetDocumentTitlePrice()
   useRoundRollovers()
-  useFetchSummitEnabled()
   useFetchExpeditionPotTotalValue()
 
   return (

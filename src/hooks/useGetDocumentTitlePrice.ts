@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useSummitPrice } from 'state/hooks'
+import { useSummitPrice } from 'state/hooksNew'
 
 const useGetDocumentTitlePrice = () => {
   const summitPriceUsd = useSummitPrice()
@@ -8,8 +8,8 @@ const useGetDocumentTitlePrice = () => {
     summitPriceUsd == null
       ? ''
       : ` - $${summitPriceUsd.toNumber().toLocaleString(undefined, {
-          minimumFractionDigits: 3,
-          maximumFractionDigits: 3,
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2,
         })}`
 
   useEffect(() => {

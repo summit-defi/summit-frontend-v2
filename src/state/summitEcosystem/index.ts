@@ -157,12 +157,6 @@ export const {
 } = SummitEcosystemSlice.actions
 
 // Thunks
-export const fetchSummitEcosystemEnabledAsync = () => async (dispatch, getState) => {
-  if (getState().summitEcosystem.summitEnabled) return
-  const summitEnabled = await fetchSummitEnabled()
-  if (summitEnabled == null) return
-  dispatch(setSummitEnabled(summitEnabled))
-}
 export const fetchElevationsPublicDataAsync = () => async (dispatch) => {
   const elevationsInfo = await fetchElevationsData()
   if (elevationsInfo == null) return

@@ -3,7 +3,6 @@ import { Flex, Text, useModal } from 'uikit'
 import { Elevation, ForceElevationRetired } from 'config/constants/types'
 import styled from 'styled-components'
 import ElevationSelector from '../ElevationSelector'
-import { Farm } from 'state/types'
 import useElevate from 'hooks/useElevate'
 import ElevateModal from '../ElevateModal'
 import SummitButton from 'uikit/components/Button/SummitButton'
@@ -32,11 +31,8 @@ const CenteredSummitButton = styled(SummitButton)`
 
 const FarmCardUserElevate: React.FC<Props> = ({ symbol, farmToken, decimals, elevationLocked, disabled }) => {
   const elevation = Elevation.OASIS
-  const summitEnabled = useSummitEnabled()
-  const summitLpSymbol = getSummitLpSymbol()
   const availableSisterElevations = useAvailableSisterElevations(symbol)
   const { onElevate } = useElevate()
-  const history = useHistory()
 
   const [onPresentElevate] = useModal(
     <ElevateModal
@@ -67,7 +63,7 @@ const FarmCardUserElevate: React.FC<Props> = ({ symbol, farmToken, decimals, ele
         isLocked={elevationLocked}
         elevations={elevations}
         disabledElevations={disabledElevations}
-        disabled={disabled || !summitEnabled}
+        disabled={disabled}
         selectElevation={handleSelectElevation}
       />
       <CenteredInfoText fontSize="12px" bold monospace>

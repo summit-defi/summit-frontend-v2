@@ -15,6 +15,7 @@ export const stateToExpeditionDeitySupplies = (state: State) => state.expedition
 export const stateToExpeditionSummitWinnings = (state: State) => state.expedition?.userData?.summitWinnings || BN_ZERO
 export const stateToExpeditionUsdcWinnings = (state: State) => state.expedition?.userData?.usdcWinnings || BN_ZERO
 export const stateToExpeditionFaith = (state: State) => state.expedition.userData.faith
+export const stateToExpeditionEverestOwned = (state: State) => state.expedition.userData.everestOwned
 
 // GLACIER
 export const stateToCurrentEpochIndex = (state: State) => state.glacier.currentEpochIndex
