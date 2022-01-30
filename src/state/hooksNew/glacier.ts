@@ -17,7 +17,7 @@ export const makeSelectEpochByIndex = () => createSelector(
 const selectCurrentEpoch = createSelector(
     stateToEpochs,
     stateToCurrentEpochIndex,
-    (epochs, currentEpochIndex): Epoch => epochs.find((epoch) => epoch.index === currentEpochIndex) || {
+    (epochs, currentEpochIndex): Epoch => epochs?.find((epoch) => epoch.index === currentEpochIndex) || {
         index: currentEpochIndex,
         frozenSummit: BN_ZERO,
         isThawed: false,
@@ -27,7 +27,7 @@ export const useCurrentEpoch = () => useSelector(selectCurrentEpoch)
 
 const selectThawedEpochIndices = createSelector(
     stateToEpochs,
-    (epochs): number[] => epochs
+    (epochs): number[] => (epochs || [])
         .filter((epoch) => epoch.isThawed)
         .map((epoch) => epoch.index)
 )
@@ -36,7 +36,7 @@ export const useThawedEpochIndices = () => useSelector(selectThawedEpochIndices)
 const selectFrozenEpochIndices = createSelector(
     stateToEpochs,
     stateToCurrentEpochIndex,
-    (epochs, currentEpochIndex): number[] => epochs
+    (epochs, currentEpochIndex): number[] => (epochs || [])
         .filter((epoch) => !epoch.isThawed && epoch.index !== currentEpochIndex)
         .map((epoch) => epoch.index)
 )

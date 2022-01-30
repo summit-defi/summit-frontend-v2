@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Flex } from 'uikit'
 import { Elevation } from 'config/constants/types'
@@ -37,8 +37,13 @@ interface Props {
 const FarmCardUserSection: React.FC<Props> = ({ isExpanded, symbol }) => {
   const elevation = useSelectedElevation()
 
+  const [expanded, setExpanded] = useState(false)
+  useEffect(() => {
+    setExpanded(isExpanded)
+  }, [isExpanded, setExpanded])
+
   return (
-    <ExpandableSection isExpanded={isExpanded} elevation={elevation}>
+    <ExpandableSection isExpanded={expanded} elevation={elevation}>
       <Divider />
       <FarmCardTokenSection
         symbol={symbol}
