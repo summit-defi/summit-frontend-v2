@@ -63,8 +63,9 @@ export const getMenuItems = (
   },
   {
     label: 'THE GLACIER',
-    icon: '',
+    icon: 'summit/GLACIERicon.png',
     href: '/glacier',
+    palette: 'GLACIER',
     external: false,
     keyPaths: ['glacier']
   },

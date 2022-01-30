@@ -51,6 +51,51 @@ const App: React.FC = () => {
 
   const dispatch = useDispatch()
   const web3 = useWeb3()
+
+  useEffect(() => {
+    const suggestChainId = async () => {
+      const targetChainId = parseInt(process.env.REACT_APP_CHAIN_ID)
+      const existingChainId = await web3.eth.net.getId()
+
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      const provider = window.ethereum
+      if (provider && targetChainId !== existingChainId) {
+        try {
+          await provider.request({
+            method: "wallet_switchEthereumChain",
+            params: [{ chainId: '0x61' }],
+          });
+        } catch (err: any) {
+          if (err.code === 4902) {
+            try {
+              await provider.request({
+                method: "wallet_addEthereumChain",
+                params: [
+                  {
+                    chainId: '0x61',
+                    chainName: "BSC Testnet",
+                    rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
+                    nativeCurrency: {
+                      name: "BNB",
+                      symbol: "BNB",
+                      decimals: 18,
+                    },
+                    blockExplorerUrls: ["https://testnet.bscscan.com/"],
+                  },
+                ],
+              });
+            } catch (err2: any) {
+              console.error(err2.message);
+            }
+          }
+        }
+      }
+    }
+    
+    suggestChainId()
+  }, [web3])
+
   useEffect(() => {
     if (account) {
       dispatch(setActiveAccount(account))

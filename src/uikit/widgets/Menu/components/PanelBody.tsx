@@ -73,7 +73,7 @@ const PanelBody: React.FC<Props> = ({ isPushed, pushNav, isMobile, links }) => {
             textItem={entry.icon == null}
             isActive={isActive}
             className={calloutClass}
-            elevation={entry.elevation || entry.label}
+            elevation={entry.elevation || entry.palette || entry.label}
           >
             <MenuLink
               href={entry.href}
@@ -84,7 +84,7 @@ const PanelBody: React.FC<Props> = ({ isPushed, pushNav, isMobile, links }) => {
               {entry.icon != null && (
                 <SelectableIcon
                   isActive={isActive}
-                  elevation={entry.elevation || entry.label}
+                  elevation={entry.elevation || entry.palette || entry.label}
                   icon={entryIcon(entry.elevation, entry.icon)}
                   backgroundIcon={backgroundIcon}
                   elevationLocked={elevationsLocked[elevationInt]}

@@ -27,6 +27,7 @@ export interface NavTheme {
 export interface MenuEntry {
   gap?: boolean
   label?: string
+  palette?: string
   icon?: string
   href: string
   external?: boolean

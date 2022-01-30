@@ -25,7 +25,7 @@ const EpochsCard = styled(Flex)`
 const EpochsHeaderCard: React.FC = () => {
     return (
         <EpochsCard>
-            <ElevationPuck elevation='BLUE'>
+            <ElevationPuck elevation='GLACIER'>
                 <Text bold fontSize='24px' color='white'>
                     <Text fontSize='16px' color='white'>THE</Text>
                     GLACIER

@@ -43,7 +43,7 @@ export const HeaderArtwork = styled.div<{ elevation: string }>`
 `
 
 const PuckWhiteText = (name: string) => {
-  return elevationUtils.isElevation(name) || name === 'BLUE' || name === 'EVEREST'
+  return elevationUtils.isElevation(name) || name === 'BLUE' || name === 'EVEREST' || name === 'GLACIER'
 }
 
 export const HeaderElevationName = styled(HighlightedText)<{ elevationName: string }>`

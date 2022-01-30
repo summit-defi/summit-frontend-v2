@@ -65,7 +65,7 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
     <Modal
       title='Harvest|br|Epoch'
       onDismiss={onDismiss}
-      elevationCircleHeader='BLUE'
+      elevationCircleHeader='GLACIER'
       headerless
     >
       <Flex justifyContent="center" flexDirection="column" alignItems="center">

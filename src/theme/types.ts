@@ -69,6 +69,7 @@ export type Colors = {
   MESA: string
   SUMMIT: string
   EXPEDITION: string
+  GLACIER: string
 
   AUDIT: string
   BETA: string
