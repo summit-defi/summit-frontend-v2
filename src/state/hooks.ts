@@ -275,9 +275,9 @@ export const useUserTVLs = () => {
         const tokenPrice = pricesPerToken != null && pricesPerToken[farm.symbol] ? pricesPerToken[farm.symbol] : new BigNumber(1)
         const bnDecimals = new BigNumber(10).pow(farm.decimals || 18)
         elevationUtils.all.forEach((elevation) => {
-          const supply: BigNumber = farm.elevations[elevation]?.supply || BN_ZERO
-          if (supply.isEqualTo(0)) return
-          const value = supply.div(bnDecimals).times(tokenPrice)
+          const staked = farm.elevations[elevation]?.stakedBalance || BN_ZERO
+          if (staked.isEqualTo(0)) return
+          const value = staked.div(bnDecimals).times(tokenPrice)
           totalTVL = totalTVL.plus(value)
           elevTVL[elevation] = elevTVL[elevation].plus(value)
         })

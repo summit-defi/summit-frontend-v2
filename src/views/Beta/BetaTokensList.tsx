@@ -2,8 +2,8 @@ import React from 'react'
 import Page from 'components/layout/Page'
 import BetaTokenCard from './BetaTokenCard'
 import styled from 'styled-components'
-import { ElevationPuck, Flex, Text } from 'uikit'
-import { getPriceableTokens, TokenSymbol } from 'config/constants'
+import { ElevationPuck, ExternalLinkButton, Flex, Text } from 'uikit'
+import { getPriceableTokens, SummitPalette, TokenSymbol } from 'config/constants'
 import BetaRoundRollovers from './BetaRoundRollovers'
 
 const BetaTokens = {
@@ -42,6 +42,8 @@ const InfoCard = styled(Flex)`
   box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
   width: 100%;
   height: 100%;
+  gap: 24px;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
 `
@@ -69,6 +71,9 @@ const BetaTokensList: React.FC = () => {
           for the purposes of testing the V1 to V2 SUMMIT swap.
           <br/>
         </Text>
+        <ExternalLinkButton href='https://testnet.binance.org/faucet-smart'>
+            Get Testnet BNB
+        </ExternalLinkButton>
       </InfoCard>
       <BetaRoundRollovers/>
       {betaTokens.map((betaToken) => (

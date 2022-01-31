@@ -2,7 +2,7 @@ import React, { useMemo } from 'react'
 import BigNumber from 'bignumber.js'
 import styled, { css } from 'styled-components'
 import { Flex, Text } from 'uikit'
-import { BN_ZERO, Elevation, elevationFarmTabToUrl, elevationUtils } from 'config/constants/types'
+import { BN_ZERO, Elevation, ElevationFarmTab, elevationFarmTabToUrl, elevationUtils } from 'config/constants/types'
 import { useElevationFarmsTab, useSingleFarmSelected } from 'state/hooks'
 import { NavLink } from 'react-router-dom'
 import FarmCardUserSectionExpander from './FarmCardUserSectionExpander'
@@ -116,10 +116,18 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
 
   const totalValue: BigNumber = useMemo(
     () => {
-      if (lpSupply == null) return new BigNumber(0)
-      return lpSupply.div(new BigNumber(10).pow(decimals)).times(pricePerToken)
+      let supply = BN_ZERO
+      if (elevationTab === ElevationFarmTab.DASH) {
+        elevationUtils.all.forEach((elev) => {
+          supply = supply.plus(elevations[elev].supply || BN_ZERO)
+        })
+      } else {
+        supply = lpSupply
+      }
+      if (supply == null) return new BigNumber(0)
+      return supply.div(new BigNumber(10).pow(decimals)).times(pricePerToken)
     },
-    [lpSupply, pricePerToken, decimals]
+    [lpSupply, elevationTab, elevations, pricePerToken, decimals]
   )
 
   const targetUrl = `/${(elevationFarmTabToUrl[elevationTab] || 'elevations').toLowerCase()}${expanded ? '' : `/${symbol.toLowerCase()}`}`

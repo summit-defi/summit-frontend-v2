@@ -1,9 +1,11 @@
 import BigNumber from 'bignumber.js'
+import { ElevationFarmTab } from 'config/constants'
 import React, { memo, useMemo } from 'react'
+import { useElevationFarmsTab } from 'state/hooks'
 import { useSummitPrice } from 'state/hooksNew'
 import styled from 'styled-components'
 import { Skeleton, Text } from 'uikit'
-import { nFormatter } from 'utils'
+import { capitalizeFirstLetter, nFormatter } from 'utils'
 
 const FlexInfoItem = styled.div`
     display: flex;
@@ -30,6 +32,7 @@ interface Props {
 const compoundEventCount = 365
 
 export const FarmAPYBreakdown: React.FC<Props> = memo(({ summitPerYear, totalValue }) => {
+    const elevationTab = useElevationFarmsTab()
     const summitPrice = useSummitPrice()
 
     const apr = summitPrice
@@ -47,10 +50,14 @@ export const FarmAPYBreakdown: React.FC<Props> = memo(({ summitPerYear, totalVal
     
     const yearlyAPY = !apy ? null : apy > 1000000000 ? '🔥🔥' : apy > 1000000 ? '🔥' : `${nFormatter(farmAvgAPY, 2)}%`
     const dailyAPY = !dailyAPR ? null : dailyAPR > 1000000000 ? '🔥🔥' : dailyAPR > 1000000 ? '🔥' : `${nFormatter(dailyAPR, 2)}%`
+
+
+    const apyText = `${elevationTab === ElevationFarmTab.DASH ? 'Base' : capitalizeFirstLetter(elevationTab)} APY`
+
     
     return (
         <FlexInfoItem>
-            <Text small>APY</Text>
+            <Text small>{apyText}</Text>
             <InfoItemValue>
                 <Text bold monospace fontSize='12px' style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
                         {yearlyAPY || <Skeleton height={24} width={80} />}
@@ -64,14 +71,17 @@ export const FarmAPYBreakdown: React.FC<Props> = memo(({ summitPerYear, totalVal
 })
 
 export const FarmTotalValue: React.FC<{ totalValue: BigNumber }> = memo(({ totalValue }) => {
+    const elevationTab = useElevationFarmsTab()
 
     const totalValueFormatted = totalValue
         ? `$${Number(totalValue).toLocaleString(undefined, { maximumFractionDigits: 0 })}`
         : '-'
 
+    const tvlText = `${elevationTab === ElevationFarmTab.DASH ? '' : `${capitalizeFirstLetter(elevationTab)} `}TVL`
+
     return (
         <FlexInfoItem>
-            <Text small>TVL</Text>
+            <Text small>{tvlText}</Text>
             <InfoItemValue>
                 <Text bold monospace style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
                     {totalValueFormatted}
