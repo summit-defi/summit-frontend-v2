@@ -3,13 +3,14 @@ import styled from 'styled-components'
 import { Flex, ExternalLinkButton } from 'uikit'
 import { getContract } from 'utils'
 import { provider } from 'web3-core'
-import FarmCardUserApproveDeposit from './FarmCardUserApproveDeposit'
 import FarmCardUserWithdraw from './FarmCardUserWithdraw'
 import FarmCardUserElevate from './FarmCardUserElevate'
 import FarmCardMobileDepositWithdrawSelector from './FarmCardMobileDepositWithdrawSelector'
 import { useIsElevationLockedUntilRollover, useMediaQuery, useSelectedElevation } from 'state/hooks'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useFarmAndUserTokenInteractionSectionInfo } from 'state/hooksNew'
+import FarmCardUserApprove from './FarmCardUserApprove'
+import FarmCardUserDeposit from './FarmCardUserDeposit'
 
 const MobileVerticalFlex = styled(Flex)`
   flex-direction: column;
@@ -89,24 +90,35 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
   )
 
   // DEPOSIT SECTION
-  const depositSection = useCallback(
-    () =>
-      (!isMobile || mobileDepositWithdraw === 0) && (
-        <FarmCardUserApproveDeposit
+  const approveDepositSection = useCallback(
+    () => {
+      if (isMobile && mobileDepositWithdraw !== 0) return null
+      if (isApproved) return (
+        <FarmCardUserDeposit
           farmToken={farmToken}
-          elevation={elevation}
           symbol={symbol}
           elevationLocked={elevationLocked}
           walletBalance={walletBalance}
           decimals={decimals}
           depositFeeBP={depositFeeBP}
-          isApproved={isApproved}
+          elevation={elevation}
           disabled={disabled}
-          lpContract={lpContract}
           claimable={elevClaimable}
           setPending={setApproveDepositPending}
         />
-      ),
+      )
+      return (
+        <FarmCardUserApprove
+          symbol={symbol}
+          walletBalance={walletBalance}
+          decimals={decimals}
+          depositFeeBP={depositFeeBP}
+          elevation={elevation}
+          lpContract={lpContract}
+          setPending={setApproveDepositPending}
+        />
+      )
+    },
     [
       farmToken,
       elevation,
@@ -175,7 +187,7 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
     <Flex flexDirection='column' alignItems='center' justifyContent='center'>
       <MobileVerticalFlex>
         {mobileDepositWithdrawSelector()}
-        {depositSection()}
+        {approveDepositSection()}
         {withdrawSection()}
         {elevateSection()}
       </MobileVerticalFlex>

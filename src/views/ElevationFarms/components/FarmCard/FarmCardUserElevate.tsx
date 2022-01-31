@@ -6,6 +6,7 @@ import ElevationSelector from '../ElevationSelector'
 import useElevate from 'hooks/useElevate'
 import ElevateModal from '../ElevateModal'
 import { useSymbolElevateSelectorInfo } from 'state/hooksNew'
+import { useSelectedElevation } from 'state/hooks'
 
 interface Props {
   symbol: string
@@ -21,7 +22,7 @@ const CenteredInfoText = styled(Text)`
 `
 
 const FarmCardUserElevate: React.FC<Props> = ({ symbol, elevationLocked, disabled }) => {
-  const elevation = Elevation.OASIS
+  const elevation = useSelectedElevation()
   const elevsLaunched = useSymbolElevateSelectorInfo(symbol)
   const { onElevate } = useElevate()
 

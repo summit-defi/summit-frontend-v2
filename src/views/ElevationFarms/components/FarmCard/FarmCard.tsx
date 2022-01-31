@@ -12,7 +12,6 @@ import { makeSelectFarmBySymbol, useSelector } from 'state/hooksNew'
 import { FarmAPYBreakdown, FarmTotalValue } from './FarmCardInfoItems'
 
 const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
-  scroll-margin: 128px;
   align-self: baseline;
   flex-direction: column;
   justify-content: space-around;
@@ -86,26 +85,6 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
   const elevationTab = useElevationFarmsTab()
   const singleFarmSymbol = useSingleFarmSelected()
   const expanded = singleFarmSymbol === symbol
-  const farmCardRef = useRef(null)
-  const [currentTab, setCurrentTab] = useState(elevationTab)
-
-  useEffect(
-    () => {
-      if (currentTab !== elevationTab && expanded) {
-        const top = farmCardRef.current.getBoundingClientRect().top
-        const isVisible = (top + 200) >= 0 && top <= window.innerHeight
-        setCurrentTab(currentTab)
-        
-        if (isVisible) {
-          farmCardRef.current.scrollIntoView({
-            behavior: 'smooth'
-          })
-        }
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [elevationTab]
-  )
 
   const {
     allocation,
@@ -154,7 +133,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
 
 
   return (
-    <FCard $locked={false} ref={farmCardRef} $expanded={expanded}>
+    <FCard $locked={false} $expanded={expanded}>
       <PressableFlex to={targetUrl} $expanded={expanded}>
         { farmComment != null && <Text monospace bold italic fontSize='13px' mb='14px' textAlign='center'>* {farmComment}</Text> }
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }

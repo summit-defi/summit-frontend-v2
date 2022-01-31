@@ -1,16 +1,13 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Flex, Text } from 'uikit'
-import { Elevation, ForceElevationRetired } from 'config/constants/types'
+import { Elevation } from 'config/constants/types'
 import { getFullDisplayBalance } from 'utils'
-import { Contract } from 'web3-eth-contract'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
 import TokenInput from 'components/TokenInput'
 import useStake from 'hooks/useStake'
-import { useApprove } from 'hooks/useApprove'
 import { isNumber } from 'lodash'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useRewardsWillBeClaimedModal, RewardsWillBeClaimedType } from '../../../../components/RewardsWillBeClaimedModal'
 
 interface Props {
@@ -20,10 +17,8 @@ interface Props {
   walletBalance: BigNumber
   decimals: number
   depositFeeBP: number
-  isApproved: boolean
   elevation: Elevation
   disabled: boolean
-  lpContract: Contract
   claimable: BigNumber
   setPending: (boolean) => void
 }
@@ -38,29 +33,18 @@ const CenteredSummitButton = styled(SummitButton)`
   margin: 34px auto 0px auto;
 `
 
-const FarmCardUserApproveDeposit: React.FC<Props> = ({
+const FarmCardUserDeposit: React.FC<Props> = ({
   farmToken,
   symbol,
   elevationLocked,
   walletBalance,
   decimals,
   depositFeeBP,
-  isApproved,
   elevation,
   disabled,
   claimable,
   setPending,
-  lpContract,
 }) => {
-  const { account } = useWallet()
-  const whitelistedAccounts = [
-    '0x3231e42a2Bb09Aa5E2d4403FC99Dab639EDe8175',
-    '0xd61984812038D1BE0A185373d48074299f369b66',
-    '0x072fB97C6f88675d53B584f8b2d26Ce2520Cc4bA'
-  ]
-  const elevationForcedDisabled = elevation !== Elevation.OASIS && ForceElevationRetired && !whitelistedAccounts.includes(account)
-  // APPROVE ACTION
-  const { onApprove, pending: approvalPending } = useApprove(lpContract, symbol)
 
   // REWARDS WILL BE CLAIMED MODAL
   const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(elevation, claimable, 'Deposit', RewardsWillBeClaimedType.Farm)
@@ -69,8 +53,8 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
   const { onStake, pending: stakePending } = useStake(farmToken, elevation)
 
   useEffect(() => {
-    setPending(stakePending || approvalPending)
-  }, [stakePending, approvalPending, setPending])
+    setPending(stakePending)
+  }, [stakePending, setPending])
 
   // DEPOSIT TOKEN INPUT
   const [depositVal, setDepositVal] = useState('')
@@ -131,24 +115,17 @@ const FarmCardUserApproveDeposit: React.FC<Props> = ({
         feeText='Deposit Fee'
         feeBP={depositFeeBP}
       />
-      {isApproved && (
-        <CenteredSummitButton
-          summitPalette={elevation}
-          isLocked={elevationLocked}
-          isLoading={stakePending}
-          disabled={disabled || invalidDeposit || elevationForcedDisabled}
-          onClick={handleStake}
-        >
-          DEPOSIT
-        </CenteredSummitButton>
-      )}
-      {!isApproved && (
-        <CenteredSummitButton isLoading={approvalPending} onClick={onApprove} summitPalette={elevation}>
-          APPROVE {symbol}
-        </CenteredSummitButton>
-      )}
+      <CenteredSummitButton
+        summitPalette={elevation}
+        isLocked={elevationLocked}
+        isLoading={stakePending}
+        disabled={disabled || invalidDeposit}
+        onClick={handleStake}
+      >
+        DEPOSIT
+      </CenteredSummitButton>
     </Flex>
   )
 }
 
-export default FarmCardUserApproveDeposit
+export default React.memo(FarmCardUserDeposit)

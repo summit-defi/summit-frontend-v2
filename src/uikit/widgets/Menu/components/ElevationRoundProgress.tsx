@@ -34,13 +34,12 @@ const VerticalBar = styled.div<{ right?: boolean, isExpedition: boolean }>`
     border-radius: 4px;
     z-index: 4;
     
-    ${({ right, isExpedition }) => right ? css`
-        right: 0px;
-        background-color: ${({ theme }) => theme.colors.text};
-        ` : css`
-        left: 0px;
-        background-color: ${({ theme }) => isExpedition ? '#3B2F60' : theme.colors.textGold};
-    `}
+    right: ${({ right }) => right ? '0px' : 'unset'};
+    right: ${({ right }) => right ? 'unset' : '0px'};
+    background-color: ${({ right, isExpedition, theme }) => right ?
+        (isExpedition ? '#3B2F60' : theme.colors.textGold) :
+        theme.colors.text
+    };
 `
 
 const ProgressBar = styled.div<{ perc: number, isExpedition: boolean }>`

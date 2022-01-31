@@ -9,13 +9,14 @@ import { useSelectedElevation, useIsElevationLockedUntilRollover, useElevationUs
 import CardValue from 'views/Home/components/CardValue'
 import ContributionBreakdown from './ContributionBreakdown'
 import SummitButton from 'uikit/components/Button/SummitButton'
+import { useElevationWinningsContributions } from 'state/hooksNew'
 
 const ElevationWinnings: React.FC = () => {
   const elevation = useSelectedElevation()
   const elevationLocked = useIsElevationLockedUntilRollover(elevation)
+  const winningsContributions = useElevationWinningsContributions(elevation)
   const { claimable } = useElevationUserRoundInfo(elevation)
   const rawClaimable = getBalanceNumber(claimable)
-  const farms = useFarms()
   const earningsOrWinnings = elevationUtils.winningsOrEarnings(elevation).toUpperCase()
 
   // CLAIMING ELEVATION
@@ -26,29 +27,6 @@ const ElevationWinnings: React.FC = () => {
     if (nothingToClaim || elevationLocked || claimPending) return
     onClaimElevation()
   }
-
-  const farmsWithClaimable = farms
-    .map((farm) => ({
-      symbol: farm.symbol,
-      claimable: farm.elevations[elevation]?.claimable || new BigNumber(0)
-    }))
-    .filter((farm) => farm.claimable.isGreaterThan(0))
-
-  const sortedClaimables = orderBy(
-    farmsWithClaimable,
-    (farmWithClaimable) => farmWithClaimable.claimable.toNumber(),
-    'desc'
-  )
-
-  const contributionSum = sortedClaimables.reduce((acc, sortedClaimable) => acc.plus(sortedClaimable.claimable), new BigNumber(0))
-
-  const contributions = sortedClaimables.map((sortedClaimable, index) => ({
-    token: true,
-    title: sortedClaimable.symbol,
-    key: index,
-    perc: sortedClaimable.claimable.times(100).div(contributionSum).toNumber(),
-    val: `${getFormattedBigNumber(sortedClaimable.claimable)} SUMMIT`,
-  }))
 
 
   return (
@@ -81,7 +59,7 @@ const ElevationWinnings: React.FC = () => {
 
       <ContributionBreakdown
         title={`${earningsOrWinnings} BY FARM:`}
-        contributions={contributions}
+        contributions={winningsContributions}
       />
       
       

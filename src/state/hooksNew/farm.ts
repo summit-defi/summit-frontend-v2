@@ -1,10 +1,11 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { FarmType } from "state/types";
 import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToTokenInfos } from "./base";
-import { getFarmInteracting, getFarmType } from "utils"
+import { getFarmInteracting, getFarmType, getFormattedBigNumber } from "utils"
 import { BN_ZERO, Elevation, elevationUtils } from "config/constants";
 import { useSelector } from "./utils";
 import BigNumber from "bignumber.js";
+import { orderBy } from "lodash";
 
 
 
@@ -141,3 +142,35 @@ const selectSymbolElevateSelectorInfo = createSelector(
     ({ elevLaunched }) => elevLaunched
 )
 export const useSymbolElevateSelectorInfo = (symbol: string) => useSelector((state) => selectSymbolElevateSelectorInfo(state, symbol))
+
+const selectFarmsWithClaimable = createSelector(
+    stateToFarms,
+    (_, elevation: Elevation) => elevation,
+    (farms, elevation) => farms
+        .map((farm) => ({
+            symbol: farm.symbol,
+            claimable: farm.elevations[elevation]?.claimable || BN_ZERO
+        }))
+        .filter((farm) => farm.claimable.isGreaterThan(0))
+)
+const selectElevationWinningsContributions = createSelector(
+    selectFarmsWithClaimable,
+    (farmsWithClaimable) => {
+        const sortedClaimables = orderBy(
+            farmsWithClaimable,
+            (farmWithClaimable) => farmWithClaimable.claimable.toNumber(),
+            'desc'
+        )
+        
+        const contributionSum = sortedClaimables.reduce((acc, sortedClaimable) => acc.plus(sortedClaimable.claimable), BN_ZERO)
+        
+        return sortedClaimables.map((sortedClaimable, index) => ({
+            token: true,
+            title: sortedClaimable.symbol,
+            key: index,
+            perc: sortedClaimable.claimable.times(100).div(contributionSum).toNumber(),
+            val: `${getFormattedBigNumber(sortedClaimable.claimable)} SUMMIT`,
+        }))
+    }
+)
+export const useElevationWinningsContributions = (elevation: Elevation) => useSelector((state) => selectElevationWinningsContributions(state, elevation))
