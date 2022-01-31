@@ -1,15 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
-import {
-  useExpeditionFetching,
-  useExpeditionEntered,
-} from 'state/hooks'
+import { useExpeditionFetching } from 'state/hooks'
 import Page from 'components/layout/Page'
 import ExpeditionTotems from './components/ExpeditionTotems'
 import PageLoader from 'components/PageLoader'
 import ExpeditionEntryFlow from './components/ExpeditionEntryFlow'
 import { useEnteredExpedition, useExpeditionLoaded } from 'state/hooksNew'
-import FlexLayout from 'components/layout/Flex'
 import ExpeditionCard from './components/ExpeditionCard'
 
 const StyledPage = styled(Page)`

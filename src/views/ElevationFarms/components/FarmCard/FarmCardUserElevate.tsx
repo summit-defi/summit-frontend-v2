@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex, Text, useModal } from 'uikit'
-import { Elevation, ForceElevationRetired } from 'config/constants/types'
+import { Elevation } from 'config/constants/types'
 import styled from 'styled-components'
 import ElevationSelector from '../ElevationSelector'
 import useElevate from 'hooks/useElevate'

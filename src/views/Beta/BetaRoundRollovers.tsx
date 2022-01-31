@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Flex, Text, TokenSymbolImage } from 'uikit'
+import { Flex, Text } from 'uikit'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { Elevation, PriceableToken, TokenSymbol } from 'config/constants'
+import { Elevation } from 'config/constants'
 import useRolloverElevation from 'hooks/useRolloverElevation'
 import { useElevationRoundTimeRemaining, useElevationLocked } from 'state/hooks'
 
@@ -75,6 +75,8 @@ const BetaRoundRolloversCard: React.FC = () => {
   return (
     <BTCard>
       <WrapperFlex>
+        <Text monospace italic small mb='14px' textAlign='center'>* The BETA requires manually rolling over rounds, it will be done automatically in the real V2</Text>
+
         <FarmNumericalInfoFlex>
           { [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT, Elevation.EXPEDITION].map((elevation) => (
             <SummitButton

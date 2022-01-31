@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
-import { Flex, HighlightedText, MobileColumnFlex, Text } from 'uikit'
+import { Flex, HighlightedText, MobileColumnFlex, Text, TokenSymbolImage } from 'uikit'
 import { MobileRowFlex } from 'uikit/components/Box/Flex'
 import { getEpochTimestamps, getFormattedBigNumber, timestampToDate } from 'utils'
 import HarvestEpochButton from './HarvestEpochButton'
@@ -43,8 +43,8 @@ const ThawedEpoch: React.FC<{ epochIndex: number }> = ({ epochIndex }) => {
                 {beginDate} - {closeDate}
             </Text>
             <MobileColumnFlex alignItems='center' justifyContent='center' mt='12px' mb='12px'>
+                <TokenSymbolImage symbol='ThawedSUMMIT' width={40} height={40} />
                 <HighlightedText bold monospace fontSize='22px' ml='4px' mr='4px' lineHeight='22px'>{rawFrozen}</HighlightedText>
-                <HighlightedText bold monospace fontSize='14px' ml='4px' mr='4px' lineHeight='14px'>SUMMIT</HighlightedText>
             </MobileColumnFlex>
             <HarvestEpochButton epochIndex={epoch.index} width='160px' height='28px' />
         </StyledMobileColumnFlex>

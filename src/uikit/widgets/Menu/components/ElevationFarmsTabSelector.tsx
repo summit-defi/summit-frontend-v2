@@ -1,15 +1,14 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
-import { darken, transparentize } from 'polished'
+import styled from 'styled-components'
+import { darken } from 'polished'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { Elevation, ElevationFarmTab, elevationFarmTabToUrl, elevationTabToElevation, elevationUtils, SummitPalette } from 'config/constants/types'
+import { ElevationFarmTab, elevationFarmTabToUrl, elevationTabToElevation, elevationUtils, SummitPalette } from 'config/constants/types'
 import { pressableMixin } from 'uikit/util/styledMixins'
 import { useElevationFarmsTab, useElevationTotems, useSingleFarmSelected } from 'state/hooks'
-import { NavLink, useLocation } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import Flex from 'uikit/components/Box/Flex'
 import { Text } from 'uikit/components/Text'
 import ElevationTabTotemIcon from './ElevationTabTotemIcon'
-import { MENU_HEIGHT } from '../config'
 import { useWinningTotems } from 'state/hooksNew'
 
 const buttonWidth = 68
@@ -70,7 +69,10 @@ const TextButtonText = styled(Text)<{
 }>`
     text-align: center;
     line-height: 14px;
-    color: ${({ theme, tab }) => darken(tab === ElevationFarmTab.DASH ? 0 : 0.2, theme.colors[tab])};
+    color: ${({ theme, tab }) => tab === ElevationFarmTab.DASH && theme.isDark ?
+        theme.colors.text :
+        darken(tab === ElevationFarmTab.DASH ? 0 : 0.2, theme.colors[tab])
+    };
     text-shadow: 1px 1px 2px ${({ theme, tab }) => darken(0.2, theme.colors[tab])};
 `
 

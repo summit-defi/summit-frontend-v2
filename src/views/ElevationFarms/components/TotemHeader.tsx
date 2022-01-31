@@ -16,6 +16,7 @@ import TotemHeaderButtonsRow from './TotemHeaderButtonsRow'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import MultiElevYieldBet from './MultiElevYieldBet'
 import MultiElevWinningsAndClaim from './MultiElevWinningsAndClaim'
+import { LifetimeSummitWinnings } from './LifetimeSummitWinnings'
 
 const HeaderCardsWrapper = styled(Flex)`
   justify-content: center;
@@ -80,6 +81,7 @@ const TotemHeader: React.FC = () => {
     <HeaderCardsWrapper>
       <HeaderWrapper flexDirection="column" alignItems="center" justifyContent="center">
         <TotemHeaderButtonsRow/>
+        <LifetimeSummitWinnings/>
         <ElevationIntroduction/>
         { account == null ?
           <UnlockButton summitPalette={elevationTab} /> :

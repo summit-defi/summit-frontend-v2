@@ -3,7 +3,6 @@ import {
   retryableMulticall,
   abi,
   groupByAndMap,
-  getSubCartographerAddress,
 } from 'utils/'
 import BigNumber from 'bignumber.js'
 import { Elevation, elevationUtils } from 'config/constants/types'

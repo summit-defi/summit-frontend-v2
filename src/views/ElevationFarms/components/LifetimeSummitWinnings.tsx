@@ -1,20 +1,20 @@
 import React, { memo } from 'react'
-import { useGlacierTotalFrozenSummit, useGlacierTotalThawedSummit } from 'state/hooksNew'
+import { ElevationFarmTab } from 'config/constants'
+import { useLifetimeSummitWinningsAndBonus } from 'state/hooksNew'
 import styled from 'styled-components'
-import { HighlightedText, MobileColumnFlex, Text, TokenSymbolImage } from 'uikit'
+import { HighlightedText, MobileColumnFlex, Text } from 'uikit'
 import { getFormattedBigNumber } from 'utils'
+import { useElevationFarmsTab } from 'state/hooks'
 
 const Wrapper = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    margin-bottom: 24px;
     width: 100%;
-    margin-top: -24px;
     
     ${({ theme }) => theme.mediaQueries.nav} {
-        margin-top: -136px;
+        margin-top: -86px;
     }
 `
 
@@ -43,24 +43,23 @@ const ValueText = styled(MobileColumnFlex)`
     }
 `
 
-const SummitIconSize = 50
-
-export const GlacierTotalSummitAmounts: React.FC = memo(() => {
-    const totalFrozenSummit = useGlacierTotalFrozenSummit()
-    const totalThawedSummit = useGlacierTotalThawedSummit()
-    const rawTotalFrozenSummit = getFormattedBigNumber(totalFrozenSummit)
-    const rawTotalThawedSummit = getFormattedBigNumber(totalThawedSummit)
+const DashboardLifetimeSummitWinnings: React.FC = memo(() => {
+    const {
+        lifetimeSummitWinnings,
+        lifetimeSummitBonuses,
+    } = useLifetimeSummitWinningsAndBonus()
+    const rawLifetimeSummitWinnings = getFormattedBigNumber(lifetimeSummitWinnings)
+    const rawLifetimeSummitBonuses = getFormattedBigNumber(lifetimeSummitBonuses)
 
     return (
         <Wrapper>
             <ItemFlex>
-                <TokenSymbolImage symbol='FrozenSUMMIT' width={SummitIconSize} height={SummitIconSize} />
                 <Text bold monospace small>
-                    TOTAL FROZEN SUMMIT
+                    LIFETIME WINNINGS
                 </Text>
                 <ValueText>
                     <HighlightedText bold monospace fontSize='22' lineHeight='22px'>
-                        {rawTotalFrozenSummit}
+                        {rawLifetimeSummitWinnings}
                     </HighlightedText>
                     <HighlightedText monospace fontSize='14' lineHeight='14px'>
                         SUMMIT
@@ -69,13 +68,12 @@ export const GlacierTotalSummitAmounts: React.FC = memo(() => {
             </ItemFlex>
             <Spacer/>
             <ItemFlex>
-                <TokenSymbolImage symbol='ThawedSUMMIT' width={SummitIconSize} height={SummitIconSize} />
                 <Text bold monospace small>
-                    TOTAL THAWED SUMMIT
+                    LIFETIME LOYALTY BONUS
                 </Text>
                 <ValueText>
                     <HighlightedText bold monospace fontSize='22' lineHeight='22px'>
-                        {rawTotalThawedSummit}
+                        {rawLifetimeSummitBonuses}
                     </HighlightedText>
                     <HighlightedText monospace fontSize='14' lineHeight='14px'>
                         SUMMIT
@@ -84,4 +82,11 @@ export const GlacierTotalSummitAmounts: React.FC = memo(() => {
             </ItemFlex>
         </Wrapper>
     )
+})
+
+export const LifetimeSummitWinnings: React.FC = memo(() => {
+    const elevationTab = useElevationFarmsTab()
+
+    if (elevationTab !== ElevationFarmTab.DASH) return null
+    return <DashboardLifetimeSummitWinnings/>
 })

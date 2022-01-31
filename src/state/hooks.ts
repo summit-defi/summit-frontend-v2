@@ -2,13 +2,13 @@ import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
-import { getTimestampDiff, groupBy, getFormattedBigNumber, epochEndTimestamp, epochThawTimestamp } from 'utils'
+import { getTimestampDiff, getFormattedBigNumber, epochEndTimestamp, epochThawTimestamp } from 'utils'
 import {
   fetchFarmsPublicDataAsync,
   fetchExpeditionUserDataAsync,
   fetchExpeditionPublicDataAsync,
 } from './actions'
-import { State, Farm, ElevationInfo, UserTokenData, EverestUserData } from './types'
+import { State, Farm, ElevationInfo } from './types'
 import { BN_ZERO, Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired, RoundLockTime, SummitPalette } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
@@ -18,11 +18,8 @@ import {
 import { useLocation } from 'react-router-dom'
 import { getFarmConfigs } from 'config/constants/farms'
 import useTheme from 'hooks/useTheme'
-import { getChainWrappedNativeTokenSymbol, TokenSymbol } from 'config/constants'
 import { updateExpeditionUserPotentialWinningsAsync, updateExpeditionUserWinningsAsync } from './expedition'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-
-const ZERO = new BigNumber(0)
 
 export const useMediaQuery = (query) => {
   const [matches, setMatches] = useState(false)
@@ -191,7 +188,7 @@ export const useMultiElevStaked = () => {
   return useMemo(
     () => {
       const tvlContributions = Object.entries(elevTVL)
-        .filter(([elevation, tvl]) => tvl.isGreaterThan(0))
+        .filter(([_, tvl]) => tvl.isGreaterThan(0))
         .map(([elevation, tvl]) => ({
           title: elevation,
           elevation: true,
@@ -340,9 +337,6 @@ export const useExpeditionDisbursedValue = (): number => {
 
 export const useSummitEnabled = () => useSelector((state: State) => state.summitEcosystem.summitEnabled)
 
-export const useElevationsInfo = (): ElevationInfo[] => {
-  return useSelector((state: State) => state.summitEcosystem.elevationsInfo)
-}
 export const useElevationInfo = (elevation: Elevation): ElevationInfo | null => {
   return useSelector(
     (state: State) =>
@@ -410,10 +404,6 @@ export const useSelectedElevation = (): Elevation | null => {
         return null
     }
   }, [location])
-}
-export const useSelectedElevationInfo = (): ElevationInfo | null => {
-  const elevation = useSelectedElevation()
-  return useElevationInfo(elevation)
 }
 
 export const useTotemSelectionPending = (): boolean => {
@@ -508,34 +498,6 @@ export const usePendingExpeditionTx = (): boolean => {
   return useSelector((state: State) => state.summitEcosystem.pendingExpeditionTx)
 }
 
-// ELEVATE
-const baseSisterFarms = {
-  [Elevation.OASIS]: null,
-  [Elevation.PLAINS]: null,
-  [Elevation.MESA]: null,
-  [Elevation.SUMMIT]: null,
-  [Elevation.EXPEDITION]: null,
-}
-export interface SisterFarms {
-  [Elevation.OASIS]?: Farm
-  [Elevation.PLAINS]?: Farm
-  [Elevation.MESA]?: Farm
-  [Elevation.SUMMIT]?: Farm
-}
-export const useSisterFarms = (symbol: string): SisterFarms => {
-  return baseSisterFarms
-  // const farms = useFarms()
-
-  // return useMemo(() => {
-  //   const sisterFarms = baseSisterFarms
-  //   farms.forEach((farm) => {
-  //     if (farm.symbol !== symbol || !farm.launched) return
-  //     sisterFarms[farm.elevation] = farm
-  //   })
-  //   return sisterFarms
-  // }, [farms, symbol])
-}
-
 // HISTORICAL WINNERS
 export const useTotemHistoricalData = (
   elevation: Elevation,
@@ -589,11 +551,6 @@ export const useWinningTotems = () => {
   ])
 }
 
-export const useSelectedElevationWinningTotem = () => {
-  const elevation = useSelectedElevation()
-  return  useElevationWinningTotem(elevation)
-}
-
 // THEME
 export const usePageForcedDarkMode = () => {
   const elevation = useSelectedElevation()
@@ -613,38 +570,6 @@ export const useEpochVariableTickTimestamp = (epoch: number, toEpochEnd = false)
     if ((maxTimestamp - currentTimestamp) > 3600) return (Math.floor(currentTimestamp / 60) * 60) + 30
     return currentTimestamp
   }, [currentTimestamp, epoch, toEpochEnd])
-}
-
-// EVEREST
-export const useEverestInfo = () => {
-  const totalSummitLocked: BigNumber = useSelector((state: State) => state.everest.totalSummitLocked)
-  const averageLockDuration: number = useSelector((state: State) => state.everest.averageLockDuration)
-  const everestSupply: BigNumber = useSelector((state: State) => state.everest.everestSupply)
-  return useMemo(
-    () => ({
-      totalSummitLocked,
-      averageLockDuration,
-      everestSupply
-    }),
-    [totalSummitLocked, averageLockDuration, everestSupply]
-  )
-}
-export const useEverestUserInfo = (): EverestUserData | undefined => {
-  return useSelector((state: State) => state.everest.userData)
-}
-export const useEverestDataLoaded = () => {
-  const userInfo = useEverestUserInfo()
-  return useMemo(
-    () => userInfo != null,
-    [userInfo]
-  )
-}
-export const useUserHasLockedSummit = () => {
-  const userInfo = useEverestUserInfo()
-  return useMemo(
-    () => (userInfo?.summitLocked || BN_ZERO).isGreaterThan(0),
-    [userInfo]
-  )
 }
 
 

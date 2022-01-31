@@ -1,6 +1,6 @@
 import React from 'react'
 import { Elevation, elevationUtils } from 'config/constants/types'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { elevationPalette } from 'theme/colors'
 import { Text, Flex, useMatchBreakpoints } from 'uikit'
 import Totem from './Totem'
@@ -16,7 +16,7 @@ const TotemBattleAreaWrapper = styled(Flex)<{ fullWidth: boolean, secondRow: boo
   justify-content: center;
   position: relative;
   height: ${GameAreaHeight}px;
-  margin-top: ${({ secondRow }) => secondRow ? -31 : 15}px;
+  margin-top: ${({ secondRow }) => secondRow ? -16 : 0}px;
   width: ${({ fullWidth }) => fullWidth ? '100%' : 'auto'};
 `
 

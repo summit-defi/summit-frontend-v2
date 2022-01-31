@@ -147,13 +147,15 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
       headerless
     >
       <Flex justifyContent="center" flexDirection="column" alignItems="center">
-        <Text textAlign="center" bold>
-          {`Transfer ${symbol} between elevations and skip the fees.`}
+        <Text textAlign="center" monospace small bold>
+          {`Transfer ${symbol} between elevations`}
+          <br/>
+          and avoid the Fairness Tax.
         </Text>
 
         <Flex justifyContent="space-around" alignItems="center" width="100%" mt="24px">
           <Flex flexDirection="column" alignItems="center">
-            <Text bold monospace>
+            <Text bold monospace small>
               FROM THE:
             </Text>
             <ElevationSelector
@@ -171,7 +173,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
           </Flex>
 
           <Flex flexDirection="column" alignItems="center">
-            <Text bold monospace>
+            <Text bold monospace small>
               TO THE:
             </Text>
             <ElevationSelector
@@ -184,7 +186,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
           </Flex>
         </Flex>
 
-        <Text bold monospace mt="24px">
+        <Text bold monospace mt="24px" small>
           {selectedTargetElevation} TOTEM:
         </Text>
         {totem == null ? (
@@ -201,7 +203,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
           />
         )}
 
-        <Text bold monospace mt="24px" mb="12px">
+        <Text bold monospace mt="24px" mb="12px" small>
           AMOUNT TO TRANSFER:
         </Text>
         <TokenInput

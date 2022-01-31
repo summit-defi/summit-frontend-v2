@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit'
 import { BN_ZERO } from 'config/constants'
 import { Epoch } from 'state/types'
-import { stateToEpochs, stateToCurrentEpochIndex, stateToGlacierTotalFrozenSummit, stateToGlacierTotalThawedSummit } from './base'
+import { stateToEpochs, stateToCurrentEpochIndex, stateToGlacierTotalFrozenSummit, stateToGlacierTotalThawedSummit, stateToLifetimeSummitWinnings, stateToLifetimeSummitBonuses } from './base'
 import { useSelector } from './utils'
 
 export const makeSelectEpochByIndex = () => createSelector(
@@ -44,4 +44,14 @@ export const useFrozenEpochIndices = () => useSelector(selectFrozenEpochIndices)
 
 export const useGlacierTotalFrozenSummit = () => useSelector(stateToGlacierTotalFrozenSummit)
 export const useGlacierTotalThawedSummit = () => useSelector(stateToGlacierTotalThawedSummit)
+
+const selectLifetimeSummitWinningsAndBonus = createSelector(
+    stateToLifetimeSummitWinnings,
+    stateToLifetimeSummitBonuses,
+    (lifetimeSummitWinnings, lifetimeSummitBonuses) => ({
+        lifetimeSummitWinnings,
+        lifetimeSummitBonuses,
+    })
+)
+export const useLifetimeSummitWinningsAndBonus = () => useSelector(selectLifetimeSummitWinningsAndBonus)
 

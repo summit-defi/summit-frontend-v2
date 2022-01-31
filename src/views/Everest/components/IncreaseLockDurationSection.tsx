@@ -1,5 +1,4 @@
-import BigNumber from 'bignumber.js'
-import React, { memo, useState } from 'react'
+import React, { useState } from 'react'
 import { useCurrentTimestampOnce } from 'state/hooks'
 import { EverestUserData, LockSummitButtonType } from 'state/types'
 import { Flex, Text } from 'uikit'

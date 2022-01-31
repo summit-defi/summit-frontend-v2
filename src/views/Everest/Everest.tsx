@@ -5,12 +5,12 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import Page from 'components/layout/Page'
 import { UserEverestCard, EverestStatsCard } from './components'
 import styled from 'styled-components'
-import { ElevationPuck, Flex, Text } from 'uikit'
+import { ElevationPuck, Flex } from 'uikit'
 import FlexLayout from 'components/layout/Flex'
 import { fetchUserEpochsAsync } from 'state/glacier'
 import useRefresh from 'hooks/useRefresh'
 import PageLoader from 'components/PageLoader'
-import { useEverestDataLoaded } from 'state/hooks'
+import { useEverestDataLoaded } from 'state/hooksNew'
 
 const HeaderCardsWrapper = styled(Flex)`
     justify-content: center;

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { provider } from 'web3-core'
-import { abi, getSummitTokenAddress, getTokenApproved, getTokenBalance, getV1SummitTokenAddress, retryableMulticall } from 'utils'
+import { getSummitTokenAddress, getTokenApproved, getTokenBalance, getV1SummitTokenAddress } from 'utils'
 import useRefresh from './useRefresh'
 
 export const useV1SummitTokenBalance = () => {

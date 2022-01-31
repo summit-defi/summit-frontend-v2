@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
-import { Flex, Text } from 'uikit'
+import React from 'react'
+import { Flex } from 'uikit'
 import Slider from 'rc-slider'
 import styled from 'styled-components'
-import { darken, linearGradient, transparentize } from 'polished'
+import { darken, linearGradient } from 'polished'
 import 'rc-slider/assets/index.css'
-import { pressableMixin } from 'uikit/util/styledMixins'
-import { getPaletteGradientStops, getLockDurationPerc, lockDurationSliderMarks, lockDurationSliderPerc, sliderPercLockDuration, sliderPoints  } from 'utils'
+import { getPaletteGradientStops, getLockDurationPerc, lockDurationSliderMarks, sliderPoints  } from 'utils'
 import { SummitPalette } from 'config/constants'
 
 const ButtonHeight = 6

@@ -6,7 +6,6 @@ import FarmStakingCard from './components/FarmStakingCard'
 import SummitStats from './components/SummitStats'
 import { useExpeditionDisbursedValue, useExpeditionPotTotalValue, useTotalValue } from 'state/hooks'
 import CardValue from './components/CardValue'
-import TotemsLineup from './components/TotemsLineup'
 import { Elevation } from 'config/constants/types'
 import { getSummitLpSymbol } from 'config/constants'
 import { InverseDeity } from 'views/ElevationFarms/components/InverseDeity'
@@ -141,8 +140,6 @@ const Home: React.FC = () => {
           Your Totem Lineup:
         </StyledHighlightedText>
       </Flex>
-
-      <TotemsLineup />
 
       <div>
         <Cards>

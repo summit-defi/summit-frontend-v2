@@ -96,9 +96,10 @@ const TextBubble = styled.div<{ perc: number }>`
     }
 `
 
-const TimerText = styled(Text)<{ even: boolean }>`
+const TimerText = styled(Text)<{ even: boolean, endingHighlight: boolean }>`
     transform-origin: 50% 50%;
     transform: ${({ even }) => `scale(${even ? 1 : 1.07})`};
+    color: ${({ theme, endingHighlight, even }) => (endingHighlight && !even) ? '#EA9130' : theme.colors.text};
 `
 
 const StyledSpinner = styled(Spinner)`
@@ -117,6 +118,7 @@ const ElevationRoundProgress: React.FC = () => {
         () => {
             if (roundTimeRemaining == null) return ''
             if (roundTimeRemaining === 0) return 'FINALIZING ROUND'
+            if (roundTimeRemaining <= 420) return `ROUND LOCKS IN: ${getTimeRemainingText(roundTimeRemaining - 120)}!`
             if (roundTimeRemaining <= 120) {
                 return `LOCKED, FINALIZING IN: ${getTimeRemainingText(roundTimeRemaining)}`
             }
@@ -131,7 +133,7 @@ const ElevationRoundProgress: React.FC = () => {
             const pill = clamp((100 * ((roundDuration - 120) - (roundTimeRemaining - 120))) / (roundDuration - 120), 0, 100)
             return {
                 pill,
-                text: roundTimeRemaining <= 120 ? 50 : pill
+                text: roundTimeRemaining <= 420 ? 50 : pill
             }
         },
         [roundTimeRemaining, roundDuration]
@@ -146,7 +148,7 @@ const ElevationRoundProgress: React.FC = () => {
             <ProgressPill isExpedition={isExpedition} perc={perc().pill}/>
             { roundTimeRemaining != null && <TextBubble perc={perc().text}>
                 { roundTimeRemaining === 0 && <StyledSpinner className="spinner" /> }
-                <TimerText bold monospace even={roundTimeRemaining % 2 === 0}>{getTimerText()}</TimerText>
+                <TimerText bold monospace endingHighlight={roundTimeRemaining <= 420 && roundTimeRemaining > 120} even={roundTimeRemaining % 2 === 0}>{getTimerText()}</TimerText>
             </TextBubble> }
         </RoundProgressBar>
     )

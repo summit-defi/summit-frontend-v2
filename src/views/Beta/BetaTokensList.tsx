@@ -56,12 +56,12 @@ const BetaTokensList: React.FC = () => {
         <ElevationPuck elevation='BASE'>
           <Text bold fontSize='24px' color='#CB0000'>
             BETA
-            <br/>
-            TOKENS
           </Text>
         </ElevationPuck>
-        <Text bold monospace textAlign='center'>
-          Beta test tokens are available below
+        <Text bold monospace small textAlign='center'>
+          BETA test tokens and round rollovers are available below.
+          <br/>
+          The beta uses temporary values for many constants. Dont take the values as set in stone.
           <br/>
           <br/>
           The CAKE token is used as the SUMMIT V1 token

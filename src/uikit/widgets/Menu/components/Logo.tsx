@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import Flex from '../../../components/Box/Flex'
 import { LogoIcon as LogoWithText } from '../icons'
 import { SummitPalette } from 'config/constants/types'
 import { pressableMixin } from 'uikit/util/styledMixins'

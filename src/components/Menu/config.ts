@@ -15,7 +15,7 @@ const populateLinkSummitAddress = (link: string): string => {
 export const getMenuItems = (
   exchangeLink,
   liqLink,
-  totems,
+  userDeity,
   elevationsLocked,
 ): MenuEntry[] => [
   {
@@ -39,18 +39,16 @@ export const getMenuItems = (
     external: true,
   },
   {
+    label: 'OBELISK AUDIT',
+    href: 'https://github.com/Tibereum/obelisk-audits/blob/main/Summit.pdf',
+    external: true,
+  },
+
+  {
     label: 'BETA',
     href: '/beta',
     icon: 'totemIcons/BETA.png',
     keyPaths: ['beta']
-  },
-
-  {
-    label: 'OBELISK|br|AUDIT',
-    href: 'https://github.com/Tibereum/obelisk-audits/blob/main/Summit.pdf',
-    external: true,
-    icon: 'totemIcons/AUDIT.png',
-    neverHighlight: true,
   },
   {
     label: 'ELEVATION|br|FARMS',
@@ -80,7 +78,7 @@ export const getMenuItems = (
     icon: getTotemIcon(
       Elevation.EXPEDITION,
       elevationsLocked[elevationUtils.toInt(Elevation.EXPEDITION)],
-      totems[Elevation.EXPEDITION],
+      userDeity,
     ),
     href: `/expedition`,
     external: false,

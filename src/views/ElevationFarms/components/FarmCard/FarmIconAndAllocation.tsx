@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { ElevationFarmTab } from "config/constants";
-import { useElevationFarmsTab, useSelectedElevation } from "state/hooks";
+import { useElevationFarmsTab } from "state/hooks";
 import styled from "styled-components";
 import { Flex, Tag, Text, TokenSymbolImage } from "uikit";
 

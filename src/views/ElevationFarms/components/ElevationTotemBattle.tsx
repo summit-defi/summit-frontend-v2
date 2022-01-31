@@ -1,5 +1,5 @@
 import React from 'react'
-import { Elevation, ElevationFarmTab, elevationTabToElevation, elevationUtils } from 'config/constants/types'
+import { ElevationFarmTab, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import { Flex, Text } from 'uikit'
 import { useElevationUserRoundInfo, useElevationTotem, useElevationFarmsTab } from 'state/hooks'
 import TotemBattleBreakdown from './TotemBattleBreakdown'

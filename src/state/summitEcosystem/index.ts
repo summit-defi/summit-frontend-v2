@@ -5,7 +5,6 @@ import { Elevation, elevationUtils } from 'config/constants/types'
 import { FarmType, SummitEcosystemState } from '../types'
 import { fetchElevationsData, fetchDeityDivider } from './fetchElevationInfo'
 import { fetchRolloverReward } from './fetchRolloverRewardInNativeToken'
-import { fetchSummitEnabled } from './fetchSummitEnabled'
 import { fetchUsersTotems } from './fetchUsersTotems'
 
 const getLocalStorageVariables = () => {

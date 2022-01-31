@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import { makeSelectEpochByIndex, useFrozenEpochIndices, useSelector } from 'state/hooksNew'
 import styled from 'styled-components'
-import { Flex, HighlightedText, Text } from 'uikit'
+import { Flex, HighlightedText, Text, TokenSymbolImage } from 'uikit'
 import { getEpochTimestamps, getBalanceNumber, timestampToDate } from 'utils'
 import CardValue from 'views/Home/components/CardValue'
 import EpochProgressBar from './EpochProgressBar'
@@ -15,6 +15,7 @@ const MobileBreak = styled.br`
 `
 
 export const FrozenEpochCard = styled(Flex)`
+    position: relative;
     flex-direction: column;
     background: ${({ theme }) => theme.colors.background};
     border-radius: 6px;
@@ -35,28 +36,36 @@ const FrozenEpoch: React.FC<{ epochIndex: number }> = ({ epochIndex }) => {
     const thawDate = timestampToDate(thawTimestamp)
     return (
         <FrozenEpochCard gap='24px' alignItems='center' justifyContent='center'>
-            <Text bold monospace fontSize='12px' textAlign='center'>
+            <Text bold monospace small textAlign='center'>
                 EPOCH:{' '}
                 <MobileBreak/>
                 {beginDate} - {closeDate}
             </Text>
+
+
+            <Text monospace small italic textAlign='center' mb='-24px'>
+                SUMMIT THAWS IN:
+            </Text>
+
+
             <EpochProgressBar
                 epoch={epoch.index}
             />
             <Flex gap='24px' alignItems='center' justifyContent='space-around' width='100%' maxWidth='450px'>
                 <Flex flexDirection='column' justifyContent='center' alignItems='center'>
                     <Text bold monospace fontSize='12px'>SUMMIT FROZEN:</Text>
-                    <CardValue
-                        value={rawFrozen}
-                        decimals={3}
-                        fontSize="20"
-                        postfix='SUMMIT'
-                        postfixFontSize='14'
-                    />
+                    <Flex gap='6px' ml='-6px' alignItems='center' justifyContent='center'>
+                        <TokenSymbolImage symbol='FrozenSUMMIT' width={40} height={40} />
+                        <CardValue
+                            value={rawFrozen}
+                            decimals={3}
+                            fontSize="20"
+                        />
+                    </Flex>
                 </Flex>
                 <Flex flexDirection='column' justifyContent='center' alignItems='center'>
                     <Text bold monospace fontSize='12px'>THAW DATE:</Text>
-                    <HighlightedText bold monospace header fontSize='20'>
+                    <HighlightedText bold monospace header fontSize='20' lineHeight='40px'>
                         {thawDate}
                     </HighlightedText>
                 </Flex>

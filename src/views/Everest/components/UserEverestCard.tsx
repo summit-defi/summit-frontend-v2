@@ -1,6 +1,6 @@
 import { BN_ZERO } from "config/constants"
 import React, { memo } from "react"
-import { useEverestUserInfo } from "state/hooks"
+import { useEverestUserInfo } from "state/hooksNew"
 import styled from "styled-components"
 import { Flex, HighlightedText } from "uikit"
 import { IncreaseLockDurationSection } from "./IncreaseLockDurationSection"

@@ -93,7 +93,7 @@ const TotemHeaderButtonsRow: React.FC = () => {
   const totemSelectionPending = useTotemSelectionPending()
 
   const isElevationFarm = elevation !== Elevation.OASIS
-  const { onPresentTotemWinnersModal, showTotemWinnersModalButton } = useTotemWinnersModal(elevation)
+  const { onPresentTotemWinnersModal } = useTotemWinnersModal(elevation)
   const { onPresentSelectTotemModal } = useSelectTotemModal(elevation)
 
   const handlePresentSelectTotemModal = () => {

@@ -6,8 +6,8 @@ import MenuLink from './MenuLink'
 import { PanelProps, PushedProps } from '../types'
 import { Elevation, elevationUtils } from 'config/constants/types'
 import SelectableIcon from './SelectableIcon'
-import { useElevationsLocked, useElevationTotems, useWinningTotems } from 'state/hooks'
-import { useExpeditionUserDeity, useUserTotemsAndCrowns } from 'state/hooksNew'
+import { useElevationsLocked } from 'state/hooks'
+import { useExpeditionUserDeity } from 'state/hooksNew'
 
 interface Props extends PanelProps, PushedProps {
   isMobile: boolean

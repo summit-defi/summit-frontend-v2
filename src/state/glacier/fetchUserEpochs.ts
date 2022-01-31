@@ -13,12 +13,22 @@ export const fetchUserEpochs = async (account: string) => {
     }, {
         address: summitLockingAddress,
         name: 'getCurrentEpoch'
+    }, {
+        address: summitLockingAddress,
+        name: 'userLifetimeWinnings',
+        params: [account]
+    }, {
+        address: summitLockingAddress,
+        name: 'userLifetimeBonusWinnings',
+        params: [account]
     }], 'fetchUserInteractingEpochs')
 
     if (interactingEpochsRes == null) return []
 
     const interactingEpochs = interactingEpochsRes[0][0].map((epochIndex) => epochIndex.toNumber())
     const currentEpochIndex = new BigNumber(interactingEpochsRes[1][0]._hex).toNumber()
+    const lifetimeSummitWinnings = new BigNumber(interactingEpochsRes[2][0]._hex).toNumber()
+    const lifetimeSummitBonuses = new BigNumber(interactingEpochsRes[3][0]._hex).toNumber()
 
     const epochCalls = interactingEpochs.map((epochIndex) => [{
         address: summitLockingAddress,
@@ -47,6 +57,8 @@ export const fetchUserEpochs = async (account: string) => {
 
 
     return {
+        lifetimeSummitWinnings,
+        lifetimeSummitBonuses,
         currentEpochIndex,
         epochs,
         totalFrozenSummit,

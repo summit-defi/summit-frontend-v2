@@ -1,6 +1,6 @@
 import React from 'react'
 import { useCurrentEpoch } from 'state/hooksNew'
-import { Flex, HighlightedText, MobileColumnFlex, Text } from 'uikit'
+import { Flex, HighlightedText, MobileColumnFlex, Text, TokenSymbolImage } from 'uikit'
 import { epochThawTimestamp, getBalanceNumber, timestampToDate } from 'utils'
 import CardValue from 'views/Home/components/CardValue'
 import EpochProgressBar from './EpochProgressBar'
@@ -22,17 +22,18 @@ export const CurrentEpochSection: React.FC = () => {
             <MobileColumnFlex gap='24px' alignItems='center' justifyContent='space-between' width='100%' maxWidth='450px'>
                 <Flex flexDirection='column' justifyContent='center' alignItems='center'>
                     <Text bold monospace fontSize='12px'>EPOCH SUMMIT FROZEN:</Text>
-                    <CardValue
-                        value={rawFrozen}
-                        decimals={3}
-                        fontSize="22"
-                        postfix='SUMMIT'
-                        postfixFontSize='14'
-                    />
+                    <Flex gap='6px' ml='-6px' alignItems='center' justifyContent='center'>
+                        <TokenSymbolImage symbol='FrozenSUMMIT' width={40} height={40} />
+                        <CardValue
+                            value={rawFrozen}
+                            decimals={3}
+                            fontSize="22"
+                        />
+                    </Flex>
                 </Flex>
                 <Flex flexDirection='column' justifyContent='center' alignItems='center'>
                     <Text bold monospace fontSize='12px'>EPOCH THAW DATE:</Text>
-                    <HighlightedText bold monospace header fontSize='22'>
+                    <HighlightedText bold monospace header fontSize='22' lineHeight='40px'>
                         {thawDate}
                     </HighlightedText>
                 </Flex>

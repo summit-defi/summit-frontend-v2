@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { getV1SummitTokenAddress, tokenSwapV1Summit, approve, getSummitTokenAddress, getContract } from 'utils'
-import { useERC20, useSummitToken } from './useContract'
+import { useSummitToken } from './useContract'
 import useToast from './useToast'
 import { provider } from 'web3-core'
 import { useV1SummitTokenApproved, useV1SummitTokenBalance } from './useV1SummitToken'

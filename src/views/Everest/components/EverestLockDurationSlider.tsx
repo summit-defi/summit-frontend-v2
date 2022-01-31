@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { darken, linearGradient } from 'polished'
 import 'rc-slider/assets/index.css'
 import { pressableMixin } from 'uikit/util/styledMixins'
-import { getPaletteGradientStops, lockDurationSliderMarks, lockDurationSliderPerc, sliderPercLockDuration, sliderPoints  } from 'utils'
+import { getPaletteGradientStops, lockDurationSliderMarks, lockDurationSliderPerc, sliderPercLockDuration } from 'utils'
 import { SummitPalette } from 'config/constants'
 
 const ButtonHeight = 28

@@ -10,7 +10,7 @@ import { MENU_HEIGHT, SIDEBAR_WIDTH_REDUCED, SIDEBAR_WIDTH_FULL } from "./config
 import SummitPrice from "./components/SummitPrice";
 import MenuButton from "./components/MenuButton";
 import { HamburgerCloseIcon, HamburgerIcon } from "./icons";
-import { useCurrentSummitPalette, useSelectedElevation } from "state/hooks";
+import { useCurrentSummitPalette } from "state/hooks";
 import DarkModeToggle from "./components/DarkModeToggle";
 import MenuPageSpecificHeader from "./components/MenuPageSpecificHeader";
 
@@ -91,13 +91,6 @@ const MobileOnlyFooter = styled.div`
     display: none;
   }
 `;
-
-const FarmTabsMenuOffset = styled.div`
-  flex-shrink: 2;
-  flex-grow: 2;
-  max-width: 217px;
-  height: 5px;
-`
 
 const MobileExcludedHeaderElements = styled.div`
   display: flex;

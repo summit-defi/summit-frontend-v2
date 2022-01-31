@@ -162,6 +162,8 @@ export interface Epoch {
   isThawed: boolean
 }
 export interface GlacierState {
+  lifetimeSummitWinnings: BigNumber
+  lifetimeSummitBonuses: BigNumber
   epochs: Epoch[]
   currentEpochIndex: number
   totalFrozenSummit: BigNumber

@@ -78,11 +78,6 @@ const BarFlex = styled(Flex)<{ single: boolean }>`
         min-width: 100px;
     `}
 `
-const HorizontalBar = styled.div`
-    width: 100%;
-    height: 1px;
-    background-color: ${({ theme }) => theme.colors.text};
-`
 
 const Wrapper = styled(Flex)<{ single: boolean }>`
     flex-direction: row;

@@ -7,7 +7,6 @@ import SummitClaimBalance from './SummitClaimBalance'
 import SummitWalletBalance from './SummitWalletBalance'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { useAllElevsClaimable } from 'hooks/useAllElevsClaimable'
-import SummitVestingBalance from './SummitVestingBalance'
 import { getBalanceNumber, getSummitTokenAddress } from 'utils'
 import BigNumber from 'bignumber.js'
 
@@ -38,11 +37,6 @@ const Actions = styled(Flex)`
 const FarmedStakingCard = () => {
   const { account } = useWallet()
   const elevsClaimable = useAllElevsClaimable()
-
-  console.log({
-    elevsClaimable,
-    isNull: elevsClaimable != null
-  })
   
   const totalClaimable =
     elevsClaimable != null ?

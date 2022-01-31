@@ -1,7 +1,7 @@
 import { Elevation } from 'config/constants/types'
 import { usePendingTxs } from 'hooks/usePendingTx'
 import React, { useCallback } from 'react'
-import { useSelectedElevation, useCurrentSummitPalette } from 'state/hooks'
+import { useCurrentSummitPalette } from 'state/hooks'
 import styled from 'styled-components'
 import SummitButton from '../../../components/Button/SummitButton'
 import { useWalletModal } from '../../WalletModal'

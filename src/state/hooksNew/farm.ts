@@ -96,19 +96,6 @@ export const useFarmUserTokenSectionInfo = (symbol: string) => useSelector((stat
 
 export const useSummitPrice = () => useSelector((state) => state.prices.pricesPerToken?.SUMMIT || new BigNumber(1.5))
 
-
-const elevBoolean = {
-    [Elevation.OASIS]: false,
-    [Elevation.PLAINS]: false,
-    [Elevation.MESA]: false,
-    [Elevation.SUMMIT]: false,
-}
-const elevBigNumber = {
-    [Elevation.OASIS]: BN_ZERO,
-    [Elevation.PLAINS]: BN_ZERO,
-    [Elevation.MESA]: BN_ZERO,
-    [Elevation.SUMMIT]: BN_ZERO,
-}
 const selectSymbolElevateModalInfo = createSelector(
     stateToFarms,
     (_: any, symbol: string) => symbol,

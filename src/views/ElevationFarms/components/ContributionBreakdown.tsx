@@ -1,7 +1,5 @@
-import { Elevation } from 'config/constants'
 import React from 'react'
 import styled from 'styled-components'
-import { darken } from 'polished'
 import { ElevationImage, Flex, Text, TokenSymbolImage } from 'uikit'
 
 const BarHeight = 50
@@ -41,43 +39,12 @@ const ValueText = styled(Text)<{ top: boolean }>`
     text-align: center;
 `
 
-const MarkerText = styled(Text)`
-    position: absolute;
-    font-size: 12px;
-    line-height: 18px;
-    padding-left: 6px;
-    padding-right: 6px;
-    top: ${BarHeight - 18}px;
-    bottom: 0px;
-    background-color: ${({ theme }) => theme.colors.background};
-`
-
-const MarkerBar = styled.div<{ elevation?: Elevation }>`
-    width: 6px;
-    position: absolute;
-    top: 15px;
-    bottom: 15px;
-    left: -3px;
-    border-radius: 3px;
-    background-color: ${({ theme, elevation }) => darken(0.1, theme.colors[elevation || 'BASE'])};
-    box-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`};
-`
-
 const VerticalBar = styled.div<{ perc: number }>`
     width: 1px;
     position: absolute;
     height: 20px;
     background-color: ${({ theme }) => theme.colors.text};
     left: ${({ perc }) => perc}%;
-`
-
-const BarFlex = styled(Flex)`
-    position: relative;
-    margin-left: 30px;
-    margin-right: 30px;
-    flex-direction: row;
-    align-items: center;
-    flex: 1;
 `
 const HorizontalBar = styled.div`
     position: absolute;
@@ -110,12 +77,11 @@ interface Contribution {
     elevation?: boolean
     title?: string
     val?: string
-    html?: JSX.Element
     key: number
     perc: number
 }
 
-const ContributionComponent: React.FC<Contribution> = ({token = false, elevation = false, title, val, html, perc}) => {
+const ContributionComponent: React.FC<Contribution> = ({token = false, elevation = false, title, val, perc}) => {
     return <ContributionWrapper perc={perc}>
         {title != null && <TitleWrapper>
             { token && <TokenSymbolImage symbol={title} width={36} height={36} />}

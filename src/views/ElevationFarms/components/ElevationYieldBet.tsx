@@ -1,18 +1,11 @@
 import React from 'react'
-import { Elevation, elevationUtils } from 'config/constants/types'
-import styled, { css } from 'styled-components'
-import { elevationPalette } from 'theme/colors'
-import { chunkArray, getBalanceNumber, getFormattedBigNumber, getFullDisplayBalance, groupByAndMap } from 'utils'
+import { getBalanceNumber, getFormattedBigNumber } from 'utils'
 import { Text, Flex } from 'uikit'
-import Totem from './Totem'
-import chroma from 'chroma-js'
 import BigNumber from 'bignumber.js'
-import { clamp, orderBy } from 'lodash'
-import { useClaimElevation } from 'hooks/useClaim'
-import { useSelectedElevation, useIsElevationLockedUntilRollover, useElevationUserRoundInfo, useFarms } from 'state/hooks'
+import { orderBy } from 'lodash'
+import { useSelectedElevation, useElevationUserRoundInfo, useFarms } from 'state/hooks'
 import CardValue from 'views/Home/components/CardValue'
 import ContributionBreakdown from './ContributionBreakdown'
-import SummitButton from 'uikit/components/Button/SummitButton'
 
 const ElevationYieldBet: React.FC = () => {
   const elevation = useSelectedElevation()
@@ -20,7 +13,6 @@ const ElevationYieldBet: React.FC = () => {
   const rawYieldContributed = getBalanceNumber(yieldContributed)
   const rawPotentialWinnings = getBalanceNumber(potentialWinnings)
   const farms = useFarms()
-  const earningsOrWinnings = elevationUtils.winningsOrEarnings(elevation).toUpperCase()
 
   const farmsWithYield = farms
     .map((farm) => ({

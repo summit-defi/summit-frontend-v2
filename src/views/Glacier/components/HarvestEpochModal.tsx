@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Flex, Text, Modal, ModalActions } from 'uikit'
 import TokenInput from '../../../components/TokenInput'
 import { getFullDisplayBalance } from '../../../utils/formatBalance'
@@ -141,7 +141,7 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
           disabled={invalidVal}
           onClick={handleConfirmHarvestEpoch}
         >
-          { lockForEverest ? 'LOCK FOR EVEREST' : 'HARVEST'}
+          { lockForEverest ? 'LOCK FOR EVEREST' : (isThawed ? 'HARVEST' : 'HARVEST WITH TAX')}
         </SummitButton>
       </ModalActions>
     </Modal>

@@ -1,7 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { Elevation, elevationUtils, RevertReasonMap } from 'config/constants/types'
 import { ethers } from 'ethers'
-import Web3 from 'web3'
 
 export enum RevertType {
   SUMMIT = 'SUMMIT',

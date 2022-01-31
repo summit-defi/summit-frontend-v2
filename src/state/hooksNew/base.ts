@@ -22,6 +22,8 @@ export const stateToCurrentEpochIndex = (state: State) => state.glacier.currentE
 export const stateToEpochs = (state: State) => state.glacier.epochs
 export const stateToGlacierTotalFrozenSummit = (state: State) => state.glacier.totalFrozenSummit
 export const stateToGlacierTotalThawedSummit = (state: State) => state.glacier.totalThawedSummit
+export const stateToLifetimeSummitWinnings = (state: State) => state.glacier.lifetimeSummitWinnings
+export const stateToLifetimeSummitBonuses = (state: State) => state.glacier.lifetimeSummitBonuses
 
 // TOTEM
 export const stateToUserTotems = (state: State) => state.summitEcosystem.totems
@@ -41,3 +43,9 @@ export const stateToFarms = (state: State) => state.farms.data
 export const stateToFarmsLoaded = (state: State) => state.farms.farmsLoaded
 export const stateToFarmsUserDataLoaded = (state: State) => state.farms.userDataLoaded
 export const stateToTokenInfos = (state: State) => state.tokens.data
+
+// EVEREST
+export const stateToEverestTotalSummitLocked = (state: State) => state.everest.totalSummitLocked
+export const stateToEverestAverageLockDuration = (state: State) => state.everest.averageLockDuration
+export const stateToEverestSupply = (state: State) => state.everest.everestSupply
+export const stateToEverestUserData = (state: State) => state.everest.userData

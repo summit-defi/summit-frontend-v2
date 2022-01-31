@@ -1,5 +1,5 @@
 import { Elevation } from 'config/constants/types'
-import styled, { css, keyframes } from 'styled-components'
+import styled, { css } from 'styled-components'
 import { pressableMixin } from 'uikit/util/styledMixins'
 import { SpinnerKeyframes } from '../Svg/Icons/Spinner'
 

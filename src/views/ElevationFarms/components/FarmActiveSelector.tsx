@@ -4,8 +4,6 @@ import { useSelectedElevation } from 'state/hooks'
 import { useFarmType } from 'hooks/useFarmType'
 import { Flex } from 'uikit'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { FarmType } from 'state/types'
-import { darken } from 'polished'
 import { pressableMixin } from 'uikit/util/styledMixins'
 
 const buttonWidth = 120

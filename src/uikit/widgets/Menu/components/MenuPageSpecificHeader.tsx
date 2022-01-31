@@ -1,7 +1,7 @@
 import React from 'react'
 import ElevationFarmsTabSelector from "./ElevationFarmsTabSelector"
 import { useMatchBreakpoints } from "../../../hooks";
-import { useCurrentSummitPalette, useSelectedElevation } from "state/hooks";
+import { useCurrentSummitPalette } from "state/hooks";
 import Logo from "./Logo";
 import ElevationRoundProgress from "./ElevationRoundProgress";
 import Flex from 'uikit/components/Box/Flex'
