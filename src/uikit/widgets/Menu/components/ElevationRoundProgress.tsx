@@ -61,7 +61,7 @@ const ProgressPill = styled.div<{ perc: number, isExpedition: boolean }>`
     width: 14px;
     height: 14px;
     transform: rotate(${({ perc }) => perc === 100 ? '45' : '-45'}deg);
-    background-color: ${({ isExpedition }) => isExpedition ? '#DDA4A8' : '#EA9130'};
+    background-color: ${({ isExpedition }) => isExpedition ? '#DDA4A8' : '#f2ac4a'};
     border-radius: 10px 10px 10px 0px;
     position: absolute;
     left: ${({ perc }) => `calc(${perc}% - ${perc * 0.02}px - 7px)`};
@@ -88,18 +88,18 @@ const TextBubble = styled.div<{ perc: number }>`
     }
 
     .spinner {
-        fill: ${({ theme }) => theme.colors.text};
-        stroke: ${({ theme }) => theme.colors.text};
-        stroke-width: 1px;
+        fill: #f2ac4a;
+        stroke: #f2ac4a;
+        stroke-width: 2px;
         animation: ${SpinnerKeyframes} 1.4s infinite linear;
-        margin-right: 12px;
+        margin-right: 18px;
     }
 `
 
 const TimerText = styled(Text)<{ even: boolean, endingHighlight: boolean }>`
     transform-origin: 50% 50%;
-    transform: ${({ even }) => `scale(${even ? 1 : 1.07})`};
-    color: ${({ theme, endingHighlight, even }) => (endingHighlight && !even) ? '#EA9130' : theme.colors.text};
+    transform: ${({ even }) => `scale(${even ? 1.07 : 1})`};
+    color: ${({ theme, endingHighlight, even }) => (endingHighlight && even) ? '#f2ac4a' : theme.colors.text};
 `
 
 const StyledSpinner = styled(Spinner)`
@@ -148,7 +148,7 @@ const ElevationRoundProgress: React.FC = () => {
             <ProgressPill isExpedition={isExpedition} perc={perc().pill}/>
             { roundTimeRemaining != null && <TextBubble perc={perc().text}>
                 { roundTimeRemaining === 0 && <StyledSpinner className="spinner" /> }
-                <TimerText bold monospace endingHighlight={roundTimeRemaining <= 420 && roundTimeRemaining > 120} even={roundTimeRemaining % 2 === 0}>{getTimerText()}</TimerText>
+                <TimerText bold monospace endingHighlight={roundTimeRemaining === 0 || roundTimeRemaining <= 420 && roundTimeRemaining > 120} even={roundTimeRemaining % 2 === 0}>{getTimerText()}</TimerText>
             </TextBubble> }
         </RoundProgressBar>
     )
