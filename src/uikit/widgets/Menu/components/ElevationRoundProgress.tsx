@@ -118,10 +118,10 @@ const ElevationRoundProgress: React.FC = () => {
         () => {
             if (roundTimeRemaining == null) return ''
             if (roundTimeRemaining === 0) return 'FINALIZING ROUND'
-            if (roundTimeRemaining <= 420) return `ROUND LOCKS IN: ${getTimeRemainingText(roundTimeRemaining - 120)}!`
             if (roundTimeRemaining <= 120) {
                 return `LOCKED, FINALIZING IN: ${getTimeRemainingText(roundTimeRemaining)}`
             }
+            if (roundTimeRemaining <= 420) return `ROUND LOCKS IN: ${getTimeRemainingText(roundTimeRemaining - 120)}!`
         
             return getTimeRemainingText(roundTimeRemaining - 120)
         },
