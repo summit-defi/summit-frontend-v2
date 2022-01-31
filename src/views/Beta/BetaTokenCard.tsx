@@ -1,8 +1,7 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
-import { Flex, Text, TokenSymbolImage } from 'uikit'
-import SummitButton from 'uikit/components/Button/SummitButton'
-import { PriceableToken, TokenSymbol } from 'config/constants'
+import { Flex, Text, TokenSymbolImage, SummitButton } from 'uikit'
+import { PriceableToken, SummitPalette, TokenSymbol } from 'config/constants'
 import { useMintBetaToken } from './useMintBetaToken'
 
 const BTCard = styled(Flex)`
@@ -77,6 +76,35 @@ const BetaTokenCard: React.FC<BetaTokenCardProps> = ({
     mintAmount * 5,
   ]
 
+  const addTokenToMetamask = useCallback(async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const provider = window.ethereum
+    if (provider) {
+        try {
+        // wasAdded is a boolean. Like any RPC method, an error may be thrown.
+        const wasAdded = await provider.request({
+            method: 'wallet_watchAsset',
+            params: {
+            type: 'ERC20',
+            options: {
+                address: tokenAddress,
+                symbol,
+                decimals,
+                image: `${window.location.origin}/images/tokens/${symbol}.png`,
+            },
+            },
+        })
+
+        if (wasAdded) {
+            console.log('Token was added')
+        }
+        } catch (error) {
+        // TODO: find a way to handle when the user rejects transaction or it fails
+        }
+    }
+    }, [tokenAddress, symbol, decimals])
+
   return (
     <BTCard>
       <WrapperFlex>
@@ -85,9 +113,17 @@ const BetaTokenCard: React.FC<BetaTokenCardProps> = ({
           <SymbolIconFlex justifyContent="flex-start" alignItems="center">
             <TokenSymbolImage symbol={symbol} width={56} height={56} />
             <Flex flexDirection="column" alignItems="flex-start">
-              <Text italic monospace bold fontSize="16px" lineHeight="14px" textAlign="left">
+              <Text italic monospace bold fontSize="16px" mb='6px' lineHeight="14px" textAlign="left">
                 {symbol}
               </Text>
+              <SummitButton
+                onClick={addTokenToMetamask}
+                height={24}
+                padding={16}
+                summitPalette={SummitPalette.BASE}
+              >
+                  + <img style={{ marginLeft: 8 }} width={16} src="/images/wallet/metamask.png" alt="metamask logo" />
+              </SummitButton>
             </Flex>
           </SymbolIconFlex>
           { mintableAmounts.map((mintableAmount) => (
