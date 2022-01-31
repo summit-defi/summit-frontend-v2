@@ -10,7 +10,7 @@ export default function useVisibility<Element extends HTMLElement>(): [boolean, 
         setIsVisible(false);
         return;
         }
-        const top = currentElement.current.getBoundingClientRect().top;
+        const { top } = currentElement.current.getBoundingClientRect();
         setIsVisible((top + 200) >= 0 && top <= window.innerHeight);
     }, 150);
 

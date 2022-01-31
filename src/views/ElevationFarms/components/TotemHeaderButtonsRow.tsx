@@ -92,7 +92,7 @@ const TotemHeaderButtonsRow: React.FC = () => {
   const elevationLockedUntilRollover = useIsElevationLockedUntilRollover(elevation)
   const totemSelectionPending = useTotemSelectionPending()
 
-  const isElevationFarm = elevation !== Elevation.OASIS
+  const isElevationFarm = elevation !== null && elevation !== Elevation.OASIS
   const { onPresentTotemWinnersModal } = useTotemWinnersModal(elevation)
   const { onPresentSelectTotemModal } = useSelectTotemModal(elevation)
 

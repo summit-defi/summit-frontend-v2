@@ -1,4 +1,4 @@
-import { BN_ZERO } from "config/constants";
+import { BN_ZERO, Elevation, elevationUtils } from "config/constants";
 import { State } from "state/types";
 
 // EXPEDITION
@@ -22,8 +22,6 @@ export const stateToCurrentEpochIndex = (state: State) => state.glacier.currentE
 export const stateToEpochs = (state: State) => state.glacier.epochs
 export const stateToGlacierTotalFrozenSummit = (state: State) => state.glacier.totalFrozenSummit
 export const stateToGlacierTotalThawedSummit = (state: State) => state.glacier.totalThawedSummit
-export const stateToLifetimeSummitWinnings = (state: State) => state.glacier.lifetimeSummitWinnings
-export const stateToLifetimeSummitBonuses = (state: State) => state.glacier.lifetimeSummitBonuses
 
 // TOTEM
 export const stateToUserTotems = (state: State) => state.summitEcosystem.totems
@@ -38,11 +36,14 @@ export const stateToFarmTypeFilter = (state: State) => state.summitEcosystem.far
 export const stateToFarmLiveFilter = (state: State) => state.summitEcosystem.liveFarms
 
 // FARMS
-export const stateToFarmsElevationData = (state: State) => state.farms.elevationData
+export const stateToFarmsElevationsData = (state: State) => state.farms.elevationData
+export const stateToFarmsElevationData = (state: State, elevation: Elevation) => state.farms.elevationData[elevationUtils.toInt(elevation)]
 export const stateToFarms = (state: State) => state.farms.data
 export const stateToFarmsLoaded = (state: State) => state.farms.farmsLoaded
 export const stateToFarmsUserDataLoaded = (state: State) => state.farms.userDataLoaded
 export const stateToTokenInfos = (state: State) => state.tokens.data
+export const stateToLifetimeSummitWinnings = (state: State) => state.farms.lifetimeSummitWinnings
+export const stateToLifetimeSummitBonuses = (state: State) => state.farms.lifetimeSummitBonuses
 
 // EVEREST
 export const stateToEverestTotalSummitLocked = (state: State) => state.everest.totalSummitLocked

@@ -11,7 +11,7 @@ import Menu from './components/Menu'
 import PageLoader from './components/PageLoader'
 import { fetchFarmUserDataAsync } from 'state/farms'
 import useWeb3 from 'hooks/useWeb3'
-import { fetchRolloverRewardInNativeTokenAsync, fetchUserTotemsAsync, setActiveAccount } from 'state/summitEcosystem'
+import { fetchUserTotemsAsync, setActiveAccount } from 'state/summitEcosystem'
 import ElevationBackground from 'components/ElevationBackground'
 import styled from 'styled-components'
 import ExpeditionBackground from 'components/ExpeditionBackground'
@@ -101,7 +101,6 @@ const App: React.FC = () => {
       dispatch(fetchFarmUserDataAsync(account))
       dispatch(fetchUserTotemsAsync(account))
       dispatch(fetchTokensUserDataAsync(account))
-      dispatch(fetchRolloverRewardInNativeTokenAsync())
       dispatch(fetchUserEpochsAsync(account))
       dispatch(fetchEverestDataAsync(account))
     }

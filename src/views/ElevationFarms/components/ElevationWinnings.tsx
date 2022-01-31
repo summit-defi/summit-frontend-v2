@@ -1,21 +1,19 @@
 import React from 'react'
 import { elevationUtils } from 'config/constants/types'
-import { getBalanceNumber, getFormattedBigNumber } from 'utils'
+import { getBalanceNumber } from 'utils'
 import { Text, Flex } from 'uikit'
-import BigNumber from 'bignumber.js'
-import { orderBy } from 'lodash'
 import { useClaimElevation } from 'hooks/useClaim'
-import { useSelectedElevation, useIsElevationLockedUntilRollover, useElevationUserRoundInfo, useFarms } from 'state/hooks'
+import { useSelectedElevation, useIsElevationLockedUntilRollover } from 'state/hooks'
 import CardValue from 'views/Home/components/CardValue'
 import ContributionBreakdown from './ContributionBreakdown'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { useElevationWinningsContributions } from 'state/hooksNew'
+import { useElevationWinningsContributions, useUserElevationClaimable } from 'state/hooksNew'
 
 const ElevationWinnings: React.FC = () => {
   const elevation = useSelectedElevation()
   const elevationLocked = useIsElevationLockedUntilRollover(elevation)
   const winningsContributions = useElevationWinningsContributions(elevation)
-  const { claimable } = useElevationUserRoundInfo(elevation)
+  const claimable = useUserElevationClaimable(elevation)
   const rawClaimable = getBalanceNumber(claimable)
   const earningsOrWinnings = elevationUtils.winningsOrEarnings(elevation).toUpperCase()
 

@@ -4,12 +4,12 @@ import { darken } from 'polished'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { ElevationFarmTab, elevationFarmTabToUrl, elevationTabToElevation, elevationUtils, SummitPalette } from 'config/constants/types'
 import { pressableMixin } from 'uikit/util/styledMixins'
-import { useElevationFarmsTab, useElevationTotems, useSingleFarmSelected } from 'state/hooks'
+import { useElevationFarmsTab, useSingleFarmSelected } from 'state/hooks'
 import { NavLink } from 'react-router-dom'
 import Flex from 'uikit/components/Box/Flex'
 import { Text } from 'uikit/components/Text'
 import ElevationTabTotemIcon from './ElevationTabTotemIcon'
-import { useWinningTotems } from 'state/hooksNew'
+import { useUserTotemsAndCrowns } from 'state/hooksNew'
 
 const buttonWidth = 68
 const buttonHeight = 46
@@ -82,15 +82,12 @@ const ElevationFarmsTabSelector: React.FC = () => {
     const selectedTab = useElevationFarmsTab()
     const singleFarmSymbol = useSingleFarmSelected()
     const selectedIndex = tabs.findIndex((tab) => tab === selectedTab)
-    const userTotems = useElevationTotems()
-    const winningTotems = useWinningTotems()
-    const tabCrowned = {
-        [ElevationFarmTab.DASH]: false,
-        [ElevationFarmTab.OASIS]: false,
-        [ElevationFarmTab.PLAINS]: userTotems[1] === winningTotems[1],
-        [ElevationFarmTab.MESA]: userTotems[2] === winningTotems[2],
-        [ElevationFarmTab.SUMMIT]: userTotems[3] === winningTotems[3],
-    }
+    const userTotemsAndCrowned = useUserTotemsAndCrowns()
+    const { crowned: selectedTabCrowned } = userTotemsAndCrowned[elevationUtils.tabToInt(selectedTab)] || {}
+
+    const buttonPalette = selectedTab !== ElevationFarmTab.DASH && selectedTabCrowned ?
+        SummitPalette.GOLD :
+        selectedTab
 
     return (
         <SelectorFlex>
@@ -102,7 +99,7 @@ const ElevationFarmsTabSelector: React.FC = () => {
                         tab={selectedTab}
                         selectedIndex={selectedIndex}
                         padding="0px"
-                        summitPalette={ tabCrowned[selectedTab] ? SummitPalette.GOLD : selectedTab }
+                        summitPalette={ buttonPalette }
                     >
                         {selectedTab}
                         {selectedTab === ElevationFarmTab.DASH && <br/>}
@@ -111,13 +108,14 @@ const ElevationFarmsTabSelector: React.FC = () => {
                 )}
                 {tabs.map((tab) => {
                     const tabTarget = `/${elevationFarmTabToUrl[tab]}${singleFarmSymbol != null ? `/${singleFarmSymbol.toLowerCase()}` : ''}`
+                    const { userTotem, crowned } = userTotemsAndCrowned[elevationUtils.tabToInt(tab)] || {}
                     return (
                         <TextButton
                             key={tab}
                             to={tabTarget}
                             selected={tab === selectedTab}
                         >
-                            { tab === ElevationFarmTab.DASH || userTotems[elevationUtils.tabToInt(tab)] == null ?
+                            { (tab === ElevationFarmTab.DASH || userTotem == null) ?
                                 <TextButtonText
                                     monospace
                                     tab={tab}
@@ -130,8 +128,8 @@ const ElevationFarmsTabSelector: React.FC = () => {
                                 <ElevationTabTotemIcon
                                     selected={tab === selectedTab}
                                     elevation={elevationTabToElevation[tab]}
-                                    totem={userTotems[elevationUtils.tabToInt(tab)]}
-                                    crowned={tabCrowned[tab]}
+                                    totem={userTotem}
+                                    crowned={crowned}
                                 />
                             }
                         </TextButton>

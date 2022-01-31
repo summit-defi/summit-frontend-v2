@@ -83,6 +83,8 @@ export interface FarmsState {
   farmsLoaded: boolean
   userDataLoaded: boolean
   elevationDataLoaded: boolean
+  lifetimeSummitWinnings: BigNumber
+  lifetimeSummitBonuses: BigNumber
   data: Farm[]
   elevationData: ElevationFarmsData[]
 }
@@ -162,8 +164,6 @@ export interface Epoch {
   isThawed: boolean
 }
 export interface GlacierState {
-  lifetimeSummitWinnings: BigNumber
-  lifetimeSummitBonuses: BigNumber
   epochs: Epoch[]
   currentEpochIndex: number
   totalFrozenSummit: BigNumber

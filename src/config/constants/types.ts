@@ -207,8 +207,8 @@ export const elevationUtils = {
   winningsOrEarnings: (elevation: Elevation) => {
     return elevation === Elevation.OASIS ? 'Earnings' : 'Winnings'
   },
-  toInt: (elevation: Elevation) => ElevationInt[elevation],
-  tabToInt: (elevationTab: ElevationFarmTab) => ElevationInt[elevationTabToElevation[elevationTab]] || 0,
+  toInt: (elevation: Elevation) => ElevationInt[elevation] || 0,
+  tabToInt: (elevationTab: ElevationFarmTab) => ElevationInt[elevationTabToElevation[elevationTab]],
   fromInt: (int): Elevation => {
     switch (int) {
       case 4:

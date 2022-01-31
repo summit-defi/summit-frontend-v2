@@ -3,7 +3,7 @@ import Page from 'components/layout/Page'
 import BetaTokenCard from './BetaTokenCard'
 import styled from 'styled-components'
 import { ElevationPuck, ExternalLinkButton, Flex, Text } from 'uikit'
-import { getPriceableTokens, SummitPalette, TokenSymbol } from 'config/constants'
+import { getPriceableTokens, TokenSymbol } from 'config/constants'
 import BetaRoundRollovers from './BetaRoundRollovers'
 
 const BetaTokens = {

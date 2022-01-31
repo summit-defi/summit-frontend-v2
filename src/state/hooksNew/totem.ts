@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { useSelector } from "./utils";
-import { stateToUserTotems, stateToExpeditionDeity, stateToWinningTotems, stateToFarmsElevationData } from './base'
+import { stateToUserTotems, stateToExpeditionDeity, stateToWinningTotems, stateToFarmsElevationsData, stateToFarmsElevationData } from './base'
 import { Elevation, elevationUtils } from "config/constants";
 
 export const useExpeditionUserDeity = () => useSelector(stateToExpeditionDeity)
@@ -34,7 +34,7 @@ export const selectElevationUserTotemAndCrowned = createSelector(
     (_, elevation: Elevation) => elevation,
     (userTotems, winningTotems, elevation) => ({
         userTotem: userTotems[elevationUtils.toInt(elevation)],
-        crowned: userTotems[elevationUtils.toInt(elevation)] === winningTotems[elevationUtils.toInt(elevation)]
+        crowned: userTotems[elevationUtils.toInt(elevation)] != null && userTotems[elevationUtils.toInt(elevation)] === winningTotems[elevationUtils.toInt(elevation)]
     })
 )
 export const useElevationUserTotemAndCrowned = (elevation: Elevation) => useSelector((state) => selectElevationUserTotemAndCrowned(state, elevation))
@@ -52,15 +52,32 @@ export const useUserTotemsAndCrowns = () => useSelector(selectUserTotemsAndCrown
 
 export const selectDashboardTotemBattleInfo = createSelector(
     selectUserTotemsAndCrowns,
-    stateToFarmsElevationData,
-    (userTotemsAndCrowns, elevationData) => elevationUtils.elevationOnly
+    stateToFarmsElevationsData,
+    (userTotemsAndCrowns, elevationsData) => elevationUtils.elevationOnly
         .map((elev) => {
             const totemAndCrowned = userTotemsAndCrowns[elevationUtils.toInt(elev)]
             return [{
                 totem: totemAndCrowned.userTotem,
                 crowned: totemAndCrowned.crowned,
-                mult: elevationData[elevationUtils.toInt(elev)]?.totemMultipliers[totemAndCrowned.userTotem] || 0
+                mult: totemAndCrowned.userTotem == null ?
+                    elevationUtils.totemCount(elev) :
+                    (elevationsData[elevationUtils.toInt(elev)]?.totemMultipliers[totemAndCrowned.userTotem] || 0)
             }]
         })
 )
 export const useDashboardTotemBattleInfo = () => useSelector(selectDashboardTotemBattleInfo)
+
+export const selectElevationTotemBattleInfo = createSelector(
+    selectElevationUserTotemAndCrowned,
+    stateToFarmsElevationData,
+    (_, elevation: Elevation) => elevation,
+    ({ userTotem, crowned }, { totemMultipliers }, elevation) => ({
+        userTotem,
+        totemInfos: elevationUtils.totemsArray(elevation).map((totem) => ({
+            totem,
+            crowned: totem === userTotem && crowned,
+            mult: totemMultipliers[totem],
+        }))
+    })
+)
+export const useElevationTotemBattleInfo = (elevation: Elevation) => useSelector((state) => selectElevationTotemBattleInfo(state, elevation))

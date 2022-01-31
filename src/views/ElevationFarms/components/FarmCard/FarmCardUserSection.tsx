@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Flex } from 'uikit'
 import { Elevation } from 'config/constants/types'
 import FarmCardTokenSection from './FarmCardTokenSection'
 import FarmCardUserInteractionSection from './FarmCardUserInteractionSection'

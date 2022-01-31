@@ -1,10 +1,10 @@
 import React from 'react'
 import { ElevationFarmTab, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import { Flex, Text } from 'uikit'
-import { useElevationUserRoundInfo, useElevationTotem, useElevationFarmsTab } from 'state/hooks'
+import { useElevationFarmsTab } from 'state/hooks'
 import TotemBattleBreakdown from './TotemBattleBreakdown'
 import styled from 'styled-components'
-import { useDashboardTotemBattleInfo, useElevationWinningTotem } from 'state/hooksNew'
+import { useDashboardTotemBattleInfo, useElevationTotemBattleInfo } from 'state/hooksNew'
 
 const GappedFlex = styled(Flex)`
   gap: 18px;
@@ -67,19 +67,10 @@ const AllElevationsTotemBattles: React.FC = () => {
 
 const SingleElevationTotemBattle: React.FC<{ elevationTab: ElevationFarmTab }> = ({ elevationTab }) => {
   const elevation = elevationTabToElevation[elevationTab]
-  const { totemMultipliers } = useElevationUserRoundInfo(elevation)
-  const winningTotem = useElevationWinningTotem(elevation)
-  const userTotem = useElevationTotem(elevation)
-
-  const totemInfos = elevationUtils.totemsArray(elevation).map((totem) => ({
-    totem,
-    crowned: totem === winningTotem,
-    mult: totemMultipliers[totem],
-  }))
+  const { userTotem, totemInfos } = useElevationTotemBattleInfo(elevation)
 
   return (
     <TotemBattleBreakdown
-      // title={`${elevation} TOTEM BATTLE`}
       elevation={elevation}
       totemInfos={totemInfos}
       userTotem={userTotem}

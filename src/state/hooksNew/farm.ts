@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { FarmType } from "state/types";
-import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToTokenInfos } from "./base";
+import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToTokenInfos, stateToFarmsElevationData, stateToLifetimeSummitBonuses, stateToLifetimeSummitWinnings } from "./base";
 import { getFarmInteracting, getFarmType, getFormattedBigNumber } from "utils"
 import { BN_ZERO, Elevation, elevationUtils } from "config/constants";
 import { useSelector } from "./utils";
@@ -174,3 +174,20 @@ const selectElevationWinningsContributions = createSelector(
     }
 )
 export const useElevationWinningsContributions = (elevation: Elevation) => useSelector((state) => selectElevationWinningsContributions(state, elevation))
+
+const selectUserElevationClaimable = createSelector(
+    stateToFarmsElevationData,
+    (elevationData) => elevationData?.claimable || BN_ZERO
+)
+export const useUserElevationClaimable = (elevation: Elevation) => useSelector((state) => selectUserElevationClaimable(state, elevation))
+
+
+const selectLifetimeSummitWinningsAndBonus = createSelector(
+    stateToLifetimeSummitWinnings,
+    stateToLifetimeSummitBonuses,
+    (lifetimeSummitWinnings, lifetimeSummitBonuses) => ({
+        lifetimeSummitWinnings,
+        lifetimeSummitBonuses,
+    })
+)
+export const useLifetimeSummitWinningsAndBonus = () => useSelector(selectLifetimeSummitWinningsAndBonus)

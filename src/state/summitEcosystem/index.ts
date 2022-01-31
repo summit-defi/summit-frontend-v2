@@ -1,10 +1,8 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
-import BigNumber from 'bignumber.js'
-import { Elevation, elevationUtils } from 'config/constants/types'
+import { BN_ZERO, Elevation, elevationUtils } from 'config/constants/types'
 import { FarmType, SummitEcosystemState } from '../types'
 import { fetchElevationsData, fetchDeityDivider } from './fetchElevationInfo'
-import { fetchRolloverReward } from './fetchRolloverRewardInNativeToken'
 import { fetchUsersTotems } from './fetchUsersTotems'
 
 const getLocalStorageVariables = () => {
@@ -39,7 +37,7 @@ const initialState: SummitEcosystemState = {
   liveFarms: true,
   pendingTxs: [],
   elevationRolloversToShow: [],
-  rolloverRewardInNativeToken: new BigNumber(0),
+  rolloverRewardInNativeToken: BN_ZERO,
   expeditionPotTotalValue: 0,
   pendingExpeditionTx: false,
   pendingTotemSelection: false,
@@ -187,14 +185,6 @@ export const addPendingTx = (hash: string, title: string) => async (dispatch) =>
 }
 export const removePendingTx = (hash: string) => async (dispatch) => {
   dispatch(removePendingTransaction(hash))
-}
-export const updateChainId = (chainId: string) => async (dispatch) => {
-  dispatch(setChainId(chainId))
-}
-export const fetchRolloverRewardInNativeTokenAsync = () => async (dispatch) => {
-  const rolloverRewardInNativeToken = await fetchRolloverReward()
-  if (rolloverRewardInNativeToken == null) return
-  dispatch(setRolloverRewardInNativeToken(rolloverRewardInNativeToken))
 }
 export const updatePendingTotemSelection = (pending) => async (dispatch) => {
   dispatch(setPendingTotemSelection(pending))

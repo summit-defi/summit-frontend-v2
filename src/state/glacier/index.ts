@@ -6,8 +6,6 @@ import { epochDuration } from 'utils'
 import { fetchUserEpochs } from './fetchUserEpochs'
 
 const initialState: GlacierState = {
-  lifetimeSummitWinnings: BN_ZERO,
-  lifetimeSummitBonuses: BN_ZERO,
   epochs: [],
   currentEpochIndex: Math.floor(Date.now() / epochDuration),
   totalFrozenSummit: BN_ZERO,
@@ -19,8 +17,6 @@ export const GlacierSlice = createSlice({
   initialState,
   reducers: {
     setEpochs: (state, action) => {
-      state.lifetimeSummitWinnings = action.payload.lifetimeSummitWinnings
-      state.lifetimeSummitBonuses = action.payload.lifetimeSummitBonuses
       state.epochs = action.payload.epochs
       state.currentEpochIndex = action.payload.currentEpochIndex
       state.totalFrozenSummit = action.payload.totalFrozenSummit

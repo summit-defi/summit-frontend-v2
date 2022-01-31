@@ -2,13 +2,13 @@ import BigNumber from 'bignumber.js'
 import { Elevation, elevationUtils } from 'config/constants/types'
 import { useSelectTotemAndOrFaith } from 'hooks/useSelectTotem'
 import React, { useCallback, useState } from 'react'
-import { useElevationUserRoundInfo } from 'state/hooks'
 import styled, { keyframes } from 'styled-components'
 import { getPaletteGradientFarmCardBackground } from 'utils'
 import { RewardsWillBeClaimedType, useRewardsWillBeClaimedModal } from 'components/RewardsWillBeClaimedModal'
 import InitialSelectionTotems from './InitialSelectionTotems'
 import { Flex, Modal, ArtworkTotem, HighlightedText, Text, SummitButton } from 'uikit'
 import FaithSlider from './FaithSlider'
+import { useUserElevationClaimable } from 'state/hooksNew'
 
 interface Props {
   elevation: Elevation
@@ -70,7 +70,7 @@ const SelectTotemModal: React.FC<Props> = ({
   existingFaith = null,
   onDismiss = () => null,
 }) => {
-  const { claimable } = useElevationUserRoundInfo(elevation)
+  const claimable = useUserElevationClaimable(elevation)
   const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(elevation, claimable || new BigNumber(0), 'Deposit', RewardsWillBeClaimedType.FullElevation)
 
   const { onSelectTotemAndOrSafetyFactor } = useSelectTotemAndOrFaith()

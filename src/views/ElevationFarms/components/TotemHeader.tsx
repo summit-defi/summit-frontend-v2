@@ -67,7 +67,7 @@ const TotemHeaderAccountSection = memo(() => {
   return (
     <>
       <ElevationTotemBattle/>
-      { userTotem != null && <ElevSpecificSection/> }
+      { elevationTab !== ElevationFarmTab.DASH && userTotem != null && <ElevSpecificSection/> }
       { elevationTab === ElevationFarmTab.DASH && <MultiElevSection/> }
     </>
   )

@@ -7,6 +7,7 @@ import {
   fetchElevClaimableRewards,
   fetchElevPotentialWinnings,
   fetchFarmUserData,
+  fetchLifetimeWinningsAndBonuses,
 } from './fetchFarmUser'
 import { FarmsState } from '../types'
 import BigNumber from 'bignumber.js'
@@ -26,6 +27,8 @@ const initialState: FarmsState = {
   farmsLoaded: false,
   userDataLoaded: false,
   elevationDataLoaded: false,
+  lifetimeSummitWinnings: BN_ZERO,
+  lifetimeSummitBonuses: BN_ZERO,
   data: [...getFarmConfigs()],
   elevationData: [
     EMPTY_ELEVATION_FARMS_DATA,
@@ -53,7 +56,7 @@ export const farmsSlice = createSlice({
       state.userDataLoaded = true
     },
     setElevationFarmsData: (state, action) => {
-      const { elevClaimableRewards, elevPotentialWinnings, elevRoundRewards } = action.payload
+      const { elevClaimableRewards, elevPotentialWinnings, elevRoundRewards, lifetimeWinningsAndBonuses } = action.payload
       state.elevationData = elevationUtils.all.map((elevation) => ({
         claimable: elevClaimableRewards[elevation] as BigNumber,
         yieldContributed: elevPotentialWinnings[elevation].yieldContributed as BigNumber,
@@ -63,6 +66,8 @@ export const farmsSlice = createSlice({
         totemMultipliers: elevRoundRewards[elevation].totemMultipliers as number[],
       }))
       state.elevationDataLoaded = true
+      state.lifetimeSummitWinnings = lifetimeWinningsAndBonuses.lifetimeSummitWinnings
+      state.lifetimeSummitBonuses = lifetimeWinningsAndBonuses.lifetimeSummitBonuses
     },
   },
 })
@@ -77,22 +82,23 @@ export const fetchFarmsPublicDataAsync = () => async (dispatch) => {
 }
 export const fetchFarmUserDataAsync = (account) => async (dispatch) => {
   const farmConfigs = getFarmConfigs()
-  await fetchFarmUserData(account, farmConfigs)
 
   const [
     farmsUserData,
     elevClaimableRewards,
     elevPotentialWinnings,
     elevRoundRewards,
+    lifetimeWinningsAndBonuses,
   ] = await Promise.all([
     await fetchFarmUserData(account, farmConfigs),
     await fetchElevClaimableRewards(account),
     await fetchElevPotentialWinnings(account),
     await fetchElevationsRoundRewards(farmConfigs),
+    await fetchLifetimeWinningsAndBonuses(account),
   ])
 
   dispatch(setFarmUserData({ farmsUserData }))
-  dispatch(setElevationFarmsData({ elevClaimableRewards, elevPotentialWinnings, elevRoundRewards }))
+  dispatch(setElevationFarmsData({ elevClaimableRewards, elevPotentialWinnings, elevRoundRewards, lifetimeWinningsAndBonuses }))
 }
 
 export default farmsSlice.reducer

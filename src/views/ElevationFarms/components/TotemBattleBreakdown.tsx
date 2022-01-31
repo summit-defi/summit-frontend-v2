@@ -211,6 +211,7 @@ const TotemBattleResult: React.FC<TotemResultProps> = ({ totemInfo, elevation, c
   return (
     <TotemResultWrapper>
       <TotemPosition topOffset={topOffset}>
+        <TotemMultText bold monospace>{totemInfo.mult == null ? '' : `${totemInfo.mult.toFixed(1)}x`}</TotemMultText>
         <TotemScale scale={totemScale}>
           <Totem
             elevation={elevation}
@@ -221,7 +222,6 @@ const TotemBattleResult: React.FC<TotemResultProps> = ({ totemInfo, elevation, c
           />
           {totemInfo.crowned && <IconCrown />}
         </TotemScale>
-        <TotemMultText bold monospace>{totemInfo.mult == null ? '' : `${totemInfo.mult}x`}</TotemMultText>
       </TotemPosition>
     </TotemResultWrapper>
   )

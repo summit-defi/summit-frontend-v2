@@ -5,6 +5,7 @@ import {
   abi,
   groupByAndMap,
   getSubCartographerAddress,
+  getSummitGlacierAddress,
 } from 'utils'
 import { getFarmAllElevationsIterable, getFarmOnlyElevationsIterable } from 'utils/farms'
 
@@ -170,4 +171,27 @@ export const fetchElevationsRoundRewards = async (farmConfigs: FarmConfig[]) => 
   })
 
   return elevationTotemRoundRewards
+}
+
+export const fetchLifetimeWinningsAndBonuses = async (account: string) => {
+  const summitGlacierAddress = getSummitGlacierAddress()
+  const res = await retryableMulticall(abi.summitGlacier, [{
+      address: summitGlacierAddress,
+      name: 'userLifetimeWinnings',
+      params: [account]
+  }, {
+      address: summitGlacierAddress,
+      name: 'userLifetimeBonusWinnings',
+      params: [account]
+  }], 'fetchUserInteractingEpochs')
+
+  if (res == null) return {
+    lifetimeSummitWinnings: BN_ZERO,
+    lifetimeSummitBonuses: BN_ZERO,
+  }
+
+  return {
+    lifetimeSummitWinnings: new BigNumber(res[0][0]._hex).toNumber(),
+    lifetimeSummitBonuses: new BigNumber(res[1][0]._hex).toNumber(),
+  }
 }

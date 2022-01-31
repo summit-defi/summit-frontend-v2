@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { linearGradient, transparentize } from 'polished'
 import Flex from 'uikit/components/Box/Flex'
 import { Text } from 'uikit/components/Text'
