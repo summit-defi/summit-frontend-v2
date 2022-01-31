@@ -395,19 +395,6 @@
     "anonymous": false,
     "inputs": [
       {
-        "indexed": true,
-        "internalType": "address",
-        "name": "user",
-        "type": "address"
-      }
-    ],
-    "name": "RolloverReferral",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
         "indexed": false,
         "internalType": "uint16",
         "name": "_baseMinimumWithdrawalTax",
@@ -469,12 +456,6 @@
         "indexed": false,
         "internalType": "uint256",
         "name": "_treasuryBP",
-        "type": "uint256"
-      },
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "_referralsBP",
         "type": "uint256"
       }
     ],
@@ -1129,6 +1110,49 @@
         "type": "bytes32"
       },
       {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRoleMember",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getRoleMemberCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
         "internalType": "address",
         "name": "account",
         "type": "address"
@@ -1177,11 +1201,6 @@
       },
       {
         "internalType": "address",
-        "name": "_SummitReferrals",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
         "name": "_CartographerOasis",
         "type": "address"
       },
@@ -1207,7 +1226,7 @@
       },
       {
         "internalType": "address",
-        "name": "_summitLocking",
+        "name": "_summitGlacier",
         "type": "address"
       }
     ],
@@ -1368,32 +1387,6 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_amount",
-        "type": "uint256"
-      }
-    ],
-    "name": "referralRewardsMintSafetyHatch",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "referralsSummitBP",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "renounceOwnership",
     "outputs": [],
@@ -1458,13 +1451,6 @@
       }
     ],
     "name": "rollover",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "rolloverReferral",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -1587,11 +1573,6 @@
   },
   {
     "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "_referralsBP",
-        "type": "uint256"
-      },
       {
         "internalType": "uint256",
         "name": "_treasuryBP",
@@ -1766,10 +1747,10 @@
   },
   {
     "inputs": [],
-    "name": "summitLocking",
+    "name": "summitGlacier",
     "outputs": [
       {
-        "internalType": "contract SummitLocking",
+        "internalType": "contract SummitGlacier",
         "name": "",
         "type": "address"
       }
@@ -1785,19 +1766,6 @@
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "summitReferrals",
-    "outputs": [
-      {
-        "internalType": "contract SummitReferrals",
-        "name": "",
-        "type": "address"
       }
     ],
     "stateMutability": "view",

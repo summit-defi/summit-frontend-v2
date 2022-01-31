@@ -13,7 +13,7 @@
       },
       {
         "internalType": "address",
-        "name": "_summitLocking",
+        "name": "_summitGlacier",
         "type": "address"
       }
     ],
@@ -620,6 +620,49 @@
         "type": "bytes32"
       },
       {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getRoleMember",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      }
+    ],
+    "name": "getRoleMemberCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "role",
+        "type": "bytes32"
+      },
+      {
         "internalType": "address",
         "name": "account",
         "type": "address"
@@ -869,6 +912,24 @@
     "inputs": [
       {
         "internalType": "uint8",
+        "name": "_newDeity",
+        "type": "uint8"
+      },
+      {
+        "internalType": "uint8",
+        "name": "_newSafetyFactor",
+        "type": "uint8"
+      }
+    ],
+    "name": "selectDeityAndSafetyFactor",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint8",
         "name": "_newSafetyFactor",
         "type": "uint8"
       }
@@ -938,10 +999,10 @@
   },
   {
     "inputs": [],
-    "name": "summitLocking",
+    "name": "summitGlacier",
     "outputs": [
       {
-        "internalType": "contract SummitLocking",
+        "internalType": "contract SummitGlacier",
         "name": "",
         "type": "address"
       }

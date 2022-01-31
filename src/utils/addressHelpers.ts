@@ -59,9 +59,9 @@ export const getElevationHelperAddress = () => {
   const chainId = getChainId()
   return addresses.elevationHelper[chainId]
 }
-export const getSummitLockingAddress = () => {
+export const getSummitGlacierAddress = () => {
   const chainId = getChainId()
-  return addresses.summitLocking[chainId]
+  return addresses.summitGlacier[chainId]
 }
 export const getMulticallAddress = () => {
   const chainId = getChainId()

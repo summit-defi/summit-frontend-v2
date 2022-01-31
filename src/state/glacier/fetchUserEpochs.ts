@@ -2,23 +2,23 @@ import BigNumber from "bignumber.js"
 import { BN_ZERO } from "config/constants"
 import { chunk } from "lodash"
 import { Epoch } from "state/types"
-import { retryableMulticall, abi, getSummitLockingAddress } from "utils"
+import { retryableMulticall, abi, getSummitGlacierAddress } from "utils"
 
 export const fetchUserEpochs = async (account: string) => {
-    const summitLockingAddress = getSummitLockingAddress()
-    const interactingEpochsRes = await retryableMulticall(abi.summitLocking, [{
-        address: summitLockingAddress,
+    const summitGlacierAddress = getSummitGlacierAddress()
+    const interactingEpochsRes = await retryableMulticall(abi.summitGlacier, [{
+        address: summitGlacierAddress,
         name: 'getUserInteractingEpochs',
         params: [account],
     }, {
-        address: summitLockingAddress,
+        address: summitGlacierAddress,
         name: 'getCurrentEpoch'
     }, {
-        address: summitLockingAddress,
+        address: summitGlacierAddress,
         name: 'userLifetimeWinnings',
         params: [account]
     }, {
-        address: summitLockingAddress,
+        address: summitGlacierAddress,
         name: 'userLifetimeBonusWinnings',
         params: [account]
     }], 'fetchUserInteractingEpochs')
@@ -31,16 +31,16 @@ export const fetchUserEpochs = async (account: string) => {
     const lifetimeSummitBonuses = new BigNumber(interactingEpochsRes[3][0]._hex).toNumber()
 
     const epochCalls = interactingEpochs.map((epochIndex) => [{
-        address: summitLockingAddress,
+        address: summitGlacierAddress,
         name: 'userLockedWinnings',
         params: [account, epochIndex],
     }, {
-        address: summitLockingAddress,
+        address: summitGlacierAddress,
         name: 'hasEpochMatured',
         params: [epochIndex]
     }]).flat()
     
-    const epochsRes = await retryableMulticall(abi.summitLocking, epochCalls, "fetchUserEpochs")
+    const epochsRes = await retryableMulticall(abi.summitGlacier, epochCalls, "fetchUserEpochs")
     if (epochsRes == null) return []
 
     const chunkedRes = chunk(epochsRes, 2)

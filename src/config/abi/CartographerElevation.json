@@ -34,6 +34,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "cartographer",
+    "outputs": [
+      {
+        "internalType": "contract Cartographer",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -137,6 +150,19 @@
         "internalType": "uint8",
         "name": "",
         "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "elevationHelper",
+    "outputs": [
+      {
+        "internalType": "contract ElevationHelper",
+        "name": "",
+        "type": "address"
       }
     ],
     "stateMutability": "view",
@@ -409,6 +435,25 @@
     "name": "rollover",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "name": "roundWinningsMult",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

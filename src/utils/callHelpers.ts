@@ -116,8 +116,8 @@ export const tokenSwapV1Summit = async (summitToken, v1SummitBalance, account) =
 }
 
 // EPOCH
-export const harvestEpoch = async (summitLocking, epochIndex, amount, lockForEverest, account) => {
-  const harvestEpochCall = summitLocking.methods.harvestWinnings(
+export const harvestEpoch = async (summitGlacier, epochIndex, amount, lockForEverest, account) => {
+  const harvestEpochCall = summitGlacier.methods.harvestWinnings(
     epochIndex,
     new BigNumber(amount).times(new BigNumber(10).pow(18)).toString(),
     lockForEverest

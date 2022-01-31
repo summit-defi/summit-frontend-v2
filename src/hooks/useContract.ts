@@ -11,7 +11,7 @@ import {
   getElevationHelperAddress,
   getSummitLpAddress,
   getEverestTokenAddress,
-  getSummitLockingAddress,
+  getSummitGlacierAddress,
 } from 'utils/'
 
 const useContract = (abi: AbiItem, address: string, contractOptions?: ContractOptions) => {
@@ -55,8 +55,8 @@ export const useExpedition = () => {
 export const useElevationHelper = () => {
   return useContract(abiItem.elevationHelper, getElevationHelperAddress())
 }
-export const useSummitLocking = () => {
-  return useContract(abiItem.summitLocking, getSummitLockingAddress())
+export const useSummitGlacier = () => {
+  return useContract(abiItem.summitGlacier, getSummitGlacierAddress())
 }
 
 export default useContract
