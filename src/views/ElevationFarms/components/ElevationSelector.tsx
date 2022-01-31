@@ -110,7 +110,7 @@ const TextButton = styled.div<{
   color: ${({ theme, elevation }) => darken(0.2, theme.colors[elevation])};
   text-shadow: 1px 1px 2px ${({ theme, elevation }) => darken(0.2, theme.colors[elevation])};
   font-family: Courier Prime, monospace;
-  font-size: 16px;
+  font-size: 14px;
   height: ${buttonHeight}px;
   line-height: 32px;
   text-align: center;

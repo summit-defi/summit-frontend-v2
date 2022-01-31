@@ -5,18 +5,16 @@ import TokenInput from '../../../components/TokenInput'
 import { getFullDisplayBalance } from '../../../utils/formatBalance'
 import { Elevation, elevToPalette } from 'config/constants/types'
 import ElevationSelector from './ElevationSelector'
-import { useElevationTotem, useSisterFarms } from 'state/hooks'
+import { useElevationTotem } from 'state/hooks'
 import { isNumber } from 'lodash'
 import Totem from './Totem'
 import { elevationPalette } from 'theme/colors'
 import { useRewardsWillBeClaimedModal, RewardsWillBeClaimedType } from 'components/RewardsWillBeClaimedModal'
 import { useSelectTotemModal } from 'components/SelectTotemModal'
+import { useSymbolElevateModalInfo } from 'state/hooksNew'
 
 interface ElevateModalProps {
   symbol: string
-  tokenAddress: string
-  decimals: number
-
   sourceElevation?: Elevation
   targetElevation?: Elevation
 
@@ -33,23 +31,25 @@ interface ElevateModalProps {
 
 const ElevateModal: React.FC<ElevateModalProps> = ({
   symbol,
-  tokenAddress,
-  decimals,
   sourceElevation = null,
   targetElevation = null,
   onConfirmElevate,
   onDismiss,
 }) => {
-  const sisterFarms = useSisterFarms(symbol)
+  const {
+    elevLaunched,
+    elevClaimable,
+    elevStaked,
+    decimals,
+    farmToken,
+  } = useSymbolElevateModalInfo(symbol)
 
   // REWARDS WILL BE CLAIMED MODAL
   const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(Elevation.OASIS, new BigNumber(0), 'Elevate', RewardsWillBeClaimedType.Elevate)
   
-  const disabledElevations = Object.entries(sisterFarms)
-    .filter(([_, sisterFarm]) => sisterFarm == null)
-    .map(([sisterElevation]) => sisterElevation) as Elevation[]
-
   const sisterElevations = [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT]
+  const disabledElevations = sisterElevations.filter((elevToDisable) => !elevLaunched[elevToDisable])
+
   const sourceElevations =
     sourceElevation != null ? [sourceElevation] : sisterElevations.filter((elev) => elev !== targetElevation)
   const targetElevations =
@@ -61,8 +61,8 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
   const totem = useElevationTotem(selectedTargetElevation)
   const { onPresentSelectTotemModal } = useSelectTotemModal(selectedTargetElevation)
 
-  const [sourceEarned, setSourceEarned] = useState(null)
-  const [targetEarned, setTargetEarned] = useState(null)
+  const [sourceClaimable, setSourceClaimable] = useState(null)
+  const [targetClaimable, setTargetClaimable] = useState(null)
   const [fullBalance, setFullBalance] = useState('0')
   const [val, setVal] = useState('')
   const [invalidVal, setValInvalid] = useState(true)
@@ -92,10 +92,9 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
   useEffect(() => {
     if (selectedSourceElevation === null) return
     
-    const selectedFarm = sisterFarms[selectedSourceElevation]
-    setSourceEarned(selectedFarm.userData?.claimable || new BigNumber(0))
+    setSourceClaimable(elevClaimable[selectedSourceElevation])
     const newFullBalance = getFullDisplayBalance(
-      selectedFarm.userData?.stakedBalance || new BigNumber(0),
+      elevStaked[selectedSourceElevation],
       decimals,
     )
     setFullBalance(newFullBalance)
@@ -106,10 +105,11 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
     selectedSourceElevation,
     symbol,
     setFullBalance,
-    setSourceEarned,
+    setSourceClaimable,
     setVal,
     setValInvalid,
-    sisterFarms,
+    elevClaimable,
+    elevStaked,
   ])
 
   const handleSelectTargetElevation = useCallback(
@@ -118,9 +118,8 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
   )
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    setTargetEarned(sisterFarms[selectedTargetElevation]!.userData?.claimable || new BigNumber(0))
-  }, [selectedTargetElevation, sisterFarms, setTargetEarned])
+    setTargetClaimable(elevClaimable[selectedTargetElevation])
+  }, [selectedTargetElevation, elevClaimable, setTargetClaimable])
 
   const handlePresentSelectTotem = () => {
     onPresentSelectTotemModal()
@@ -133,10 +132,10 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
       elevateInfo: {
         sourceElevation: selectedSourceElevation,
         targetElevation: selectedTargetElevation,
-        sourceEarned,
-        targetEarned,
+        sourceClaimable,
+        targetClaimable,
       },
-      transactionToConfirm: () => onConfirmElevate(symbol, tokenAddress, selectedSourceElevation, selectedTargetElevation, val, decimals),
+      transactionToConfirm: () => onConfirmElevate(symbol, farmToken, selectedSourceElevation, selectedTargetElevation, val, decimals),
     })
   }
 

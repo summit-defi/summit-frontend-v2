@@ -5,15 +5,10 @@ import styled from 'styled-components'
 import ElevationSelector from '../ElevationSelector'
 import useElevate from 'hooks/useElevate'
 import ElevateModal from '../ElevateModal'
-import SummitButton from 'uikit/components/Button/SummitButton'
-import { useAvailableSisterElevations, useSummitEnabled } from 'state/hooks'
-import { getSummitLpSymbol } from 'config/constants'
-import { useHistory } from 'react-router'
+import { useSymbolElevateSelectorInfo } from 'state/hooksNew'
 
 interface Props {
   symbol: string
-  farmToken: string
-  decimals: number
   elevationLocked: boolean
   disabled: boolean
 }
@@ -25,21 +20,15 @@ const CenteredInfoText = styled(Text)`
   line-height: 16px;
 `
 
-const CenteredSummitButton = styled(SummitButton)`
-  margin: 34px auto 24px auto;
-`
-
-const FarmCardUserElevate: React.FC<Props> = ({ symbol, farmToken, decimals, elevationLocked, disabled }) => {
+const FarmCardUserElevate: React.FC<Props> = ({ symbol, elevationLocked, disabled }) => {
   const elevation = Elevation.OASIS
-  const availableSisterElevations = useAvailableSisterElevations(symbol)
+  const elevsLaunched = useSymbolElevateSelectorInfo(symbol)
   const { onElevate } = useElevate()
 
   const [onPresentElevate] = useModal(
     <ElevateModal
       symbol={symbol}
-      tokenAddress={farmToken}
       onConfirmElevate={onElevate}
-      decimals={decimals}
     />,
   )
   const handleSelectElevation = (selectedElevation) => {
@@ -50,7 +39,7 @@ const FarmCardUserElevate: React.FC<Props> = ({ symbol, farmToken, decimals, ele
   }
 
   const elevations = [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT]
-  const disabledElevations = elevations.filter((elevToDisable) => !availableSisterElevations[elevToDisable] || (ForceElevationRetired && [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT].includes(elevToDisable)))
+  const disabledElevations = elevations.filter((elevToDisable) => !elevsLaunched[elevToDisable])
 
   return (
     <Flex flexDirection="column" justifyContent="flex-start" alignItems="flex-start">

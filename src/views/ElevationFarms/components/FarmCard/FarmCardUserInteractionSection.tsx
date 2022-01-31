@@ -1,8 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Flex, ExternalLinkButton } from 'uikit'
-import { Farm, UserTokenData } from 'state/types'
-import { Elevation } from 'config/constants/types'
 import { getContract } from 'utils'
 import { provider } from 'web3-core'
 import FarmCardUserApproveDeposit from './FarmCardUserApproveDeposit'
@@ -10,7 +8,6 @@ import FarmCardUserWithdraw from './FarmCardUserWithdraw'
 import FarmCardUserElevate from './FarmCardUserElevate'
 import FarmCardMobileDepositWithdrawSelector from './FarmCardMobileDepositWithdrawSelector'
 import { useIsElevationLockedUntilRollover, useMediaQuery, useSelectedElevation } from 'state/hooks'
-import { getFarmToken } from 'utils/farms'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useFarmAndUserTokenInteractionSectionInfo } from 'state/hooksNew'
 
@@ -68,15 +65,13 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
   }, [ethereum, farmToken])
 
   // PENDING STATES
-  const [claimPending, setClaimPending] = useState<boolean>(false)
   const [approveDepositPending, setApproveDepositPending] = useState<boolean>(false)
   const [withdrawPending, setWithdrawPending] = useState<boolean>(false)
 
   // DISABLED
-  const disabled = useMemo(() => approveDepositPending || withdrawPending || claimPending || !isApproved, [
+  const disabled = useMemo(() => approveDepositPending || withdrawPending || !isApproved, [
     approveDepositPending,
     withdrawPending,
-    claimPending,
     isApproved,
   ])
 
@@ -169,13 +164,11 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
       (!isMobile || mobileDepositWithdraw === 2) && (
         <FarmCardUserElevate
           symbol={symbol}
-          farmToken={farmToken}
-          decimals={decimals}
           elevationLocked={elevationLocked}
           disabled={disabled}
         />
       ),
-    [isMobile, mobileDepositWithdraw, elevationLocked, symbol, farmToken, decimals, disabled],
+    [isMobile, mobileDepositWithdraw, elevationLocked, symbol, disabled],
   )
 
   return (

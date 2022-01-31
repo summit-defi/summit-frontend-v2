@@ -535,23 +535,6 @@ export const useSisterFarms = (symbol: string): SisterFarms => {
   //   return sisterFarms
   // }, [farms, symbol])
 }
-const baseSisterFarmsAvailable = {
-  [Elevation.OASIS]: false,
-  [Elevation.PLAINS]: false,
-  [Elevation.MESA]: false,
-  [Elevation.SUMMIT]: false,
-}
-export const useAvailableSisterElevations = (symbol: string) => {
-  const sisterFarms = useSisterFarms(symbol)
-
-  return useMemo(() => {
-    const sisterFarmsAvailable = baseSisterFarmsAvailable
-    elevationUtils.all.forEach((elevation) => {
-      sisterFarmsAvailable[elevation] = sisterFarms[elevation] != null
-    })
-    return sisterFarmsAvailable
-  }, [sisterFarms])
-}
 
 // HISTORICAL WINNERS
 export const useTotemHistoricalData = (
