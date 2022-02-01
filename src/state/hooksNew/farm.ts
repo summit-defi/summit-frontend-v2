@@ -191,3 +191,47 @@ const selectLifetimeSummitWinningsAndBonus = createSelector(
     })
 )
 export const useLifetimeSummitWinningsAndBonus = () => useSelector(selectLifetimeSummitWinningsAndBonus)
+
+
+const selectFarmsWithYield = createSelector(
+    stateToFarms,
+    (_, elevation: Elevation) => elevation,
+    (farms, elevation) => farms
+        .map((farm) => ({
+            symbol: farm.symbol,
+            yieldContributed: farm.elevations[elevation]?.yieldContributed || BN_ZERO
+        }))
+        .filter((farm) => farm.yieldContributed.isGreaterThan(0))
+)
+const selectElevationYieldBetContributions = createSelector(
+    selectFarmsWithYield,
+    (farmsWithYield) => {
+        const sortedYields = orderBy(
+            farmsWithYield,
+            (farmWithYield) => farmWithYield.yieldContributed.toNumber(),
+            'desc'
+        )
+        
+        const yieldSum = sortedYields.reduce((acc, sortedYield) => acc.plus(sortedYield.yieldContributed), BN_ZERO)
+        
+        return sortedYields.map((sortedYield, index) => ({
+            token: true,
+            title: sortedYield.symbol,
+            key: index,
+            perc: sortedYield.yieldContributed.times(100).div(yieldSum).toNumber(),
+            val: `${getFormattedBigNumber(sortedYield.yieldContributed)} SUMMIT`,
+        }))
+    }
+)
+export const useElevationYieldBetContributions = (elevation: Elevation) => useSelector((state) => selectElevationYieldBetContributions(state, elevation))
+
+const selectUserElevationYieldInfo = createSelector(
+    stateToFarmsElevationData,
+    (elevationData) => ({
+        yieldContributed: elevationData?.yieldContributed || BN_ZERO,
+        potentialWinnings: elevationData?.potentialWinnings || BN_ZERO,
+    })
+)
+export const useUserElevationYieldInfo = (elevation: Elevation) => useSelector((state) => selectUserElevationYieldInfo(state, elevation))
+
+

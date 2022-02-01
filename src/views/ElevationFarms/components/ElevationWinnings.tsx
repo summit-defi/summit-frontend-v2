@@ -3,17 +3,18 @@ import { elevationUtils } from 'config/constants/types'
 import { getBalanceNumber } from 'utils'
 import { Text, Flex } from 'uikit'
 import { useClaimElevation } from 'hooks/useClaim'
-import { useSelectedElevation, useIsElevationLockedUntilRollover } from 'state/hooks'
+import { useSelectedElevation } from 'state/hooks'
 import CardValue from 'views/Home/components/CardValue'
 import ContributionBreakdown from './ContributionBreakdown'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { useElevationWinningsContributions, useUserElevationClaimable } from 'state/hooksNew'
+import { useElevationWinningsContributions, useUserElevationClaimable, useElevationInteractionsLocked } from 'state/hooksNew'
 
 const ElevationWinnings: React.FC = () => {
   const elevation = useSelectedElevation()
-  const elevationLocked = useIsElevationLockedUntilRollover(elevation)
+  const elevationLocked = useElevationInteractionsLocked(elevation)
   const winningsContributions = useElevationWinningsContributions(elevation)
   const claimable = useUserElevationClaimable(elevation)
+  
   const rawClaimable = getBalanceNumber(claimable)
   const earningsOrWinnings = elevationUtils.winningsOrEarnings(elevation).toUpperCase()
 

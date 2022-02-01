@@ -1,13 +1,13 @@
 import React from 'react'
 import { Elevation, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import styled from 'styled-components'
-import { Text, Flex, Spinner, ElevationPuck, ArtworkTotem } from 'uikit'
-import { useIsElevationLockedUntilRollover, useTotemSelectionPending, useElevationFarmsTab } from 'state/hooks'
+import { Text, Flex, Spinner, Lock, ElevationPuck, ArtworkTotem } from 'uikit'
+import { useTotemSelectionPending, useElevationFarmsTab } from 'state/hooks'
 import { useSelectTotemModal } from 'components/SelectTotemModal'
 import SummitIconButton from 'uikit/components/Button/SummitIconButton'
 import { SpinnerKeyframes } from 'uikit/components/Svg/Icons/Spinner'
 import useTotemWinnersModal from 'uikit/widgets/TotemWinnersModal/useTotemWinnersModal'
-import { useElevationUserTotemAndCrowned } from 'state/hooksNew'
+import { RoundStatus, useElevationInteractionsLockedBreakdown, useElevationUserTotemAndCrowned } from 'state/hooksNew'
 
 const HeaderButtonsRow = styled(Flex)`
   position: absolute;
@@ -84,12 +84,18 @@ const StyledSpinner = styled(Spinner)`
   align-self: center;
   filter: drop-shadow(0px 0px 4px black);
 `
+const StyledLock = styled(Lock)`
+  position: absolute;
+  align-self: center;
+  filter: drop-shadow(0px 0px 4px black);
+`
 
 const TotemHeaderButtonsRow: React.FC = () => {
   const elevationTab = useElevationFarmsTab()
   const elevation = elevationTabToElevation[elevationTab]
   const { userTotem, crowned } = useElevationUserTotemAndCrowned(elevation)
-  const elevationLockedUntilRollover = useIsElevationLockedUntilRollover(elevation)
+  const { roundStatus } = useElevationInteractionsLockedBreakdown(elevation)
+  const totemSwitchDisabled = roundStatus === RoundStatus.RolloverLockout || roundStatus === RoundStatus.RolloverAvailable
   const totemSelectionPending = useTotemSelectionPending()
 
   const isElevationFarm = elevation !== null && elevation !== Elevation.OASIS
@@ -97,7 +103,7 @@ const TotemHeaderButtonsRow: React.FC = () => {
   const { onPresentSelectTotemModal } = useSelectTotemModal(elevation)
 
   const handlePresentSelectTotemModal = () => {
-    if (elevationLockedUntilRollover) return
+    if (totemSwitchDisabled) return
     onPresentSelectTotemModal()
   }
 
@@ -106,7 +112,7 @@ const TotemHeaderButtonsRow: React.FC = () => {
     <HeaderButtonsRow flexDirection="row" justifyContent="center" alignItems="center">
       {userTotem != null && isElevationFarm && (
         <SummitIconButton
-          isLocked={elevationLockedUntilRollover}
+          isLocked={totemSwitchDisabled}
           isLoading={totemSelectionPending}
           elevation={elevation}
           onClick={handlePresentSelectTotemModal}
@@ -115,7 +121,7 @@ const TotemHeaderButtonsRow: React.FC = () => {
           <SwitchTotemIcon />
           <IconButtonText bold monospace>SWITCH<br/>TOTEM</IconButtonText>
           {totemSelectionPending && <StyledSpinner className="spinner" />}
-          {/* {elevationLockedUntilRollover && <StyledLock width="28px" />} */}
+          {totemSwitchDisabled && <StyledLock width="28px" />}
         </SummitIconButton>
       )}
       { elevation != null ?

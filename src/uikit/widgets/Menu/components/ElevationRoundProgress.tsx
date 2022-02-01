@@ -3,11 +3,12 @@ import styled from 'styled-components'
 import { linearGradient, transparentize } from 'polished'
 import Flex from 'uikit/components/Box/Flex'
 import { Text } from 'uikit/components/Text'
-import { useElevationFarmsTab, useElevationRoundTimeRemaining, useSelectedElevation } from 'state/hooks'
-import { Elevation, ElevationFarmTab, SummitPalette } from 'config/constants'
+import { useElevationFarmsTab, useSelectedElevation } from 'state/hooks'
+import { Elevation, ElevationFarmTab, RoundLockTime, SummitPalette } from 'config/constants'
 import { getPaletteGradientStops, getTimeRemainingText } from 'utils'
 import { clamp } from 'lodash'
 import { Spinner, SpinnerKeyframes } from 'uikit/components/Svg/Icons/Spinner'
+import { RoundStatus, useElevationRoundStatusAndProgress } from 'state/hooksNew'
 
 const RoundProgressBar = styled(Flex)<{ greyed: boolean }>`
     position: absolute;
@@ -26,7 +27,7 @@ const HorizontalBar = styled.div`
     background-color: ${({ theme }) => theme.colors.text};
 `
 
-const VerticalBar = styled.div<{ right?: boolean, isExpedition: boolean }>`
+const VerticalBar = styled.div<{ right?: boolean, isExpedition: boolean, isUnlockBar: boolean }>`
     position: absolute;
     top: -7px;
     height: 14px;
@@ -35,24 +36,25 @@ const VerticalBar = styled.div<{ right?: boolean, isExpedition: boolean }>`
     z-index: 4;
     
     right: ${({ right }) => right ? '0px' : 'unset'};
-    right: ${({ right }) => right ? 'unset' : '0px'};
-    background-color: ${({ right, isExpedition, theme }) => right ?
+    left: ${({ right }) => right ? 'unset' : '0px'};
+    background-color: ${({ right, isExpedition, theme, isUnlockBar }) => ((!right && !isUnlockBar) || (right && isUnlockBar)) ?
         (isExpedition ? '#3B2F60' : theme.colors.textGold) :
         theme.colors.text
     };
 `
 
-const ProgressBar = styled.div<{ perc: number, isExpedition: boolean }>`
-    width: ${({ perc }) => perc}%;
+const ProgressBar = styled.div<{ perc: number, isExpedition: boolean, isUnlockBar: boolean }>`
+    width: ${({ perc, isUnlockBar }) => isUnlockBar ? (100 - perc) : perc}%;
     height: 4px;
-    background-color: ${({ isExpedition }) => linearGradient({
+    background-color: ${({ isExpedition, isUnlockBar }) => linearGradient({
         colorStops: getPaletteGradientStops(isExpedition ? SummitPalette.EXPEDITION : SummitPalette.GOLD),
-        toDirection: '120deg',
+        toDirection: isUnlockBar ? '-60deg' : '120deg',
     })};
     border-radius: 0px 3px 3px 0px;
     z-index: 3;
     position: absolute;
-    left: 0px;
+    left: ${({ isUnlockBar }) => isUnlockBar ? 'unset' : '0px'};
+    right: ${({ isUnlockBar }) => isUnlockBar ? '0px' : 'unlock'};
     top: -2px;
 `
 
@@ -60,7 +62,7 @@ const ProgressPill = styled.div<{ perc: number, isExpedition: boolean }>`
     width: 14px;
     height: 14px;
     transform: rotate(${({ perc }) => perc === 100 ? '45' : '-45'}deg);
-    background-color: ${({ isExpedition }) => isExpedition ? '#DDA4A8' : '#f2ac4a'};
+    background-color: ${({ isExpedition }) => isExpedition ? '#DDA4A8' : '#EA9130'};
     border-radius: 10px 10px 10px 0px;
     position: absolute;
     left: ${({ perc }) => `calc(${perc}% - ${perc * 0.02}px - 7px)`};
@@ -95,10 +97,10 @@ const TextBubble = styled.div<{ perc: number, isExpedition: boolean }>`
     }
 `
 
-const TimerText = styled(Text)<{ even: boolean, endingHighlight: boolean, isExpedition: boolean }>`
+const TimerText = styled(Text)<{ evenGrowHighlight: boolean, endingHighlight: boolean, isExpedition: boolean }>`
     transform-origin: 50% 50%;
-    transform: ${({ even }) => `scale(${even ? 1.07 : 1})`};
-    color: ${({ theme, endingHighlight, even, isExpedition }) => (endingHighlight && even) ? (isExpedition ? '#d89595' : '#f2ac4a') : theme.colors.text};
+    transform: ${({ evenGrowHighlight }) => `scale(${(evenGrowHighlight) ? 1.07 : 1})`};
+    color: ${({ theme, endingHighlight, evenGrowHighlight, isExpedition }) => (endingHighlight && evenGrowHighlight) ? (isExpedition ? '#d89595' : '#f2ac4a') : theme.colors.text};
 `
 
 const StyledSpinner = styled(Spinner)`
@@ -107,47 +109,85 @@ const StyledSpinner = styled(Spinner)`
 `
 
 const ElevationRoundProgress: React.FC = () => {
-    const elevation = useSelectedElevation()
-    const isExpedition = elevation === Elevation.EXPEDITION
     const elevationTab = useElevationFarmsTab()
-    const roundDuration = (isExpedition ? 24 : 2) * 3600
-    const roundTimeRemaining = useElevationRoundTimeRemaining(isExpedition ? Elevation.EXPEDITION : Elevation.PLAINS)
+    const selectedElevation = useSelectedElevation()
+    const elevation = selectedElevation || Elevation.OASIS
+    const isExpedition = elevation === Elevation.EXPEDITION
 
-    const getTimerText = useCallback(
+    const { status, duration, timeRemaining } = useElevationRoundStatusAndProgress(elevation)
+    const isUnlockBar = status === RoundStatus.NotYetUnlocked
+
+    const getRoundProgressUI = useCallback(
         () => {
-            if (roundTimeRemaining == null) return ''
-            if (roundTimeRemaining === 0) return 'FINALIZING ROUND'
-            if (roundTimeRemaining <= 120) {
-                return `LOCKED, FINALIZING IN: ${getTimeRemainingText(roundTimeRemaining)}`
+            let timerText = ''
+            let nearLockHighlight = true
+            const durationToLock = duration - RoundLockTime
+            const timeToLock = timeRemaining - RoundLockTime
+            const pillPerc = clamp((100 * (durationToLock - timeToLock)) / durationToLock, 0, 100)
+            let evenGrowHighlight = false
+            let textPerc = 50
+            if (isUnlockBar) {
+                nearLockHighlight = false
+                timerText = `THE ${elevation} UNLOCKS IN: ${getTimeRemainingText(timeRemaining)}`
+            } else {
+                // eslint-disable-next-line no-lonely-if
+                if (timeRemaining == null) {
+                    timerText = ''
+                    nearLockHighlight = false
+                } else if (timeRemaining === 0) {
+                    timerText = 'FINALIZING ROUND'
+                    evenGrowHighlight = true
+                } else if (timeRemaining <= RoundLockTime) {
+                    timerText = `LOCKED, FINALIZING IN: ${getTimeRemainingText(timeRemaining)}`
+                    evenGrowHighlight = true
+                } else if (timeRemaining <= (RoundLockTime + 300)) {
+                    timerText = `ROUND LOCKS IN: ${getTimeRemainingText(timeToLock)}!`
+                    evenGrowHighlight = timeRemaining % 2 === 0
+                } else {
+                    timerText = getTimeRemainingText(timeToLock)
+                    textPerc = pillPerc
+                    nearLockHighlight = false
+                }                
             }
-            if (roundTimeRemaining <= 420) return `ROUND LOCKS IN: ${getTimeRemainingText(roundTimeRemaining - 120)}!`
-        
-            return getTimeRemainingText(roundTimeRemaining - 120)
-        },
-        [roundTimeRemaining]
-    )
 
-    const perc = useCallback(
-        () => {
-            const pill = clamp((100 * ((roundDuration - 120) - (roundTimeRemaining - 120))) / (roundDuration - 120), 0, 100)
             return {
-                pill,
-                text: roundTimeRemaining <= 420 ? 50 : pill
+                timerText,
+                nearLockHighlight,
+                pillPerc,
+                textPerc,
+                evenGrowHighlight
             }
+
         },
-        [roundTimeRemaining, roundDuration]
+        [timeRemaining, isUnlockBar, duration, elevation]
     )
+
+    const {
+        timerText,
+        nearLockHighlight,
+        pillPerc,
+        textPerc,
+        evenGrowHighlight,
+    } = getRoundProgressUI()
 
     return (
         <RoundProgressBar greyed={elevationTab === ElevationFarmTab.OASIS}>
             <HorizontalBar/>
-            <VerticalBar isExpedition={isExpedition}/>
-            <VerticalBar isExpedition={isExpedition} right/>
-            <ProgressBar isExpedition={isExpedition} perc={perc().pill}/>
-            <ProgressPill isExpedition={isExpedition} perc={perc().pill}/>
-            { roundTimeRemaining != null && <TextBubble isExpedition={isExpedition} perc={perc().text}>
-                { roundTimeRemaining === 0 && <StyledSpinner className="spinner" /> }
-                <TimerText isExpedition={isExpedition} bold monospace endingHighlight={roundTimeRemaining === 0 || roundTimeRemaining <= 420 && roundTimeRemaining > 120} even={roundTimeRemaining % 2 === 0}>{getTimerText()}</TimerText>
+            <VerticalBar isExpedition={isExpedition} isUnlockBar={isUnlockBar}/>
+            <VerticalBar isExpedition={isExpedition} isUnlockBar={isUnlockBar} right/>
+            <ProgressBar isExpedition={isExpedition} perc={pillPerc} isUnlockBar={isUnlockBar}/>
+            <ProgressPill isExpedition={isExpedition} perc={pillPerc}/>
+            { timeRemaining != null && <TextBubble isExpedition={isExpedition} perc={textPerc}>
+                { timeRemaining === 0 && <StyledSpinner className="spinner" /> }
+                <TimerText
+                    isExpedition={isExpedition}
+                    bold
+                    monospace
+                    endingHighlight={nearLockHighlight}
+                    evenGrowHighlight={evenGrowHighlight}
+                >
+                    {timerText}
+                </TimerText>
             </TextBubble> }
         </RoundProgressBar>
     )

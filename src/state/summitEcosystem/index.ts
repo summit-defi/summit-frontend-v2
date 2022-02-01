@@ -27,12 +27,14 @@ const getLocalStorageVariables = () => {
     ),
     chainId: JSON.parse(localStorage.getItem('ChainId')) || '97',
     farmType: (localStorage.getItem('FarmType') || FarmType.All) as FarmType,
+    elevationsInfo: elevationUtils.elevationExpedition.map((elev) => 
+      JSON.parse(localStorage.getItem(`${elev}_ecosystem_info`) || 'null')
+    )
   }
 }
 
 const initialState: SummitEcosystemState = {
   ...getLocalStorageVariables(),
-  elevationsInfo: [],
   expeditionDivider: 50,
   liveFarms: true,
   pendingTxs: [],
@@ -64,6 +66,7 @@ export const SummitEcosystemSlice = createSlice({
       state.elevationsInfo = elevationUtils.elevationExpedition.map((elevation) => {
         localStorage.setItem(`${elevation}_winning_totem`, `${elevationsData[elevation].winningTotem}`)
         state.winningTotems[elevationUtils.toInt(elevation)] = elevationsData[elevation].winningTotem
+        localStorage.setItem(`${elevation}_ecosystem_info`, JSON.stringify(elevationsData[elevation], null, 2))
         return elevationsData[elevation]
       })
     },

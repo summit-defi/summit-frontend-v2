@@ -25,6 +25,7 @@ export const stateToGlacierTotalThawedSummit = (state: State) => state.glacier.t
 
 // TOTEM
 export const stateToUserTotems = (state: State) => state.summitEcosystem.totems
+export const stateToElevationUserTotem = (state: State, elevation: Elevation) => state.summitEcosystem.totems[elevationUtils.toInt(elevation)]
 export const stateToExpeditionDeity = (state: State) => state.expedition.userData.deity
 export const stateToWinningTotems = (state: State) => state.summitEcosystem.winningTotems
 export const stateToWinningDeity = (state: State) => state.summitEcosystem.winningTotems[4]
@@ -34,6 +35,8 @@ export const stateToDeityDivider = (state: State) => state.summitEcosystem.exped
 export const stateToTotemSelectionPending = (state: State) => state.summitEcosystem.pendingTotemSelection
 export const stateToFarmTypeFilter = (state: State) => state.summitEcosystem.farmType
 export const stateToFarmLiveFilter = (state: State) => state.summitEcosystem.liveFarms
+export const stateToElevationInfo = (state: State, elevation: Elevation) => state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(elevation)] || null
+export const stateToElevationsInfos = (state: State) => state.summitEcosystem.elevationsInfo
 
 // FARMS
 export const stateToFarmsElevationsData = (state: State) => state.farms.elevationData

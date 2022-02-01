@@ -171,7 +171,7 @@ const FarmTypeSelector: React.FC<Props> = ({
 }) => {
   const selectedIndex = elevations.findIndex((elevation) => elevation === selected)
   const handleSelectElevation = (elevation) => {
-    if (disabled || disabledElevations.includes(elevation)) return
+    if (isLocked || disabled || disabledElevations.includes(elevation)) return
     selectElevation(elevation)
   }
 

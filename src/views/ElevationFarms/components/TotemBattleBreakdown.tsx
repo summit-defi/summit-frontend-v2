@@ -211,7 +211,7 @@ const TotemBattleResult: React.FC<TotemResultProps> = ({ totemInfo, elevation, c
   return (
     <TotemResultWrapper>
       <TotemPosition topOffset={topOffset}>
-        <TotemMultText bold monospace>{totemInfo.mult == null ? '' : `${totemInfo.mult.toFixed(1)}x`}</TotemMultText>
+        <TotemMultText bold monospace>{totemInfo.mult == null ? '' : `${isFinite(totemInfo.mult) ? totemInfo.mult.toFixed(1) : 'INF '}x`}</TotemMultText>
         <TotemScale scale={totemScale}>
           <Totem
             elevation={elevation}

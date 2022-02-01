@@ -27,7 +27,7 @@ export const brandColors = {
   EVEREST: '#017B88',
   GLACIER: '#001A36',
 
-  textGold: '#F7BA56',
+  textGold: '#EE9F3D',
 }
 
 export const lightColors: Colors = {

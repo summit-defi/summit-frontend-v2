@@ -2,14 +2,14 @@ import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
-import { getTimestampDiff, getFormattedBigNumber, epochEndTimestamp, epochThawTimestamp } from 'utils'
+import { getFormattedBigNumber, epochEndTimestamp, epochThawTimestamp } from 'utils'
 import {
   fetchFarmsPublicDataAsync,
   fetchExpeditionUserDataAsync,
   fetchExpeditionPublicDataAsync,
 } from './actions'
 import { State, Farm, ElevationInfo } from './types'
-import { BN_ZERO, Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired, RoundLockTime, SummitPalette } from '../config/constants/types'
+import { BN_ZERO, Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired, SummitPalette } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
   fetchElevationHelperInfoAsync,
@@ -113,7 +113,7 @@ export const useDashboardTotemBattleInfo = () => {
   )
 }
 
-export const useMultiElevYieldInfo = () => {
+export const useMultiElevYieldBetInfo = () => {
   const elevationData = useSelector((state: State) => state.farms.elevationData) 
   return useMemo(
     () => {
@@ -470,32 +470,6 @@ export const useElevationsLocked = (): boolean[] => {
       ),
     [elevationRoundNumbers],
   )
-}
-export const useElevationRoundTimeRemaining = (elevation: Elevation): number | null => {
-  const elevationInfo = useElevationInfo(elevation)
-  const currentTimestamp = useCurrentTimestamp()
-  const elevationUnlockTimestamp = useElevationUnlockTimestamp(elevation)
-
-  return useMemo(() => (elevationInfo == null ? null : getTimestampDiff(currentTimestamp, Math.max(elevationUnlockTimestamp, elevationInfo.roundEndTimestamp))), [
-    elevationInfo,
-    currentTimestamp,
-    elevationUnlockTimestamp,
-  ])
-}
-export const useIsElevationLockedUntilRollover = (elevation: Elevation): boolean => {
-  const timeRemaining = useElevationRoundTimeRemaining(elevation)
-  return useMemo(
-    () => timeRemaining <= RoundLockTime && elevation !== Elevation.OASIS,
-    [timeRemaining, elevation],
-  )
-}
-
-// EXPEDITION
-export const useExpeditionDivider = (): number => {
-  return useSelector((state: State) => state.summitEcosystem.expeditionDivider)
-}
-export const usePendingExpeditionTx = (): boolean => {
-  return useSelector((state: State) => state.summitEcosystem.pendingExpeditionTx)
 }
 
 // HISTORICAL WINNERS

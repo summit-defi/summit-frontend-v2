@@ -26,7 +26,7 @@ const MarkerWrapper = styled.div<{ progress: number }>`
 
 const EndMarkerText = styled(Text)<{ top: boolean }>`
     position: absolute;
-    font-size: 12px;
+    font-size: ${({ top }) => top ? 11 : 12}px;
     line-height: 18px;
     white-space: nowrap;
     top: ${({ top }) => top ? 0 : EndMarkerHeight - 18}px;
@@ -115,7 +115,7 @@ const EndMarker: React.FC<EndMarkerProps> = ({title, perc}) => {
     return <EndMarkerWrapper>
         {title != null && <EndMarkerText monospace top>{title}</EndMarkerText>}
         <VerticalBar/>
-        {perc != null && <EndMarkerText monospace bold top={false}>{perc}%</EndMarkerText>}
+        {perc != null && <EndMarkerText monospace top={false}>{perc}%</EndMarkerText>}
     </EndMarkerWrapper>
 }
 

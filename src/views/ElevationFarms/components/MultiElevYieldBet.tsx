@@ -1,12 +1,12 @@
 import React from 'react'
 import { getBalanceNumber } from 'utils'
 import { Text, Flex } from 'uikit'
-import { useMultiElevYieldInfo } from 'state/hooks'
+import { useMultiElevYieldBetInfo } from 'state/hooks'
 import CardValue from 'views/Home/components/CardValue'
 import ContributionBreakdown from './ContributionBreakdown'
 
 const MultiElevYieldBet: React.FC = () => {
-  const { elevYieldsBreakdown, totalYieldContributed, totalPotentialWinnings } = useMultiElevYieldInfo()
+  const { elevYieldsBreakdown, totalYieldContributed, totalPotentialWinnings } = useMultiElevYieldBetInfo()
 
   const rawYieldContributed = getBalanceNumber(totalYieldContributed)
   const rawPotentialWinnings = getBalanceNumber(totalPotentialWinnings)

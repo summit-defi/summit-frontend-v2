@@ -2,13 +2,14 @@ import React from 'react'
 import { getBalanceNumber } from 'utils'
 import { Text, Flex } from 'uikit'
 import styled from 'styled-components'
-import { useAllElevationsClaimable, useIsElevationLockedUntilRollover } from 'state/hooks'
+import { useAllElevationsClaimable } from 'state/hooks'
 import CardValue from 'views/Home/components/CardValue'
 import ContributionBreakdown from './ContributionBreakdown'
 import BigNumber from 'bignumber.js'
 import { Elevation, elevationUtils } from 'config/constants'
 import { useClaimElevation } from 'hooks/useClaim'
 import SummitButton from 'uikit/components/Button/SummitButton'
+import { useElevationInteractionsLocked } from 'state/hooksNew'
 
 const ButtonsRow = styled(Flex)`
   gap: 12px;
@@ -22,7 +23,7 @@ interface ElevProps {
 }
 
 const ElevClaim: React.FC<ElevProps> = ({ elevation, claimable }) => {
-  const elevationLocked = useIsElevationLockedUntilRollover(elevation)
+  const elevationLocked = useElevationInteractionsLocked(elevation)
   const earningsOrWinnings = elevationUtils.winningsOrEarnings(elevation).toUpperCase()
 
   const { onClaimElevation, claimPending } = useClaimElevation(elevation)

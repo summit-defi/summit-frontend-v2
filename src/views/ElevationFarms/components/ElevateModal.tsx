@@ -190,7 +190,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
           {selectedTargetElevation} TOTEM:
         </Text>
         {totem == null ? (
-          <SummitButton elevation={selectedTargetElevation} mt="11px" mb="11px" onClick={handlePresentSelectTotem}>
+          <SummitButton summitPalette={selectedTargetElevation} mt="11px" mb="11px" onClick={handlePresentSelectTotem}>
             SELECT TOTEM
           </SummitButton>
         ) : (

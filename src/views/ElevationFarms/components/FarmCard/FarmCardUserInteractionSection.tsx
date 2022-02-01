@@ -1,14 +1,14 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import styled from 'styled-components'
-import { Flex, ExternalLinkButton } from 'uikit'
+import { Flex, Text, Lock, ExternalLinkButton } from 'uikit'
 import { getContract } from 'utils'
 import { provider } from 'web3-core'
 import FarmCardUserWithdraw from './FarmCardUserWithdraw'
 import FarmCardUserElevate from './FarmCardUserElevate'
 import FarmCardMobileDepositWithdrawSelector from './FarmCardMobileDepositWithdrawSelector'
-import { useIsElevationLockedUntilRollover, useMediaQuery, useSelectedElevation } from 'state/hooks'
+import { useMediaQuery, useSelectedElevation } from 'state/hooks'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { useFarmAndUserTokenInteractionSectionInfo } from 'state/hooksNew'
+import { useElevationInteractionsLockedBreakdown, useFarmAndUserTokenInteractionSectionInfo } from 'state/hooksNew'
 import FarmCardUserApprove from './FarmCardUserApprove'
 import FarmCardUserDeposit from './FarmCardUserDeposit'
 
@@ -31,11 +31,23 @@ const MobileVerticalFlexText = styled(MobileVerticalFlex)`
   }
 `
 
+const StyledLock = styled(Lock)`
+  transform: rotate(20deg);
+  fill: ${({ theme }) => theme.colors.textGold};
+`
+
 interface Props {
   symbol: string
 }
+
 const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
   const elevation = useSelectedElevation()
+  const isMobile = useMediaQuery('(max-width: 986px)')
+  const {
+    farmInteractionsLocked,
+    totemNotSelected,
+  } = useElevationInteractionsLockedBreakdown(elevation)
+  const elevationLocked = farmInteractionsLocked || totemNotSelected
   const { account, ethereum }: { account: string | null, ethereum: provider } = useWallet()
 
   const {
@@ -56,8 +68,6 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
     walletBalance,
   } = useFarmAndUserTokenInteractionSectionInfo(symbol, elevation)
 
-  const isMobile = useMediaQuery('(max-width: 986px)')
-  const elevationLocked = useIsElevationLockedUntilRollover(elevation)
   const [mobileDepositWithdraw, setMobileDepositWithdraw] = useState(isMobile ? 0 : -1)
 
   const isApproved = account && farmAllowance && farmAllowance.isGreaterThan(0)
@@ -185,6 +195,18 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
 
   return (
     <Flex flexDirection='column' alignItems='center' justifyContent='center'>
+      { elevationLocked &&
+        <Flex width='100%' alignItems='center' justifyContent='flex-start' mb='16px' gap='8px'>
+          <StyledLock width='18px'/>
+          <Text bold italic gold small monospace textAlign='left'>
+            {
+              farmInteractionsLocked ?
+                `THE ${elevation} Farms are locked until the Elevation unlocks` :
+                `You must select a Totem to deposit`
+            }  
+          </Text>
+        </Flex>
+      }
       <MobileVerticalFlex>
         {mobileDepositWithdrawSelector()}
         {approveDepositSection()}

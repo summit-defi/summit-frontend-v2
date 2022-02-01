@@ -86,7 +86,7 @@ const ElevationIntroduction: React.FC = () => {
         <br/>
       </StyledText>
       { account != null && userTotem == null && <SummitButton
-        elevation={elevation}
+        summitPalette={elevation}
         onClick={handlePresentSelectTotemModal}
         isLoading={totemSelectionPending}
       >

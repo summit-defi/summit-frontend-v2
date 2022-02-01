@@ -91,7 +91,7 @@ export const EverestStatsCard: React.FC = memo(() => {
             </TokenImageWrapper>
 
             <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
-                <Text monospace small>Everest Supply:</Text>
+                <Text monospace small>Total Everest Supply:</Text>
                 <CardValue summitPalette={SummitPalette.EVEREST} value={rawEverestSupply} decimals={3} fontSize="22" />
             </Flex>
             <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>

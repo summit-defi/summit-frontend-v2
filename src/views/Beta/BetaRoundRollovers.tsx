@@ -2,9 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'uikit'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { Elevation } from 'config/constants'
+import { Elevation, elevationUtils } from 'config/constants'
 import useRolloverElevation from 'hooks/useRolloverElevation'
-import { useElevationRoundTimeRemaining, useElevationLocked } from 'state/hooks'
+import { rolloverOrUnlockAvailable, RoundStatus, useElevationRoundStatus, elevationLocked, useElevationsRoundStatuses } from 'state/hooksNew'
 
 const BTCard = styled(Flex)`
   align-self: baseline;
@@ -43,34 +43,7 @@ const FarmNumericalInfoFlex = styled(Flex)`
 const BetaRoundRolloversCard: React.FC = () => {
   const { onRolloverElevation, elevsPending } = useRolloverElevation()
 
-  const plainsTimeRemaining = useElevationRoundTimeRemaining(Elevation.PLAINS)
-  const mesaTimeRemaining = useElevationRoundTimeRemaining(Elevation.MESA)
-  const summitTimeRemaining = useElevationRoundTimeRemaining(Elevation.SUMMIT)
-  const expeditionTimeRemaining = useElevationRoundTimeRemaining(Elevation.EXPEDITION)
-  const plainsLocked = useElevationLocked(Elevation.PLAINS)
-  const mesaLocked = useElevationLocked(Elevation.MESA)
-  const summitLocked = useElevationLocked(Elevation.SUMMIT)
-  const expeditionLocked = useElevationLocked(Elevation.EXPEDITION)
-
-
-  const roundInfo = {
-    [Elevation.PLAINS]: {
-      time: plainsTimeRemaining,
-      locked: plainsLocked,
-    },
-    [Elevation.MESA]: {
-      time: mesaTimeRemaining,
-      locked: mesaLocked,
-    },
-    [Elevation.SUMMIT]: {
-      time: summitTimeRemaining,
-      locked: summitLocked,
-    },
-    [Elevation.EXPEDITION]: {
-      time: expeditionTimeRemaining,
-      locked: expeditionLocked,
-    },
-  }
+  const elevsRoundStatuses = useElevationsRoundStatuses()
 
   return (
     <BTCard>
@@ -78,16 +51,16 @@ const BetaRoundRolloversCard: React.FC = () => {
         <Text monospace italic small mb='14px' textAlign='center'>* The BETA requires manually rolling over rounds, it will be done automatically in the real V2</Text>
 
         <FarmNumericalInfoFlex>
-          { [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT, Elevation.EXPEDITION].map((elevation) => (
+          { elevationUtils.elevationExpedition.map((elevation, elevDataIndex) => (
             <SummitButton
               key={elevation}
-              onClick={() => onRolloverElevation(elevation, roundInfo[elevation].locked)}
+              onClick={() => onRolloverElevation(elevation, elevsRoundStatuses[elevDataIndex] === RoundStatus.UnlockAvailable)}
               width='160px'
               summitPalette={elevation}
-              disabled={roundInfo[elevation].time > 0}
+              disabled={!rolloverOrUnlockAvailable(elevsRoundStatuses[elevDataIndex])}
               isLoading={elevsPending[elevation]}
             >
-              ROLLOVER
+              { elevationLocked(elevsRoundStatuses[elevDataIndex]) ? 'UNLOCK' : 'ROLLOVER' }
               <br/>
               {elevation}
             </SummitButton>
