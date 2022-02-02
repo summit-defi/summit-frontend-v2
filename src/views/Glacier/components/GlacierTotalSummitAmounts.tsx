@@ -56,7 +56,7 @@ export const GlacierTotalSummitAmounts: React.FC = memo(() => {
             <ItemFlex>
                 <TokenSymbolImage symbol='FrozenSUMMIT' width={SummitIconSize} height={SummitIconSize} />
                 <Text bold monospace small>
-                    TOTAL FROZEN SUMMIT
+                    YOUR FROZEN SUMMIT
                 </Text>
                 <ValueText>
                     <HighlightedText bold monospace fontSize='22' lineHeight='22px'>
@@ -71,7 +71,7 @@ export const GlacierTotalSummitAmounts: React.FC = memo(() => {
             <ItemFlex>
                 <TokenSymbolImage symbol='ThawedSUMMIT' width={SummitIconSize} height={SummitIconSize} />
                 <Text bold monospace small>
-                    TOTAL THAWED SUMMIT
+                    YOUR THAWED SUMMIT
                 </Text>
                 <ValueText>
                     <HighlightedText bold monospace fontSize='22' lineHeight='22px'>
