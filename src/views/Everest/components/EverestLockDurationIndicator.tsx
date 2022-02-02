@@ -2,7 +2,7 @@ import React from 'react'
 import { Flex } from 'uikit'
 import Slider from 'rc-slider'
 import styled from 'styled-components'
-import { darken, linearGradient } from 'polished'
+import { darken, linearGradient, transparentize } from 'polished'
 import 'rc-slider/assets/index.css'
 import { getPaletteGradientStops, getLockDurationPerc, lockDurationSliderMarks, sliderPoints  } from 'utils'
 import { SummitPalette } from 'config/constants'
@@ -17,15 +17,22 @@ const SliderWrapper = styled(Flex)`
     pointer-events: none;
 
     .rc-slider-rail {
-        width: calc(100% + ${ButtonHeight}px);
-        left: -${ButtonHeight / 2}px;
+        border-radius: 0px;
+        width: 100%;
+        left: 0px;
         height: ${ButtonHeight}px;
-        border-radius: ${ButtonHeight / 2}px;
         top: ${(ButtonHeight / -2) + 6}px;
-        background-color: ${({ theme }) => darken(0.2, theme.colors.background)};
+        background-color: ${({ theme }) => theme.colors.text};
+        opacity: 0.3;
     }
     .rc-slider-track {
-        display: none;
+        top: 3px;
+        border-radius: 0px;
+        height: ${ButtonHeight}px;
+        background: ${linearGradient({
+            colorStops: getPaletteGradientStops(SummitPalette.EVEREST),
+            toDirection: '120deg',
+        })};
     }
     .rc-slider-dot {
         display: none;        
@@ -59,6 +66,7 @@ const SliderWrapper = styled(Flex)`
         font-family: Courier Prime, monospace;
         letter-spacing: 0.5px;
         font-weight: bold;
+        font-weight: 13px;
         pointer-events: none;
     }
 `
@@ -78,10 +86,9 @@ const FakeMarkDot = styled.div<{ perc: number }>`
 
     &::after {
         position: absolute;
-        border-radius: 4px;
         content: ' ';
-        width: 6px;
-        height: 6px;
+        width: 2px;
+        height: 15px;
         background-color: ${({ theme }) => theme.colors.text};
     }
 `
@@ -89,7 +96,7 @@ const FakeMarkDot = styled.div<{ perc: number }>`
 const FakeSliderHandle = styled.div<{ perc: number }>`
     position: absolute;
     left: ${({ perc }) => perc}%;
-    width: 24px;
+    width: 4px;
     height: 24px;
     padding: 0px;
     border: none;
@@ -101,11 +108,7 @@ const FakeSliderHandle = styled.div<{ perc: number }>`
     transform: translateX(-50%);
     margin-top: -6px;
     z-index: 6;
-    background: ${linearGradient({
-        colorStops: getPaletteGradientStops(SummitPalette.EVEREST),
-        toDirection: '120deg',
-    })};
-    border-radius: 20px;
+    background-color: #D9B28B;
 `
 
 interface Props {
@@ -128,8 +131,9 @@ const EverestLockDurationIndicator: React.FC<Props> = ({ avgLockDuration }) => {
             <Slider
                 min={0}
                 marks={filteredMarks}
-                step={null}
-                defaultValue={0}
+                step={1}
+                value={avgPerc}
+                defaultValue={avgPerc}
             />
             { Object.keys(filteredMarks).map((markPerc) =>
                 <FakeMarkDot

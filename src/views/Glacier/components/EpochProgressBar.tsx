@@ -1,10 +1,10 @@
-import { Elevation } from 'config/constants'
 import React from 'react'
 import styled from 'styled-components'
-import { darken } from 'polished'
 import { Flex, Text } from 'uikit'
-import { getEpochTimestamps, getTimeRemainingText, timestampToDate } from 'utils'
+import { getEpochTimestamps, getPaletteGradientStops, getTimeRemainingText, timestampToDate } from 'utils'
 import { useEpochVariableTickTimestamp } from 'state/hooks'
+import { darken, linearGradient, transparentize } from 'polished'
+import { SummitPalette } from 'config/constants'
 
 const EndMarkerHeight = 65
 
@@ -19,48 +19,46 @@ const EndMarkerWrapper = styled.div`
 const MarkerWrapper = styled.div<{ progress: number }>`
     position: relative;
     display: flex;
+    align-items: center;
     justify-content: center;
     width: 1px;
     height: ${EndMarkerHeight}px;
     left: ${({ progress }) => (progress * 100) - 100}%;
 `
 
-const EndMarkerText = styled(Text)<{ top: boolean }>`
+const EndMarkerText = styled(Text)`
     position: absolute;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 18px;
     white-space: nowrap;
-    top: ${({ top }) => top ? 0 : EndMarkerHeight - 18}px;
-    bottom: ${({ top }) => top ? EndMarkerHeight - 18 : 0}px;
+    top: ${-4}px;
 `
 
 const MarkerText = styled(Text)`
     position: absolute;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 18px;
     padding-left: 6px;
     padding-right: 6px;
-    top: ${EndMarkerHeight - 18}px;
-    bottom: 0px;
+    bottom: -4px;
     white-space: nowrap;
 `
 
-const MarkerBar = styled.div<{ elevation?: Elevation }>`
-    width: 6px;
+const MarkerBar = styled.div`
+    width: 4px;
     position: absolute;
-    top: 20px;
-    bottom: 20px;
-    left: -3px;
-    border-radius: 3px;
-    background-color: ${({ theme, elevation }) => darken(0.1, theme.colors[elevation || 'BASE'])};
-    box-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`};
+    height: 24px;
+    left: 0px;
+    background-color: #94BDCC;
+    z-index: 5;
 `
 
 const VerticalBar = styled.div`
-    width: 1px;
+    width: 2px;
     position: absolute;
     top: 25px;
     bottom: 25px;
+    z-index: 4;
     background-color: ${({ theme }) => theme.colors.text};
 `
 
@@ -75,9 +73,20 @@ const BarFlex = styled(Flex)`
 `
 const HorizontalBar = styled.div`
     width: 100%;
-    height: 1px;
+    height: 6px;
     background-color: ${({ theme }) => theme.colors.text};
+    opacity: 0.3;
 `
+
+const HorizontalProgressBar = styled.div<{ progress: number }>`
+    position: absolute;
+    left: 0;
+    width: ${({ progress }) => progress * 100}%;
+    height: 6px;
+    background: ${linearGradient({
+        colorStops: getPaletteGradientStops(SummitPalette.BASE),
+        toDirection: '120deg',
+    })};`
 
 const Wrapper = styled(Flex)`
     flex-direction: row;
@@ -104,9 +113,9 @@ interface MarkerProps {
 
 const EndMarker: React.FC<EndMarkerProps> = ({title, perc}) => {
     return <EndMarkerWrapper>
-        {title != null && <EndMarkerText monospace top>{title}</EndMarkerText>}
+        {title != null && <EndMarkerText monospace>{title}</EndMarkerText>}
         <VerticalBar/>
-        {perc != null && <EndMarkerText monospace bold top={false}>{perc}%</EndMarkerText>}
+        {perc != null && <EndMarkerText monospace bold={false}>{perc}%</EndMarkerText>}
     </EndMarkerWrapper>
 }
 
@@ -131,6 +140,7 @@ const EpochProgressBar: React.FC<Props> = ({ epoch, isCurrentEpoch = false }) =>
             <BarFlex flexDirection='row' alignItems='center'>
                 <EndMarker title={startDate}/>
                 <HorizontalBar/>
+                <HorizontalProgressBar progress={progress}/>
                 <EndMarker title={endDate}/>
                 <Marker timeRemainingText={timeRemainingText} progress={progress}/>
             </BarFlex>

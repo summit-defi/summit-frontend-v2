@@ -82,6 +82,7 @@ export const socials = [
 ]
 
 export const MENU_HEIGHT = 64
+export const MENU_HEIGHT_WITH_PROGRESS = 72
 export const MENU_ENTRY_TEXT_ITEM = 28
 export const MENU_ENTRY_HEIGHT = 58
 export const MENU_GAP_HEIGHT = 20

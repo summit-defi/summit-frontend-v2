@@ -25,6 +25,13 @@ const EverestCard = styled(Flex)`
     }
 `
 
+const HeaderHighlightedText = styled(HighlightedText)`
+    margin-bottom: 0px;
+    ${({ theme }) => theme.mediaQueries.nav} {
+        margin-bottom: 18px;
+    }
+`
+
 
 export const UserEverestCard: React.FC = memo(() => {
     const userEverestInfo = useEverestUserInfo()
@@ -33,9 +40,9 @@ export const UserEverestCard: React.FC = memo(() => {
 
     return (
         <EverestCard gap='32px' alignItems='center' justifyContent='center'>
-            <HighlightedText bold monospace textAlign='center'>
+            <HeaderHighlightedText bold monospace textAlign='center'>
                 LOCK SUMMIT
-            </HighlightedText>
+            </HeaderHighlightedText>
             { userHasLockedSummit ?
                 <>
                     <IncreaseLockedAmountSection userEverestInfo={userEverestInfo}/>

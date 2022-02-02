@@ -19,9 +19,9 @@ interface Props {
 
 export const InitialSummitLockSection: React.FC<Props> = ({ summitBalance, summitApproved }) => {
     const currentTimestamp = useCurrentTimestampOnce()
-    
+
     const [lockAmount, setLockAmount] = useState<BigNumber | null>(null)
-    const [lockDuration, setLockDuration] = useState<number | null>(null)
+    const [lockDuration, setLockDuration] = useState<number | null>(30)
 
     const everestAward = getExpectedEverestAward(lockAmount, lockDuration)
 

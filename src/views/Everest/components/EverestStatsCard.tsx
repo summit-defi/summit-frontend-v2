@@ -24,6 +24,15 @@ export const EverestCard = styled(Flex)`
 `
 
 
+
+const HeaderHighlightedText = styled(HighlightedText)`
+    margin-bottom: 0px;
+    ${({ theme }) => theme.mediaQueries.nav} {
+        margin-bottom: 18px;
+    }
+`
+
+
 const TokenImageWrapper = styled.div`
     display: flex;
     align-items: center;
@@ -73,9 +82,9 @@ export const EverestStatsCard: React.FC = memo(() => {
 
     return (
         <EverestCard gap='32px' alignItems='center' justifyContent='center'>
-            <HighlightedText bold monospace textAlign='center'>
+            <HeaderHighlightedText bold monospace textAlign='center'>
                 THE EVEREST TOKEN
-            </HighlightedText>
+            </HeaderHighlightedText>
 
             <TokenImageWrapper>
                 <TokenSymbolImage symbol='EVEREST' width={48} height={48}/>

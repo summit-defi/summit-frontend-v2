@@ -18,6 +18,7 @@ const EndMarkerWrapper = styled.div`
 const MarkerWrapper = styled.div<{ progress: number }>`
     position: relative;
     display: flex;
+    align-items: center;
     justify-content: center;
     width: 1px;
     height: ${EndMarkerHeight}px;
@@ -35,7 +36,7 @@ const EndMarkerText = styled(Text)<{ top: boolean }>`
 
 const MarkerText = styled(Text)`
     position: absolute;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 18px;
     padding-left: 6px;
     padding-right: 6px;
@@ -45,18 +46,15 @@ const MarkerText = styled(Text)`
 `
 
 const MarkerBar = styled.div<{ elevation?: Elevation }>`
-    width: 2px;
+    width: 4px;
     position: absolute;
-    top: 15px;
-    bottom: 15px;
-    left: -1px;
-    /* border-radius: 3px; */
+    height: 24px;
+    left: -2px;
     background-color: ${({ theme, elevation }) => darken(0.1, theme.colors[elevation || 'BASE'])};
-    /* box-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`}; */
 `
 
 const VerticalBar = styled.div`
-    width: 1px;
+    width: 2px;
     position: absolute;
     top: 20px;
     bottom: 20px;

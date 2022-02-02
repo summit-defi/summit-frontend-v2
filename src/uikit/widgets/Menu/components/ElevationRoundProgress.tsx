@@ -12,6 +12,8 @@ import { RoundStatus, useElevationRoundStatusAndProgress } from 'state/hooksNew'
 
 const RoundProgressBar = styled(Flex)<{ greyed: boolean }>`
     position: absolute;
+    align-items: center;
+    justify-content: center;
     bottom: 3px;
     width: 150%;
     max-width: calc(100vw - 40px);
@@ -22,17 +24,15 @@ const RoundProgressBar = styled(Flex)<{ greyed: boolean }>`
 const HorizontalBar = styled.div`
     position: absolute;
     width: 100%;
-    height: 4px;
-    top: -2px;
+    height: 6px;
     background-color: ${({ theme }) => theme.colors.text};
 `
 
 const VerticalBar = styled.div<{ right?: boolean, isExpedition: boolean, isUnlockBar: boolean }>`
     position: absolute;
     top: -7px;
-    height: 14px;
-    width: 4px;
-    border-radius: 4px;
+    height: 15px;
+    width: 2px;
     z-index: 4;
     
     right: ${({ right }) => right ? '0px' : 'unset'};
@@ -45,28 +45,23 @@ const VerticalBar = styled.div<{ right?: boolean, isExpedition: boolean, isUnloc
 
 const ProgressBar = styled.div<{ perc: number, isExpedition: boolean, isUnlockBar: boolean }>`
     width: ${({ perc, isUnlockBar }) => isUnlockBar ? (100 - perc) : perc}%;
-    height: 4px;
+    height: 6px;
     background-color: ${({ isExpedition, isUnlockBar }) => linearGradient({
         colorStops: getPaletteGradientStops(isExpedition ? SummitPalette.EXPEDITION : SummitPalette.GOLD),
-        toDirection: isUnlockBar ? '-60deg' : '120deg',
+        toDirection: (isUnlockBar !== isExpedition) ? '120deg' : '-60deg',
     })};
-    border-radius: 0px 3px 3px 0px;
     z-index: 3;
     position: absolute;
     left: ${({ isUnlockBar }) => isUnlockBar ? 'unset' : '0px'};
     right: ${({ isUnlockBar }) => isUnlockBar ? '0px' : 'unlock'};
-    top: -2px;
 `
 
 const ProgressPill = styled.div<{ perc: number, isExpedition: boolean }>`
-    width: 14px;
-    height: 14px;
-    transform: rotate(${({ perc }) => perc === 100 ? '45' : '-45'}deg);
-    background-color: ${({ isExpedition }) => isExpedition ? '#DDA4A8' : '#EA9130'};
-    border-radius: 10px 10px 10px 0px;
+    width: 4px;
+    height: 24px;
+    background-color: ${({ isExpedition }) => isExpedition ? '#DDA4A8' : '#FCC965'};
     position: absolute;
-    left: ${({ perc }) => `calc(${perc}% - ${perc * 0.02}px - 7px)`};
-    top: -7px;
+    left: ${({ perc }) => `calc(${perc}% - 2px)`};
     z-index: 4;
 `
 
@@ -79,9 +74,9 @@ const TextBubble = styled.div<{ perc: number, isExpedition: boolean }>`
     border-radius: 4px;
     z-index: 3;
     position: absolute;
-    left: ${({ perc }) => `clamp(33px, calc(${perc}% - 2px), calc(100% - 33px))`};
+    left: ${({ perc }) => `clamp(36px, ${perc}%, calc(100% - 36px))`};
     transform: translateX(-50%) translateY(50%);
-    bottom: -26px;
+    bottom: -30px;
     white-space: nowrap;
 
     ${({ theme }) => theme.mediaQueries.nav} {

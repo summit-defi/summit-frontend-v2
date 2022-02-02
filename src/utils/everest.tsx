@@ -30,7 +30,7 @@ export const lockDurationSliderMarksMemoizable = (userLockDuration?: number) => 
         return {
             style: {
                 opacity: duration < userLockDuration ? 0.5 : 1,
-                fontWeight: duration === userLockDuration ? '700' : '200'
+                fontWeight: duration === userLockDuration ? '700' : '400'
             },
             label: <>
                 {durationText}

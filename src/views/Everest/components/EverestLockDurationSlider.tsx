@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Flex } from 'uikit'
 import Slider from 'rc-slider'
 import styled from 'styled-components'
-import { darken, linearGradient } from 'polished'
+import { transparentize, linearGradient } from 'polished'
 import 'rc-slider/assets/index.css'
 import { pressableMixin } from 'uikit/util/styledMixins'
 import { getPaletteGradientStops, lockDurationSliderMarks, lockDurationSliderPerc, sliderPercLockDuration } from 'utils'
@@ -22,7 +22,7 @@ const SliderWrapper = styled(Flex)`
         height: ${ButtonHeight}px;
         border-radius: ${ButtonHeight / 2}px;
         top: ${(ButtonHeight / -2) + 6}px;
-        background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
+        background-color: ${({ theme }) => transparentize(0.85, theme.colors.text)};
         box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
     }
     .rc-slider-track {
@@ -52,15 +52,15 @@ const SliderWrapper = styled(Flex)`
     }
 
     .rc-slider-mark {
-        top: -24px;
+        top: -26px;
         pointer-events: none;
     }
     .rc-slider-mark-text {
         color: ${({ theme }) => theme.colors.text};
         font-family: Courier Prime, monospace;
         letter-spacing: 0.5px;
-        font-weight: bold;
         pointer-events: none;
+        font-size: 13px;
     }
 `
 
@@ -117,7 +117,7 @@ interface Props {
 const EverestLockDurationSlider: React.FC<Props> = ({ existingLockDuration, setLockDuration }) => {
     const existingDurPerc = existingLockDuration != null ? lockDurationSliderPerc(existingLockDuration) : null
     const marks = lockDurationSliderMarks(existingLockDuration)
-    const [perc, setPerc] = useState(existingLockDuration != null ? existingDurPerc : null)
+    const [perc, setPerc] = useState(existingLockDuration != null ? existingDurPerc : lockDurationSliderPerc(30))
 
 
     const handleSetLockDuration = (markPerc) => {

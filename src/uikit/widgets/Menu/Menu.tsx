@@ -90,7 +90,7 @@ const MobileOnlyFooter = styled.div`
   ${({ theme }) => theme.mediaQueries.nav} {
     display: none;
   }
-`;
+`
 
 const MobileExcludedHeaderElements = styled.div`
   display: flex;
