@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex } from 'uikit'
+import { Flex, TooltipModalType } from 'uikit'
 import BoundedProgressBar from '../BoundedProgressBar'
 import { timestampToDate } from 'utils'
 import { useFarmUserTokenSectionInfo } from 'state/hooksNew'
@@ -35,14 +35,16 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
     <Flex flexWrap='wrap' justifyContent='center' flexDirection='row' width='100%' mb='18px' mt='6px' style={{gap: '24px'}}>
       { depositFeeBP > 0 &&
         <BoundedProgressBar
-          title='DEPOSIT|br|FEE'
+          tooltipType={TooltipModalType.DepositFee}
+          title='DEP. FEE'
           currPerc={depositFeeBP / 100}
         />
       }
 
       { maxTaxBP > 0 &&
         <BoundedProgressBar
-          title='FAIRNESS|br|TAX'
+          tooltipType={TooltipModalType.FairnessTax}
+          title='FAIRNESS TAX'
           minTitle={taxStartDate}
           maxTitle={taxEndDate}
           leftPerc={maxTaxBP / 100}
@@ -52,7 +54,8 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
       }
 
       <BoundedProgressBar
-        title='LOYALTY|br|BONUS'
+        tooltipType={TooltipModalType.LoyaltyBonus}
+        title='LOYALTY BONUS'
         minTitle={bonusStartDate}
         maxTitle={bonusEndDate}
         leftPerc={0}

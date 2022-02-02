@@ -1,10 +1,24 @@
 import { Elevation } from 'config/constants'
 import React from 'react'
-import styled from 'styled-components'
-import { darken } from 'polished'
+import styled, { DefaultTheme } from 'styled-components'
+import { transparentize } from 'polished'
 import { Flex, Skeleton, Text } from 'uikit'
 
 const BarHeight = 24
+
+const elevationBarBorder = ({ theme, elevation, focused }: { theme: DefaultTheme, elevation?: Elevation, focused?: Elevation }): string => {
+    if (elevation == null) return `
+        border: 1px dashed ${theme.colors.text};
+        background-color: transparent;
+    `
+    if (focused != null && elevation !== focused) return `
+        background-color: ${transparentize(0.4, theme.colors[elevation])};
+    `
+    return `
+        border: none;
+        background-color: ${theme.colors[elevation]};
+    `
+}
 
 const ElevationBar = styled.div<{ elevation?: Elevation, perc: number, focused?: Elevation }>`
     position: relative;
@@ -16,8 +30,7 @@ const ElevationBar = styled.div<{ elevation?: Elevation, perc: number, focused?:
     height: ${({ focused, elevation }) => focused != null && focused === elevation ? BarHeight + 4 : BarHeight}px;
     margin-left: 1px;
     margin-right: 1px;
-    background-color: ${({ theme, elevation }) => elevation == null ? 'transparent' : darken(0, theme.colors[elevation])};
-    border: ${({ theme, elevation }) => elevation == null ? `1px dashed ${theme.colors.text}` : 'none'};
+    ${elevationBarBorder}
 `
 
 const ElevationBarSkeleton = styled(Skeleton)`
@@ -26,10 +39,11 @@ const ElevationBarSkeleton = styled(Skeleton)`
     height: ${BarHeight}px;
 `
 
-const ElevationText = styled(Text)`
-    font-size: 12px;
+const ElevationText = styled(Text)<{ elevation?: Elevation, focused?: Elevation }>`
+    font-size: 13px;
     color: white;
-    text-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`};
+    /* display: ${({ elevation, focused }) => focused != null && elevation !== focused ? 'none' : 'default'}; */
+    font-weight: bold;
 `
 
 const ValueText = styled(Text)`
@@ -86,7 +100,7 @@ interface ContFocused {
 
 const ContributionComponent: React.FC<Contribution & ContFocused> = ({elevation, val, perc, focused}) => {
     return <ElevationBar perc={perc} elevation={elevation} focused={focused}>
-        <ElevationText monospace bold small>{elevation}</ElevationText>
+        <ElevationText monospace small elevation={elevation} focused={focused}>{elevation}</ElevationText>
         { (focused == null || focused === elevation) &&
             <ValueText monospace bold>{val != null ? val : `${perc.toFixed(1)}%`}</ValueText>
         }

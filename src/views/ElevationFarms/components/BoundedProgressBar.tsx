@@ -2,8 +2,10 @@ import { Elevation } from 'config/constants'
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { darken } from 'polished'
-import { breakTextBr, Flex, Text, TriangleGrowIcon } from 'uikit'
+import { breakTextBr, Flex, HeaderInfoQuestion, Text, TooltipModalType, TriangleGrowIcon, useModal } from 'uikit'
 import { useSelectedElevation } from 'state/hooks'
+import TooltipModal from 'uikit/widgets/Modal/TooltipModal'
+import { pressableMixin } from 'uikit/util/styledMixins'
 
 const EndMarkerHeight = 55
 
@@ -65,20 +67,19 @@ const BarFlex = styled(Flex)<{ single: boolean }>`
     position: relative;
     flex-direction: row;
     align-items: center;
+    width: calc(100% - 40px);
 
     ${({ single }) => single ? css`
         margin-left: 10px;
         margin-right: 10px;
+        align-items: flex-start;
     ` : css`
-        margin-left: 20px;
-        margin-right: 20px;
-        flex: 1;
-        min-width: 100px;
+        min-width: 175px;
     `}
 `
 
 const Wrapper = styled(Flex)<{ single: boolean }>`
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     flex: ${({ single }) => single ? 0 : 1};
@@ -89,14 +90,6 @@ const StyledTriangleGrowIcon = styled(TriangleGrowIcon)`
     opacity: 0.3;
 `
 
-const ProgressionTriangleClip = styled.div`
-    position: absolute;
-    left: 0;
-    width: 50px;
-    height: 15px;
-    overflow: hidden;
-`
-
 const ProgressionTriangleGrowIcon = styled(TriangleGrowIcon)<{ elevation?: Elevation }>`
     position: absolute;
     left: 0;
@@ -104,13 +97,18 @@ const ProgressionTriangleGrowIcon = styled(TriangleGrowIcon)<{ elevation?: Eleva
     fill: ${({ theme, elevation }) => darken(0.1, theme.colors[elevation || 'BASE'])};
 `
 
+const HeaderInfoQuestionButton = styled(HeaderInfoQuestion)`
+    cursor: pointer;
+`
+
 interface Props {
-    title?: string
+    title: string
     minTitle?: string
     maxTitle?: string
     leftPerc?: number
     rightPerc?: number
     currPerc?: number
+    tooltipType: TooltipModalType
 }
 
 interface EndMarkerProps {
@@ -139,14 +137,24 @@ const Marker: React.FC<MarkerProps> = ({perc, progress, elevation}) => {
     </MarkerWrapper>
 }
 
-const BoundedProgressBar: React.FC<Props> = ({title, minTitle, maxTitle, leftPerc, rightPerc, currPerc}) => {
+const BoundedProgressBar: React.FC<Props> = ({title, minTitle, maxTitle, leftPerc, rightPerc, currPerc, tooltipType}) => {
     const elevation = useSelectedElevation()
 
     const progress = (currPerc - leftPerc) / (rightPerc - leftPerc)
     const single = (leftPerc == null && rightPerc == null)
+
+    const [onPresentTooltipModal] = useModal(
+        <TooltipModal tooltipType={tooltipType}/>
+    ) 
+
     return (
         <Wrapper single={single}>
-            { title != null && <Text bold monospace small textAlign='center' lineHeight='14px' style={{ width: '70px' }}>{breakTextBr(title)}</Text> }
+            <Flex alignItems='center' justifyContent='center' width='100%' gap='8px'>
+                <Text bold monospace small textAlign='center' lineHeight='14px'>
+                    {title}
+                </Text>
+                <HeaderInfoQuestionButton onClick={onPresentTooltipModal}/>
+            </Flex>
             <BarFlex flexDirection='row' alignItems='center' single={single}>
                 { !single &&
                     <>

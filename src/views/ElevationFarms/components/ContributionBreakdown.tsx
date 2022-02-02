@@ -35,7 +35,19 @@ const ValueText = styled(Text)<{ perc: number, index: number }>`
     overflow: hidden;
     bottom: 0px;
     text-align: center;
-    transform: ${({ perc }) => perc >= 10 ? 'none' : 'rotate(35deg) translateX(35%)'};
+    transform: ${({ perc }) => perc < 20 ? 'rotate(70deg) translateX(35%)' : 'none'};
+    
+    ${({ theme }) => theme.mediaQueries.nav} {
+        transform: ${({ perc }) => perc < 10 ? 'rotate(70deg) translateX(35%)' : 'none'};
+    }
+`
+
+const LowPercHideText = styled(Text)<{ perc: number }>`
+    display: ${({ perc }) => perc < 20 ? 'none' : 'flex'};
+
+    ${({ theme }) => theme.mediaQueries.nav} {
+        display: ${({ perc }) => perc < 10 ? 'none' : 'flex'};
+    }
 `
 
 const VerticalBar = styled.div<{ perc: number, noContributions?: boolean }>`
@@ -100,7 +112,7 @@ const ContributionComponent: React.FC<Contribution> = ({token = false, elevation
         {title != null && <TitleWrapper>
             { token && <TokenSymbolImage symbol={title} width={36} height={36} />}
             { elevation && <ElevationImage elevation={title} width={36} height={36} />}
-            { perc >= 10 && <Text monospace lineHeight='14px' ml='4px' mr='4px' small textAlign='center'>{title}</Text> }
+            <LowPercHideText monospace perc={perc} lineHeight='14px' ml='4px' mr='4px' small textAlign='center'>{title}</LowPercHideText>
         </TitleWrapper>}
         <VerticalBar perc={100}/>
         <ValueText monospace bold perc={perc} index={index}>{val != null ? val : `${perc}%`}</ValueText>
