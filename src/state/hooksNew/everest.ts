@@ -1,15 +1,17 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { stateToEverestTotalSummitLocked, stateToEverestAverageLockDuration, stateToEverestSupply, stateToEverestUserData } from "./base";
+import { stateToEverestTotalSummitLocked, stateToEverestAverageLockDuration, stateToEverestSupply, stateToEverestUserData, stateToUserEverestOwned } from "./base";
 import { useSelector } from "./utils";
 
 const selectEverestStatsInfo = createSelector(
     stateToEverestTotalSummitLocked,
     stateToEverestAverageLockDuration,
     stateToEverestSupply,
-    (totalSummitLocked, averageLockDuration, everestSupply) => ({
+    stateToUserEverestOwned,
+    (totalSummitLocked, averageLockDuration, everestSupply, userEverestOwned) => ({
         totalSummitLocked,
         averageLockDuration,
         everestSupply,
+        userEverestOwned,
     })
 )
 export const useEverestStatsInfo = () => useSelector(selectEverestStatsInfo)

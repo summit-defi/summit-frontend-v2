@@ -4,7 +4,7 @@ import { ElevationImage, Flex, Skeleton, Text, TokenSymbolImage } from 'uikit'
 
 const BarHeight = 50
 
-const ContributionWrapper = styled.div<{ perc: number }>`
+const ContributionWrapper = styled.div<{ perc: number, index: number }>`
     position: relative;
     display: flex;
     flex-direction: row;
@@ -12,6 +12,7 @@ const ContributionWrapper = styled.div<{ perc: number }>`
     align-items: center;
     width: ${({ perc }) => perc}%;
     height: ${BarHeight}px;
+    z-index: ${({ index }) => 10 - index};
 `
 
 const TitleWrapper = styled(Flex)`
@@ -25,16 +26,16 @@ const TitleWrapper = styled(Flex)`
     /* overflow: hidden; */
 `
 
-const ValueText = styled(Text)<{ top: boolean }>`
+const ValueText = styled(Text)<{ perc: number, index: number }>`
     position: absolute;
     font-size: 12px;
     line-height: 18px;
     height: 18px;
     flex-wrap: wrap;
     overflow: hidden;
-    top: ${({ top }) => top ? 0 : BarHeight - 18}px;
-    bottom: ${({ top }) => top ? BarHeight - 18 : 0}px;
+    bottom: 0px;
     text-align: center;
+    transform: ${({ perc }) => perc >= 10 ? 'none' : 'rotate(35deg) translateX(35%)'};
 `
 
 const VerticalBar = styled.div<{ perc: number, noContributions?: boolean }>`
@@ -56,6 +57,7 @@ const Wrapper = styled(Flex)`
     align-items: flex-start;
     justify-content: center;
     width: 100%;
+    gap: 6px;
 `
 
 const BarWrapper = styled(Flex)`
@@ -90,17 +92,18 @@ interface Contribution {
     val?: string
     key: number
     perc: number
+    index?: number
 }
 
-const ContributionComponent: React.FC<Contribution> = ({token = false, elevation = false, title, val, perc}) => {
-    return <ContributionWrapper perc={perc}>
+const ContributionComponent: React.FC<Contribution> = ({token = false, elevation = false, title, val, perc, index}) => {
+    return <ContributionWrapper perc={perc} index={index}>
         {title != null && <TitleWrapper>
             { token && <TokenSymbolImage symbol={title} width={36} height={36} />}
             { elevation && <ElevationImage elevation={title} width={36} height={36} />}
-            <Text monospace lineHeight='14px' ml='4px' mr='4px' small textAlign='center'>{title}</Text>
+            { perc >= 10 && <Text monospace lineHeight='14px' ml='4px' mr='4px' small textAlign='center'>{title}</Text> }
         </TitleWrapper>}
         <VerticalBar perc={100}/>
-        <ValueText monospace bold top={false}>{val != null ? val : `${perc}%`}</ValueText>
+        <ValueText monospace bold perc={perc} index={index}>{val != null ? val : `${perc}%`}</ValueText>
     </ContributionWrapper>
 }
 
@@ -130,8 +133,8 @@ const ContributionBreakdown: React.FC<Props> = ({loaded, breakingDownTitle, brea
                                 <NoBreakdownText monospace>NO {breakingDownTitle} TO BREAKDOWN</NoBreakdownText>
                                 <VerticalBar perc={100} noContributions/>
                             </> :
-                            contributions.map((contribution) => 
-                                <ContributionComponent key={contribution.key} {...contribution} />
+                            contributions.map((contribution, index) => 
+                                <ContributionComponent key={contribution.key} index={index} {...contribution} />
                             )
                         }
                     </>

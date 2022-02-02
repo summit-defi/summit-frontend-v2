@@ -16,7 +16,7 @@ const TotemBattleAreaWrapper = styled(Flex)<{ fullWidth: boolean, secondRow: boo
   justify-content: center;
   position: relative;
   height: ${GameAreaHeight}px;
-  margin-top: ${({ secondRow }) => secondRow ? -16 : 0}px;
+  margin-top: ${({ secondRow }) => secondRow ? -31 : 0}px;
   width: ${({ fullWidth }) => fullWidth ? '100%' : 'auto'};
 `
 
@@ -43,11 +43,12 @@ const TotemResultsWrapper = styled(Flex)<{ elevation: Elevation, multiElev: bool
   padding-right: 6px; 
   margin-left: 6px; 
   margin-right: 6px;
-  gap: ${({ elevation }) => elevation === Elevation.SUMMIT || elevation === Elevation.MESA ? 0 : 20}px;
+  gap: ${({ elevation }) => elevation === Elevation.SUMMIT || elevation === Elevation.MESA ? 5 : 20}px;
   flex: 1;
 
   ${({ theme }) => theme.mediaQueries.nav} {
-    gap: ${({ elevation }) => elevation === Elevation.SUMMIT ? 0 : 20}px;
+    justify-content: center;
+    gap: ${({ elevation }) => elevation === Elevation.SUMMIT ? 5 : 20}px;
     padding-left: ${({ multiElev}) => multiElev ? 32 : 6}px;
     padding-right: ${({ multiElev}) => multiElev ? 32 : 6}px; 
   }
@@ -143,7 +144,7 @@ const calcScale = (mult, elevation: Elevation) => {
   const maxMult = expectedMult + thirdMult
   const minMult = expectedMult - thirdMult
   const clampedMult = clamp(mult == null ? expectedMult : mult, minMult, maxMult)
-  return 1 - (((maxMult - clampedMult) / (maxMult - minMult)) * 0.2)
+  return 1 - (((maxMult - clampedMult) / (maxMult - minMult)) * 0.1)
 }
 
 
@@ -219,6 +220,7 @@ const TotemBattleResult: React.FC<TotemResultProps> = ({ totemInfo, elevation, c
             color={color}
             selected={selected}
             pressable={false}
+            size='46'
           />
           {totemInfo.crowned && <IconCrown />}
         </TotemScale>

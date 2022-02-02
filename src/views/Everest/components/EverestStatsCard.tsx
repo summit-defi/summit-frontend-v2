@@ -23,6 +23,15 @@ export const EverestCard = styled(Flex)`
     height: 100%;
 `
 
+const Divider = styled.div`
+    background-color: ${({ theme }) => theme.colors.text};
+    height: 1px;
+    margin: 0px auto;
+    width: 100%;
+    max-width: 600px;
+    opacity: 0.5px;
+`
+
 
 
 const HeaderHighlightedText = styled(HighlightedText)`
@@ -42,9 +51,10 @@ const TokenImageWrapper = styled.div`
 
 
 export const EverestStatsCard: React.FC = memo(() => {
-    const { totalSummitLocked, averageLockDuration, everestSupply } = useEverestStatsInfo()
+    const { totalSummitLocked, averageLockDuration, everestSupply, userEverestOwned } = useEverestStatsInfo()
     const summitPrice = useSummitPrice()
 
+    const rawUserEverestOwned = getBalanceNumber(userEverestOwned)
     const rawEverestSupply = getBalanceNumber(everestSupply)
     const rawSummitLocked = getBalanceNumber(totalSummitLocked)
     const rawSummitValueLocked = getBalanceNumber(totalSummitLocked.times(summitPrice))
@@ -81,7 +91,7 @@ export const EverestStatsCard: React.FC = memo(() => {
         }, [everestAddress])
 
     return (
-        <EverestCard gap='32px' alignItems='center' justifyContent='center'>
+        <EverestCard gap='24px' alignItems='center' justifyContent='center'>
             <HeaderHighlightedText bold monospace textAlign='center'>
                 THE EVEREST TOKEN
             </HeaderHighlightedText>
@@ -98,6 +108,13 @@ export const EverestStatsCard: React.FC = memo(() => {
                     + <img style={{ marginLeft: 8 }} width={16} src="/images/wallet/metamask.png" alt="metamask logo" />
                 </SummitButton>
             </TokenImageWrapper>
+
+            <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
+                <Text monospace small bold>YOUR EVEREST BALANCE:</Text>
+                <CardValue summitPalette={SummitPalette.EVEREST} value={rawUserEverestOwned} decimals={3} fontSize="22" />
+            </Flex>
+
+            <Divider/>
 
             <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
                 <Text monospace small>Total Everest Supply:</Text>

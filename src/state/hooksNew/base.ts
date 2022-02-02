@@ -53,3 +53,4 @@ export const stateToEverestTotalSummitLocked = (state: State) => state.everest.t
 export const stateToEverestAverageLockDuration = (state: State) => state.everest.averageLockDuration
 export const stateToEverestSupply = (state: State) => state.everest.everestSupply
 export const stateToEverestUserData = (state: State) => state.everest.userData
+export const stateToUserEverestOwned = (state: State) => state.everest.userData.everestOwned

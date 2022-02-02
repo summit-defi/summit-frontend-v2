@@ -60,7 +60,7 @@ export const InitialSummitLockSection: React.FC<Props> = ({ summitBalance, summi
         
     return (
         <Flex gap='32px' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
-            <Text as='p' monospace small textAlign='center'>
+            <Text as='p' bold monospace small textAlign='center'>
                 Lock SUMMIT to earn EVEREST, letting you
                 participate in Expeditions, our future DAO, and EVEREST pools.
                 Locking SUMMIT for longer earns you more EVEREST.
