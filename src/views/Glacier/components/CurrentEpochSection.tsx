@@ -21,7 +21,7 @@ export const CurrentEpochSection: React.FC = () => {
             />
             <MobileColumnFlex gap='24px' alignItems='center' justifyContent='space-between' width='100%' maxWidth='450px'>
                 <Flex flexDirection='column' justifyContent='center' alignItems='center'>
-                    <Text bold monospace fontSize='12px'>EPOCH SUMMIT FROZEN:</Text>
+                    <Text bold monospace small>EPOCH SUMMIT FROZEN:</Text>
                     <Flex gap='6px' ml='-6px' alignItems='center' justifyContent='center'>
                         <TokenSymbolImage symbol='FrozenSUMMIT' width={40} height={40} />
                         <CardValue
@@ -32,7 +32,7 @@ export const CurrentEpochSection: React.FC = () => {
                     </Flex>
                 </Flex>
                 <Flex flexDirection='column' justifyContent='center' alignItems='center'>
-                    <Text bold monospace fontSize='12px'>EPOCH THAW DATE:</Text>
+                    <Text bold monospace small>EPOCH THAW DATE:</Text>
                     <HighlightedText bold monospace header fontSize='22' lineHeight='40px'>
                         {thawDate}
                     </HighlightedText>

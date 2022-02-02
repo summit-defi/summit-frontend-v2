@@ -12,6 +12,17 @@ export enum RoundStatus {
     RolloverAvailable = 'RolloverAvailable',
 }
 
+export const roundStatusLockReason = (status: RoundStatus, elevation: Elevation) => {
+    switch (status) {
+        case RoundStatus.UnlockAvailable:
+        case RoundStatus.NotYetUnlocked: return `THE ${elevation} Farms are locked until the Elevation Unlocks`
+        case RoundStatus.RolloverLockout: return `THE ${elevation} Farms are locked until the Round Ends`
+        case RoundStatus.RolloverAvailable: return `THE ${elevation} Farms are locked until the Round Finalizes`
+        case RoundStatus.Active:
+        default: return ''
+    }
+}
+
 export const roundStatusFarmAllowsInteraction = (status: RoundStatus) => {
     return status === RoundStatus.Active
 }
@@ -74,6 +85,10 @@ export const useElevationRoundStatusAndProgress = (elevation: Elevation) => {
                 if (currentTimestamp >= roundEndTimestamp) status = RoundStatus.RolloverAvailable
                 else if (currentTimestamp >= (roundEndTimestamp - RoundLockTime)) status = RoundStatus.RolloverLockout
                 else status = RoundStatus.Active
+            }
+
+            if (elevation === Elevation.OASIS) {
+                status = RoundStatus.Active
             }
 
             return {

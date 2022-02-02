@@ -80,11 +80,11 @@ const ElevationFarms: React.FC = () => {
             <Route path={`${path}/`}>
               { stakedFarms.length > 0 && 
                 <>
-                  <Text margin='0px auto 6px 24px' fontSize='12px' bold monospace>YOUR FARMS</Text>
+                  <Text margin='0px auto 6px 24px' small bold monospace>YOUR FARMS</Text>
                   <Flex flexDirection='column' width='100%'>
                     {stakedFarmsList(stakedFarms)}
                   </Flex>
-                  <Text margin='12px auto 6px 24px' fontSize='12px' bold monospace>ALL FARMS</Text>
+                  <Text margin='12px auto 6px 24px' small bold monospace>ALL FARMS</Text>
                 </>
               }
 

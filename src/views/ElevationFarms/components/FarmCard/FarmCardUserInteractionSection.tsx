@@ -8,7 +8,7 @@ import FarmCardUserElevate from './FarmCardUserElevate'
 import FarmCardMobileDepositWithdrawSelector from './FarmCardMobileDepositWithdrawSelector'
 import { useMediaQuery, useSelectedElevation } from 'state/hooks'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { useElevationInteractionsLockedBreakdown, useFarmAndUserTokenInteractionSectionInfo } from 'state/hooksNew'
+import { RoundStatus, roundStatusLockReason, useElevationInteractionsLockedBreakdown, useFarmAndUserTokenInteractionSectionInfo } from 'state/hooksNew'
 import FarmCardUserApprove from './FarmCardUserApprove'
 import FarmCardUserDeposit from './FarmCardUserDeposit'
 
@@ -44,6 +44,7 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
   const elevation = useSelectedElevation()
   const isMobile = useMediaQuery('(max-width: 986px)')
   const {
+    roundStatus,
     farmInteractionsLocked,
     totemNotSelected,
   } = useElevationInteractionsLockedBreakdown(elevation)
@@ -199,11 +200,7 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
         <Flex width='100%' alignItems='center' justifyContent='flex-start' mb='16px' gap='8px'>
           <StyledLock width='18px'/>
           <Text bold italic gold small monospace textAlign='left'>
-            {
-              farmInteractionsLocked ?
-                `THE ${elevation} Farms are locked until the Elevation unlocks` :
-                `You must select a Totem to deposit`
-            }  
+            { roundStatusLockReason(roundStatus, elevation) }  
           </Text>
         </Flex>
       }

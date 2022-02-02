@@ -37,7 +37,7 @@ const ThawedEpoch: React.FC<{ epochIndex: number }> = ({ epochIndex }) => {
     const closeDate = timestampToDate(closeTimestamp)
     return (
         <StyledMobileColumnFlex alignItems='center' justifyContent='center'>
-            <Text bold monospace fontSize='12px' textAlign='center'>
+            <Text bold monospace small textAlign='center'>
                 EPOCH:{' '}
                 <MobileBreak/>
                 {beginDate} - {closeDate}

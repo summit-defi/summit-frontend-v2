@@ -90,7 +90,7 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
         />
       </Flex>
 
-      <Text monospace fontSize='12px' textAlign='center' mt='48px'>
+      <Text monospace small textAlign='center' mt='48px'>
           { lockForEverest ?
             <>
                 Locking frozen SUMMIT for EVEREST requires

@@ -59,7 +59,7 @@ export const FarmAPYBreakdown: React.FC<Props> = memo(({ summitPerYear, totalVal
         <FlexInfoItem>
             <Text small>{apyText}</Text>
             <InfoItemValue>
-                <Text bold monospace fontSize='12px' style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
+                <Text bold monospace small style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
                         {yearlyAPY || <Skeleton height={24} width={80} />}
                 </Text>
                 <Text bold monospace fontSize='11px' style={{ display: 'flex', alignItems: 'center', lineHeight: '16px' }}>

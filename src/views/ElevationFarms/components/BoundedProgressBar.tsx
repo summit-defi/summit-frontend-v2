@@ -45,14 +45,14 @@ const MarkerText = styled(Text)`
 `
 
 const MarkerBar = styled.div<{ elevation?: Elevation }>`
-    width: 6px;
+    width: 2px;
     position: absolute;
     top: 15px;
     bottom: 15px;
-    left: -3px;
-    border-radius: 3px;
+    left: -1px;
+    /* border-radius: 3px; */
     background-color: ${({ theme, elevation }) => darken(0.1, theme.colors[elevation || 'BASE'])};
-    box-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`};
+    /* box-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`}; */
 `
 
 const VerticalBar = styled.div`
@@ -89,6 +89,21 @@ const Wrapper = styled(Flex)<{ single: boolean }>`
 
 const StyledTriangleGrowIcon = styled(TriangleGrowIcon)`
     opacity: 0.3;
+`
+
+const ProgressionTriangleClip = styled.div`
+    position: absolute;
+    left: 0;
+    width: 50px;
+    height: 15px;
+    overflow: hidden;
+`
+
+const ProgressionTriangleGrowIcon = styled(TriangleGrowIcon)<{ elevation?: Elevation }>`
+    position: absolute;
+    left: 0;
+    opacity: 1;
+    fill: ${({ theme, elevation }) => darken(0.1, theme.colors[elevation || 'BASE'])};
 `
 
 interface Props {
@@ -133,12 +148,13 @@ const BoundedProgressBar: React.FC<Props> = ({title, minTitle, maxTitle, leftPer
     const single = (leftPerc == null && rightPerc == null)
     return (
         <Wrapper single={single}>
-            { title != null && <Text bold monospace fontSize='12px' textAlign='center' lineHeight='14px' style={{ width: '70px' }}>{breakTextBr(title)}</Text> }
+            { title != null && <Text bold monospace small textAlign='center' lineHeight='14px' style={{ width: '70px' }}>{breakTextBr(title)}</Text> }
             <BarFlex flexDirection='row' alignItems='center' single={single}>
                 { !single &&
                     <>
                         <EndMarker title={minTitle} perc={leftPerc}/>
                         <StyledTriangleGrowIcon width='100%' height='15px' left={leftPerc} right={rightPerc}/>
+                        <ProgressionTriangleGrowIcon width={`calc(${progress * 100}% + 1px)`} height='15px' left={leftPerc} right={currPerc} elevation={elevation}/>
                         <EndMarker title={maxTitle} perc={rightPerc}/>
                     </>
                 }

@@ -86,7 +86,7 @@ const ContributionComponent: React.FC<Contribution> = ({token = false, elevation
         {title != null && <TitleWrapper>
             { token && <TokenSymbolImage symbol={title} width={36} height={36} />}
             { elevation && <ElevationImage elevation={title} width={36} height={36} />}
-            <Text monospace lineHeight='14px' fontSize='12px' textAlign='center'>{title}</Text>
+            <Text monospace lineHeight='14px' small textAlign='center'>{title}</Text>
         </TitleWrapper>}
         <VerticalBar perc={100}/>
         <ValueText monospace bold top={false}>{val != null ? val : `${perc}%`}</ValueText>

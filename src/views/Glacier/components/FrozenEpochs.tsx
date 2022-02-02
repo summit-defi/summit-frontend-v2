@@ -53,7 +53,7 @@ const FrozenEpoch: React.FC<{ epochIndex: number }> = ({ epochIndex }) => {
             />
             <Flex gap='24px' alignItems='center' justifyContent='space-around' width='100%' maxWidth='450px'>
                 <Flex flexDirection='column' justifyContent='center' alignItems='center'>
-                    <Text bold monospace fontSize='12px'>SUMMIT FROZEN:</Text>
+                    <Text bold monospace small>SUMMIT FROZEN:</Text>
                     <Flex gap='6px' ml='-6px' alignItems='center' justifyContent='center'>
                         <TokenSymbolImage symbol='FrozenSUMMIT' width={40} height={40} />
                         <CardValue
@@ -64,7 +64,7 @@ const FrozenEpoch: React.FC<{ epochIndex: number }> = ({ epochIndex }) => {
                     </Flex>
                 </Flex>
                 <Flex flexDirection='column' justifyContent='center' alignItems='center'>
-                    <Text bold monospace fontSize='12px'>THAW DATE:</Text>
+                    <Text bold monospace small>THAW DATE:</Text>
                     <HighlightedText bold monospace header fontSize='20' lineHeight='40px'>
                         {thawDate}
                     </HighlightedText>

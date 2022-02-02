@@ -98,7 +98,7 @@ export const RewardsWillBeClaimedModal: React.FC<Props> = ({
         </>
       }
       { [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT].includes(elevation) && rewardClaimType !== RewardsWillBeClaimedType.FullElevation &&
-        <Text bold monospace italic textAlign='center' fontSize='12px' mt='24px'>
+        <Text bold monospace italic textAlign='center' small mt='24px'>
           This will only claim rewards from
           <br/>
           THIS specific farm at the {elevation}.

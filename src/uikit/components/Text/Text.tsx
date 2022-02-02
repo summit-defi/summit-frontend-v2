@@ -14,7 +14,7 @@ const getColor = ({ color, gold, theme }: ThemedProps) => {
 }
 
 const getFontSize = ({ fontSize, small }: TextProps) => {
-  return small ? '12px' : fontSize || '14px'
+  return small ? '13px' : fontSize || '14px'
 }
 
 export const breakTextBr = (breakableText: string): Array<string | JSX.Element> => {

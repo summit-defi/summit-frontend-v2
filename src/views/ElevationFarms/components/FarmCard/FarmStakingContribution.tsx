@@ -5,7 +5,7 @@ import { Flex, Text } from 'uikit'
 import { capitalizeFirstLetter, getFarmTotalStakedBalance } from 'utils'
 import CardValue from 'views/Home/components/CardValue'
 import ElevationContributionBreakdown from '../ElevationContributionBreakdown'
-import { useSelectedElevation } from 'state/hooks'
+import { useFarmsLoaded, useSelectedElevation } from 'state/hooks'
 import BigNumber from 'bignumber.js'
 
 const StakingInfoItem = styled(Flex)`
@@ -35,12 +35,13 @@ export interface ElevationsStaked {
 }
 
 interface Props {
+    userDataLoaded: boolean
     elevationsStaked: ElevationsStaked
     pricePerToken: BigNumber
     decimals: number
 }
 
-const FarmStakingContribution: React.FC<Props> = ({ elevationsStaked, pricePerToken, decimals }) => {
+const FarmStakingContribution: React.FC<Props> = ({ userDataLoaded, elevationsStaked, pricePerToken, decimals }) => {
     const elevation = useSelectedElevation()
 
     const [stakedUSD, stakingContributions] = useMemo(
@@ -81,6 +82,7 @@ const FarmStakingContribution: React.FC<Props> = ({ elevationsStaked, pricePerTo
             </Flex>
             <InfoItemValue width='100%'>
                 <ElevationContributionBreakdown
+                    loaded={userDataLoaded}
                     contributions={stakingContributions}
                     focused={elevation}
                     center

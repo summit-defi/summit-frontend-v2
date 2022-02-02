@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { FarmType } from "state/types";
-import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToTokenInfos, stateToFarmsElevationData, stateToLifetimeSummitBonuses, stateToLifetimeSummitWinnings } from "./base";
+import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToTokenInfos, stateToFarmsElevationData, stateToLifetimeSummitBonuses, stateToLifetimeSummitWinnings, stateToFarmsUserDataLoaded } from "./base";
 import { getFarmInteracting, getFarmType, getFormattedBigNumber } from "utils"
 import { BN_ZERO, Elevation, elevationUtils } from "config/constants";
 import { useSelector } from "./utils";
@@ -233,5 +233,12 @@ const selectUserElevationYieldInfo = createSelector(
     })
 )
 export const useUserElevationYieldInfo = (elevation: Elevation) => useSelector((state) => selectUserElevationYieldInfo(state, elevation))
+
+const selectFarmsUserDataLoaded = createSelector(
+    stateToFarmsUserDataLoaded,
+    (userDataLoaded) => userDataLoaded
+)
+
+export const useFarmsUserDataLoaded = () => useSelector(selectFarmsUserDataLoaded)
 
 

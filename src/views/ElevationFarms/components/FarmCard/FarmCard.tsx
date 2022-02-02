@@ -8,7 +8,7 @@ import { NavLink } from 'react-router-dom'
 import FarmCardUserSectionExpander from './FarmCardUserSectionExpander'
 import FarmIconAndAllocation from './FarmIconAndAllocation'
 import FarmStakingContribution, { ElevationsStaked } from './FarmStakingContribution'
-import { makeSelectFarmBySymbol, useSelector } from 'state/hooksNew'
+import { makeSelectFarmBySymbol, useSelector, useFarmsUserDataLoaded } from 'state/hooksNew'
 import { FarmAPYBreakdown, FarmTotalValue } from './FarmCardInfoItems'
 
 const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
@@ -84,6 +84,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
   const pricePerToken = useSelector((state) => state.prices.pricesPerToken[symbol] || new BigNumber(1))
   const elevationTab = useElevationFarmsTab()
   const singleFarmSymbol = useSingleFarmSelected()
+  const userDataLoaded = useFarmsUserDataLoaded()
   const expanded = singleFarmSymbol === symbol
 
   const {
@@ -139,7 +140,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }
         <FarmNumericalInfoFlex>
           <FarmIconAndAllocation symbol={symbol} allocation={allocation}/>
-          <FarmStakingContribution elevationsStaked={farmElevationsStaked} pricePerToken={pricePerToken} decimals={decimals}/>
+          <FarmStakingContribution userDataLoaded={userDataLoaded} elevationsStaked={farmElevationsStaked} pricePerToken={pricePerToken} decimals={decimals}/>
           <FarmAPYBreakdown summitPerYear={summitPerYear} totalValue={totalValue}/>
           <FarmTotalValue totalValue={totalValue}/>
         </FarmNumericalInfoFlex>

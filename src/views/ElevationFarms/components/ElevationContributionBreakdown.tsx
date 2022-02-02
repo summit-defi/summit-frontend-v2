@@ -2,7 +2,7 @@ import { Elevation } from 'config/constants'
 import React from 'react'
 import styled from 'styled-components'
 import { darken } from 'polished'
-import { Flex, Text } from 'uikit'
+import { Flex, Skeleton, Text } from 'uikit'
 
 const BarHeight = 24
 
@@ -16,9 +16,14 @@ const ElevationBar = styled.div<{ elevation?: Elevation, perc: number, focused?:
     height: ${({ focused, elevation }) => focused != null && focused === elevation ? BarHeight + 4 : BarHeight}px;
     margin-left: 1px;
     margin-right: 1px;
-    background-color: ${({ theme, elevation }) => elevation == null ? theme.colors.text : darken(0, theme.colors[elevation])};
-    /* filter: ${({ focused, elevation }) => focused == null || focused === elevation ? 'none' : 'grayscale(1)'}; */
-    opacity: ${({ focused, elevation }) => elevation == null ? 0.1 : (focused == null || focused === elevation) ? 1 : 0.5};
+    background-color: ${({ theme, elevation }) => elevation == null ? 'transparent' : darken(0, theme.colors[elevation])};
+    border: ${({ theme, elevation }) => elevation == null ? `1px dashed ${theme.colors.text}` : 'none'};
+`
+
+const ElevationBarSkeleton = styled(Skeleton)`
+    position: relative;
+    width: 100%;
+    height: ${BarHeight}px;
 `
 
 const ElevationText = styled(Text)`
@@ -81,7 +86,7 @@ interface ContFocused {
 
 const ContributionComponent: React.FC<Contribution & ContFocused> = ({elevation, val, perc, focused}) => {
     return <ElevationBar perc={perc} elevation={elevation} focused={focused}>
-        <ElevationText monospace bold fontSize='12px'>{elevation}</ElevationText>
+        <ElevationText monospace bold small>{elevation}</ElevationText>
         { (focused == null || focused === elevation) &&
             <ValueText monospace bold>{val != null ? val : `${perc.toFixed(1)}%`}</ValueText>
         }
@@ -89,22 +94,25 @@ const ContributionComponent: React.FC<Contribution & ContFocused> = ({elevation,
 }
 
 interface Props {
+    loaded: boolean
     title?: string
     focused?: Elevation
     contributions: Contribution[]
     center?: boolean
 }
 
-const ElevationContributionBreakdown: React.FC<Props> = ({title, contributions, focused, center = false}) => {
+const ElevationContributionBreakdown: React.FC<Props> = ({ loaded, title, contributions, focused, center = false}) => {
   return (
     <Wrapper>
         { title != null && <Text bold monospace>{title}</Text> }
         <BarWrapper hasTitle={title != null} center={center}>
-            {contributions.map((contribution) => 
-                <ContributionComponent key={contribution.key} {...contribution} focused={focused} />
-            )}
-            {contributions.length === 0 &&
-                <ElevationBar perc={100}/>
+            { !loaded ?
+                <ElevationBarSkeleton/> :
+                contributions.length === 0 ?
+                    <ElevationBar perc={100}/> :
+                    contributions.map((contribution) => 
+                        <ContributionComponent key={contribution.key} {...contribution} focused={focused} />
+                    )
             }
         </BarWrapper>
     </Wrapper>
