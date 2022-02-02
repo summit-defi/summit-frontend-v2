@@ -41,16 +41,12 @@ const LockForEverestInfoSection: React.FC<{ val: string }> = React.memo(({ val }
   const newLockRelease = Math.max(minLockRelease, lockRelease)
   const releaseDate = timestampToDate(lockRelease)
   const newReleaseDate = timestampToDateWithYear(newLockRelease)
-  const requiresLockReleaseIncrease = newLockRelease > lockRelease
 
   const minLockDuration = 30
   const newLockDuration = Math.max(minLockDuration, lockDuration)
-  const requiresLockDurationIncrease = newLockDuration > lockDuration
 
   const everestAwardFromLockDuration = getAdditionalEverestAwardForLockDurationIncrease(summitLocked, newLockDuration, everestOwned)
-  const rawEverestAwardFromLockDuration = getFormattedBigNumber(everestAwardFromLockDuration)
   const everestAwardFromLocking = getExpectedEverestAward(new BigNumber(val).times(new BigNumber(10).pow(18)), newLockDuration)
-  const rawEverestAwardFromLocking = getFormattedBigNumber(everestAwardFromLocking)
   const totalEverestAward = everestAwardFromLockDuration.plus(everestAwardFromLocking)
   const rawTotalEverestAward = getFormattedBigNumber(totalEverestAward)
 
@@ -102,6 +98,8 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
     frozenSummit,
     isThawed,
   } = epoch
+  const { everestOwned } = useEverestUserInfo()
+  const anyEverestOwned = everestOwned.isGreaterThan(0)
 
   const fullHarvestableBalance = getFullDisplayBalance(frozenSummit, 18)
 
@@ -196,7 +194,7 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
           </SummitButton>
           <SummitButton
             summitPalette={summitPalette}
-            isLocked={false}
+            isLocked={!anyEverestOwned}
             disabled={invalidVal}
             onClick={handleConfirmHarvestEpoch}
           >
