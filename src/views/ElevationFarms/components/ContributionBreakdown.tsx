@@ -19,12 +19,10 @@ const TitleWrapper = styled(Flex)`
     align-items: center;
     justify-content: center;
     position: absolute;
-    height: 36px;
-    top: -16px;
+    bottom: 32px;
     width: 100%;
-    gap: 4px;
     flex-wrap: wrap;
-    overflow: hidden;
+    /* overflow: hidden; */
 `
 
 const ValueText = styled(Text)<{ top: boolean }>`
@@ -99,7 +97,7 @@ const ContributionComponent: React.FC<Contribution> = ({token = false, elevation
         {title != null && <TitleWrapper>
             { token && <TokenSymbolImage symbol={title} width={36} height={36} />}
             { elevation && <ElevationImage elevation={title} width={36} height={36} />}
-            <Text monospace lineHeight='14px' small textAlign='center'>{title}</Text>
+            <Text monospace lineHeight='14px' ml='4px' mr='4px' small textAlign='center'>{title}</Text>
         </TitleWrapper>}
         <VerticalBar perc={100}/>
         <ValueText monospace bold top={false}>{val != null ? val : `${perc}%`}</ValueText>
