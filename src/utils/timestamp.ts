@@ -38,10 +38,12 @@ export const getTimeDenom = (index: number): string => {
   }
 }
 export const timestampToDate = (timestamp: number): string => {
+  if (timestamp < 10000000) return '---'
   const date = new Date(timestamp * 1000)
   return date.toLocaleDateString('en', { month: 'short', day: 'numeric' }).toUpperCase()
 }
 export const timestampToDateWithYear = (timestamp: number): string => {
+  if (timestamp < 10000000) return '---'
   const date = new Date(timestamp * 1000)
   return date.toLocaleDateString('en', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()
 }

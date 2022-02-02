@@ -49,7 +49,7 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
           maxTitle={taxEndDate}
           leftPerc={maxTaxBP / 100}
           rightPerc={minTaxBP / 100}
-          currPerc={currentTaxBP / 100}
+          currPerc={(taxResetTimestamp === 0 ? 700 : currentTaxBP) / 100}
         />
       }
 
