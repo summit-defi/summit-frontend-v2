@@ -2,9 +2,11 @@ import React from 'react'
 import { Flex, HighlightedText, Text } from 'uikit'
 import { useMultiElevStaked } from 'state/hooks'
 import ContributionBreakdown from './ContributionBreakdown'
+import { useFarmsUserDataLoaded } from 'state/hooksNew'
 
 const MultiElevStaked: React.FC = () => {
   const { totalTVL, tvlContributions } = useMultiElevStaked()
+  const userDataLoaded = useFarmsUserDataLoaded()
 
   return (
     <Flex width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
@@ -15,6 +17,8 @@ const MultiElevStaked: React.FC = () => {
         </HighlightedText>
       </Flex>
       <ContributionBreakdown
+        loaded={userDataLoaded}
+        breakingDownTitle='TVL'
         contributions={tvlContributions}
       />
     </Flex>

@@ -4,10 +4,11 @@ import { Text, Flex } from 'uikit'
 import { useSelectedElevation } from 'state/hooks'
 import CardValue from 'views/Home/components/CardValue'
 import ContributionBreakdown from './ContributionBreakdown'
-import { useElevationYieldBetContributions, useUserElevationYieldInfo } from 'state/hooksNew'
+import { useElevationYieldBetContributions, useUserElevationYieldInfo, useFarmsUserDataLoaded } from 'state/hooksNew'
 
 const ElevationYieldBet: React.FC = () => {
   const elevation = useSelectedElevation()
+  const userDataLoaded = useFarmsUserDataLoaded()
   const yieldBetContributions = useElevationYieldBetContributions(elevation)
   const { yieldContributed, potentialWinnings } = useUserElevationYieldInfo(elevation)
   const rawYieldContributed = getBalanceNumber(yieldContributed)
@@ -41,7 +42,9 @@ const ElevationYieldBet: React.FC = () => {
       </Flex>
 
       <ContributionBreakdown
-        title='YIELD BET BY FARM:'
+        loaded={userDataLoaded}
+        breakingDownTitle='YIELD BET'
+        breakdownType='FARM'
         contributions={yieldBetContributions}
       />
     </Flex>

@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ElevationImage, Flex, Text, TokenSymbolImage } from 'uikit'
+import { ElevationImage, Flex, Skeleton, Text, TokenSymbolImage } from 'uikit'
 
 const BarHeight = 50
 
@@ -39,18 +39,18 @@ const ValueText = styled(Text)<{ top: boolean }>`
     text-align: center;
 `
 
-const VerticalBar = styled.div<{ perc: number }>`
+const VerticalBar = styled.div<{ perc: number, noContributions?: boolean }>`
     width: 1px;
     position: absolute;
     height: 20px;
-    background-color: ${({ theme }) => theme.colors.text};
     left: ${({ perc }) => perc}%;
+    border-left: ${({ theme, noContributions }) => `1px ${noContributions === true ? 'dashed' : 'solid'} ${theme.colors.text}`};
 `
-const HorizontalBar = styled.div`
+const HorizontalBar = styled.div<{ noContributions?: boolean }>`
     position: absolute;
     width: 100%;
     height: 1px;
-    background-color: ${({ theme }) => theme.colors.text};
+    border-top: ${({ theme, noContributions }) => `1px ${noContributions === true ? 'dashed' : 'solid'} ${theme.colors.text}`};
 `
 
 const Wrapper = styled(Flex)`
@@ -67,6 +67,19 @@ const BarWrapper = styled(Flex)`
     position: relative;
     width: 100%;
     height: 75px;
+`
+
+const NoBreakdownText = styled(Text)`
+    background-color: ${({ theme }) => theme.colors.background};
+    padding: 0px 6px;
+    z-index: 2;
+`
+
+const ContributionSkeleton = styled(Skeleton)`
+    position: relative;
+    width: 100%;
+    height: 4px;
+    min-height: 4px;
 `
 
 
@@ -94,26 +107,40 @@ const ContributionComponent: React.FC<Contribution> = ({token = false, elevation
 }
 
 interface Props {
-    title?: string
+    loaded: boolean
+    breakingDownTitle: string
+    breakdownType?: 'ELEVATION' | 'FARM'
     contributions: Contribution[]
 }
 
-const ContributionBreakdown: React.FC<Props> = ({title, contributions}) => {
-  return (
-    <Wrapper>
-        { title != null && <Text bold monospace>{title}</Text> }
-        <BarWrapper>
-            <VerticalBar perc={0}/>
-            <HorizontalBar/>
-            {contributions.map((contribution) => 
-                <ContributionComponent key={contribution.key} {...contribution} />
-            )}
-            {contributions.length === 0 &&
-                <VerticalBar perc={100}/>
-            }
-        </BarWrapper>
-    </Wrapper>
-  )
+const ContributionBreakdown: React.FC<Props> = ({loaded, breakingDownTitle, breakdownType = 'ELEVATION', contributions}) => {
+    const noContributions = contributions.length === 0
+
+    return (
+        <Wrapper>
+            <Text bold monospace>{breakingDownTitle} BY {breakdownType}:</Text>
+            <BarWrapper>
+                { !loaded ?
+                    <>
+                        <ContributionSkeleton/>
+                    </> :
+                    <>
+                        <VerticalBar perc={0} noContributions={noContributions}/>
+                        <HorizontalBar noContributions={noContributions}/>
+                        {noContributions ?
+                            <>
+                                <NoBreakdownText monospace>NO {breakingDownTitle} TO BREAKDOWN</NoBreakdownText>
+                                <VerticalBar perc={100} noContributions/>
+                            </> :
+                            contributions.map((contribution) => 
+                                <ContributionComponent key={contribution.key} {...contribution} />
+                            )
+                        }
+                    </>
+                }
+            </BarWrapper>
+        </Wrapper>
+    )
 }
 
 export default React.memo(ContributionBreakdown)

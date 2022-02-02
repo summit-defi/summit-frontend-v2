@@ -102,21 +102,21 @@ interface Props {
 }
 
 const ElevationContributionBreakdown: React.FC<Props> = ({ loaded, title, contributions, focused, center = false}) => {
-  return (
-    <Wrapper>
-        { title != null && <Text bold monospace>{title}</Text> }
-        <BarWrapper hasTitle={title != null} center={center}>
-            { !loaded ?
-                <ElevationBarSkeleton/> :
-                contributions.length === 0 ?
-                    <ElevationBar perc={100}/> :
-                    contributions.map((contribution) => 
-                        <ContributionComponent key={contribution.key} {...contribution} focused={focused} />
-                    )
-            }
-        </BarWrapper>
-    </Wrapper>
-  )
+    return (
+        <Wrapper>
+            { title != null && <Text bold monospace>{title}</Text> }
+            <BarWrapper hasTitle={title != null} center={center}>
+                { !loaded ?
+                    <ElevationBarSkeleton/> :
+                    contributions.length === 0 ?
+                        <ElevationBar perc={100}/> :
+                        contributions.map((contribution) => 
+                            <ContributionComponent key={contribution.key} {...contribution} focused={focused} />
+                        )
+                }
+            </BarWrapper>
+        </Wrapper>
+    )
 }
 
 export default React.memo(ElevationContributionBreakdown)

@@ -9,7 +9,7 @@ import BigNumber from 'bignumber.js'
 import { Elevation, elevationUtils } from 'config/constants'
 import { useClaimElevation } from 'hooks/useClaim'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { useElevationInteractionsLocked } from 'state/hooksNew'
+import { useElevationInteractionsLocked, useFarmsUserDataLoaded } from 'state/hooksNew'
 
 const ButtonsRow = styled(Flex)`
   gap: 12px;
@@ -54,6 +54,7 @@ const ElevClaim: React.FC<ElevProps> = ({ elevation, claimable }) => {
 const MultiElevWinningsAndClaim: React.FC = () => {
   const { totalClaimable, elevationsClaimable, claimableBreakdown } = useAllElevationsClaimable()
   const rawTotalClaimable = getBalanceNumber(totalClaimable)
+  const userDataLoaded = useFarmsUserDataLoaded()
 
   return (
     <Flex width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
@@ -72,6 +73,8 @@ const MultiElevWinningsAndClaim: React.FC = () => {
       </Flex>
 
       <ContributionBreakdown
+        loaded={userDataLoaded}
+        breakingDownTitle='WINNINGS'
         contributions={claimableBreakdown}
       />
 

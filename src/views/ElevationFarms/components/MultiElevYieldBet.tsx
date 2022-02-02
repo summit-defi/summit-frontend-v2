@@ -4,9 +4,11 @@ import { Text, Flex } from 'uikit'
 import { useMultiElevYieldBetInfo } from 'state/hooks'
 import CardValue from 'views/Home/components/CardValue'
 import ContributionBreakdown from './ContributionBreakdown'
+import { useFarmsUserDataLoaded } from 'state/hooksNew'
 
 const MultiElevYieldBet: React.FC = () => {
   const { elevYieldsBreakdown, totalYieldContributed, totalPotentialWinnings } = useMultiElevYieldBetInfo()
+  const userDataLoaded = useFarmsUserDataLoaded()
 
   const rawYieldContributed = getBalanceNumber(totalYieldContributed)
   const rawPotentialWinnings = getBalanceNumber(totalPotentialWinnings)
@@ -37,7 +39,8 @@ const MultiElevYieldBet: React.FC = () => {
       </Flex>
 
       <ContributionBreakdown
-        title='YIELD BET BY ELEVATION:'
+        loaded={userDataLoaded}
+        breakingDownTitle='YIELD BET'
         contributions={elevYieldsBreakdown}
       />
     </Flex>

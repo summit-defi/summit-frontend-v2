@@ -5,7 +5,7 @@ import { Flex, Text } from 'uikit'
 import { capitalizeFirstLetter, getFarmTotalStakedBalance } from 'utils'
 import CardValue from 'views/Home/components/CardValue'
 import ElevationContributionBreakdown from '../ElevationContributionBreakdown'
-import { useFarmsLoaded, useSelectedElevation } from 'state/hooks'
+import { useSelectedElevation } from 'state/hooks'
 import BigNumber from 'bignumber.js'
 
 const StakingInfoItem = styled(Flex)`

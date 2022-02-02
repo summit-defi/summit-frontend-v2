@@ -7,14 +7,15 @@ import { useSelectedElevation } from 'state/hooks'
 import CardValue from 'views/Home/components/CardValue'
 import ContributionBreakdown from './ContributionBreakdown'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { useElevationWinningsContributions, useUserElevationClaimable, useElevationInteractionsLocked } from 'state/hooksNew'
+import { useElevationWinningsContributions, useUserElevationClaimable, useElevationInteractionsLocked, useFarmsUserDataLoaded } from 'state/hooksNew'
 
 const ElevationWinnings: React.FC = () => {
   const elevation = useSelectedElevation()
   const elevationLocked = useElevationInteractionsLocked(elevation)
   const winningsContributions = useElevationWinningsContributions(elevation)
   const claimable = useUserElevationClaimable(elevation)
-  
+  const userDataLoaded = useFarmsUserDataLoaded()
+
   const rawClaimable = getBalanceNumber(claimable)
   const earningsOrWinnings = elevationUtils.winningsOrEarnings(elevation).toUpperCase()
 
@@ -57,7 +58,9 @@ const ElevationWinnings: React.FC = () => {
       </Flex>
 
       <ContributionBreakdown
-        title={`${earningsOrWinnings} BY FARM:`}
+        loaded={userDataLoaded}
+        breakingDownTitle={earningsOrWinnings}
+        breakdownType='FARM'
         contributions={winningsContributions}
       />
       
