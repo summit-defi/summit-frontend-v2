@@ -14,7 +14,7 @@ const RoundProgressBar = styled(Flex)<{ greyed: boolean }>`
     position: absolute;
     align-items: center;
     justify-content: center;
-    bottom: 3px;
+    bottom: -6px;
     width: 150%;
     max-width: calc(100vw - 40px);
     filter: ${({ greyed }) => greyed ? 'grayscale(1) ' : ''}drop-shadow(1px 1px 1px ${transparentize(0.5, 'black')});
@@ -30,7 +30,6 @@ const HorizontalBar = styled.div`
 
 const VerticalBar = styled.div<{ right?: boolean, isExpedition: boolean, isUnlockBar: boolean }>`
     position: absolute;
-    top: -7px;
     height: 15px;
     width: 2px;
     z-index: 4;

@@ -3,7 +3,7 @@ import Container from './Container'
 
 const Page = styled(Container)`
   min-height: calc(100vh - 64px);
-  padding-top: 24px;
+  padding-top: 44px;
   padding-bottom: 128px;
   padding-left: 8px;
   padding-right: 8px;
@@ -11,7 +11,7 @@ const Page = styled(Container)`
   justify-content: center;
 
   ${({ theme }) => theme.mediaQueries.lg} {
-    padding-top: 16px;
+    padding-top: 36px;
     padding-bottom: 64px;
   }
 `

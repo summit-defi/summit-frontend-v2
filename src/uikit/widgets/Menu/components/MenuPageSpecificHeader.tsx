@@ -26,6 +26,15 @@ const FullHeightWrapper = styled(Flex)<{ farmTabSelectorVisible: boolean }>`
     }
 `
 
+const RoundProgressNavExtraHeight = styled.div`
+    height: 26px;
+    background-color: ${({ theme }) => theme.colors.background};
+    position: absolute;
+    bottom: -24px;
+    left: -50px;
+    right: -50px;
+`
+
 interface Props {
     isDark: boolean
     isPushed: boolean
@@ -49,6 +58,7 @@ const MenuPageSpecificHeader: React.FC<Props> = ({ isDark, isPushed }) => {
             { logoVisible && <Logo isDark={isDark} href="/" summitPalette={summitPalette}/> }
             { (isFarmTab || isExpedition) &&
             <>
+                { roundProgressVisible && <RoundProgressNavExtraHeight/> }
                 <FullHeightWrapper farmTabSelectorVisible={isFarmTab}>
                     { isFarmTab && <ElevationFarmsTabSelector/> }
                     { isExpedition && <ExpeditionMenuHeader /> }
