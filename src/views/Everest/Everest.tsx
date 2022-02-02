@@ -11,6 +11,7 @@ import { fetchUserEpochsAsync } from 'state/glacier'
 import useRefresh from 'hooks/useRefresh'
 import PageLoader from 'components/PageLoader'
 import { useEverestDataLoaded } from 'state/hooksNew'
+import { fetchEverestDataAsync } from 'state/everest'
 
 const HeaderCardsWrapper = styled(Flex)`
     justify-content: center;
@@ -29,7 +30,7 @@ const Everest: React.FC = () => {
   const { fastRefresh } = useRefresh()
   useEffect(() => {
     if (account) {
-      dispatch(fetchUserEpochsAsync(account))
+      dispatch(fetchEverestDataAsync(account))
     }
   }, [account, dispatch, fastRefresh, web3])
 

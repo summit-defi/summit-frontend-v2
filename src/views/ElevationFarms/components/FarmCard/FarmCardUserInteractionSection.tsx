@@ -8,7 +8,7 @@ import FarmCardUserElevate from './FarmCardUserElevate'
 import FarmCardMobileDepositWithdrawSelector from './FarmCardMobileDepositWithdrawSelector'
 import { useMediaQuery, useSelectedElevation } from 'state/hooks'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { RoundStatus, roundStatusLockReason, useElevationInteractionsLockedBreakdown, useFarmAndUserTokenInteractionSectionInfo } from 'state/hooksNew'
+import { roundStatusLockReason, useElevationInteractionsLockedBreakdown, useFarmAndUserTokenInteractionSectionInfo } from 'state/hooksNew'
 import FarmCardUserApprove from './FarmCardUserApprove'
 import FarmCardUserDeposit from './FarmCardUserDeposit'
 

@@ -68,12 +68,12 @@ export const LockSummitInfoAndButton: React.FC<LockSummitButtonProps> = ({ appro
         <Flex flexDirection='column' width='calc(100% - 72px)' alignItems='center' justifyContent='center' gap='8px'>
             { showLockRelease &&
                 <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
-                    <Text monospace small>Lock Release Date:</Text>
+                    <Text monospace small>SUMMIT Unlock Date:</Text>
                     <Text bold monospace>{releaseDate}</Text>
                 </Flex>
             }
             <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
-                <Text monospace small>Everest Award:</Text>
+                <Text monospace small>EVEREST Award:</Text>
                 <Text bold monospace>{rawEverestAward}</Text>
             </Flex>
             <SummitButton

@@ -65,6 +65,8 @@ interface Props {
 }
 
 const TooltipModal: React.FC<Props> = ({ tooltipType, onDismiss = () => null }) => {
+
+    // TODO: Add learn more external link
     return (
         <Modal title={modalTitle(tooltipType)} onDismiss={onDismiss} elevationCircleHeader="BLUE" headerless>
             <Text textAlign='center' mb='32px' style={{maxWidth: '350px'}} bold monospace small>{modalContent(tooltipType)}</Text>

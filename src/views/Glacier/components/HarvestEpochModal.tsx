@@ -1,12 +1,88 @@
 import React, { useCallback, useState } from 'react'
-import { Flex, Text, Modal, ModalActions } from 'uikit'
+import { Flex, Text, Modal, ModalActions, Lock } from 'uikit'
 import TokenInput from '../../../components/TokenInput'
-import { getFullDisplayBalance } from '../../../utils/formatBalance'
+import { getFormattedBigNumber, getFullDisplayBalance } from '../../../utils/formatBalance'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { isNumber } from 'lodash'
 import { Epoch } from 'state/types'
 import HarvestLockForEverestSelector from './HarvestLockForEverestSelector'
 import { SummitPalette } from 'config/constants'
+import { useEverestUserInfo } from 'state/hooksNew'
+import styled from 'styled-components'
+import { getAdditionalEverestAwardForLockDurationIncrease, getExpectedEverestAward, timestampToDate, timestampToDateWithYear } from 'utils'
+import BigNumber from 'bignumber.js'
+import { useCurrentTimestampOnce } from 'state/hooks'
+
+
+const InfoText = styled(Text)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`
+
+const StyledLock = styled(Lock)`
+  transform: rotate(20deg);
+  fill: ${({ theme }) => theme.colors.textGold};
+`
+
+const LockForEverestInfoSection: React.FC<{ val: string }> = React.memo(({ val }) => {
+  const {
+    everestOwned,
+    summitLocked,
+    lockRelease,
+    lockDuration,
+  } = useEverestUserInfo()
+  const currentTimestamp = useCurrentTimestampOnce()
+
+  const anyEverestOwned = everestOwned.isGreaterThan(0)
+
+  const minLockRelease = currentTimestamp + (30 * 24 * 3600)
+  const newLockRelease = Math.max(minLockRelease, lockRelease)
+  const releaseDate = timestampToDate(lockRelease)
+  const newReleaseDate = timestampToDateWithYear(newLockRelease)
+  const requiresLockReleaseIncrease = newLockRelease > lockRelease
+
+  const minLockDuration = 30
+  const newLockDuration = Math.max(minLockDuration, lockDuration)
+  const requiresLockDurationIncrease = newLockDuration > lockDuration
+
+  const everestAwardFromLockDuration = getAdditionalEverestAwardForLockDurationIncrease(summitLocked, newLockDuration, everestOwned)
+  const rawEverestAwardFromLockDuration = getFormattedBigNumber(everestAwardFromLockDuration)
+  const everestAwardFromLocking = getExpectedEverestAward(new BigNumber(val).times(new BigNumber(10).pow(18)), newLockDuration)
+  const rawEverestAwardFromLocking = getFormattedBigNumber(everestAwardFromLocking)
+  const totalEverestAward = everestAwardFromLockDuration.plus(everestAwardFromLocking)
+  const rawTotalEverestAward = getFormattedBigNumber(totalEverestAward)
+
+  return (
+    <>
+      { !anyEverestOwned && 
+        <Flex width='100%' alignItems='center' justifyContent='flex-start' gap='8px' mb='18px'>
+          <StyledLock width='18px'/>
+          <Text bold italic gold small monospace textAlign='left'>
+            You have to lock SUMMIT for the first time through the EVEREST tab.
+          </Text>
+        </Flex>
+      }
+      <Text monospace bold small textAlign='center'>
+        * If your current Lock Duration is less than 30 Days, it will be increased to 30 Days (this will add to your EVEREST award).
+      </Text>
+      <br/>
+      <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%' mb='8px'>
+          <Text monospace small textAlign='left'>Unlock Date:</Text>
+          <Text bold monospace textAlign='right'>{releaseDate} {`==>`} {newReleaseDate}</Text>
+      </Flex>
+      <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%' mb='8px'>
+          <Text monospace small textAlign='left'>Lock Duration:</Text>
+          <Text bold monospace textAlign='right'>{lockDuration}D {`==>`} {newLockDuration}D</Text>
+      </Flex>
+      <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%' mb='8px'>
+          <Text monospace small textAlign='left'>EVEREST Award:</Text>
+          <Text bold monospace textAlign='right'>{rawTotalEverestAward} EVEREST</Text>
+      </Flex>
+    </>
+  )
+})
 
 interface HarvestEpochModalProps {
   epoch: Epoch
@@ -68,14 +144,14 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
       elevationCircleHeader='GLACIER'
       headerless
     >
-      <Flex justifyContent="center" flexDirection="column" alignItems="center">
+      <Flex justifyContent="center" flexDirection="column" alignItems="center" mt='-12px' maxWidth='400px'>
         <HarvestLockForEverestSelector
             lockForEverest={lockForEverest}
             selectLockForEverest={setLockForEverest}
         />
 
         <Text bold monospace mt="24px">
-          AMOUNT TO HARVEST:
+          AMOUNT TO {lockForEverest ? 'LOCK' : 'HARVEST'}:
         </Text>
         <TokenInput
           value={val}
@@ -88,62 +164,46 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
           feeText='Harvest Before Thawed Tax'
           feeBP={isThawed || lockForEverest ? 0 : 5000}
         />
+
+        <InfoText monospace small textAlign='center' mt={lockForEverest ? '24px' : '48px'}>
+            { lockForEverest ?
+              <LockForEverestInfoSection val={val}/> :
+              isThawed ?
+                  <>
+                      This locked SUMMIT has thawed,
+                      and is free to harvest.
+                      <br/>
+                      <br/>
+                      Harvesting will not take any tax,
+                      you will receive 100% of your harvest.
+                  </> :
+                  <>
+                      This SUMMIT is still frozen,
+                      a 50% tax will be taken on harvest.
+                      <br/>
+                      (50% burned, 50% sent to EVEREST holders)
+                      <br/>
+                      <br/>
+                      Either lock for EVEREST or wait until
+                      this epoch thaws to avoid the tax.
+                  </>
+            }
+        </InfoText>
+
+        <ModalActions>
+          <SummitButton secondary onClick={onDismiss}>
+            CANCEL
+          </SummitButton>
+          <SummitButton
+            summitPalette={summitPalette}
+            isLocked={false}
+            disabled={invalidVal}
+            onClick={handleConfirmHarvestEpoch}
+          >
+            { lockForEverest ? 'LOCK FOR EVEREST' : (isThawed ? 'HARVEST' : 'HARVEST WITH TAX')}
+          </SummitButton>
+        </ModalActions>
       </Flex>
-
-      <Text monospace small textAlign='center' mt='48px'>
-          { lockForEverest ?
-            <>
-                Locking frozen SUMMIT for EVEREST requires
-                <br/>
-                a lock period of at least 30 days.
-                <br/>
-                <br/>
-                Your EVEREST lock duration will be increased
-                <br/>
-                to 30 days if it is currently less.
-                <br/>
-                <br/>
-            </> :
-            isThawed ?
-                <>
-                    This locked SUMMIT has thawed,
-                    <br/>
-                    and is free to harvest.
-                    <br/>
-                    <br/>
-                    Harvesting will not take any tax,
-                    <br/>
-                    you will receive 100% of your harvest.
-                    <br/>
-                    <br/>
-                </> :
-                <>
-                    This SUMMIT is still frozen,
-                    <br/>
-                    a 50% tax will be taken on harvest.
-                    <br/>
-                    (50% burned, 50% sent to EVEREST holders)
-                    <br/>
-                    <br/>
-                    Either lock for EVEREST or wait until
-                    <br/>
-                    this epoch thaws to avoid the tax.
-                </>
-          }
-      </Text>
-
-      <ModalActions>
-        <SummitButton secondary onClick={onDismiss}>
-          CANCEL
-        </SummitButton>
-        <SummitButton
-          summitPalette={summitPalette}
-          disabled={invalidVal}
-          onClick={handleConfirmHarvestEpoch}
-        >
-          { lockForEverest ? 'LOCK FOR EVEREST' : (isThawed ? 'HARVEST' : 'HARVEST WITH TAX')}
-        </SummitButton>
-      </ModalActions>
     </Modal>
   )
 }
