@@ -2,29 +2,30 @@ import { Elevation } from 'config/constants'
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { darken } from 'polished'
-import { breakTextBr, Flex, HeaderInfoQuestion, Text, TooltipModalType, TriangleGrowIcon, useModal } from 'uikit'
+import { Flex, HeaderInfoQuestion, Text, TooltipModalType, TriangleGrowIcon, useModal } from 'uikit'
 import { useSelectedElevation } from 'state/hooks'
 import TooltipModal from 'uikit/widgets/Modal/TooltipModal'
-import { pressableMixin } from 'uikit/util/styledMixins'
+import { MarkProp } from 'uikit/components/Svg/Icons/TriangleGrow'
 
 const EndMarkerHeight = 55
 
-const EndMarkerWrapper = styled.div`
-    position: relative;
+const EndMarkerWrapper = styled.div<{ positionPerc: number }>`
+    position: absolute;
     display: flex;
     justify-content: center;
     width: 1px;
+    left: ${({ positionPerc }) => `calc(${positionPerc}% - 1px)`};
     height: ${EndMarkerHeight}px;
 `
 
-const MarkerWrapper = styled.div<{ progress: number }>`
+const MarkerWrapper = styled.div<{ positionPerc: number }>`
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 1px;
     height: ${EndMarkerHeight}px;
-    left: ${({ progress }) => (progress * 100) - 100}%;
+    left: ${({ positionPerc }) => (positionPerc) - 100}%;
 `
 
 const EndMarkerText = styled(Text)<{ top: boolean }>`
@@ -86,15 +87,10 @@ const Wrapper = styled(Flex)<{ single: boolean }>`
     max-width: 350px;
 `
 
-const StyledTriangleGrowIcon = styled(TriangleGrowIcon)`
-    opacity: 0.3;
-`
-
-const ProgressionTriangleGrowIcon = styled(TriangleGrowIcon)<{ elevation?: Elevation }>`
-    position: absolute;
-    left: 0;
-    opacity: 1;
-    fill: ${({ theme, elevation }) => darken(0.1, theme.colors[elevation || 'BASE'])};
+const StyledTriangleGrowIcon = styled(TriangleGrowIcon)<{ elevation?: Elevation }>`
+    > .progress-fill {
+        fill: ${({ theme, elevation }) => darken(0.1, theme.colors[elevation || 'BASE'])};
+    }
 `
 
 const HeaderInfoQuestionButton = styled(HeaderInfoQuestion)`
@@ -103,45 +99,43 @@ const HeaderInfoQuestionButton = styled(HeaderInfoQuestion)`
 
 interface Props {
     title: string
-    minTitle?: string
-    maxTitle?: string
-    leftPerc?: number
-    rightPerc?: number
-    currPerc?: number
+    marks: EndMarkerProps[]
+    currDisplayPerc?: number
+    currPositionPerc?: number
     tooltipType: TooltipModalType
 }
 
 interface EndMarkerProps {
     title?: string
-    perc?: number
+    displayPerc: number
+    positionPerc: number
 }
 
 interface MarkerProps {
-    perc?: number
-    progress: number
+    displayPerc: number
+    positionPerc: number
     elevation?: Elevation
 }
 
-const EndMarker: React.FC<EndMarkerProps> = ({title, perc}) => {
-    return <EndMarkerWrapper>
+const EndMarker: React.FC<EndMarkerProps> = ({title, displayPerc, positionPerc}) => {
+    return <EndMarkerWrapper positionPerc={positionPerc}>
         {title != null && <EndMarkerText monospace top>{title}</EndMarkerText>}
         <VerticalBar/>
-        {perc != null && <EndMarkerText monospace top={false}>{perc}%</EndMarkerText>}
+        {displayPerc != null && <EndMarkerText monospace top={false}>{displayPerc}%</EndMarkerText>}
     </EndMarkerWrapper>
 }
 
-const Marker: React.FC<MarkerProps> = ({perc, progress, elevation}) => {
-    return <MarkerWrapper progress={progress}>
-        {perc != null && <MarkerText monospace bold>{perc}%</MarkerText>}
+const Marker: React.FC<MarkerProps> = ({displayPerc, positionPerc, elevation}) => {
+    return <MarkerWrapper positionPerc={positionPerc}>
+        {displayPerc != null && <MarkerText monospace bold>{displayPerc}%</MarkerText>}
         <MarkerBar elevation={elevation}/>
     </MarkerWrapper>
 }
 
-const BoundedProgressBar: React.FC<Props> = ({title, minTitle, maxTitle, leftPerc, rightPerc, currPerc, tooltipType}) => {
+const BoundedProgressBar: React.FC<Props> = ({title, marks, currDisplayPerc, currPositionPerc, tooltipType}) => {
     const elevation = useSelectedElevation()
 
-    const progress = (currPerc - leftPerc) / (rightPerc - leftPerc)
-    const single = (leftPerc == null && rightPerc == null)
+    const single = marks.length <= 1
 
     const [onPresentTooltipModal] = useModal(
         <TooltipModal tooltipType={tooltipType}/>
@@ -151,20 +145,23 @@ const BoundedProgressBar: React.FC<Props> = ({title, minTitle, maxTitle, leftPer
         <Wrapper single={single}>
             <Flex alignItems='center' justifyContent='center' width='100%' gap='8px'>
                 <Text bold monospace small textAlign='center' lineHeight='14px'>
-                    {title}
+                    {title}: {currDisplayPerc}%
                 </Text>
                 <HeaderInfoQuestionButton onClick={onPresentTooltipModal}/>
             </Flex>
             <BarFlex flexDirection='row' alignItems='center' single={single}>
-                { !single &&
-                    <>
-                        <EndMarker title={minTitle} perc={leftPerc}/>
-                        <StyledTriangleGrowIcon width='100%' height='15px' left={leftPerc} right={rightPerc}/>
-                        <ProgressionTriangleGrowIcon width={`calc(${progress * 100}% + 1px)`} height='15px' left={leftPerc} right={currPerc} elevation={elevation}/>
-                        <EndMarker title={maxTitle} perc={rightPerc}/>
-                    </>
-                }
-                <Marker perc={currPerc} progress={progress} elevation={elevation}/>
+                { !single && <StyledTriangleGrowIcon
+                    width='100%'
+                    height='15px'
+                    elevation={elevation}
+                    currDisplayPerc={currDisplayPerc}
+                    currPositionPerc={currPositionPerc}
+                    marks={marks as MarkProp[]}
+                /> }
+                { !single && marks.map((mark) =>
+                    <EndMarker key={mark.positionPerc} {...mark}/>
+                )}
+                <Marker displayPerc={currDisplayPerc} positionPerc={currPositionPerc} elevation={elevation}/>
             </BarFlex>
         </Wrapper>
     )

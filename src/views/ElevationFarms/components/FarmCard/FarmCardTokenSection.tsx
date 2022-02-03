@@ -3,6 +3,7 @@ import { Flex, TooltipModalType } from 'uikit'
 import BoundedProgressBar from '../BoundedProgressBar'
 import { timestampToDate } from 'utils'
 import { useFarmUserTokenSectionInfo } from 'state/hooksNew'
+import { useCurrentTimestamp } from 'state/hooks'
 
 interface Props {
   symbol: string
@@ -23,13 +24,18 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
     currentBonusBP,
     bonusResetTimestamp,
   } = useFarmUserTokenSectionInfo(symbol)
+  const currentTimestamp = useCurrentTimestamp()
 
   const taxStartDate = timestampToDate(taxResetTimestamp)
   const taxEndDate = timestampToDate(taxResetTimestamp + week)
+  const taxPositionPerc = 100 * ((currentTimestamp - taxResetTimestamp) / week)
   
-  const bonusStartTimestamp = bonusResetTimestamp + week
+  const bonusStartTimestamp = bonusResetTimestamp
+  const bonusGrowthStartTimestamp = bonusResetTimestamp + week
   const bonusStartDate = timestampToDate(bonusStartTimestamp)
+  const bonusGrowthStartDate = timestampToDate(bonusGrowthStartTimestamp)
   const bonusEndDate = timestampToDate(bonusStartTimestamp + week)
+  const bonusPositionPerc = 100 * ((currentTimestamp - bonusResetTimestamp) / (week * 2))
 
   return (
     <Flex flexWrap='wrap' justifyContent='center' flexDirection='row' width='100%' mb='18px' mt='6px' style={{gap: '24px'}}>
@@ -37,7 +43,8 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
         <BoundedProgressBar
           tooltipType={TooltipModalType.DepositFee}
           title='DEP. FEE'
-          currPerc={depositFeeBP / 100}
+          marks={[]}
+          currDisplayPerc={depositFeeBP / 100}
         />
       }
 
@@ -45,22 +52,45 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
         <BoundedProgressBar
           tooltipType={TooltipModalType.FairnessTax}
           title='FAIRNESS TAX'
-          minTitle={taxStartDate}
-          maxTitle={taxEndDate}
-          leftPerc={maxTaxBP / 100}
-          rightPerc={minTaxBP / 100}
-          currPerc={(taxResetTimestamp === 0 ? 700 : currentTaxBP) / 100}
+          marks={[
+            {
+              title: taxStartDate,
+              displayPerc: maxTaxBP / 100,
+              positionPerc: 0
+            },
+            {
+              title: taxEndDate,
+              displayPerc: minTaxBP / 100,
+              positionPerc: 100
+            }
+          ]}
+          currDisplayPerc={(taxResetTimestamp === 0 ? 700 : currentTaxBP) / 100}
+          currPositionPerc={taxPositionPerc}
         />
       }
 
       <BoundedProgressBar
         tooltipType={TooltipModalType.LoyaltyBonus}
         title='LOYALTY BONUS'
-        minTitle={bonusStartDate}
-        maxTitle={bonusEndDate}
-        leftPerc={0}
-        rightPerc={maxBonusBP / 100}
-        currPerc={currentBonusBP / 100}
+        marks={[
+          {
+            title: bonusStartDate,
+            displayPerc: 0,
+            positionPerc: 0
+          },
+          {
+            title: bonusGrowthStartDate,
+            displayPerc: 0,
+            positionPerc: 50
+          },
+          {
+            title: bonusEndDate,
+            displayPerc: maxBonusBP / 100,
+            positionPerc: 100
+          }
+        ]}
+        currDisplayPerc={currentBonusBP / 100}
+        currPositionPerc={bonusPositionPerc}
       />
     </Flex>
   )
