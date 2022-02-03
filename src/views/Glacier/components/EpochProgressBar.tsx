@@ -132,7 +132,7 @@ const EpochProgressBar: React.FC<Props> = ({ epoch, isCurrentEpoch = false }) =>
     const endTimestamp = isCurrentEpoch ? closeTimestamp : thawTimestamp
     const startDate = timestampToDate(startTimestamp)
     const endDate = timestampToDate(endTimestamp)
-    const currentTimestamp = useEpochVariableTickTimestamp(epoch)
+    const currentTimestamp = useEpochVariableTickTimestamp(epoch, isCurrentEpoch)
     const timeRemainingText = getTimeRemainingText(Math.max(0, endTimestamp - currentTimestamp))
     const progress = (currentTimestamp - startTimestamp) / (endTimestamp - startTimestamp)
     return (
