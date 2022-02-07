@@ -65,7 +65,7 @@ export const RewardsWillBeClaimedModal: React.FC<Props> = ({
   }
 
   return (
-    <Modal title="REWARDS TO|br|CLAIM" onDismiss={onDismiss} headerless elevationCircleHeader={elevateInfo?.targetElevation || elevation}>
+    <Modal title="REWARDS TO|br|FREEZE" onDismiss={onDismiss} headerless elevationCircleHeader={elevateInfo?.targetElevation || elevation}>
       { (rewardClaimType === RewardsWillBeClaimedType.Farm || rewardClaimType === RewardsWillBeClaimedType.FullElevation) &&
         <>
           <Text bold monospace textAlign='center'>This {transactionName} will also<br/>claim your available</Text>
@@ -77,7 +77,7 @@ export const RewardsWillBeClaimedModal: React.FC<Props> = ({
       { rewardClaimType === RewardsWillBeClaimedType.Elevate &&
         <>
           <Text bold monospace mb='24px' textAlign='center'>
-            Elevating will claim your earned
+            Elevating will freeze your earned
             <br/>
             rewards from both the source and target farms:
           </Text>

@@ -101,14 +101,8 @@ const FarmedStakingCard = () => {
         </Flex>
         <Actions>
           {!account &&
-          //  ? (
-          //   <SummitButton isLoading={claimAllPending} disabled={pidsWithEarned.length <= 0} onClick={onClaimAll}>
-          //     {`CLAIM ALL (${pidsWithEarned.length})`}
-          //   </SummitButton>
-          // ) : (
             <UnlockButton/>
           }
-          {/* )} */}
         </Actions>
       </CardBody>
     </StyledFarmStakingCard>

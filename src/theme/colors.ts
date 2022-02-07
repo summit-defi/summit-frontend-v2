@@ -25,7 +25,7 @@ export const brandColors = {
   BETA: '#DB00FF',
   BASE: '#3e7fa2',
   EVEREST: '#017B88',
-  GLACIER: '#001A36',
+  GLACIER: '#39749e',
 
   textGold: '#EE9F3D',
 }

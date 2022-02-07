@@ -49,7 +49,7 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
   const { onWithdraw, pending: withdrawPending } = useWithdraw(farmToken, elevation)
 
 
-  // REWARDS WILL BE CLAIMED MODAL
+  // REWARDS WILL BE FROZEN MODAL
   const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(elevation, claimable, 'Withdraw', RewardsWillBeClaimedType.Farm)
 
 

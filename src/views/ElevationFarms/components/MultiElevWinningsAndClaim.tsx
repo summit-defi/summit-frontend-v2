@@ -44,7 +44,7 @@ const ElevClaim: React.FC<ElevProps> = ({ elevation, claimable }) => {
       style={{padding: '0px'}}
       onClick={handleClaimElevation}
     >
-      CLAIM {elevation}
+      FREEZE {elevation}
       <br />
       {earningsOrWinnings}
     </SummitButton>

@@ -44,7 +44,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
     farmToken,
   } = useSymbolElevateModalInfo(symbol)
 
-  // REWARDS WILL BE CLAIMED MODAL
+  // REWARDS WILL BE FROZEN MODAL
   const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(Elevation.OASIS, new BigNumber(0), 'Elevate', RewardsWillBeClaimedType.Elevate)
   
   const sisterElevations = [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT]

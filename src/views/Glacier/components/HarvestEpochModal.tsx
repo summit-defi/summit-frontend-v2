@@ -159,11 +159,9 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
           onChange={handleChange}
           max={fullHarvestableBalance}
           symbol='SUMMIT'
-          feeText='Harvest Before Thawed Tax'
-          feeBP={isThawed || lockForEverest ? 0 : 5000}
         />
 
-        <InfoText monospace small textAlign='center' mt={lockForEverest ? '24px' : '48px'}>
+        <InfoText monospace small textAlign='center' mt='24px'>
             { lockForEverest ?
               <LockForEverestInfoSection val={val}/> :
               isThawed ?
@@ -182,7 +180,12 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
                       (50% burned, 50% sent to EVEREST holders)
                       <br/>
                       <br/>
-                      Either lock for EVEREST or wait until
+                      <Flex flexDirection='row' justifyContent='center' gap='48px' alignItems='center'>
+                        <Text bold monospace color='red' textAlign='left'>TAX FOR EARLY<br/>HARVEST (50%):</Text>
+                        <Text bold monospace fontSize='16px' color='red' textAlign='right'>{new BigNumber(val || 0).dividedBy(2).toFixed(3)}<br/>SUMMIT</Text>
+                      </Flex>
+                      <br/>
+                      Either Lock for EVEREST or wait until
                       this epoch thaws to avoid the tax.
                   </>
             }
@@ -194,7 +197,7 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
           </SummitButton>
           <SummitButton
             summitPalette={summitPalette}
-            isLocked={!anyEverestOwned}
+            isLocked={lockForEverest && !anyEverestOwned}
             disabled={invalidVal}
             onClick={handleConfirmHarvestEpoch}
           >

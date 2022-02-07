@@ -11,10 +11,10 @@ const Wrapper = styled.div`
     justify-content: center;
     margin-bottom: 24px;
     width: 100%;
-    margin-top: -24px;
+    margin-top: -30px;
     
     ${({ theme }) => theme.mediaQueries.nav} {
-        margin-top: -136px;
+        margin-top: -141px;
     }
 `
 
@@ -43,7 +43,7 @@ const ValueText = styled(MobileColumnFlex)`
     }
 `
 
-const SummitIconSize = 50
+const SummitIconSize = 60
 
 export const GlacierTotalSummitAmounts: React.FC = memo(() => {
     const totalFrozenSummit = useGlacierTotalFrozenSummit()

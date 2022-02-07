@@ -35,18 +35,20 @@ const EpochsHeaderCard: React.FC = () => {
             <Flex gap='24px' mt='12px' mb='16px' width='100%' alignItems='center'>
                 <Flex flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
                     <Text monospace small textAlign='center'>
-                        The GLACIER holds your SUMMIT winnings from
-                        all elevation farms. All SUMMIT claimed during
-                        an Epoch is frozen for ~4 weeks.
+                        The GLACIER holds your frozen SUMMIT winnings from
+                        all elevation farms. All SUMMIT frozen during
+                        an Epoch thaws 4 weeks later.
                         <br/>
                         <br/>
                         <br/>
-                        <Text bold monospace small>Frozen SUMMIT can either be:</Text>
-                        - harvested early for a 50% tax
+                        <Text bold monospace small>SUMMIT in the Glacier can either be:</Text>
+                        - Harvested after thawing for no tax
+                        <br/>
+                        - harvested while frozen for a 50% tax
                         <br/>
                         (50% burned, 50% to EVEREST holders)
                         <br/>
-                        - locked for EVEREST without tax
+                        - locked for EVEREST at any time without tax
                         <br/>(requires lock duration {`>`}= 30 days)
                     </Text>
                 </Flex>

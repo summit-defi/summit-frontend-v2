@@ -62,7 +62,7 @@ export const ExpeditionWinnings: React.FC = memo(() => {
                 width='220px'
                 onClick={handleHarvestExpedition}
             >
-                { anySummitWinnings && 'CLAIM SUMMIT' }
+                { anySummitWinnings && 'FREEZE SUMMIT' }
                 { (anySummitWinnings || anyUsdcWinnings) &&
                 <>
                     {' AND'}

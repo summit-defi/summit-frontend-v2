@@ -19,7 +19,7 @@ const ElevationWinnings: React.FC = () => {
   const rawClaimable = getBalanceNumber(claimable)
   const earningsOrWinnings = elevationUtils.winningsOrEarnings(elevation).toUpperCase()
 
-  // CLAIMING ELEVATION
+  // FREEZING ELEVATION
   const { onClaimElevation, claimPending } = useClaimElevation(elevation)
   const nothingToClaim = !claimable || claimable.isEqualTo(0)
 
@@ -51,7 +51,7 @@ const ElevationWinnings: React.FC = () => {
           width='200px'
           onClick={handleClaimElevation}
         >
-          CLAIM {elevation}
+          FREEZE {elevation}
           <br />
           {earningsOrWinnings}
         </SummitButton>
