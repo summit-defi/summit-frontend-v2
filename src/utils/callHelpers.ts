@@ -147,6 +147,12 @@ export const increaseLockDuration = async (everestToken, duration, account) => {
   )
   return estimateGasAndExecute(increaseLockDurationCall, account)
 }
+export const withdrawLockedSummit = async (everestToken, amount, account) => {
+  const withdrawLockedSummitCall = everestToken.methods.withdrawLockedSummit(
+    new BigNumber(amount).times(new BigNumber(10).pow(18)).toString()
+  )
+  return estimateGasAndExecute(withdrawLockedSummitCall, account)
+}
 export const lockFarmSummitForEverest = async (cartographer, sourceElevation, amount, account) => {
   const call = cartographer.methods.elevateAndLockStakedSummit(
     elevationUtils.toInt(sourceElevation),
