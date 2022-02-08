@@ -63,6 +63,14 @@ const FarmCardUserDeposit: React.FC<Props> = ({
     return getFullDisplayBalance(walletBalance || new BigNumber(0), decimals)
   }, [walletBalance, decimals])
 
+  useEffect(
+    () => {
+      setDepositVal(fullDepositBalance)
+      setInvalidDepositVal(!validDepositVal(fullDepositBalance, fullDepositBalance))
+    },
+    [fullDepositBalance]
+  )
+
   const validDepositVal = (testVal, depositBalance) => {
     return (
       testVal === '' ||

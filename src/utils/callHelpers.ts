@@ -111,7 +111,9 @@ export const elevate = async (cartographer, token, sourceElevation, targetElevat
 
 // V1 --> V2 Token swap
 export const tokenSwapV1Summit = async (summitToken, v1SummitBalance, account) => {
-  const switchTotemCall = summitToken.methods.tokenSwap(v1SummitBalance)
+  const switchTotemCall = summitToken.methods.tokenSwap(
+    new BigNumber(v1SummitBalance).times(new BigNumber(10).pow(18)).toString()
+  )
   return estimateGasAndExecute(switchTotemCall, account)
 }
 

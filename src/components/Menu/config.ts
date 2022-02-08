@@ -24,6 +24,11 @@ export const getMenuItems = (
     keyPaths: [''],
   },
   {
+    label: 'V1 DAPP',
+    href: 'https://ftmV1.summitdefi.com',
+    external: true,
+  },
+  {
     label: 'EXCHANGE',
     href: populateLinkSummitAddress(exchangeLink),
     external: true,
@@ -44,12 +49,12 @@ export const getMenuItems = (
     external: true,
   },
 
-  {
-    label: 'BETA',
-    href: '/beta',
-    icon: 'totemIcons/BETA.png',
-    keyPaths: ['beta']
-  },
+  // {
+  //   label: 'BETA',
+  //   href: '/beta',
+  //   icon: 'totemIcons/BETA.png',
+  //   keyPaths: ['beta']
+  // },
   {
     label: 'ELEVATION|br|FARMS',
     icon: 'totemOtter',

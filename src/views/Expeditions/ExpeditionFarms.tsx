@@ -9,10 +9,10 @@ import { useEnteredExpedition, useExpeditionLoaded } from 'state/hooksNew'
 import ExpeditionCard from './components/ExpeditionCard'
 
 const StyledPage = styled(Page)`
-  padding-top: 48px;
+  padding-top: 68px;
 
   ${({ theme }) => theme.mediaQueries.lg} {
-    padding-top: 80px;
+    padding-top: 120px;
     margin-top: -40px;
     padding-bottom: 64px;
   }

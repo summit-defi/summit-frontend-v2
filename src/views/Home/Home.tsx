@@ -1,15 +1,18 @@
 import React from 'react'
 import styled from 'styled-components'
-import { BaseLayout, HighlightedText, Flex, Text } from 'uikit'
+import { BaseLayout, HighlightedText, Flex } from 'uikit'
 import Page from 'components/layout/Page'
 import FarmStakingCard from './components/FarmStakingCard'
 import SummitStats from './components/SummitStats'
-import { useExpeditionDisbursedValue, useExpeditionPotTotalValue, useTotalValue } from 'state/hooks'
+import { useTotalValue } from 'state/hooks'
 import CardValue from './components/CardValue'
 import { Elevation } from 'config/constants/types'
-import { getSummitLpSymbol } from 'config/constants'
-import { InverseDeity } from 'views/ElevationFarms/components/InverseDeity'
 import SummitTokenSwapCard from './components/SummitTokenSwapCard'
+import ExpeditionTreasuryCard from './components/ExpeditionTreasuryCard'
+
+const StyledPage = styled(Page)`
+  max-width: 850px;
+`
 
 const Hero = styled.div`
   align-items: center;
@@ -66,11 +69,9 @@ const Cards = styled(BaseLayout)`
 
 const Home: React.FC = () => {
   const totalValue = useTotalValue()
-  const expeditionPotTotalValue = useExpeditionPotTotalValue()
-  const expeditionDisbursedValue = useExpeditionDisbursedValue()
 
   return (
-    <Page>
+    <StyledPage>
       <Hero>
         <StyledHighlightedText fontSize="32px" letterSpacing="16px">
           SUMMIT DEFI
@@ -97,58 +98,13 @@ const Home: React.FC = () => {
         />
       </Flex>
 
-      <BackgroundedFlex flexDirection='column' justifyContent="center" alignItems="center" mt="36px">
-        <DeityWrapper>
-          <InverseDeity deity={0} selected />
-        </DeityWrapper>
-
-        <StyledHighlightedText fontSize="16px" letterSpacing="2px" mb='8px'>
-        EXPEDITION TREASURY:
-      </StyledHighlightedText>
-      <CardValue
-        value={expeditionPotTotalValue}
-        prefix="$"
-        decimals={2}
-        fontSize="40"
-        gold
-        summitPalette={Elevation.OASIS}
-      />
-      <StyledHighlightedText fontSize="14px" letterSpacing="2px" mt='8px' mb='0px'>
-        DISBURSED TO DATE:
-      </StyledHighlightedText>
-      <CardValue
-        value={expeditionDisbursedValue}
-        prefix="$"
-        decimals={2}
-        fontSize="26"
-        gold
-        summitPalette={Elevation.OASIS}
-      />
-        <Text textAlign='center' bold monospace italic mt='8px' fontSize='16px'>
-          100% of the Expedition Treasury
-          <br/>
-          will be given back exclusively to
-          <br/>
-          SUMMIT and {getSummitLpSymbol()} holders
-          <br/>
-          through daily Expeditions at 3pm UTC.
-        </Text>
-      </BackgroundedFlex>
-
-      <Flex justifyContent="center" alignItems="center" mt="52px" mb="32px">
-        <StyledHighlightedText fontSize="16px" letterSpacing="2px">
-          Your Totem Lineup:
-        </StyledHighlightedText>
-      </Flex>
-
-      <div>
-        <Cards>
-          <SummitTokenSwapCard />
-          <FarmStakingCard />
-          <SummitStats />
-        </Cards>
-      </div>
-    </Page>
+      <Cards>
+        <SummitTokenSwapCard />
+        <ExpeditionTreasuryCard />
+        <FarmStakingCard />
+        <SummitStats />
+      </Cards>
+    </StyledPage>
   )
 }
 

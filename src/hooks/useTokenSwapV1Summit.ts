@@ -44,10 +44,11 @@ export const useTokenSwapV1Summit = () => {
   ])
 
 
-  const handleTokenSwap = useCallback(async () => {
+  const handleTokenSwap = useCallback(async (amount: string) => {
+    const filteredAmount = amount || '0'
     try {
       setSwapPending(true)
-      await tokenSwapV1Summit(summitToken, v1SummitBalance.toString(), account)
+      await tokenSwapV1Summit(summitToken, filteredAmount, account)
       toastSuccess('SUMMIT token swap Succeeded')
     } catch (error) {
       toastError('Error in SUMMIT token swap', (error as Error).message)
@@ -57,7 +58,6 @@ export const useTokenSwapV1Summit = () => {
   }, [
     account,
     summitToken,
-    v1SummitBalance,
     setSwapPending,
     toastSuccess,
     toastError,

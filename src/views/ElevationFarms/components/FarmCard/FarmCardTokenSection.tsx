@@ -4,6 +4,7 @@ import BoundedProgressBar from '../BoundedProgressBar'
 import { timestampToDate } from 'utils'
 import { useFarmUserTokenSectionInfo } from 'state/hooksNew'
 import { useCurrentTimestamp } from 'state/hooks'
+import { clamp } from 'lodash'
 
 interface Props {
   symbol: string
@@ -26,16 +27,23 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
   } = useFarmUserTokenSectionInfo(symbol)
   const currentTimestamp = useCurrentTimestamp()
 
-  const taxStartDate = timestampToDate(taxResetTimestamp)
-  const taxEndDate = timestampToDate(taxResetTimestamp + week)
-  const taxPositionPerc = 100 * ((currentTimestamp - taxResetTimestamp) / week)
+  const sanitizedTaxResetTimestamp = taxResetTimestamp || currentTimestamp
+  const taxStartDate = timestampToDate(sanitizedTaxResetTimestamp)
+  const taxEndDate = timestampToDate(sanitizedTaxResetTimestamp + week)
+  const taxPositionPerc = clamp(100 * ((currentTimestamp - sanitizedTaxResetTimestamp) / week), 0, 100)
   
-  const bonusStartTimestamp = bonusResetTimestamp
-  const bonusGrowthStartTimestamp = bonusResetTimestamp + week
+  const sanitizedBonusResetTimestamp = bonusResetTimestamp || currentTimestamp
+  const bonusStartTimestamp = sanitizedBonusResetTimestamp
+  const bonusGrowthStartTimestamp = sanitizedBonusResetTimestamp + week
   const bonusStartDate = timestampToDate(bonusStartTimestamp)
   const bonusGrowthStartDate = timestampToDate(bonusGrowthStartTimestamp)
   const bonusEndDate = timestampToDate(bonusStartTimestamp + week)
-  const bonusPositionPerc = 100 * ((currentTimestamp - bonusResetTimestamp) / (week * 2))
+  const bonusPositionPerc = clamp(100 * ((currentTimestamp - sanitizedBonusResetTimestamp) / (week * 2)), 0, 100)
+
+  console.log({
+    taxPositionPerc,
+    bonusPositionPerc
+  })
 
   return (
     <Flex flexWrap='wrap' justifyContent='center' flexDirection='row' width='100%' mb='18px' mt='6px' style={{gap: '24px'}}>

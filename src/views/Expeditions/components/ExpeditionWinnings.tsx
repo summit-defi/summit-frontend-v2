@@ -59,7 +59,7 @@ export const ExpeditionWinnings: React.FC = memo(() => {
                 disabled={!anySummitWinnings && !anyUsdcWinnings}
                 isLoading={pending}
                 summitPalette={SummitPalette.GOLD}
-                width='220px'
+                width='240px'
                 onClick={handleHarvestExpedition}
             >
                 { anySummitWinnings && 'FREEZE SUMMIT' }
