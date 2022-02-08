@@ -5,6 +5,8 @@ import { timestampToDate } from 'utils'
 import { useFarmUserTokenSectionInfo } from 'state/hooksNew'
 import { useCurrentTimestamp } from 'state/hooks'
 import { clamp } from 'lodash'
+import { TokenSymbol } from 'config/constants'
+import { LockFarmingSummitForEverest } from './LockFarmingSummitForEverest'
 
 interface Props {
   symbol: string
@@ -40,13 +42,9 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
   const bonusEndDate = timestampToDate(bonusStartTimestamp + week)
   const bonusPositionPerc = clamp(100 * ((currentTimestamp - sanitizedBonusResetTimestamp) / (week * 2)), 0, 100)
 
-  console.log({
-    taxPositionPerc,
-    bonusPositionPerc
-  })
-
   return (
     <Flex flexWrap='wrap' justifyContent='center' flexDirection='row' width='100%' mb='18px' mt='6px' style={{gap: '24px'}}>
+      { symbol === TokenSymbol.SUMMIT && <LockFarmingSummitForEverest/>}
       { depositFeeBP > 0 &&
         <BoundedProgressBar
           tooltipType={TooltipModalType.DepositFee}

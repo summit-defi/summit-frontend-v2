@@ -6,14 +6,15 @@ import { HighlightedText } from 'uikit/components/Text'
 interface Props {
   elevation?: string
   top?: number
+  inline?: boolean
 }
 
 const PuckSize = 180
 
-const HeaderCircleWrapper = styled.div<{ top?: number }>`
+const HeaderCircleWrapper = styled.div<{ top?: number, inline: boolean }>`
   z-index: 3;
   height: ${PuckSize + 12}px;
-  position: absolute;
+  position: ${({ inline }) => inline ? 'relative' : 'absolute'};
   width: ${PuckSize + 12}px;
   top: ${({ top }) => top != null ? top : -(PuckSize + 12) / 2}px;
   pointer-events: none;
@@ -59,9 +60,9 @@ export const HeaderElevationName = styled(HighlightedText)<{ elevationName: stri
   flex-direction: column;
 `
 
-export const ElevationPuck: React.FC<Props> = ({ elevation, children, top }) =>
+export const ElevationPuck: React.FC<Props> = ({ elevation, children, top, inline = false }) =>
   !elevation ? null : (
-    <HeaderCircleWrapper top={top}>
+    <HeaderCircleWrapper top={top} inline={inline}>
       <HeaderCircleBackground />
       <HeaderArtwork elevation={elevation} />
       <HeaderElevationName header elevationName={elevation}>

@@ -11,7 +11,7 @@ const FarmCardDashboardElevationLinks: React.FC<Props> = ({ symbol }) => {
   
   
   return (
-    <Flex flexDirection='column' gap='8px' mt='4px' alignItems='center' justifyContent='center'>
+    <Flex flexDirection='column' width='100%' gap='8px' mt='4px' alignItems='center' justifyContent='center'>
       <Text bold monospace small>OPEN {symbol} FARM AT ELEVATION:</Text>
       <Flex width='100%' gap='12px' flexWrap='wrap' alignItems='center' justifyContent='space-around'>
         { elevationUtils.all.map((elev) => {
