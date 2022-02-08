@@ -1,13 +1,13 @@
 import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Card, CardBody, HighlightedText, Token3DFloating, ChevronRightIcon } from 'uikit'
+import { Flex, Text, Card, CardBody, HighlightedText, Token3DFloating, ChevronRightIcon, ChevronUpIcon } from 'uikit'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import UnlockButton from 'components/UnlockButton'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { useTokenSwapV1Summit } from 'hooks/useTokenSwapV1Summit'
 import { getBalanceNumber, getFullDisplayBalance } from 'utils'
 import { isNumber } from 'lodash'
-import { BN_ZERO } from 'config/constants'
+import { BN_ZERO, SummitPalette } from 'config/constants'
 import TokenInput from 'components/TokenInput'
 import BigNumber from 'bignumber.js'
 
@@ -38,6 +38,7 @@ const GreyToken3DFloating = styled(Token3DFloating)`
 enum TokenSwapFlowItem {
   Approve,
   Swap,
+  Cleanup,
 }
 
 const ActiveFlowItemUnderline = styled.div`
@@ -54,6 +55,8 @@ const flowItemTitle = (flowItem: TokenSwapFlowItem) => {
           return 'APPROVE V1 SUMMIT'
       case TokenSwapFlowItem.Swap:
           return 'SWAP'
+      case TokenSwapFlowItem.Cleanup:
+          return 'CLEAN UP'
       default: return ''
   }
 }
@@ -79,6 +82,8 @@ const SummitTokenSwapCard = () => {
     approvePending,
     v1SummitApproved,
     v1SummitBalance,
+    v2SummitAddress,
+    v1SummitAddress,
   } = useTokenSwapV1Summit()
 
   const rawV1SummitBalance = getBalanceNumber(v1SummitBalance)
@@ -91,6 +96,65 @@ const SummitTokenSwapCard = () => {
     if (swapPending || invalidSwap || !v1SummitApproved) return
     onTokenSwap(swapVal)
   }
+
+
+  const addWatchSummitToken = useCallback(async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const provider = window.ethereum
+    if (provider) {
+      try {
+        // wasAdded is a boolean. Like any RPC method, an error may be thrown.
+        const wasAdded = await provider.request({
+          method: 'wallet_watchAsset',
+          params: {
+            type: 'ERC20',
+            options: {
+              address: v2SummitAddress,
+              symbol: 'SUMMIT',
+              decimals: '18',
+              image: `${window.location.origin}/images/tokens/SUMMIT.png`,
+            },
+          },
+        })
+
+        if (wasAdded) {
+          console.log('Token was added')
+        }
+      } catch (error) {
+        // TODO: find a way to handle when the user rejects transaction or it fails
+      }
+    }
+  }, [v2SummitAddress])
+
+  const deprecateV1SummitToken = useCallback(async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const provider = window.ethereum
+    if (provider) {
+      try {
+        // wasAdded is a boolean. Like any RPC method, an error may be thrown.
+        const wasAdded = await provider.request({
+          method: 'wallet_watchAsset',
+          params: {
+            type: 'ERC20',
+            options: {
+              address: v1SummitAddress,
+              symbol: 'V1 SUMMIT',
+              decimals: '18',
+              image: `${window.location.origin}/images/tokens/SUMMITV1.png`,
+            },
+          },
+        })
+
+        if (wasAdded) {
+          console.log('Token was added')
+        }
+      } catch (error) {
+        // TODO: find a way to handle when the user rejects transaction or it fails
+      }
+    }
+  }, [v1SummitAddress])
 
 
 
@@ -161,6 +225,12 @@ const SummitTokenSwapCard = () => {
 
         <Flex gap='8px' flexDirection='column' justifyContent='center' alignItems='center' width='100%'>
           <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
+            <Text monospace small>Add V2 SUMMIT to Wallet</Text>
+            <SummitButton onClick={addWatchSummitToken} height={24} padding={36}>
+              + <img style={{ marginLeft: 8 }} width={16} src="/images/wallet/metamask.png" alt="metamask logo" />
+            </SummitButton>
+          </Flex>
+          <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
             <Text monospace small>V1 SUMMIT in Wallet:</Text>
             <Text bold monospace>{rawV1SummitBalance} SUMMIT</Text>
           </Flex>
@@ -217,6 +287,26 @@ const SummitTokenSwapCard = () => {
                 onClick={handleSwapButtonPressed}
               >
                 SWAP V1 FOR V2 SUMMIT
+            </SummitButton>
+          </Flex>
+
+          <EntryFlowItem
+            flowItem={TokenSwapFlowItem.Cleanup}
+            flowIndex={3}
+            completed={v1SummitApproved && v1SummitBalance.isEqualTo(0)}
+            active={v1SummitApproved}
+          />
+
+          <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
+            <Text monospace small>Mark V1 SUMMIT Deprecated</Text>
+            <SummitButton onClick={deprecateV1SummitToken} height={24} padding={36} summitPalette={'RED' as SummitPalette}>
+              - <img style={{ marginLeft: 8 }} width={16} src="/images/wallet/metamask.png" alt="metamask logo" />
+            </SummitButton>
+          </Flex>
+          <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
+            <Text monospace small>Minimize Swap Card</Text>
+            <SummitButton onClick={deprecateV1SummitToken} height={24} padding={41}>
+              <ChevronUpIcon width='24px' color='white'/>
             </SummitButton>
           </Flex>
         </Flex>

@@ -63,5 +63,5 @@ export const useTokenSwapV1Summit = () => {
     toastError,
   ])
 
-  return { onApprove: handleApproveSummitV1, onTokenSwap: handleTokenSwap, approvePending, swapPending, v1SummitApproved, v1SummitBalance, anythingToSwap }
+  return { onApprove: handleApproveSummitV1, onTokenSwap: handleTokenSwap, approvePending, swapPending, v1SummitApproved, v1SummitBalance, anythingToSwap, v2SummitAddress: summitAddress, v1SummitAddress }
 }

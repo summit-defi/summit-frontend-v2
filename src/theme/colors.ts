@@ -89,5 +89,6 @@ export const elevationPalette = {
   SUMMIT: ['#040707', '#2B3C44', '#557280', '#7BA6BB', '#A6CBDC', '#C3D8E0'],
   EXPEDITION: ['#3B2F60', '#865075', '#B16684', '#D48B8A', '#DDA4A8', '#7A4D64'],
   GOLD: ['#FCC965', '#F7BA56', '#F3AC4A', '#EE9F3D', '#EA9130', '#EA9130'],
-  EVEREST: ['#017B88', '#30A0A4', '#90B7B4', '#AECEBF', '#DEDDBE', '#D9B28B', '#D9B28B']
+  EVEREST: ['#017B88', '#30A0A4', '#90B7B4', '#AECEBF', '#DEDDBE', '#D9B28B', '#D9B28B'],
+  RED: ['#FFBABA', '#FF7B7B', '#FF5252', '#FF0000', '#A70000', '#900000', '#900000']
 }

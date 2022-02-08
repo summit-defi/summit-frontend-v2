@@ -11,7 +11,7 @@ import SummitTokenSwapCard from './components/SummitTokenSwapCard'
 import ExpeditionTreasuryCard from './components/ExpeditionTreasuryCard'
 
 const StyledPage = styled(Page)`
-  max-width: 850px;
+  max-width: 950px;
 `
 
 const Hero = styled.div`
