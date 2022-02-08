@@ -10,8 +10,8 @@ const Page = styled(Container)`
   align-items: center;
   justify-content: center;
 
-  ${({ theme }) => theme.mediaQueries.lg} {
-    padding-top: 36px;
+  ${({ theme }) => theme.mediaQueries.nav} {
+    padding-top: 64px;
     padding-bottom: 64px;
   }
 `

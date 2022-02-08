@@ -132,6 +132,7 @@ export interface SummitEcosystemState {
   expeditionPotTotalValue: number
   pendingExpeditionTx: boolean
   pendingTotemSelection: boolean
+  summitSwapMinimized: boolean
 }
 
 // API Price State

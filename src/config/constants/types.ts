@@ -54,6 +54,12 @@ export const elevationFarmTabToUrl = {
   [ElevationFarmTab.MESA]: 'mesa',
   [ElevationFarmTab.SUMMIT]: 'summit'
 }
+export const elevationToUrl = {
+  [Elevation.OASIS]: 'oasis',
+  [Elevation.PLAINS]: 'plains',
+  [Elevation.MESA]: 'mesa',
+  [Elevation.SUMMIT]: 'summit'
+}
 
 export const elevationTabToElevation = {
   [ElevationFarmTab.DASH]: null,

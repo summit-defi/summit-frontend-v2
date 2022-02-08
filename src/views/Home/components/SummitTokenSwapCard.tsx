@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Card, CardBody, HighlightedText, Token3DFloating, ChevronRightIcon, ChevronUpIcon } from 'uikit'
+import { Flex, Text, Card, CardBody, HighlightedText, Token3DFloating, ChevronRightIcon } from 'uikit'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import UnlockButton from 'components/UnlockButton'
 import SummitButton from 'uikit/components/Button/SummitButton'
@@ -10,6 +10,8 @@ import { isNumber } from 'lodash'
 import { BN_ZERO, SummitPalette } from 'config/constants'
 import TokenInput from 'components/TokenInput'
 import BigNumber from 'bignumber.js'
+import { updateSummitSwapMinimized } from 'state/summitEcosystem'
+import { useDispatch } from 'react-redux'
 
 const StyledFarmStakingCard = styled(Card)`
   min-height: 376px;
@@ -74,6 +76,7 @@ const EntryFlowItem: React.FC<{ flowItem: TokenSwapFlowItem, flowIndex: number, 
 
 const SummitTokenSwapCard = () => {
   const { account } = useWallet()
+  const dispatch = useDispatch()
 
   const {
     onApprove,
@@ -96,6 +99,11 @@ const SummitTokenSwapCard = () => {
     if (swapPending || invalidSwap || !v1SummitApproved) return
     onTokenSwap(swapVal)
   }
+
+  const handleMinimizeSwapCard = useCallback(
+    () => dispatch(updateSummitSwapMinimized(true)),
+    [dispatch]
+  )
 
 
   const addWatchSummitToken = useCallback(async () => {
@@ -262,11 +270,12 @@ const SummitTokenSwapCard = () => {
             flowItem={TokenSwapFlowItem.Swap}
             flowIndex={2}
             completed={v1SummitApproved && v1SummitBalance.isEqualTo(0)}
-            active={v1SummitApproved}
+            active={v1SummitApproved && v1SummitBalance.isGreaterThan(0)}
           />
           <Flex width='100%' alignItems='center' justifyContent='center'>
             <TokenInput
               value={swapVal}
+              disabled={v1SummitBalance.isEqualTo(0)}
               balanceText="Wallet"
               isLocked={!v1SummitApproved}
               onSelectMax={handleSelectMaxSwap}
@@ -282,7 +291,7 @@ const SummitTokenSwapCard = () => {
           <Flex width='100%' alignItems='center' justifyContent='center'>
             <SummitButton
                 isLoading={swapPending}
-                disabled={invalidSwap}
+                disabled={invalidSwap || v1SummitBalance.isEqualTo(0)}
                 isLocked={!v1SummitApproved}
                 onClick={handleSwapButtonPressed}
               >
@@ -293,7 +302,7 @@ const SummitTokenSwapCard = () => {
           <EntryFlowItem
             flowItem={TokenSwapFlowItem.Cleanup}
             flowIndex={3}
-            completed={v1SummitApproved && v1SummitBalance.isEqualTo(0)}
+            completed={false}
             active={v1SummitApproved}
           />
 
@@ -305,17 +314,17 @@ const SummitTokenSwapCard = () => {
           </Flex>
           <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
             <Text monospace small>Minimize Swap Card</Text>
-            <SummitButton onClick={deprecateV1SummitToken} height={24} padding={41}>
-              <ChevronUpIcon width='24px' color='white'/>
+            <SummitButton onClick={handleMinimizeSwapCard} height={24} padding={35}>
+              HIDE
             </SummitButton>
           </Flex>
         </Flex>
 
-        <Actions>
-          {!account &&
+        {!account &&
+          <Actions>
             <UnlockButton/>
-          }
-        </Actions>
+          </Actions>
+        }
       </CardBody>
     </StyledFarmStakingCard>
   )

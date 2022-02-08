@@ -2,13 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 import { BaseLayout, HighlightedText, Flex } from 'uikit'
 import Page from 'components/layout/Page'
-import FarmStakingCard from './components/FarmStakingCard'
 import SummitStats from './components/SummitStats'
 import { useTotalValue } from 'state/hooks'
 import CardValue from './components/CardValue'
 import { Elevation } from 'config/constants/types'
 import SummitTokenSwapCard from './components/SummitTokenSwapCard'
 import ExpeditionTreasuryCard from './components/ExpeditionTreasuryCard'
+import { useSummitSwapMinimized } from 'state/hooksNew'
+import SummitSwapMinimizedCard from './components/SummitSwapMinimizedCard'
 
 const StyledPage = styled(Page)`
   max-width: 950px;
@@ -31,6 +32,28 @@ const BackgroundedFlex = styled(Flex)`
   padding: 36px 24px;
   border-radius: 6px;
   box-shadow: 2px 2px 12px -4px rgba(25, 19, 38, 0.4), 2px 2px 8px rgba(25, 19, 38, 0.2);
+`
+
+const SwapMinGrid = styled(BaseLayout)`
+  align-items: stretch;
+  justify-content: stretch;
+
+  & > div {
+    grid-column: span 12;
+    width: 100%;
+  }
+
+  ${({ theme }) => theme.mediaQueries.sm} {
+    & > div {
+      grid-column: span 12;
+    }
+  }
+
+  ${({ theme }) => theme.mediaQueries.lg} {
+    & > div {
+      grid-column: span 12;
+    }
+  }
 `
 
 const StyledHighlightedText = styled(HighlightedText)<{ fontSize: string; letterSpacing: string }>`
@@ -69,6 +92,7 @@ const Cards = styled(BaseLayout)`
 
 const Home: React.FC = () => {
   const totalValue = useTotalValue()
+  const summitSwapMinimized = useSummitSwapMinimized()
 
   return (
     <StyledPage>
@@ -85,7 +109,7 @@ const Home: React.FC = () => {
       </Hero>
 
 
-      <Flex justifyContent="center" alignItems="center" mt="0px">
+      <Flex justifyContent="center" alignItems="center" mt="0px" mb='48px'>
         <StyledHighlightedText fontSize="16px" letterSpacing="2px">
           TVL:
         </StyledHighlightedText>
@@ -99,10 +123,15 @@ const Home: React.FC = () => {
       </Flex>
 
       <Cards>
-        <SummitTokenSwapCard />
+        { summitSwapMinimized ?
+          <SwapMinGrid>
+            <SummitSwapMinimizedCard/>
+            <SummitStats/>
+          </SwapMinGrid> :
+          <SummitTokenSwapCard />
+        }
         <ExpeditionTreasuryCard />
-        <FarmStakingCard />
-        <SummitStats />
+        { !summitSwapMinimized && <SummitStats /> }
       </Cards>
     </StyledPage>
   )

@@ -5,6 +5,7 @@ import FarmCardTokenSection from './FarmCardTokenSection'
 import FarmCardUserInteractionSection from './FarmCardUserInteractionSection'
 import { useSelectedElevation } from 'state/hooks'
 import useVisibility from 'hooks/useVisibility'
+import FarmCardDashboardElevationLinks from './FarmCardDashboardElevationLinks'
 
 const ExpandableSection = styled.div<{ isExpanded: boolean, elevation?: Elevation }>`
   display: flex;
@@ -66,15 +67,12 @@ const FarmCardUserSection: React.FC<Props> = ({ isExpanded, symbol }) => {
       <FarmCardTokenSection
         symbol={symbol}
       />
-      { elevation != null && 
-        <>
-          <Divider/>
-          <FarmCardUserInteractionSection
-            symbol={symbol}
-          />
-          <BottomPadding/>
-        </>
+      <Divider/>
+      { elevation == null ?
+        <FarmCardDashboardElevationLinks symbol={symbol} /> :
+        <FarmCardUserInteractionSection symbol={symbol} />
       }
+      <BottomPadding/>
     </ExpandableSection>
   )
 }

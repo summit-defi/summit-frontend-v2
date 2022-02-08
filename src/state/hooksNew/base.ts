@@ -37,6 +37,7 @@ export const stateToFarmTypeFilter = (state: State) => state.summitEcosystem.far
 export const stateToFarmLiveFilter = (state: State) => state.summitEcosystem.liveFarms
 export const stateToElevationInfo = (state: State, elevation: Elevation) => state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(elevation)] || null
 export const stateToElevationsInfos = (state: State) => state.summitEcosystem.elevationsInfo
+export const stateToSummitSwapMinimized = (state: State) => state.summitEcosystem.summitSwapMinimized
 
 // FARMS
 export const stateToFarmsElevationsData = (state: State) => state.farms.elevationData

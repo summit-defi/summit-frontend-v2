@@ -29,7 +29,8 @@ const getLocalStorageVariables = () => {
     farmType: (localStorage.getItem('FarmType') || FarmType.All) as FarmType,
     elevationsInfo: elevationUtils.elevationExpedition.map((elev) => 
       JSON.parse(localStorage.getItem(`${elev}_ecosystem_info`) || 'null')
-    )
+    ),
+    summitSwapMinimized: JSON.parse(localStorage.getItem('SummitSwapMinimized') || 'false')
   }
 }
 
@@ -130,6 +131,10 @@ export const SummitEcosystemSlice = createSlice({
     },
     setPendingTotemSelection: (state, action) => {
       state.pendingTotemSelection = action.payload
+    },
+    setSummitSwapMinimized: (state, action) => {
+      state.summitSwapMinimized = action.payload
+      localStorage.setItem('SummitSwapMinimized', JSON.stringify(action.payload))
     }
   },
 })
@@ -153,6 +158,7 @@ export const {
   setRolloverRewardInNativeToken,
   setExpeditionPot,
   setPendingExpeditionTx,
+  setSummitSwapMinimized,
   setPendingTotemSelection,
 } = SummitEcosystemSlice.actions
 
@@ -191,6 +197,9 @@ export const removePendingTx = (hash: string) => async (dispatch) => {
 }
 export const updatePendingTotemSelection = (pending) => async (dispatch) => {
   dispatch(setPendingTotemSelection(pending))
+}
+export const updateSummitSwapMinimized = (minimized) => async (dispatch) => {
+  dispatch(setSummitSwapMinimized(minimized))
 }
 
 export default SummitEcosystemSlice.reducer
