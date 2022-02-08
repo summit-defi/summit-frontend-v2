@@ -75,7 +75,7 @@ const BarFlex = styled(Flex)<{ single: boolean }>`
         margin-right: 10px;
         align-items: flex-start;
     ` : css`
-        min-width: 175px;
+        min-width: 135px;
     `}
 `
 
@@ -143,7 +143,7 @@ const BoundedProgressBar: React.FC<Props> = ({title, marks, currDisplayPerc, cur
 
     return (
         <Wrapper single={single}>
-            <Flex alignItems='center' justifyContent='center' width='100%' gap='8px'>
+            <Flex alignItems='center' justifyContent='center' width='100%' pl='24px' pr='24px' gap='8px'>
                 <Text bold monospace small textAlign='center' lineHeight='14px'>
                     {title}: {currDisplayPerc}%
                 </Text>

@@ -30,6 +30,7 @@ const SelectorWrapper = styled(Flex)<{
   vertical: boolean
   desktopOnlyVertical: boolean
   isLocked: boolean
+  isDisabled: boolean
 }>`
   flex-direction: row;
   justify-content: center;
@@ -37,7 +38,7 @@ const SelectorWrapper = styled(Flex)<{
   width: ${({ elevationsCount }) => buttonWidth * elevationsCount}px;
   border-radius: 16px;
   background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
-  box-shadow: ${({ theme, isLocked }) => isLocked ? 'none' : `inset 2px 2px 4px ${theme.colors.textShadow}`};
+  box-shadow: ${({ theme, isLocked, isDisabled }) => (isLocked || isDisabled) ? 'none' : `inset 2px 2px 4px ${theme.colors.textShadow}`};
   position: relative;
 
   ${({ vertical, elevationsCount }) =>
@@ -180,6 +181,7 @@ const FarmTypeSelector: React.FC<Props> = ({
       <SelectorWrapper
         elevationsCount={elevations.length}
         isLocked={isLocked}
+        isDisabled={disabled}
         vertical={vertical}
         desktopOnlyVertical={desktopOnlyVertical}
       >

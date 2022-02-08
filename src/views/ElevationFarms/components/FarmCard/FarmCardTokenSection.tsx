@@ -3,7 +3,7 @@ import { Flex, TooltipModalType } from 'uikit'
 import BoundedProgressBar from '../BoundedProgressBar'
 import { timestampToDate } from 'utils'
 import { useFarmUserTokenSectionInfo } from 'state/hooksNew'
-import { useCurrentTimestamp } from 'state/hooks'
+import { useCurrentTimestamp, useCurrentTimestampOnce } from 'state/hooks'
 import { clamp } from 'lodash'
 import { TokenSymbol } from 'config/constants'
 import { LockFarmingSummitForEverest } from './LockFarmingSummitForEverest'
@@ -27,7 +27,7 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
     currentBonusBP,
     bonusResetTimestamp,
   } = useFarmUserTokenSectionInfo(symbol)
-  const currentTimestamp = useCurrentTimestamp()
+  const currentTimestamp = useCurrentTimestampOnce()
 
   const sanitizedTaxResetTimestamp = taxResetTimestamp || currentTimestamp
   const taxStartDate = timestampToDate(sanitizedTaxResetTimestamp)
@@ -39,13 +39,13 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
   const bonusGrowthStartTimestamp = sanitizedBonusResetTimestamp + week
   const bonusStartDate = timestampToDate(bonusStartTimestamp)
   const bonusGrowthStartDate = timestampToDate(bonusGrowthStartTimestamp)
-  const bonusEndDate = timestampToDate(bonusStartTimestamp + week)
+  const bonusEndDate = timestampToDate(bonusStartTimestamp + week + week)
   const bonusPositionPerc = clamp(100 * ((currentTimestamp - sanitizedBonusResetTimestamp) / (week * 2)), 0, 100)
 
   return (
     <Flex flexWrap='wrap' justifyContent='center' flexDirection='row' width='100%' mb='18px' mt='6px' style={{gap: '24px'}}>
       { symbol === TokenSymbol.SUMMIT && <LockFarmingSummitForEverest/>}
-      { depositFeeBP > 0 &&
+      { depositFeeBP > 0 && false &&
         <BoundedProgressBar
           tooltipType={TooltipModalType.DepositFee}
           title='DEP. FEE'

@@ -23,16 +23,17 @@ export const LockFarmingSummitForEverest: React.FC = memo(() => {
     return (
         <Flex flexDirection='column' gap='12px' alignItems='center' justifyContent='flex-start'>
             <Text bold monospace small textAlign='center' lineHeight='20px'>
-                LOCK SUMMIT:
+                GET EVEREST:
             </Text>
             <SummitButton
                 summitPalette={SummitPalette.EVEREST}
                 isLoading={pending}
+                padding='18px'
                 onClick={handleLockSummit}
             >
-                    LOCK FARM SUMMIT
-                    <br/>
-                    FOR EVEREST
+                LOCK STAKED
+                <br/>
+                SUMMIT
             </SummitButton>
         </Flex>
     )

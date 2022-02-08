@@ -16,7 +16,7 @@ const ExpandableSection = styled.div<{ isExpanded: boolean, elevation?: Elevatio
   overflow: hidden;
   padding-left: 24px;
   padding-right: 24px;
-  max-height: ${({ isExpanded, elevation }) => (isExpanded ? (elevation == null ? '250px' : '600px') : '0px')};
+  max-height: ${({ isExpanded, elevation }) => (isExpanded ? (elevation == null ? '450px' : '600px') : '0px')};
   opacity: ${({ isExpanded }) => (isExpanded ? 1 : 0)};
 `
 

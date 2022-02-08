@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Flex, Text, Modal, ChevronRightIcon, ModalActions, SummitButton, ElevationPuck, TokenSymbolImage, Lock } from 'uikit'
+import { Flex, Text, Modal, ChevronRightIcon, ModalActions, SummitButton, TokenSymbolImage, Lock } from 'uikit'
 import { Elevation, SummitPalette } from 'config/constants/types'
 import { isNumber } from 'lodash'
-import { getAdditionalEverestAwardForLockDurationIncrease, getExpectedEverestAward, getFormattedBigNumber, getFullDisplayBalance, timestampToDate, timestampToDateWithYear } from 'utils'
+import { capitalizeFirstLetter, getExpectedEverestAward, getFormattedBigNumber, getFullDisplayBalance, timestampToDateWithYear } from 'utils'
 import ElevationSelector from '../ElevationSelector'
 import TokenInput from 'components/TokenInput'
 import { useEverestUserInfo, useSymbolElevateModalInfo } from 'state/hooksNew'
@@ -17,70 +17,13 @@ const StyledLock = styled(Lock)`
   fill: ${({ theme }) => theme.colors.textGold};
 `
 
-const LockForEverestInfoSection: React.FC<{ val: string }> = React.memo(({ val }) => {
-  const {
-    everestOwned,
-    summitLocked,
-    lockRelease,
-    lockDuration,
-  } = useEverestUserInfo()
-  const currentTimestamp = useCurrentTimestampOnce()
-
-  const anyEverestOwned = everestOwned.isGreaterThan(0)
-
-  const minLockRelease = currentTimestamp + (30 * 24 * 3600)
-  const newLockRelease = Math.max(minLockRelease, lockRelease)
-  const releaseDate = timestampToDate(lockRelease)
-  const newReleaseDate = timestampToDateWithYear(newLockRelease)
-
-  const minLockDuration = 30
-  const newLockDuration = Math.max(minLockDuration, lockDuration)
-
-  const everestAwardFromLockDuration = getAdditionalEverestAwardForLockDurationIncrease(summitLocked, newLockDuration, everestOwned)
-  const everestAwardFromLocking = getExpectedEverestAward(new BigNumber(val).times(new BigNumber(10).pow(18)), newLockDuration)
-  const totalEverestAward = everestAwardFromLockDuration.plus(everestAwardFromLocking)
-  const rawTotalEverestAward = getFormattedBigNumber(totalEverestAward)
-
-  return (
-    <>
-      { !anyEverestOwned && 
-        <Flex width='100%' alignItems='center' justifyContent='flex-start' gap='8px' mb='18px'>
-          <StyledLock width='18px'/>
-          <Text bold italic gold small monospace textAlign='left'>
-            You have to lock SUMMIT for the first time through the EVEREST tab.
-          </Text>
-        </Flex>
-      }
-      <Text monospace bold small textAlign='center'>
-        * If your current Lock Duration is less than 30 Days, it will be increased to 30 Days (this will add to your EVEREST award).
-      </Text>
-      <br/>
-      <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%' mb='8px'>
-          <Text monospace small textAlign='left'>Unlock Date:</Text>
-          <Text bold monospace textAlign='right'>{releaseDate} {`==>`} {newReleaseDate}</Text>
-      </Flex>
-      <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%' mb='8px'>
-          <Text monospace small textAlign='left'>Lock Duration:</Text>
-          <Text bold monospace textAlign='right'>{lockDuration}D {`==>`} {newLockDuration}D</Text>
-      </Flex>
-      <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%' mb='8px'>
-          <Text monospace small textAlign='left'>EVEREST Award:</Text>
-          <Text bold monospace textAlign='right'>{rawTotalEverestAward} EVEREST</Text>
-      </Flex>
-    </>
-  )
-})
-
-
-
 const InfoText = styled(Text)`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: calc(100% - 48px);
 `
-
-
 
 interface LockFarmSummitForEverestProps {
   sourceElevation?: Elevation
@@ -101,6 +44,18 @@ const LockFarmSummitForEverestModal: React.FC<LockFarmSummitForEverestProps> = (
     elevLaunched,
     elevStaked,
   } = useSymbolElevateModalInfo(TokenSymbol.SUMMIT)
+
+
+  const {
+    everestOwned,
+    lockRelease,
+    lockDuration,
+  } = useEverestUserInfo()
+  const currentTimestamp = useCurrentTimestampOnce()
+
+  const anyEverestOwned = everestOwned.isGreaterThan(0)
+
+
 
   const sourceElevations = [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT]
   const disabledElevations = sourceElevations.filter((elevToDisable) => !elevLaunched[elevToDisable])
@@ -154,6 +109,16 @@ const LockFarmSummitForEverestModal: React.FC<LockFarmSummitForEverestProps> = (
     onConfirmLock(selectedSourceElevation, val)
   }
 
+
+
+  const minLockRelease = currentTimestamp + (7 * 24 * 3600)
+  const newLockRelease = Math.max(minLockRelease, lockRelease)
+  const newReleaseDate = timestampToDateWithYear(newLockRelease)
+
+  const everestAwardFromLocking = getExpectedEverestAward(new BigNumber(val).times(new BigNumber(10).pow(18)), lockDuration)
+  const rawEverestAward = getFormattedBigNumber(everestAwardFromLocking)
+
+
   return (
     <Modal
       title='LOCK SUMMIT|br|FOR EVEREST'
@@ -162,15 +127,23 @@ const LockFarmSummitForEverestModal: React.FC<LockFarmSummitForEverestProps> = (
       headerless
     >
       <Flex gap='18px' justifyContent="center" flexDirection="column" alignItems="center" maxWidth='350px'>
-      <Text textAlign="center" monospace small bold mt='-24px'>
+        <Text textAlign="center" monospace small bold mt='-24px'>
           Directly lock your staked SUMMIT for
           <br/>
           EVEREST and avoid the Fairness Tax.
         </Text>
 
-        <Text textAlign="center" monospace small bold mt='-24px'>
-          SUMMIT will be added to your existing 
-        </Text>
+        { anyEverestOwned ?
+          <Text textAlign="center" monospace small italic bold mt='-8px'>
+            *Locked SUMMIT will be added to your existing Lock Period
+          </Text> :
+          <Flex width='100%' alignItems='center' justifyContent='flex-start' gap='8px' mt='-8px'>
+            <StyledLock width='18px'/>
+            <Text bold italic gold small monospace textAlign='left'>
+              You have to lock SUMMIT for the first time through the EVEREST tab.
+            </Text>
+          </Flex>
+        }
 
         <Flex justifyContent="space-around" alignItems="center" width="100%">
           <Flex flexDirection="column" alignItems="center">
@@ -178,6 +151,7 @@ const LockFarmSummitForEverestModal: React.FC<LockFarmSummitForEverestProps> = (
               selected={selectedSourceElevation}
               elevations={sourceElevations}
               disabledElevations={disabledElevations}
+              disabled={!anyEverestOwned}
               selectElevation={handleSelectSourceElevation}
               vertical
             />
@@ -201,13 +175,21 @@ const LockFarmSummitForEverestModal: React.FC<LockFarmSummitForEverestProps> = (
           value={val}
           onSelectMax={handleSelectMax}
           onChange={handleChange}
+          balanceText={`${selectedSourceElevation != null ? capitalizeFirstLetter(selectedSourceElevation) : ''} Staked`}
           max={fullBalance}
-          disabled={selectedSourceElevation == null}
+          disabled={selectedSourceElevation == null || !anyEverestOwned}
           symbol='SUMMIT'
         />
 
         <InfoText monospace small textAlign='center'>
-          <LockForEverestInfoSection val={val}/>
+          <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
+            <Text monospace small textAlign='left'>Unlock Date:</Text>
+            <Text bold monospace textAlign='right'>{newReleaseDate}</Text>
+          </Flex>
+          <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
+            <Text monospace small textAlign='left'>EVEREST Award:</Text>
+            <Text bold monospace textAlign='right'>{rawEverestAward} EVEREST</Text>
+          </Flex>
         </InfoText>
       </Flex>
 
@@ -217,10 +199,12 @@ const LockFarmSummitForEverestModal: React.FC<LockFarmSummitForEverestProps> = (
         </SummitButton>
         <SummitButton
           summitPalette={SummitPalette.EVEREST}
-          disabled={invalidVal || selectedSourceElevation == null}
+          disabled={invalidVal || selectedSourceElevation == null || !anyEverestOwned}
           onClick={handleConfirmLock}
         >
-          LOCK FARM SUMMIT
+          LOCK STAKED
+          <br/>
+          SUMMIT
         </SummitButton>
       </ModalActions>
     </Modal>
