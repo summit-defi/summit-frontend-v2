@@ -1,7 +1,7 @@
 import React from 'react'
 import { elevationUtils } from 'config/constants/types'
 import { getBalanceNumber } from 'utils'
-import { Text, Flex, HighlightedText, Skeleton } from 'uikit'
+import { Text, Flex, HighlightedText, Skeleton, useModal } from 'uikit'
 import { useClaimElevation } from 'hooks/useClaim'
 import { useSelectedElevation } from 'state/hooks'
 import CardValue from 'views/Home/components/CardValue'
@@ -9,6 +9,7 @@ import ContributionBreakdown from './ContributionBreakdown'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { useElevationWinningsContributions, useUserElevationClaimable, useElevationInteractionsLocked, useFarmsUserDataLoaded } from 'state/hooksNew'
 import styled from 'styled-components'
+import { FreezeWithBonusesModal } from './FreezeWithBonusesModal'
 
 const NoTextShadowFlex = styled(Flex)`
   gap: 4px;
@@ -34,12 +35,18 @@ const ElevationWinnings: React.FC = () => {
   const earningsOrWinnings = elevationUtils.winningsOrEarnings(elevation).toUpperCase()
 
   // FREEZING ELEVATION
-  const { onClaimElevation, claimPending } = useClaimElevation(elevation)
+  const { onClaimElevation, claimPending } = useClaimElevation()
   const nothingToClaim = !elevClaimable || elevClaimable.isEqualTo(0)
 
-  const handleClaimElevation = () => {
-    if (nothingToClaim || elevationLocked || claimPending) return
-    onClaimElevation()
+  const [onPresentFreezeElev] = useModal(
+    <FreezeWithBonusesModal
+      elevation={elevation}
+      onFreezeWinnings={onClaimElevation}
+    />
+  )
+  const handlePresentFreezeElev = () => {
+    if (claimPending || elevationLocked || nothingToClaim) return
+    onPresentFreezeElev()
   }
 
 
@@ -80,7 +87,7 @@ const ElevationWinnings: React.FC = () => {
           isLoading={claimPending}
           disabled={nothingToClaim}
           width='200px'
-          onClick={handleClaimElevation}
+          onClick={handlePresentFreezeElev}
         >
           FREEZE {elevation}
           <br />

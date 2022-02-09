@@ -42,7 +42,7 @@ export const useClaimPool = (farmToken: string, elevation: Elevation) => {
   return { onClaim: handleClaim, pending }
 }
 
-export const useClaimElevation = (elevation: Elevation) => {
+export const useClaimElevation = () => {
   const dispatch = useDispatch()
   const { account } = useWallet()
   const cartographer = useCartographer()
@@ -50,7 +50,7 @@ export const useClaimElevation = (elevation: Elevation) => {
   const { toastSuccess, toastError } = useToast()
 
   const handleClaimElevation = useCallback(
-    async () => {
+    async (elevation: Elevation) => {
       try {
         setClaimPending(true)
 
@@ -65,7 +65,7 @@ export const useClaimElevation = (elevation: Elevation) => {
         setClaimPending(false)
       }
     },
-    [account, dispatch, elevation, cartographer, setClaimPending, toastSuccess, toastError],
+    [account, dispatch, cartographer, setClaimPending, toastSuccess, toastError],
   )
 
   return { onClaimElevation: handleClaimElevation, claimPending }

@@ -49,12 +49,12 @@ export const getMenuItems = (
     external: true,
   },
 
-  // {
-  //   label: 'BETA',
-  //   href: '/beta',
-  //   icon: 'totemIcons/BETA.png',
-  //   keyPaths: ['beta']
-  // },
+  {
+    label: 'BETA',
+    href: '/beta',
+    icon: 'totemIcons/BETA.png',
+    keyPaths: ['beta']
+  },
   {
     label: 'ELEVATION|br|FARMS',
     icon: 'totemOtter',
