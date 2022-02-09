@@ -23,7 +23,6 @@ export const HighlightedText = styled(Text)<{
   text-shadow: 1px 1px 2px
     ${({ theme, summitPalette: elevation, gold }) => {
       // eslint-disable-next-line no-nested-ternary
-      if (gold) return darken(0.4, theme.colors.textGold)
       return theme.isDark
         ? 'BLACK'
         : elevation

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Flex, HighlightedText, Text } from 'uikit'
+import { Flex, HighlightedText, Skeleton, Text } from 'uikit'
 import { useMultiElevStaked } from 'state/hooks'
 import ContributionBreakdown from './ContributionBreakdown'
 import { useFarmsUserDataLoaded } from 'state/hooksNew'
@@ -11,14 +11,17 @@ const MultiElevStaked: React.FC = () => {
   return (
     <Flex width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
       <Flex flexDirection='column' justifyContent='center' alignItems='center'>
-        <Text bold monospace>YOUR TVL:</Text>
-        <HighlightedText bold monospace style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
-          {'$'}{totalTVL.toFixed(2)}
-        </HighlightedText>
+        <Text bold monospace>YOUR STAKED VOLUME:</Text>
+        { userDataLoaded ?
+          <HighlightedText bold monospace style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
+            {'$'}{totalTVL.toFixed(2)}
+          </HighlightedText> :
+          <Skeleton height={24} width={180}/>
+        }
       </Flex>
       <ContributionBreakdown
         loaded={userDataLoaded}
-        breakingDownTitle='TVL'
+        breakingDownTitle='STAKING'
         contributions={tvlContributions}
       />
     </Flex>

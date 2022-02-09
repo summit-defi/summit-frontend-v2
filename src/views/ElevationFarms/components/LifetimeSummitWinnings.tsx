@@ -1,8 +1,8 @@
 import React, { memo } from 'react'
 import { ElevationFarmTab } from 'config/constants'
-import { useLifetimeSummitWinningsAndBonus } from 'state/hooksNew'
+import { useLifetimeSummitWinningsAndBonus, useFarmsUserDataLoaded } from 'state/hooksNew'
 import styled from 'styled-components'
-import { HighlightedText, MobileColumnFlex, Text } from 'uikit'
+import { HighlightedText, MobileColumnFlex, Text, Skeleton } from 'uikit'
 import { getFormattedBigNumber } from 'utils'
 import { useElevationFarmsTab } from 'state/hooks'
 
@@ -48,6 +48,7 @@ const DashboardLifetimeSummitWinnings: React.FC = memo(() => {
         lifetimeSummitWinnings,
         lifetimeSummitBonuses,
     } = useLifetimeSummitWinningsAndBonus()
+    const userDataLoaded = useFarmsUserDataLoaded()
     const rawLifetimeSummitWinnings = getFormattedBigNumber(lifetimeSummitWinnings)
     const rawLifetimeSummitBonuses = getFormattedBigNumber(lifetimeSummitBonuses)
 
@@ -57,28 +58,34 @@ const DashboardLifetimeSummitWinnings: React.FC = memo(() => {
                 <Text bold monospace small>
                     LIFETIME WINNINGS
                 </Text>
-                <ValueText>
-                    <HighlightedText bold monospace fontSize='22' lineHeight='22px'>
-                        {rawLifetimeSummitWinnings}
-                    </HighlightedText>
-                    <HighlightedText monospace fontSize='14' lineHeight='14px'>
-                        SUMMIT
-                    </HighlightedText>
-                </ValueText>
+                { userDataLoaded ?
+                    <ValueText>
+                        <HighlightedText bold monospace fontSize='22' lineHeight='22px'>
+                            {rawLifetimeSummitWinnings}
+                        </HighlightedText>
+                        <HighlightedText monospace fontSize='14' lineHeight='14px'>
+                            SUMMIT
+                        </HighlightedText>
+                    </ValueText> :
+                    <Skeleton height={24} width={180}/>
+                }
             </ItemFlex>
             <Spacer/>
             <ItemFlex>
                 <Text bold monospace small>
                     LIFETIME LOYALTY BONUS
                 </Text>
-                <ValueText>
-                    <HighlightedText bold monospace fontSize='22' lineHeight='22px'>
-                        {rawLifetimeSummitBonuses}
-                    </HighlightedText>
-                    <HighlightedText monospace fontSize='14' lineHeight='14px'>
-                        SUMMIT
-                    </HighlightedText>
-                </ValueText>
+                { userDataLoaded ?
+                    <ValueText>
+                        <HighlightedText bold monospace fontSize='22' lineHeight='22px'>
+                            {rawLifetimeSummitBonuses}
+                        </HighlightedText>
+                        <HighlightedText monospace fontSize='14' lineHeight='14px'>
+                            SUMMIT
+                        </HighlightedText>
+                    </ValueText> :
+                    <Skeleton height={24} width={180}/>
+                }
             </ItemFlex>
         </Wrapper>
     )

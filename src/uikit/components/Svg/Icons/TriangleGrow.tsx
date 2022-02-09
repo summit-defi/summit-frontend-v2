@@ -13,13 +13,14 @@ interface Props {
   currDisplayPerc: number
 }
 
+
+const width = 250
+const height = 16
+const halfHeight = height / 2
+
 const Icon: React.FC<SvgProps & Props> = ({ marks, currPositionPerc, currDisplayPerc, ...props }) => {
   const markPercs = marks.map((mark) => mark.displayPerc)
   const max = Math.max(...markPercs)
-  
-  const width = 250
-  const height = 16
-  const halfHeight = height / 2
 
   const barCoords: string[] = new Array(marks.length * 2)
   const progressCoordsTop: string[] = []
@@ -63,4 +64,4 @@ const Icon: React.FC<SvgProps & Props> = ({ marks, currPositionPerc, currDisplay
   )
 }
 
-export default Icon
+export default React.memo(Icon)

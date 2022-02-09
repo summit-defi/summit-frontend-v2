@@ -26,18 +26,20 @@ const TitleWrapper = styled(Flex)`
     /* overflow: hidden; */
 `
 
-const ValueText = styled(Text)<{ perc: number, index: number }>`
+const ValueText = styled(Text)<{ perc: number, index: number, isBonusVal?: boolean }>`
     position: absolute;
     font-size: 12px;
     line-height: 18px;
     height: 18px;
     flex-wrap: wrap;
     overflow: hidden;
-    bottom: 0px;
+    bottom: ${({ isBonusVal }) => isBonusVal ? -14 : 0}px;
+    display: ${({ isBonusVal, perc }) => isBonusVal && perc < 20 ? 'none' : 'block'};
     text-align: center;
     transform: ${({ perc }) => perc < 20 ? 'rotate(70deg) translateX(35%)' : 'none'};
     
     ${({ theme }) => theme.mediaQueries.nav} {
+        display: ${({ isBonusVal, perc }) => isBonusVal && perc < 10 ? 'none' : 'block'};
         transform: ${({ perc }) => perc < 10 ? 'rotate(70deg) translateX(35%)' : 'none'};
     }
 `
@@ -102,12 +104,13 @@ interface Contribution {
     elevation?: boolean
     title?: string
     val?: string
+    bonusVal?: string
     key: number
     perc: number
     index?: number
 }
 
-const ContributionComponent: React.FC<Contribution> = ({token = false, elevation = false, title, val, perc, index}) => {
+const ContributionComponent: React.FC<Contribution> = ({token = false, elevation = false, title, val, bonusVal, perc, index}) => {
     return <ContributionWrapper perc={perc} index={index}>
         {title != null && <TitleWrapper>
             { token && <TokenSymbolImage symbol={title} width={36} height={36} />}
@@ -116,6 +119,7 @@ const ContributionComponent: React.FC<Contribution> = ({token = false, elevation
         </TitleWrapper>}
         <VerticalBar perc={100}/>
         <ValueText monospace bold perc={perc} index={index}>{val != null ? val : `${perc}%`}</ValueText>
+        { bonusVal != null && <ValueText monospace bold gold isBonusVal perc={perc} index={index}>{bonusVal}</ValueText> }
     </ContributionWrapper>
 }
 

@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { FarmType } from "state/types";
 import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToTokenInfos, stateToFarmsElevationData, stateToLifetimeSummitBonuses, stateToLifetimeSummitWinnings, stateToFarmsUserDataLoaded } from "./base";
-import { getFarmInteracting, getFarmType, getFormattedBigNumber } from "utils"
+import { getBalanceNumber, getFarmInteracting, getFarmType, getFormattedBigNumber } from "utils"
 import { BN_ZERO, Elevation, elevationUtils } from "config/constants";
 import { useSelector } from "./utils";
 import BigNumber from "bignumber.js";
@@ -149,7 +149,8 @@ const selectFarmsWithClaimable = createSelector(
     (farms, elevation) => farms
         .map((farm) => ({
             symbol: farm.symbol,
-            claimable: farm.elevations[elevation]?.claimable || BN_ZERO
+            claimable: farm.elevations[elevation]?.claimable || BN_ZERO,
+            claimableBonus: farm.elevations[elevation]?.claimableBonus || BN_ZERO,
         }))
         .filter((farm) => farm.claimable.isGreaterThan(0))
 )
@@ -164,13 +165,28 @@ const selectElevationWinningsContributions = createSelector(
         
         const contributionSum = sortedClaimables.reduce((acc, sortedClaimable) => acc.plus(sortedClaimable.claimable), BN_ZERO)
         
-        return sortedClaimables.map((sortedClaimable, index) => ({
+        const winningsContributions = sortedClaimables.map((sortedClaimable, index) => ({
             token: true,
             title: sortedClaimable.symbol,
             key: index,
             perc: sortedClaimable.claimable.times(100).div(contributionSum).toNumber(),
             val: `${getFormattedBigNumber(sortedClaimable.claimable)} SUMMIT`,
+            bonusVal: sortedClaimable.claimableBonus.isGreaterThan(0) ? `+${getFormattedBigNumber(sortedClaimable.claimableBonus)} BONUS` : null,
         }))
+
+        const {
+            elevClaimable,
+            elevClaimableBonus
+        } = sortedClaimables.reduce((acc, sortedClaimable) => ({
+            elevClaimable: acc.elevClaimable.plus(sortedClaimable.claimable),
+            elevClaimableBonus: acc.elevClaimableBonus.plus(sortedClaimable.claimableBonus),
+        }), { elevClaimable: BN_ZERO, elevClaimableBonus: BN_ZERO })
+
+        return {
+            winningsContributions,
+            elevClaimable,
+            elevClaimableBonus,
+        }
     }
 )
 export const useElevationWinningsContributions = (elevation: Elevation) => useSelector((state) => selectElevationWinningsContributions(state, elevation))

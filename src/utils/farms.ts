@@ -1,5 +1,6 @@
 import BigNumber from "bignumber.js"
 import { BN_ZERO, Elevation, elevationUtils, FarmConfig, TokenAssetType } from "config/constants/types"
+import memoize from "fast-memoize"
 import { Farm, FarmElevation, FarmType } from "state/types"
 
 export const getFarmToken = ({
@@ -47,7 +48,7 @@ export const getFarmInteracting = (farm: Farm) => {
     }, false)
 }
 
-export const getFarmAllElevationsIterable = (farmConfigs: FarmConfig[]) => {
+export const getFarmAllElevationsIterable = memoize((farmConfigs: FarmConfig[]) => {
     return farmConfigs.map((farm) => {
         return Object.keys(farm.elevations).map((elevation) => ({
             symbol: farm.symbol,
@@ -55,8 +56,11 @@ export const getFarmAllElevationsIterable = (farmConfigs: FarmConfig[]) => {
             elevation: elevation as Elevation,
         }))
     }).flat()
-}
-export const getFarmOnlyElevationsIterable = (farmConfigs: FarmConfig[]) => {
+})
+export const getFarmAllTokensIterable = memoize((farmConfigs: FarmConfig[]) => {
+    return farmConfigs.map((farm) => farm.farmToken)
+})
+export const getFarmOnlyElevationsIterable = memoize((farmConfigs: FarmConfig[]) => {
     return farmConfigs.map((farm) => {
         return Object.keys(farm.elevations)
             .filter((elevation) => elevation !== Elevation.OASIS)
@@ -66,7 +70,7 @@ export const getFarmOnlyElevationsIterable = (farmConfigs: FarmConfig[]) => {
                 elevation: elevation as Elevation,
             }))
     }).flat()
-}
+})
 
 export const getFarmTotalStakedBalance = (elevations): BigNumber => {
     return elevationUtils.all.reduce((acc, elev) =>

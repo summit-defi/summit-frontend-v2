@@ -6,12 +6,19 @@ import {
   groupByAndMap,
   getSubCartographerAddress,
   getSummitGlacierAddress,
+  getCartographerAddress,
 } from 'utils'
-import { getFarmAllElevationsIterable, getFarmOnlyElevationsIterable } from 'utils/farms'
+import { getFarmAllElevationsIterable, getFarmAllTokensIterable, getFarmOnlyElevationsIterable } from 'utils/farms'
 
 export const fetchFarmUserData = async (account: string, farmConfigs: FarmConfig[]) => {
   const farmElevsIterable = getFarmAllElevationsIterable(farmConfigs)
+  const tokensIterable = getFarmAllTokensIterable(farmConfigs)
 
+  const tokenCalls = tokensIterable.map((farmToken) => ({
+    address: getCartographerAddress(),
+    name: 'bonusBP',
+    params: [account, farmToken]
+  }))
   const calls = farmElevsIterable.map(({ elevation, farmToken }) => [
     {
       address: getSubCartographerAddress(elevation),
@@ -30,7 +37,16 @@ export const fetchFarmUserData = async (account: string, farmConfigs: FarmConfig
     }
   ]).flat()
 
-  const res = await retryableMulticall(abi.SubCartUserDataShared, calls, 'fetchFarmUserData')
+  const [tokensRes, farmsRes] = await Promise.all([
+    retryableMulticall(abi.cartographer, tokenCalls, 'fetchFarmUserData_tokenCalls'),
+    retryableMulticall(abi.SubCartUserDataShared, calls, 'fetchFarmUserData_farmCalls')
+  ])
+
+  const tokenBonuses = groupByAndMap(
+    tokensIterable,
+    (farmToken) => farmToken,
+    (_, tokenIndex) => tokensRes != null ? tokensRes[tokenIndex][0] : 0
+  )
 
   const userDataObject = groupByAndMap(
     farmConfigs,
@@ -43,13 +59,16 @@ export const fetchFarmUserData = async (account: string, farmConfigs: FarmConfig
     })
   )
 
-  if (res == null) return userDataObject
+  if (farmsRes == null) return userDataObject
 
-  farmElevsIterable.forEach(({ elevation, symbol }, index) => {
+  farmElevsIterable.forEach(({ elevation, symbol, farmToken }, index) => {
+    const claimable = new BigNumber(farmsRes[index * 3 + 1][0]._hex)
     userDataObject[symbol][elevation] = {
-      stakedBalance: new BigNumber(res[index * 3 + 0].staked._hex),
-      claimable: new BigNumber(res[index * 3 + 1][0]._hex),
-      yieldContributed: new BigNumber(res[index * 3 + 2][0]._hex),
+      stakedBalance: new BigNumber(farmsRes[index * 3 + 0].staked._hex),
+      claimable,
+      bonusBP: tokenBonuses[farmToken],
+      claimableBonus: claimable.times(tokenBonuses[farmToken]).dividedBy(10000),
+      yieldContributed: new BigNumber(farmsRes[index * 3 + 2][0]._hex),
     }
   })
 

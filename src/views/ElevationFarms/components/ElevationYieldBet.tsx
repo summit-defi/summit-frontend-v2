@@ -1,6 +1,6 @@
 import React from 'react'
 import { getBalanceNumber } from 'utils'
-import { Text, Flex } from 'uikit'
+import { Text, Flex, Skeleton } from 'uikit'
 import { useSelectedElevation } from 'state/hooks'
 import CardValue from 'views/Home/components/CardValue'
 import ContributionBreakdown from './ContributionBreakdown'
@@ -19,25 +19,31 @@ const ElevationYieldBet: React.FC = () => {
       <Flex alignItems='center' mb='12px' justifyContent='space-around' width='100%' maxWidth='400px'>
         <Flex flexDirection='column' justifyContent='center' alignItems='center'>
           <Text bold monospace>YIELD BET:</Text>
-          <CardValue
-            value={rawYieldContributed}
-            decimals={3}
-            summitPalette={elevation}
-            fontSize="18"
-            postfix='SUMMIT'
-            postfixFontSize='14'
-          />
+          { userDataLoaded ?
+            <CardValue
+              value={rawYieldContributed}
+              decimals={3}
+              summitPalette={elevation}
+              fontSize="18"
+              postfix='SUMMIT'
+              postfixFontSize='14'
+            /> :
+            <Skeleton height={24} width={180}/>
+          }
         </Flex>
         <Flex flexDirection='column' justifyContent='center' alignItems='center'>
           <Text bold monospace>POTENTIAL WINNINGS:</Text>
-          <CardValue
-            value={rawPotentialWinnings}
-            decimals={3}
-            summitPalette={elevation}
-            fontSize="18"
-            postfix='SUMMIT'
-            postfixFontSize='14'
-          />
+          { userDataLoaded ?
+            <CardValue
+              value={rawPotentialWinnings}
+              decimals={3}
+              summitPalette={elevation}
+              fontSize="18"
+              postfix='SUMMIT'
+              postfixFontSize='14'
+            /> :
+            <Skeleton height={24} width={180}/>
+          }
         </Flex>
       </Flex>
 

@@ -42,6 +42,8 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
   const elevRounds = []
   
   elevations.forEach((elev, elevIndex) => {
+    if (elev === Elevation.EXPEDITION) return
+
     const maxRoundNumber = Math.max(new BigNumber(res[elevIndex * 4 + 3][0]._hex).toNumber() - 1, 0)
     const minRoundNumber = Math.max(maxRoundNumber - 5, 1)
     const rounds = range(maxRoundNumber, minRoundNumber - 1, -1);
@@ -62,6 +64,8 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
   const elevPrevWinningsMultipliers = []
   let cumRoundsCount = 0
   elevations.forEach((elev, index) => {
+    if (elev === Elevation.EXPEDITION) return
+
     const rounds = elevRounds[index]
     const roundsCount = rounds.length
     if (prevWinningsMultipliersRes == null) {

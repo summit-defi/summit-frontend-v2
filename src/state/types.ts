@@ -13,6 +13,8 @@ export interface FarmElevation extends FarmElevationConfig {
   launched?: boolean
   stakedBalance?: BigNumber
   claimable?: BigNumber
+  bonusBP?: number
+  claimableBonus?: BigNumber
   yieldContributed?: BigNumber
 }
 export interface FarmElevations {
