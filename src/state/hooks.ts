@@ -158,12 +158,15 @@ export const useAllElevationsClaimable = () => {
       const elevationsClaimable = elevationUtils.all
         .map((elevation) => ({
           elevation,
-          claimable: (elevationData[elevationUtils.toInt(elevation)]?.claimable || BN_ZERO) as BigNumber
+          claimable: (elevationData[elevationUtils.toInt(elevation)]?.claimable || BN_ZERO) as BigNumber,
+          claimableBonus: (elevationData[elevationUtils.toInt(elevation)]?.claimableBonus || BN_ZERO) as BigNumber
         }))
         .filter((rawClaimable) => rawClaimable.claimable.isGreaterThan(0))
 
       const totalClaimable = elevationsClaimable
         .reduce((acc, elevClaimable) => acc.plus(elevClaimable.claimable), BN_ZERO)
+      const totalClaimableBonus = elevationsClaimable
+        .reduce((acc, elevClaimable) => acc.plus(elevClaimable.claimableBonus), BN_ZERO)
 
       const claimableBreakdown = elevationsClaimable.map((rawClaimable, index) => ({
         title: rawClaimable.elevation,
@@ -171,11 +174,13 @@ export const useAllElevationsClaimable = () => {
         key: elevationUtils.toInt(rawClaimable.elevation),
         perc: elevationsClaimable[index].claimable.times(100).div(totalClaimable).toNumber(),
         val: `${getFormattedBigNumber(elevationsClaimable[index].claimable)} SUMMIT`,
+        bonusVal: elevationsClaimable[index].claimableBonus.isGreaterThan(0) ? `+${getFormattedBigNumber(elevationsClaimable[index].claimableBonus)} BONUS` : null,
       }))
 
       return {
         elevationsClaimable,
         totalClaimable,
+        totalClaimableBonus,
         claimableBreakdown,
       }
     },

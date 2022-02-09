@@ -48,7 +48,7 @@ export const fetchFarmUserData = async (account: string, farmConfigs: FarmConfig
     (_, tokenIndex) => tokensRes != null ? tokensRes[tokenIndex][0] : 0
   )
 
-  const userDataObject = groupByAndMap(
+  const farmsUserData = groupByAndMap(
     farmConfigs,
     (farm) => farm.symbol,
     () => ({
@@ -59,20 +59,35 @@ export const fetchFarmUserData = async (account: string, farmConfigs: FarmConfig
     })
   )
 
-  if (farmsRes == null) return userDataObject
+  const elevClaimableBonuses = {
+    [Elevation.OASIS]: BN_ZERO,
+    [Elevation.PLAINS]: BN_ZERO,
+    [Elevation.MESA]: BN_ZERO,
+    [Elevation.SUMMIT]: BN_ZERO,
+  } 
+
+  if (farmsRes == null) return {
+    farmsUserData,
+    elevClaimableBonuses,
+  }
 
   farmElevsIterable.forEach(({ elevation, symbol, farmToken }, index) => {
     const claimable = new BigNumber(farmsRes[index * 3 + 1][0]._hex)
-    userDataObject[symbol][elevation] = {
+    const claimableBonus = claimable.times(tokenBonuses[farmToken]).dividedBy(10000)
+    elevClaimableBonuses[elevation] = elevClaimableBonuses[elevation].plus(claimableBonus)
+    farmsUserData[symbol][elevation] = {
       stakedBalance: new BigNumber(farmsRes[index * 3 + 0].staked._hex),
       claimable,
       bonusBP: tokenBonuses[farmToken],
-      claimableBonus: claimable.times(tokenBonuses[farmToken]).dividedBy(10000),
+      claimableBonus,
       yieldContributed: new BigNumber(farmsRes[index * 3 + 2][0]._hex),
     }
   })
 
-  return userDataObject
+  return {
+    farmsUserData,
+    elevClaimableBonuses,
+  }
 }
 
 export const fetchElevClaimableRewards = async (account: string) => {

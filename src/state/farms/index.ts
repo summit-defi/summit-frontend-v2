@@ -16,6 +16,7 @@ import { merge } from 'lodash'
 
 const EMPTY_ELEVATION_FARMS_DATA = {
   claimable: BN_ZERO,
+  claimableBonus: BN_ZERO,
   yieldContributed: BN_ZERO,
   potentialWinnings: BN_ZERO,
   roundRewards: BN_ZERO,
@@ -56,9 +57,10 @@ export const farmsSlice = createSlice({
       state.userDataLoaded = true
     },
     setElevationFarmsData: (state, action) => {
-      const { elevClaimableRewards, elevPotentialWinnings, elevRoundRewards, lifetimeWinningsAndBonuses } = action.payload
+      const { elevClaimableBonuses, elevClaimableRewards, elevPotentialWinnings, elevRoundRewards, lifetimeWinningsAndBonuses } = action.payload
       state.elevationData = elevationUtils.all.map((elevation) => ({
         claimable: elevClaimableRewards[elevation] as BigNumber,
+        claimableBonus: elevClaimableBonuses[elevation] as BigNumber,
         yieldContributed: elevPotentialWinnings[elevation].yieldContributed as BigNumber,
         potentialWinnings: elevPotentialWinnings[elevation].potentialWinnings as BigNumber,
         roundRewards: elevRoundRewards[elevation].roundRewards as BigNumber,
@@ -84,7 +86,10 @@ export const fetchFarmUserDataAsync = (account) => async (dispatch) => {
   const farmConfigs = getFarmConfigs()
 
   const [
-    farmsUserData,
+    {
+      farmsUserData,
+      elevClaimableBonuses,
+    },
     elevClaimableRewards,
     elevPotentialWinnings,
     elevRoundRewards,
@@ -98,7 +103,7 @@ export const fetchFarmUserDataAsync = (account) => async (dispatch) => {
   ])
 
   dispatch(setFarmUserData({ farmsUserData }))
-  dispatch(setElevationFarmsData({ elevClaimableRewards, elevPotentialWinnings, elevRoundRewards, lifetimeWinningsAndBonuses }))
+  dispatch(setElevationFarmsData({ elevClaimableBonuses, elevClaimableRewards, elevPotentialWinnings, elevRoundRewards, lifetimeWinningsAndBonuses }))
 }
 
 export default farmsSlice.reducer

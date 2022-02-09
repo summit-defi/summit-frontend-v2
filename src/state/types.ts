@@ -74,6 +74,7 @@ export interface ExpeditionInfo {
 // Slices states
 export interface ElevationFarmsData {
   claimable: BigNumber
+  claimableBonus: BigNumber
   yieldContributed: BigNumber
   potentialWinnings: BigNumber
   roundRewards: BigNumber

@@ -60,15 +60,14 @@ const ElevationWinnings: React.FC = () => {
               />
               { elevClaimableBonus.isGreaterThan(0) &&
                 <NoTextShadowFlex>
-                  <HighlightedText bold monospace gold summitPalette={elevation} fontSize='14px'>+</HighlightedText>
+                  <HighlightedText bold monospace gold fontSize='14px'>+</HighlightedText>
                   <CardValue
                     value={rawElevClaimableBonus}
                     decimals={3}
-                    summitPalette={elevation}
                     fontSize="14"
                     gold
                   />
-                  <HighlightedText bold monospace gold summitPalette={elevation} fontSize='14px' ml='8px'>BONUS</HighlightedText>
+                  <HighlightedText bold monospace gold fontSize='14px' ml='8px'>BONUS</HighlightedText>
                 </NoTextShadowFlex>
               }
             </> :
