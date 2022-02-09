@@ -1,8 +1,10 @@
-import { Elevation } from 'config/constants'
+import { Elevation, elevationToUrl } from 'config/constants'
 import React from 'react'
 import styled, { DefaultTheme } from 'styled-components'
 import { transparentize } from 'polished'
 import { Flex, Skeleton, Text } from 'uikit'
+import { NavLink } from 'react-router-dom'
+import { pressableMixin } from 'uikit/util/styledMixins'
 
 const BarHeight = 24
 
@@ -20,7 +22,21 @@ const elevationBarBorder = ({ theme, elevation, focused }: { theme: DefaultTheme
     `
 }
 
-const ElevationBar = styled.div<{ elevation?: Elevation, perc: number, focused?: Elevation }>`
+const EmptyElevationBar = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% - 2px);
+    height: ${BarHeight}px;
+    margin-left: 1px;
+    margin-right: 1px;
+    border: 1px dashed ${({ theme }) => theme.colors.text};
+    background-color: transparent;
+`
+
+const ElevationBar = styled(NavLink)<{ elevation?: Elevation, perc: number, focused?: Elevation }>`
     position: relative;
     display: flex;
     flex-direction: row;
@@ -31,6 +47,15 @@ const ElevationBar = styled.div<{ elevation?: Elevation, perc: number, focused?:
     margin-left: 1px;
     margin-right: 1px;
     ${elevationBarBorder}
+    transition: transform 200ms, box-shadow 200ms;
+    ${pressableMixin}
+
+    :hover {
+        box-shadow: ${({ theme }) => `2px 2px 4px ${theme.colors.textShadow}`};
+    }
+    :active {
+        box-shadow: none;
+    }
 `
 
 const ElevationBarSkeleton = styled(Skeleton)`
@@ -94,12 +119,20 @@ interface Contribution {
     key: number
     perc: number
 }
-interface ContFocused {
+interface ContProps {
+    symbol: string
     focused?: Elevation
 }
 
-const ContributionComponent: React.FC<Contribution & ContFocused> = ({elevation, val, perc, focused}) => {
-    return <ElevationBar perc={perc} elevation={elevation} focused={focused}>
+const ContributionComponent: React.FC<Contribution & ContProps> = ({symbol, elevation, val, perc, focused}) => {
+
+    const tabTarget = `/${elevationToUrl[elevation]}/${symbol.toLowerCase()}`
+
+    const handleClick = (event) => {
+        event.stopPropagation()
+    }
+
+    return <ElevationBar perc={perc} elevation={elevation} focused={focused} to={tabTarget} onClick={handleClick}>
         <ElevationText monospace small elevation={elevation} focused={focused}>{elevation}</ElevationText>
         { (focused == null || focused === elevation) &&
             <ValueText monospace bold>{val != null ? val : `${perc.toFixed(1)}%`}</ValueText>
@@ -108,6 +141,7 @@ const ContributionComponent: React.FC<Contribution & ContFocused> = ({elevation,
 }
 
 interface Props {
+    symbol: string
     loaded: boolean
     title?: string
     focused?: Elevation
@@ -115,7 +149,7 @@ interface Props {
     center?: boolean
 }
 
-const ElevationContributionBreakdown: React.FC<Props> = ({ loaded, title, contributions, focused, center = false}) => {
+const ElevationContributionBreakdown: React.FC<Props> = ({ symbol, loaded, title, contributions, focused, center = false}) => {
     return (
         <Wrapper>
             { title != null && <Text bold monospace>{title}</Text> }
@@ -123,9 +157,9 @@ const ElevationContributionBreakdown: React.FC<Props> = ({ loaded, title, contri
                 { !loaded ?
                     <ElevationBarSkeleton/> :
                     contributions.length === 0 ?
-                        <ElevationBar perc={100}/> :
+                        <EmptyElevationBar/> :
                         contributions.map((contribution) => 
-                            <ContributionComponent key={contribution.key} {...contribution} focused={focused} />
+                            <ContributionComponent key={contribution.key} {...contribution} focused={focused} symbol={symbol} />
                         )
                 }
             </BarWrapper>

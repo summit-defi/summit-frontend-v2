@@ -36,13 +36,14 @@ export interface ElevationsStaked {
 }
 
 interface Props {
+    symbol: string
     userDataLoaded: boolean
     elevationsStaked: ElevationsStaked
     pricePerToken: BigNumber
     decimals: number
 }
 
-const FarmStakingContribution: React.FC<Props> = ({ userDataLoaded, elevationsStaked, pricePerToken, decimals }) => {
+const FarmStakingContribution: React.FC<Props> = ({ symbol, userDataLoaded, elevationsStaked, pricePerToken, decimals }) => {
     const elevation = useSelectedElevation()
     const { account } = useWallet()
 
@@ -84,6 +85,7 @@ const FarmStakingContribution: React.FC<Props> = ({ userDataLoaded, elevationsSt
             </Flex>
             <InfoItemValue width='100%'>
                 <ElevationContributionBreakdown
+                    symbol={symbol}
                     loaded={account == null || userDataLoaded}
                     contributions={stakingContributions}
                     focused={elevation}

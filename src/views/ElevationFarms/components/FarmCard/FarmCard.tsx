@@ -156,7 +156,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }
         <FarmNumericalInfoFlex>
           <FarmIconAndAllocation symbol={symbol} allocation={allocation} live={live}/>
-          <FarmStakingContribution userDataLoaded={userDataLoaded} elevationsStaked={farmElevationsStaked} pricePerToken={pricePerToken} decimals={decimals}/>
+          <FarmStakingContribution symbol={symbol} userDataLoaded={userDataLoaded} elevationsStaked={farmElevationsStaked} pricePerToken={pricePerToken} decimals={decimals}/>
           <FarmAPYBreakdown summitPerYear={summitPerYear} totalValue={totalValue}/>
           <FarmTotalValue totalValue={totalValue}/>
         </FarmNumericalInfoFlex>
