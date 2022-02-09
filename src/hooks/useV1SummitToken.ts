@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { provider } from 'web3-core'
-import { getSummitTokenAddress, getTokenApproved, getTokenBalance, getV1SummitTokenAddress } from 'utils'
+import { getSummitTokenAddress, getSummitTokenContract, getTokenApproved, getTokenBalance, getV1SummitTokenAddress } from 'utils'
 import useRefresh from './useRefresh'
 
 export const useV1SummitTokenBalance = () => {
@@ -44,4 +44,38 @@ export const useV1SummitTokenApproved = () => {
   }, [account, ethereum, v1SummitAddress, summitAddress, fastRefresh])
 
   return approved
+}
+
+const getSummitSwapUnlocked = async (
+  ethereum: provider,
+  tokenAddress: string,
+): Promise<boolean> => {
+  const contract = getSummitTokenContract(ethereum, tokenAddress)
+  try {
+    const paused: boolean = await contract.methods.paused().call()
+    localStorage.setItem('SummitSwapEnabled', JSON.stringify(!paused, null, 2))
+    return !paused
+  } catch (e) {
+    return null
+  }
+}
+
+export const useSummitTokenSwapUnlocked = () => {
+  const [swapUnlocked, setSwapUnlocked] = useState(JSON.parse(localStorage.getItem('SummitSwapEnabled') || 'false'))
+  const summitAddress = getSummitTokenAddress()
+  const { fastRefresh } = useRefresh()
+  const { ethereum }: { ethereum: provider } = useWallet()
+
+  useEffect(() => {
+    const fetchSwapUnlocked = async () => {
+      const unlocked = await getSummitSwapUnlocked(ethereum, summitAddress)
+      if (unlocked != null) {
+        setSwapUnlocked(unlocked)
+      }
+    }
+
+    fetchSwapUnlocked()
+  }, [fastRefresh, setSwapUnlocked, ethereum, summitAddress])
+
+  return swapUnlocked
 }

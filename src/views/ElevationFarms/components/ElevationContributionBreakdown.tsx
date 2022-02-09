@@ -128,11 +128,7 @@ const ContributionComponent: React.FC<Contribution & ContProps> = ({symbol, elev
 
     const tabTarget = `/${elevationToUrl[elevation]}/${symbol.toLowerCase()}`
 
-    const handleClick = (event) => {
-        event.stopPropagation()
-    }
-
-    return <ElevationBar perc={perc} elevation={elevation} focused={focused} to={tabTarget} onClick={handleClick}>
+    return <ElevationBar perc={perc} elevation={elevation} focused={focused} to={tabTarget} onClick={null}>
         <ElevationText monospace small elevation={elevation} focused={focused}>{elevation}</ElevationText>
         { (focused == null || focused === elevation) &&
             <ValueText monospace bold>{val != null ? val : `${perc.toFixed(1)}%`}</ValueText>

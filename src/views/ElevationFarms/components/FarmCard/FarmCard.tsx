@@ -43,13 +43,13 @@ const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
   }
 `
 
-const PressableFlex = styled(NavLink)<{ $expanded: boolean }>`
+const PressableFlex = styled.div<{ $expanded: boolean }>`
+  display: relative;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   flex-direction: column;
   padding: 16px 20px 16px 20px;
-  cursor: pointer;
   transition: all 300ms;
   flex-wrap: wrap;
   ${({ $expanded }) =>
@@ -64,6 +64,15 @@ const PressableFlex = styled(NavLink)<{ $expanded: boolean }>`
         }
       }
     `}
+`
+
+const PressableBackground = styled(NavLink)`
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  cursor: pointer;
 `
 
 const FarmNumericalInfoFlex = styled(Flex)`
@@ -151,7 +160,8 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
 
   return (
     <FCard $locked={false} $expanded={expanded}>
-      <PressableFlex to={targetUrl} $expanded={expanded}>
+      <PressableFlex $expanded={expanded}>
+        <PressableBackground to={targetUrl}/>
         { farmComment != null && <Text monospace bold italic fontSize='13px' mb='14px' textAlign='center'>* {farmComment}</Text> }
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }
         <FarmNumericalInfoFlex>

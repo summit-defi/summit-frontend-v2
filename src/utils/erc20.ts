@@ -9,6 +9,12 @@ export const getContract = (provider: ProviderType, address: string) => {
   return contract
 }
 
+export const getSummitTokenContract = (provider: ProviderType, address: string) => {
+  const web3 = new Web3(provider)
+  const contract = new web3.eth.Contract(abiItem.summitToken, address)
+  return contract
+}
+
 export const getDummyTokenContract = (provider: ProviderType, address: string) => {
   const web3 = new Web3(provider)
   const contract = new web3.eth.Contract(abiItem.DummyERC20, address)

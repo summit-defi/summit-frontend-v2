@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Card, CardBody, HighlightedText, Token3DFloating, ChevronRightIcon } from 'uikit'
+import { Flex, Text, Card, CardBody, HighlightedText, Token3DFloating, ChevronRightIcon, Lock } from 'uikit'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import UnlockButton from 'components/UnlockButton'
 import SummitButton from 'uikit/components/Button/SummitButton'
@@ -12,6 +12,7 @@ import TokenInput from 'components/TokenInput'
 import BigNumber from 'bignumber.js'
 import { updateSummitSwapMinimized } from 'state/summitEcosystem'
 import { useDispatch } from 'react-redux'
+import { useSummitTokenSwapUnlocked } from 'hooks/useV1SummitToken'
 
 const StyledFarmStakingCard = styled(Card)`
   min-height: 376px;
@@ -23,6 +24,11 @@ const Actions = styled(Flex)`
   display: flex;
   flex: 1;
   align-items: flex-end;
+`
+
+const StyledLock = styled(Lock)`
+  transform: rotate(20deg);
+  fill: red;
 `
 
 const StyledHighlightedText = styled(HighlightedText)<{ fontSize: string; letterSpacing: string }>`
@@ -88,6 +94,7 @@ const SummitTokenSwapCard = () => {
     v2SummitAddress,
     v1SummitAddress,
   } = useTokenSwapV1Summit()
+  const swapUnlocked = useSummitTokenSwapUnlocked()
 
   const rawV1SummitBalance = getBalanceNumber(v1SummitBalance)
 
@@ -96,7 +103,7 @@ const SummitTokenSwapCard = () => {
     onApprove()
   }
   const handleSwapButtonPressed = () => {
-    if (swapPending || invalidSwap || !v1SummitApproved) return
+    if (swapPending || invalidSwap || !swapUnlocked || !v1SummitApproved) return
     onTokenSwap(swapVal)
   }
 
@@ -225,11 +232,22 @@ const SummitTokenSwapCard = () => {
             </StyledHighlightedText>
             <Token3DFloating width="96px" />
           </Flex>
+          
+          <StyledHighlightedText fontSize="16px" letterSpacing="2px" mt='-32px'>
+            TOKEN SWAP
+          </StyledHighlightedText>
         </Flex>
+        
 
-        <StyledHighlightedText fontSize="16px" letterSpacing="2px" mt='-32px'>
-          SUMMIT TOKEN SWAP:
-        </StyledHighlightedText>
+        { !swapUnlocked && 
+          <Flex alignItems='center' justifyContent='center' gap='8px' mt='-24px'>
+            <StyledLock width='18px'/>
+            <Text bold italic color='red' textAlign='center' small monospace>
+              SUMMIT V1--V2 TOKEN SWAP IS CURRENTLY LOCKED
+            </Text>
+          </Flex>
+        }
+
 
         <Flex gap='8px' flexDirection='column' justifyContent='center' alignItems='center' width='100%'>
           <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
@@ -277,7 +295,7 @@ const SummitTokenSwapCard = () => {
               value={swapVal}
               disabled={v1SummitBalance.isEqualTo(0)}
               balanceText="Wallet"
-              isLocked={!v1SummitApproved}
+              isLocked={!v1SummitApproved || !swapUnlocked}
               onSelectMax={handleSelectMaxSwap}
               onChange={handleChangeSwap}
               max={fullSwapBalance}
@@ -292,7 +310,7 @@ const SummitTokenSwapCard = () => {
             <SummitButton
                 isLoading={swapPending}
                 disabled={invalidSwap || v1SummitBalance.isEqualTo(0)}
-                isLocked={!v1SummitApproved}
+                isLocked={!v1SummitApproved || !swapUnlocked}
                 onClick={handleSwapButtonPressed}
               >
                 SWAP V1 FOR V2 SUMMIT
