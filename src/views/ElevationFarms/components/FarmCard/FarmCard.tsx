@@ -8,8 +8,11 @@ import { NavLink } from 'react-router-dom'
 import FarmCardUserSectionExpander from './FarmCardUserSectionExpander'
 import FarmIconAndAllocation from './FarmIconAndAllocation'
 import FarmStakingContribution, { ElevationsStaked } from './FarmStakingContribution'
-import { makeSelectFarmBySymbol, useSelector, useFarmsUserDataLoaded } from 'state/hooksNew'
+import { makeSelectFarmBySymbol, useSelector, useFarmsUserDataLoaded, useFarmFilters } from 'state/hooksNew'
 import { FarmAPYBreakdown, FarmTotalValue } from './FarmCardInfoItems'
+import { FarmRetiredSash } from './FarmRetiredSash'
+import { getFarmInteracting, getFarmType } from 'utils'
+import { FarmType } from 'state/types'
 
 const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
   align-self: baseline;
@@ -79,6 +82,7 @@ interface FarmCardProps {
 }
 
 const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
+  const { farmType, liveFarms } = useFarmFilters()
   const farmBySymbolSelector = useMemo(makeSelectFarmBySymbol, [])
   const farm = useSelector((state) => farmBySymbolSelector(state, symbol))
   const pricePerToken = useSelector((state) => state.prices.pricesPerToken[symbol] || new BigNumber(1))
@@ -98,8 +102,13 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     comment: farmComment,
     warning: farmWarning,
     supply: lpSupply,
+    live
   } = farm.elevations[elevationTab] || {}
 
+  const isInteracting = useMemo(
+    () => getFarmInteracting(farm),
+    [farm],
+  )
 
   const farmElevationsStaked = useMemo(
     (): ElevationsStaked => elevationUtils.all.reduce((acc, elev) => ({
@@ -132,6 +141,12 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
 
   const targetUrl = `/${(elevationFarmTabToUrl[elevationTab] || 'elevations').toLowerCase()}${expanded ? '' : `/${symbol.toLowerCase()}`}`
 
+  const liveFilterShow = (isInteracting && liveFarms) || (liveFarms !== (!live || allocation === 0))
+  if (!liveFilterShow) return null
+
+  const farmTypeShow = farmType === FarmType.All || getFarmType(farm) === farmType
+  if (!farmTypeShow) return null
+
 
   return (
     <FCard $locked={false} $expanded={expanded}>
@@ -139,12 +154,14 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
         { farmComment != null && <Text monospace bold italic fontSize='13px' mb='14px' textAlign='center'>* {farmComment}</Text> }
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }
         <FarmNumericalInfoFlex>
-          <FarmIconAndAllocation symbol={symbol} allocation={allocation}/>
+          <FarmIconAndAllocation symbol={symbol} allocation={allocation} live={live}/>
           <FarmStakingContribution userDataLoaded={userDataLoaded} elevationsStaked={farmElevationsStaked} pricePerToken={pricePerToken} decimals={decimals}/>
           <FarmAPYBreakdown summitPerYear={summitPerYear} totalValue={totalValue}/>
           <FarmTotalValue totalValue={totalValue}/>
         </FarmNumericalInfoFlex>
       </PressableFlex>
+
+      { !live && <FarmRetiredSash/> }
 
       <FarmCardUserSectionExpander
         isExpanded={expanded}

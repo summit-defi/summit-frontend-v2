@@ -9,21 +9,24 @@ import { orderBy } from "lodash";
 
 
 
-const selectFilteredPartitionedFarmSymbols = createSelector(
-    stateToFarms,
+const selectFarmFilters = createSelector(
     stateToFarmTypeFilter,
     stateToFarmLiveFilter,
-    (_, account) => account,
-    (farms, farmType, liveFarms, account) => {
+    (farmType, liveFarms) => ({
+        farmType,
+        liveFarms,
+    })
+)
+export const useFarmFilters = () => useSelector(selectFarmFilters)
+
+
+const selectStakedUnstakedFarmSymbols = createSelector(
+    stateToFarms,
+    (farms) => {
         const staked: string[] = []
         const unstaked: string[] = []
 
         farms.forEach((farm) => {
-            const visible = liveFarms === ((farm.allocation || 0) > 0) &&
-                (farmType === FarmType.All || getFarmType(farm) === farmType)
-
-            if (!visible || account == null) return
-
             if (getFarmInteracting(farm)) {
                 staked.push(farm.symbol)
             } else {
@@ -34,8 +37,7 @@ const selectFilteredPartitionedFarmSymbols = createSelector(
         return [staked, unstaked]
     }
 )
-
-export const useFilteredPartitionedFarmSymbols = (account: string | null) => useSelector((state) => selectFilteredPartitionedFarmSymbols(state, account))
+export const useStakedUnstakedFarmSymbols = () => useSelector(selectStakedUnstakedFarmSymbols)
 
 export const makeSelectFarmBySymbol = () => createSelector(
     stateToFarms,

@@ -5,9 +5,9 @@ import styled from "styled-components";
 import { Flex, Tag, Text, TokenSymbolImage } from "uikit";
 
 const MultiplierTagItem = styled(Tag)<{ elevationTab: ElevationFarmTab }>`
-  font-family: 'Courier Prime', monospace;
-  background-color: ${({ theme, elevationTab }) => theme.colors[elevationTab]};
-  border-color: ${({ theme, elevationTab }) => theme.colors[elevationTab]};
+    font-family: 'Courier Prime', monospace;
+    background-color: ${({ theme, elevationTab }) => theme.colors[elevationTab]};
+    border-color: ${({ theme, elevationTab }) => theme.colors[elevationTab]};
 `
 
 const MultiplierTag: React.FC<{ allocation: number }> = memo(({ allocation }) => {
@@ -22,9 +22,10 @@ const MultiplierTag: React.FC<{ allocation: number }> = memo(({ allocation }) =>
 interface Props {
     symbol: string
     allocation: number
+    live: boolean
 }
 
-const FarmIconAndAllocation: React.FC<Props> = ({ symbol, allocation }) => {
+const FarmIconAndAllocation: React.FC<Props> = ({ symbol, allocation, live }) => {
     return (
         <Flex gap='8px' width='180px' justifyContent="flex-start" alignItems="center">
             <TokenSymbolImage symbol={symbol} width={52} height={52} />
@@ -32,7 +33,7 @@ const FarmIconAndAllocation: React.FC<Props> = ({ symbol, allocation }) => {
                 <Text italic monospace bold fontSize="14px" lineHeight="14px" mb="4px" textAlign="left">
                     {symbol}
                 </Text>
-                <MultiplierTag allocation={allocation}/>
+                <MultiplierTag allocation={live ? allocation : 0}/>
             </Flex>
         </Flex>
     )

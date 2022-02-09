@@ -14,7 +14,7 @@ import TotemHeader from './components/TotemHeader'
 import PageLoader from 'components/PageLoader'
 import { fetchTokensUserDataAsync } from 'state/tokens'
 import FarmFilterRow from './components/FarmFilterRow'
-import { useFilteredPartitionedFarmSymbols } from 'state/hooksNew'
+import { useStakedUnstakedFarmSymbols } from 'state/hooksNew'
 
 const NoFarmsFlex = styled(Flex)`
   padding: 12px;
@@ -31,7 +31,7 @@ const ElevationFarms: React.FC = () => {
   const farmsLoaded = useFarmsLoaded()
 
   const { account }: { account: string | null } = useWallet()
-  const [stakedFarms, unstakedFarms] = useFilteredPartitionedFarmSymbols(account)
+  const [stakedFarms, unstakedFarms] = useStakedUnstakedFarmSymbols()
 
   const dispatch = useDispatch()
   const { fastRefresh } = useRefresh()

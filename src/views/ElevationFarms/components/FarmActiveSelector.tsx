@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { useSelectedElevation } from 'state/hooks'
 import { useFarmType } from 'hooks/useFarmType'
 import { Flex } from 'uikit'
 import SummitButton from 'uikit/components/Button/SummitButton'
@@ -56,13 +55,11 @@ const TextButton = styled.div`
 `
 
 const FarmActiveSelector: React.FC = () => {
-  const elevation = useSelectedElevation()
   const { liveFarms, onSetLive } = useFarmType()
   return (
     <SelectorFlex>
       <SelectorWrapper>
         <SelectedSummitButton
-          summitPalette={elevation}
           selectedIndex={liveFarms ? 0 : 1}
           padding="0px"
         >
