@@ -102,7 +102,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     comment: farmComment,
     warning: farmWarning,
     supply: lpSupply,
-    live
+    live = true,
   } = farm.elevations[elevationTab] || {}
 
   const isInteracting = useMemo(
@@ -141,7 +141,8 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
 
   const targetUrl = `/${(elevationFarmTabToUrl[elevationTab] || 'elevations').toLowerCase()}${expanded ? '' : `/${symbol.toLowerCase()}`}`
 
-  const liveFilterShow = (isInteracting && liveFarms) || (liveFarms !== (!live || allocation === 0))
+  const retired = (!live || allocation === 0)
+  const liveFilterShow = (isInteracting && liveFarms) || (liveFarms !== retired)
   if (!liveFilterShow) return null
 
   const farmTypeShow = farmType === FarmType.All || getFarmType(farm) === farmType
@@ -161,7 +162,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
         </FarmNumericalInfoFlex>
       </PressableFlex>
 
-      { !live && <FarmRetiredSash/> }
+      { retired && <FarmRetiredSash/> }
 
       <FarmCardUserSectionExpander
         isExpanded={expanded}

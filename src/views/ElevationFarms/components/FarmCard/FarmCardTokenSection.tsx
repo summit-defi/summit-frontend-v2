@@ -22,10 +22,10 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
     maxTaxBP,
     minTaxBP,
     currentTaxBP,
-    taxResetTimestamp,
+    taxResetTimestamp = 0,
 
     currentBonusBP,
-    bonusResetTimestamp,
+    bonusResetTimestamp = 0,
   } = useFarmUserTokenSectionInfo(symbol)
   const currentTimestamp = useCurrentTimestampOnce()
 
@@ -95,7 +95,7 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
             positionPerc: 100
           }
         ]}
-        currDisplayPerc={currentBonusBP / 100}
+        currDisplayPerc={(bonusResetTimestamp === 0 ? 0 : currentBonusBP) / 100}
         currPositionPerc={bonusPositionPerc}
       />
     </Flex>

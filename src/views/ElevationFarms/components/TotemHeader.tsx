@@ -42,6 +42,11 @@ const HeaderWrapper = styled(Flex)`
   gap: 24px;
 `
 
+
+const StyledUnlockButton = styled(UnlockButton)`
+  margin: 32px auto 0px auto;
+`
+
 const ElevSpecificSection = memo(() => {
   const elevationTab = useElevationFarmsTab()
   return (
@@ -84,7 +89,7 @@ const TotemHeader: React.FC = () => {
         <LifetimeSummitWinnings/>
         <ElevationIntroduction/>
         { account == null ?
-          <UnlockButton summitPalette={elevationTab} /> :
+          <StyledUnlockButton summitPalette={elevationTab} /> :
           <TotemHeaderAccountSection/>
         }
       </HeaderWrapper>

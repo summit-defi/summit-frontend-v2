@@ -35,8 +35,13 @@ const HeaderHighlightedText = styled(HighlightedText)`
 
 export const UserEverestCard: React.FC = memo(() => {
     const userEverestInfo = useEverestUserInfo()
-    const userHasLockedSummit = (userEverestInfo?.summitLocked || BN_ZERO).isGreaterThan(0)
-    const summitApproved = (userEverestInfo?.summitAllowance || BN_ZERO).isGreaterThan(0)
+    const {
+        summitLocked = BN_ZERO,
+        summitAllowance = BN_ZERO,
+        summitBalance = BN_ZERO,
+    } = userEverestInfo || {}
+    const userHasLockedSummit = summitLocked.isGreaterThan(0)
+    const summitApproved = summitAllowance.isGreaterThan(0)
 
     return (
         <EverestCard gap='32px' alignItems='center' justifyContent='center'>
@@ -49,7 +54,7 @@ export const UserEverestCard: React.FC = memo(() => {
                     <IncreaseLockDurationSection userEverestInfo={userEverestInfo}/>
                 </> :
                 <InitialSummitLockSection
-                    summitBalance={userEverestInfo.summitBalance}
+                    summitBalance={summitBalance}
                     summitApproved={summitApproved}
                 />
             }

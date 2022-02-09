@@ -28,9 +28,7 @@ const Everest: React.FC = () => {
   const { account } = useWallet()
   const { fastRefresh } = useRefresh()
   useEffect(() => {
-    if (account) {
-      dispatch(fetchEverestDataAsync(account))
-    }
+    dispatch(fetchEverestDataAsync(account))
   }, [account, dispatch, fastRefresh, web3])
 
   const everestDataLoaded = useEverestDataLoaded()
@@ -43,7 +41,7 @@ const Everest: React.FC = () => {
         <ElevationPuck elevation='EVEREST'/>
       </HeaderCardsWrapper>
       <FlexLayout>
-        { everestDataLoaded ?
+        { (everestDataLoaded || account == null) ?
           <Flex gap='24px' width='100%' flexWrap='wrap' alignItems='flex-start' justifyContent='center'>
             <UserEverestCard/>
             <EverestStatsCard/>

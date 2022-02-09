@@ -35,13 +35,18 @@ export const fetchFarms = async () => {
     */
 
     const [
-      [allocEmissionMultiplier, elevEmissionMultiplier, tokenDepositFee, tokenWithdrawalTax, summitPerSecond],
+      [alloc, allocEmissionMultiplier, elevEmissionMultiplier, tokenDepositFee, tokenWithdrawalTax, summitPerSecond],
       [oasisPoolInfo],
       [plainsPoolInfo],
       [mesaPoolInfo],
       [summitPoolInfo],
     ] = await Promise.all([
       await multicall(abi.cartographer, [
+        {
+          address: cartographerAddress,
+          name: 'tokenAlloc',
+          params: [farmToken],
+        },
         {
           address: cartographerAddress,
           name: 'tokenAllocEmissionMultiplier',
@@ -81,11 +86,10 @@ export const fetchFarms = async () => {
       .times(new BigNumber(allocEmissionMultiplier))
       .div(new BigNumber(10).pow(24))
 
-    
-
     const elevationsInfo = {
       [Elevation.OASIS]: {
         live: oasisPoolInfo.live,
+        launched: true,
         supply: new BigNumber(oasisPoolInfo.supply._hex),
       },
       [Elevation.PLAINS]: {
@@ -107,6 +111,7 @@ export const fetchFarms = async () => {
 
     return {
       ...farmConfig,
+      allocation: new BigNumber(alloc[0]._hex).toNumber(),
       elevations: merge({}, farmConfig.elevations, elevationsInfo),
       depositFeeBP: new BigNumber(tokenDepositFee),
       taxBP: new BigNumber(tokenWithdrawalTax),

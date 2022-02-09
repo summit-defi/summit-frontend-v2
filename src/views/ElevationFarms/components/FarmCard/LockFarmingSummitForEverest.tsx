@@ -1,3 +1,4 @@
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { SummitPalette } from 'config/constants'
 import useLockFarmSummitForEverest from 'hooks/useLockFarmSummitForEverest'
 import React, { memo } from 'react'
@@ -9,6 +10,7 @@ import LockFarmSummitForEverestModal from './LockFarmSummitForEverestModal'
 export const LockFarmingSummitForEverest: React.FC = memo(() => {
     const elevation = useSelectedElevation()
     const { pending, onLockFarmSummitForEverest } = useLockFarmSummitForEverest()
+    const { account } = useWallet()
 
     const [onPresentLockFarmSummit] = useModal(
         <LockFarmSummitForEverestModal
@@ -28,6 +30,7 @@ export const LockFarmingSummitForEverest: React.FC = memo(() => {
             <SummitButton
                 summitPalette={SummitPalette.EVEREST}
                 isLoading={pending}
+                disabled={account == null}
                 padding='18px'
                 onClick={handleLockSummit}
             >

@@ -1,7 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { FarmType } from "state/types";
 import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToTokenInfos, stateToFarmsElevationData, stateToLifetimeSummitBonuses, stateToLifetimeSummitWinnings, stateToFarmsUserDataLoaded } from "./base";
-import { getBalanceNumber, getFarmInteracting, getFarmType, getFormattedBigNumber } from "utils"
+import { getFarmInteracting, getFormattedBigNumber } from "utils"
 import { BN_ZERO, Elevation, elevationUtils } from "config/constants";
 import { useSelector } from "./utils";
 import BigNumber from "bignumber.js";

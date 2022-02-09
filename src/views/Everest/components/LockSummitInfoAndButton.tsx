@@ -1,5 +1,6 @@
 import React from 'react'
 import BigNumber from 'bignumber.js'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { SummitPalette } from 'config/constants'
 import { useApproveAddress } from 'hooks/useApprove'
 import { useSummitToken } from 'hooks/useContract'
@@ -9,6 +10,7 @@ import { Flex, Text, useModal } from 'uikit'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { getEverestTokenAddress, getFormattedBigNumber, timestampToDateWithYear } from 'utils'
 import LockSummitConfirmModal from './LockSummitConfirmModal'
+import UnlockButton from 'components/UnlockButton'
 
 
 interface LockSummitButtonProps {
@@ -32,6 +34,7 @@ const lockSummitButtonText = (approved: boolean, type: LockSummitButtonType) => 
 }
 
 export const LockSummitInfoAndButton: React.FC<LockSummitButtonProps> = ({ approved, disabled, type, amount, duration, everestAward, lockRelease }) => {
+    const { account } = useWallet()
 
     // APPROVAL
     const everestAddress = getEverestTokenAddress()
@@ -76,16 +79,19 @@ export const LockSummitInfoAndButton: React.FC<LockSummitButtonProps> = ({ appro
                 <Text monospace small>EVEREST Award:</Text>
                 <Text bold monospace>{rawEverestAward}</Text>
             </Flex>
-            <SummitButton
-                disabled={disabled && approved}
-                onClick={handleButtonPress}
-                summitPalette={SummitPalette.EVEREST}
-                isLoading={lockSummitPending || approvalPending}
-                mt='4px'
-                mb='4px'
-            >
-                {buttonText}
-            </SummitButton>
+            { account == null ?
+                <UnlockButton/> :
+                <SummitButton
+                    disabled={disabled && approved}
+                    onClick={handleButtonPress}
+                    summitPalette={SummitPalette.EVEREST}
+                    isLoading={lockSummitPending || approvalPending}
+                    mt='4px'
+                    mb='4px'
+                >
+                    {buttonText}
+                </SummitButton>
+            }
         </Flex>
     )
 }

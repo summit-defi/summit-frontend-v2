@@ -1,3 +1,4 @@
+import { useWallet } from '@binance-chain/bsc-use-wallet'
 import BigNumber from 'bignumber.js'
 import TokenInput from 'components/TokenInput'
 import { SummitPalette } from 'config/constants'
@@ -18,6 +19,7 @@ interface Props {
 
 
 export const InitialSummitLockSection: React.FC<Props> = ({ summitBalance, summitApproved }) => {
+    const { account } = useWallet()
     const currentTimestamp = useCurrentTimestampOnce()
 
     const [lockAmount, setLockAmount] = useState<BigNumber | null>(null)
@@ -67,7 +69,6 @@ export const InitialSummitLockSection: React.FC<Props> = ({ summitBalance, summi
                 <br/>
                 <br/>
                 EVEREST is non-transferrable, and is needed
-                <br/>
                 to unlock your SUMMIT when your lock period matures.
             </Text>
 
@@ -79,6 +80,7 @@ export const InitialSummitLockSection: React.FC<Props> = ({ summitBalance, summi
                 summitPalette={SummitPalette.EVEREST}
                 max={fullSummitBalance}
                 symbol='SUMMIT'
+                disabled={account == null}
             />
 
             <Text bold monospace small italic textAlign='left' pl='6px' style={{width: '100%'}} mb='-32px'>
@@ -87,6 +89,7 @@ export const InitialSummitLockSection: React.FC<Props> = ({ summitBalance, summi
             <EverestLockDurationSlider
                 existingLockDuration={null}
                 setLockDuration={setLockDuration}
+                disabled={account == null}
             />
 
             <LockSummitInfoAndButton

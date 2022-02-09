@@ -1,4 +1,4 @@
-import { SummitPalette } from "config/constants"
+import { BN_ZERO, SummitPalette } from "config/constants"
 import React, { memo, useCallback } from "react"
 import { useSummitPrice, useEverestStatsInfo } from "state/hooksNew"
 import styled from "styled-components"
@@ -51,7 +51,12 @@ const TokenImageWrapper = styled.div`
 
 
 export const EverestStatsCard: React.FC = memo(() => {
-    const { totalSummitLocked, averageLockDuration, everestSupply, userEverestOwned } = useEverestStatsInfo()
+    const {
+        totalSummitLocked,
+        averageLockDuration,
+        everestSupply,
+        userEverestOwned,
+    } = useEverestStatsInfo()
     const summitPrice = useSummitPrice()
 
     const rawUserEverestOwned = getBalanceNumber(userEverestOwned)

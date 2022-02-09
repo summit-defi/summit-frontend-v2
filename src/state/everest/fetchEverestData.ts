@@ -2,10 +2,10 @@ import BigNumber from "bignumber.js"
 import { BN_ZERO } from "config/constants"
 import { retryableMulticall, abi, getEverestTokenAddress, getSummitTokenAddress } from "utils"
 
-export const fetchEverestData = async (account: string) => {
+export const fetchEverestData = async (account: string | null) => {
     const everestAddress = getEverestTokenAddress()
     const summitAddress = getSummitTokenAddress()
-    const calls = [
+    const publicEverestCalls = [
         {
             address: everestAddress,
             name: 'totalSummitLocked'
@@ -18,6 +18,23 @@ export const fetchEverestData = async (account: string) => {
             address: everestAddress,
             name: 'totalSupply'
         },
+    ]
+
+    if (account == null) {
+        const publicEverestRes = await retryableMulticall(
+            abi.everestToken,
+            publicEverestCalls,
+            'fetchEverestData_public'
+        )
+
+        return {
+            totalSummitLocked: new BigNumber(publicEverestRes[0][0]._hex),
+            averageLockDuration: Math.round(new BigNumber(publicEverestRes[1][0]._hex).toNumber() / (24 * 3600)),
+            everestSupply: new BigNumber(publicEverestRes[2][0]._hex),
+        }            
+    }
+
+    const userEverestCalls = [
         {
             address: everestAddress,
             name: 'userEverestInfo',
@@ -47,10 +64,15 @@ export const fetchEverestData = async (account: string) => {
         },
     ]
 
-    const [everestDataRes, allowancesRes] = await Promise.all([
+    const [publicDataRes, userDataRes, allowancesRes] = await Promise.all([
         retryableMulticall(
             abi.everestToken,
-            calls,
+            publicEverestCalls,
+            'fetchEverestData'
+        ),
+        retryableMulticall(
+            abi.everestToken,
+            userEverestCalls,
             'fetchEverestData'
         ),
         retryableMulticall(
@@ -60,10 +82,24 @@ export const fetchEverestData = async (account: string) => {
         )
     ])
 
-    if (everestDataRes == null) return {
+    if (publicDataRes == null) return {
         totalSummitLocked: BN_ZERO,
         averageLockDuration: 0,
         everestSupply: BN_ZERO
+    }
+
+    const everestUserData = userDataRes == null ? {
+        everestOwned: BN_ZERO,
+        summitLocked: BN_ZERO,
+        lockRelease: 0,
+        lockDuration: 0,
+        everestLockMult: 0,
+    } : {
+        everestOwned: new BigNumber(userDataRes[0].everestOwned._hex),
+        summitLocked: new BigNumber(userDataRes[0].summitLocked._hex),
+        lockRelease: new BigNumber(userDataRes[0].lockRelease._hex).toNumber(),
+        lockDuration: Math.round(new BigNumber(userDataRes[0].lockDuration._hex).toNumber() / (24 * 3600)),
+        everestLockMult: new BigNumber(userDataRes[0].everestLockMultiplier._hex).toNumber(),
     }
 
     const allowances = allowancesRes == null ? {
@@ -79,15 +115,11 @@ export const fetchEverestData = async (account: string) => {
     }
 
     return {
-        totalSummitLocked: new BigNumber(everestDataRes[0][0]._hex),
-        averageLockDuration: Math.round(new BigNumber(everestDataRes[1][0]._hex).toNumber() / (24 * 3600)),
-        everestSupply: new BigNumber(everestDataRes[2][0]._hex),
+        totalSummitLocked: new BigNumber(publicDataRes[0][0]._hex),
+        averageLockDuration: Math.round(new BigNumber(publicDataRes[1][0]._hex).toNumber() / (24 * 3600)),
+        everestSupply: new BigNumber(publicDataRes[2][0]._hex),
         userData: {
-            everestOwned: new BigNumber(everestDataRes[3].everestOwned._hex),
-            summitLocked: new BigNumber(everestDataRes[3].summitLocked._hex),
-            lockRelease: new BigNumber(everestDataRes[3].lockRelease._hex).toNumber(),
-            lockDuration: Math.round(new BigNumber(everestDataRes[3].lockDuration._hex).toNumber() / (24 * 3600)),
-            everestLockMult: new BigNumber(everestDataRes[3].everestLockMultiplier._hex).toNumber(),
+            ...everestUserData,
             ...allowances,
         }
     }

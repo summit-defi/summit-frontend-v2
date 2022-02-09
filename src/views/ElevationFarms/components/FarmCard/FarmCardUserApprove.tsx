@@ -8,6 +8,8 @@ import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
 import TokenInput from 'components/TokenInput'
 import { useApprove } from 'hooks/useApprove'
+import { useWallet } from '@binance-chain/bsc-use-wallet'
+import UnlockButton from 'components/UnlockButton'
 
 interface Props {
   symbol: string
@@ -28,6 +30,9 @@ const MobileHiddenText = styled(Text)`
 const CenteredSummitButton = styled(SummitButton)`
   margin: 34px auto 0px auto;
 `
+const CenteredUnlockButton = styled(UnlockButton)`
+  margin: 34px auto 0px auto;
+`
 
 const FarmCardUserApprove: React.FC<Props> = ({
   symbol,
@@ -38,6 +43,8 @@ const FarmCardUserApprove: React.FC<Props> = ({
   setPending,
   lpContract,
 }) => {
+  const { account } = useWallet()
+
   // APPROVE ACTION
   const { onApprove, pending: approvalPending } = useApprove(lpContract, symbol)
 
@@ -77,9 +84,12 @@ const FarmCardUserApprove: React.FC<Props> = ({
         feeText='Deposit Fee'
         feeBP={depositFeeBP}
       />
-      <CenteredSummitButton isLoading={approvalPending} onClick={onApprove} summitPalette={elevation}>
-        APPROVE {symbol}
-      </CenteredSummitButton>
+      { account == null ?
+        <CenteredUnlockButton /> :
+        <CenteredSummitButton isLoading={approvalPending} onClick={onApprove} summitPalette={elevation}>
+          APPROVE {symbol}
+        </CenteredSummitButton>
+      }
     </Flex>
   )
 }
