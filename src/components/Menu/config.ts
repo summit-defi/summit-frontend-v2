@@ -16,7 +16,6 @@ export const getMenuItems = (
   exchangeLink,
   liqLink,
   userDeity,
-  elevationsLocked,
 ): MenuEntry[] => [
   {
     label: 'HOME',
@@ -82,7 +81,7 @@ export const getMenuItems = (
     label: Elevation.EXPEDITION,
     icon: getTotemIcon(
       Elevation.EXPEDITION,
-      elevationsLocked[elevationUtils.toInt(Elevation.EXPEDITION)],
+      false,
       userDeity,
     ),
     href: `/expedition`,

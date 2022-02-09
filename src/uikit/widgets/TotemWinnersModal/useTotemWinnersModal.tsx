@@ -2,7 +2,8 @@ import React from 'react'
 import { useModal } from '../Modal'
 import TotemWinnersModal from './TotemWinnersModal'
 import { Elevation } from 'config/constants/types'
-import { useElevationTotem, useTotemHistoricalData } from 'state/hooks'
+import { useTotemHistoricalData } from 'state/hooks'
+import { useElevationUserTotem } from 'state/hooksNew'
 
 interface ReturnType {
   onPresentTotemWinnersModal: () => void
@@ -12,7 +13,7 @@ interface ReturnType {
 const useTotemWinnersModal = (elevation: Elevation): ReturnType => {
   const { recentWinners, recentWinningsMultipliers, winsAccum } = useTotemHistoricalData(elevation)
   const showTotemWinnersModalButton = recentWinners.length > 0
-  const userTotem = useElevationTotem(elevation)
+  const userTotem = useElevationUserTotem(elevation)
   const [onPresentTotemWinnersModal] = useModal(
     <TotemWinnersModal
       elevation={elevation}

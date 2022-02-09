@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Elevation, elevationUtils, SummitPalette } from 'config/constants/types'
 import styled from 'styled-components'
 import { Modal, Flex, ModalActions, SummitButton } from 'uikit'
-import { useWinningTotems } from 'state/hooks'
 import { RolledOverElevation } from './RolledOverElevation'
+import { useDispatch } from 'react-redux'
+import { clearElevationRolloversToShow } from 'state/summitEcosystem'
+import { useElevationsRolledOverInfo, useUserTotems } from 'state/hooksNew'
 
 interface Props {
   elevations?: Elevation[]
-  markShown: () => void
   onDismiss?: () => void
 }
 
@@ -22,19 +23,19 @@ const WinnersWrapper = styled.div`
   gap: 12px;
 `
 
-export const ElevationsRolledOverModal: React.FC<Props> = ({ elevations = [], markShown, onDismiss }) => {
-  const winningTotems = useWinningTotems()
-  const multiWin = elevations.length > 1
-
-  const dismissModal = () => {
-    markShown()
+export const ElevationsRolledOverModal: React.FC<Props> = ({ elevations = [], onDismiss }) => {
+  const dispatch = useDispatch()
+  const handleDismiss = useCallback(() => {
+    dispatch(clearElevationRolloversToShow())
     onDismiss()
-  }
+  }, [dispatch, onDismiss])
+  const userTotems = useUserTotems()
+  const elevationsWinnings = useElevationsRolledOverInfo()
 
   return (
     <Modal
       title="WINNER!"
-      onDismiss={dismissModal}
+      onDismiss={handleDismiss}
       headerless
       elevationGlow={SummitPalette.GOLD}
       elevationCircleHeader={elevations.length > 1 ? 'Summit DeFi' : elevations[0]}
@@ -45,14 +46,15 @@ export const ElevationsRolledOverModal: React.FC<Props> = ({ elevations = [], ma
             <RolledOverElevation
               key={elevation}
               elevation={elevation}
-              winningTotem={winningTotems[elevationUtils.toInt(elevation)]}
-              multiWin={multiWin}
+              totem={userTotems[elevationUtils.toInt(elevation)]}
+              {...elevationsWinnings[elevationUtils.toInt(elevation)]}
+              multiWin={elevations.length > 1}
             />
           ))}
         </WinnersWrapper>
 
         <ModalActions>
-          <SummitButton secondary onClick={dismissModal}>
+          <SummitButton secondary onClick={handleDismiss}>
             CLOSE
           </SummitButton>
         </ModalActions>

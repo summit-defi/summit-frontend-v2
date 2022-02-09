@@ -4,7 +4,6 @@ import { ElevationFarmTab, elevationTabToElevation } from 'config/constants/type
 import { Flex } from 'uikit'
 import {
   useElevationFarmsTab,
-  useElevationTotem,
 } from 'state/hooks'
 import ElevationIntroduction from './ElevationIntroduction'
 import UnlockButton from 'components/UnlockButton'
@@ -17,6 +16,7 @@ import { useWallet } from '@binance-chain/bsc-use-wallet'
 import MultiElevYieldBet from './MultiElevYieldBet'
 import MultiElevWinningsAndClaim from './MultiElevWinningsAndClaim'
 import { LifetimeSummitWinnings } from './LifetimeSummitWinnings'
+import { useElevationUserTotem } from 'state/hooksNew'
 
 const HeaderCardsWrapper = styled(Flex)`
   justify-content: center;
@@ -67,7 +67,7 @@ const MultiElevSection = memo(() => (
 
 const TotemHeaderAccountSection = memo(() => {
   const elevationTab = useElevationFarmsTab()
-  const userTotem = useElevationTotem(elevationTabToElevation[elevationTab])
+  const userTotem = useElevationUserTotem(elevationTabToElevation[elevationTab])
 
   return (
     <>

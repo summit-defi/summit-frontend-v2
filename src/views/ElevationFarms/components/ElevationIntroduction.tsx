@@ -2,7 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { Elevation } from 'config/constants/types'
 import { Flex, Text, SummitButton } from 'uikit'
-import { useElevationTotem, useSelectedElevation, useTotemSelectionPending } from 'state/hooks'
+import { useSelectedElevation, useTotemSelectionPending } from 'state/hooks'
+import { useElevationUserTotem } from 'state/hooksNew'
 import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { useSelectTotemModal } from 'components/SelectTotemModal'
 
@@ -52,7 +53,7 @@ const Line4 = {
 
 const ElevationIntroduction: React.FC = () => {
   const elevation = useSelectedElevation()
-  const userTotem = useElevationTotem(elevation)
+  const userTotem = useElevationUserTotem(elevation)
   const { account }: { account: string } = useWallet()
   const { onPresentSelectTotemModal } = useSelectTotemModal(elevation)
   const totemSelectionPending = useTotemSelectionPending()

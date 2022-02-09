@@ -43,6 +43,15 @@ export const HeaderArtwork = styled.div<{ elevation: string }>`
   height: ${PuckSize}px;
 `
 
+export const IceCube = styled.div`
+  position: absolute;
+  opacity: 0.8;
+  background-image: url("/images/summit/IceCube.png");
+  background-size: cover;
+  width: ${PuckSize + 36}px;
+  height: ${PuckSize + 36}px;
+`
+
 const PuckWhiteText = (name: string) => {
   return elevationUtils.isElevation(name) || name === 'BLUE' || name === 'EVEREST' || name === 'GLACIER'
 }

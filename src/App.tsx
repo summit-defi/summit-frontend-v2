@@ -16,12 +16,13 @@ import ElevationBackground from 'components/ElevationBackground'
 import styled from 'styled-components'
 import ExpeditionBackground from 'components/ExpeditionBackground'
 import { ToastListener } from 'contexts/ToastsContext'
-import { useRoundRollovers } from 'hooks/useRoundRollovers'
 import PageForcedDarkComponent from 'PageForcedDarkComponent'
 import { useFetchExpeditionPotTotalValue } from 'hooks/useFetchExpeditionPotTotalValue'
 import { fetchTokensUserDataAsync } from 'state/tokens'
 import { fetchUserEpochsAsync } from 'state/glacier'
 import { fetchEverestDataAsync } from 'state/everest'
+import RoundRolloversTracker from 'RoundRolloversTracker'
+import { updateExpeditionUserWinningsAsync } from 'state/expedition'
 
 const Home = lazy(() => import('./views/Home'))
 const ElevationFarms = lazy(() => import('./views/ElevationFarms'))
@@ -98,6 +99,7 @@ const App: React.FC = () => {
   useEffect(() => {
     if (account) {
       dispatch(setActiveAccount(account))
+      dispatch(updateExpeditionUserWinningsAsync(account))
       dispatch(fetchFarmUserDataAsync(account))
       dispatch(fetchUserTotemsAsync(account))
       dispatch(fetchTokensUserDataAsync(account))
@@ -108,7 +110,6 @@ const App: React.FC = () => {
 
   useFetchPublicData()
   useGetDocumentTitlePrice()
-  useRoundRollovers()
   useFetchExpeditionPotTotalValue()
 
   return (
@@ -118,6 +119,7 @@ const App: React.FC = () => {
       <ElevationBackground />
       <ExpeditionBackground />
       <PageForcedDarkComponent />
+      <RoundRolloversTracker />
       <Menu>
         <Suspense fallback={<PageLoader />}>
           <Switch>

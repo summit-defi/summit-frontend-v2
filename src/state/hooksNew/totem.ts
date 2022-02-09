@@ -4,19 +4,14 @@ import { stateToUserTotems, stateToExpeditionDeity, stateToWinningTotems, stateT
 import { Elevation, elevationUtils } from "config/constants";
 
 export const useExpeditionUserDeity = () => useSelector(stateToExpeditionDeity)
-
-const selectUserTotems = createSelector(
-    stateToUserTotems,
-    stateToExpeditionDeity,
-    (totems, deity) => [...totems, deity]
-)
-export const useUserTotems = () => useSelector(selectUserTotems)
+export const useUserTotems = () => useSelector(stateToUserTotems)
 
 export const makeSelectElevationTotem = () => createSelector(
-    selectUserTotems,
+    stateToUserTotems,
     (_, elevation: Elevation) => elevation,
     (totems, elevation) => totems[elevationUtils.toInt(elevation)]
 )
+export const useElevationUserTotem = (elevation: Elevation) => useSelector((state) => makeSelectElevationTotem()(state, elevation))
 
 export const useWinningTotems = () => useSelector(stateToWinningTotems)
 

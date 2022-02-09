@@ -1,8 +1,7 @@
-import React, {  } from 'react'
+import React from 'react'
 import { Elevation } from 'config/constants/types'
 import styled from 'styled-components'
-import { HighlightedText } from 'uikit'
-import { useElevationInfo } from 'state/hooks'
+import { HighlightedText, Flex } from 'uikit'
 import ArtworkTotem from 'uikit/components/Totem/ArtworkTotem'
 import CardValue from 'views/Home/components/CardValue'
 import { getBalanceNumber } from 'utils'
@@ -10,7 +9,9 @@ import BigNumber from 'bignumber.js'
 
 interface Props {
   elevation: Elevation
-  winningTotem: number
+  totem: number
+  summitWinnings: BigNumber
+  usdcWinnings: BigNumber
   multiWin: boolean
 }
 
@@ -59,16 +60,9 @@ const TotemWrapper = styled.div`
   }
 `
 
-export const RolledOverElevation: React.FC<Props> = ({ elevation, winningTotem, multiWin }) => {
-  const winnings = new BigNumber(30).times(new BigNumber(10).pow(18))
-  const elevationInfo = useElevationInfo(elevation)
-  let winningsMultiplier = 0
-  let rawTotalContributed = 0
-  if (elevation !== Elevation.EXPEDITION) {
-    winningsMultiplier = elevationInfo.prevWinningsMultipliers[0]
-    rawTotalContributed = getBalanceNumber(winnings.dividedBy(winningsMultiplier))
-  }
-  const rawTotalEarned = getBalanceNumber(winnings)
+export const RolledOverElevation: React.FC<Props> = ({ elevation, totem, summitWinnings, usdcWinnings, multiWin }) => {
+  const rawSummitWinnings = getBalanceNumber(summitWinnings)
+  const rawUsdcWinnings = getBalanceNumber(usdcWinnings, 6)
 
   return (
     <TotemWrapper key={elevation}>
@@ -78,57 +72,41 @@ export const RolledOverElevation: React.FC<Props> = ({ elevation, winningTotem, 
         </HighlightedText>
       )}
 
-      { elevation !== Elevation.EXPEDITION &&
-      <>
-        <HighlightedText summitPalette={elevation} header fontSize="12">
-          YIELD CONTRIBUTED:
-        </HighlightedText>
-        <CardValue
-          value={rawTotalContributed}
-          decimals={2}
-          postfix="SUMMIT"
-          summitPalette={elevation}
-          fontSize="16"
-          postfixFontSize="14"
-        />
-        <br />
-        <br />
-      </>
-      }
-      <HighlightedText summitPalette={elevation} header fontSize="14" gold>
-        { elevation !== Elevation.EXPEDITION ? 'REWARDS:' : 'WINNINGS:' }
+      <HighlightedText summitPalette={Elevation.EXPEDITION} header fontSize="14" gold>
+        WINNINGS:
       </HighlightedText>
       <CardValue
-        value={rawTotalEarned}
-        decimals={2}
-        postfix='MIM'
-        summitPalette={elevation}
-        fontSize="32"
-        postfixFontSize="24"
+        value={rawSummitWinnings}
+        decimals={3}
+        postfix='SUMMIT'
+        summitPalette={Elevation.EXPEDITION}
+        fontSize="28"
+        postfixFontSize="20"
         gold
       />
-      { elevation !== Elevation.EXPEDITION &&
-      <CardValue
-        value={winningsMultiplier}
-        isMultiplier
-        decimals={1}
-        postfix="MULTIPLIER"
-        summitPalette={elevation}
-        fontSize="24"
-        postfixFontSize="14"
-        gold
-      />
+      { usdcWinnings.isGreaterThan(0) ?
+        <Flex mt='-12px' mb='-12px'>
+          <CardValue
+            value={rawUsdcWinnings}
+            decimals={2}
+            postfix='USDC'
+            summitPalette={Elevation.EXPEDITION}
+            fontSize="28"
+            postfixFontSize="20"
+            gold
+          />
+        </Flex> :
+        <>
+          <br/>
+          <br/>
+          <br/>
+        </>
       }
-      <br />
-      <br />
-      <br />
       <ArtworkTotem
         elevation={elevation}
-        totem={winningTotem}
-        crowned
+        totem={totem}
         desktopSize="200"
         mobileSize={multiWin ? '120' : '200'}
-        withName
       />
     </TotemWrapper>
   )

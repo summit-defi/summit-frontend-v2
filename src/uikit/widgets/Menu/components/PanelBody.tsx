@@ -6,7 +6,6 @@ import MenuLink from './MenuLink'
 import { PanelProps, PushedProps } from '../types'
 import { Elevation, elevationUtils } from 'config/constants/types'
 import SelectableIcon from './SelectableIcon'
-import { useElevationsLocked } from 'state/hooks'
 import { useExpeditionUserDeity } from 'state/hooksNew'
 
 interface Props extends PanelProps, PushedProps {
@@ -30,7 +29,6 @@ const PanelBody: React.FC<Props> = ({ isPushed, pushNav, isMobile, links }) => {
   const location = useLocation()
   const keyPath = location.pathname.split('/')[1]
   const userDeity = useExpeditionUserDeity()
-  const elevationsLocked = useElevationsLocked()
 
   // Close the menu when a user clicks a link on mobile
   const handleClick = () => {
@@ -87,7 +85,7 @@ const PanelBody: React.FC<Props> = ({ isPushed, pushNav, isMobile, links }) => {
                   elevation={entry.elevation || entry.palette || entry.label}
                   icon={entryIcon(entry.elevation, entry.icon)}
                   backgroundIcon={backgroundIcon}
-                  elevationLocked={elevationsLocked[elevationInt]}
+                  elevationLocked={false}
                 />
               )}
               <LinkLabel isActive={isActive} isPushed={isPushed} elevation={entry.elevation || entry.label}>

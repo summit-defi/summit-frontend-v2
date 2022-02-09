@@ -415,68 +415,6 @@ export const useTotemSelectionPending = (): boolean => {
   return useSelector((state: State) => state.summitEcosystem.pendingTotemSelection)
 }
 
-export const useElevationTotems = (): number[] => {
-  return useSelector((state: State) => state.summitEcosystem.totems)
-}
-export const useElevationTotem = (elevation: Elevation): number | null => {
-  return useSelector((state: State) => state.summitEcosystem.totems[elevationUtils.toInt(elevation)])
-}
-export const useElevationUnlockTimestamp = (elevation: Elevation): number => {
-  const elevationInfo = useElevationInfo(elevation)
-
-  return useMemo(() => elevationInfo?.unlockTimestamp || 1641028149, [elevationInfo])
-}
-export const useElevationRoundNumber = (elevation: Elevation): number | undefined => {
-  const elevationInfo = useElevationInfo(elevation)
-
-  return useMemo(() => elevationInfo?.roundNumber, [elevationInfo])
-}
-export const useElevationRoundNumbers = (): Array<number | null> => {
-  const plainsRound = useSelector(
-    (state: State) =>
-      state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(Elevation.PLAINS)]?.roundNumber,
-  )
-  const mesaRound = useSelector(
-    (state: State) =>
-      state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(Elevation.MESA)]?.roundNumber,
-  )
-  const summitRound = useSelector(
-    (state: State) =>
-      state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(Elevation.SUMMIT)]?.roundNumber,
-  )
-  const expeditionRound = useSelector(
-    (state: State) =>
-      state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(Elevation.EXPEDITION)]
-        ?.roundNumber,
-  )
-
-  return useMemo(() => [-1, plainsRound, mesaRound, summitRound, expeditionRound], [
-    plainsRound,
-    mesaRound,
-    summitRound,
-    expeditionRound,
-  ])
-}
-export const useElevationLocked = (elevation: Elevation): boolean => {
-  const elevationRoundNumber = useElevationRoundNumber(elevation)
-
-  return useMemo(() => false || (elevation === Elevation.OASIS ? false : elevationRoundNumber < ElevationUnlockRound[elevation]), [
-    elevationRoundNumber,
-    elevation,
-  ])
-}
-export const useElevationsLocked = (): boolean[] => {
-  const elevationRoundNumbers = useElevationRoundNumbers()
-
-  return useMemo(
-    () =>
-      elevationUtils.all.map((elevation, index) =>
-        elevation === Elevation.OASIS ? false : elevationRoundNumbers[index] < ElevationUnlockRound[elevation],
-      ),
-    [elevationRoundNumbers],
-  )
-}
-
 // HISTORICAL WINNERS
 export const useTotemHistoricalData = (
   elevation: Elevation,
@@ -499,35 +437,6 @@ export const useTotemHistoricalData = (
       winsAccum: elevationInfo.totemWinAcc,
     }
   }, [elevationInfo, elevation])
-}
-
-export const useElevationWinningTotem = (elevation: Elevation) => {
-  const elevationLocked = useElevationLocked(elevation)
-  const winningTotem = useSelector(
-    (state: State) =>
-      state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(elevation)]?.prevWinners[0],
-  )
-  const roundNumber = useElevationRoundNumber(elevation)
-
-  return useMemo(() => {
-    if ((elevation !== Elevation.OASIS && elevation !== Elevation.EXPEDITION && ForceElevationRetired) || elevationLocked || roundNumber <= 1 || elevation === Elevation.OASIS || winningTotem == null) return -1
-    return winningTotem
-  }, [elevation, elevationLocked, winningTotem, roundNumber])
-}
-
-
-export const useWinningTotems = () => {
-  const plainsTotem = useElevationWinningTotem(Elevation.PLAINS)
-  const mesaTotem = useElevationWinningTotem(Elevation.MESA)
-  const summitTotem = useElevationWinningTotem(Elevation.SUMMIT)
-  const expeditionTotem = useElevationWinningTotem(Elevation.EXPEDITION)
-
-  return useMemo(() => [-1, plainsTotem, mesaTotem, summitTotem, expeditionTotem], [
-    plainsTotem,
-    mesaTotem,
-    summitTotem,
-    expeditionTotem,
-  ])
 }
 
 // THEME

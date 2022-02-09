@@ -123,6 +123,7 @@ export interface SummitEcosystemState {
   summitEnabled: boolean
   totems: Array<number | null>
   winningTotems: Array<number | null>
+  elevMarkedWinningRound: number[]
   totemSelectionRounds: Array<number | null>
   elevationsInfo: ElevationInfo[]
   expeditionDivider: number

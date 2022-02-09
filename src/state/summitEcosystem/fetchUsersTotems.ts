@@ -1,5 +1,6 @@
-import { retryableMulticall, abi, getSubCartographerAddress } from 'utils/'
+import { retryableMulticall, abi, getSubCartographerAddress, getExpeditionAddress } from 'utils/'
 import { Elevation, elevationUtils } from 'config/constants/types'
+import BigNumber from 'bignumber.js'
 
 export const fetchUsersTotems = async (account) => {
   const elevCalls = elevationUtils.elevationOnly.map((elevation) => ({
@@ -8,18 +9,35 @@ export const fetchUsersTotems = async (account) => {
     params: [account],
   }))
 
-  const res = await retryableMulticall(abi.cartographerElevation, elevCalls, 'fetchUserElevationInfo')
-  if (res == null) return null
+  const expedCalls = [{
+    address: getExpeditionAddress(),
+    name: 'userExpeditionInfo',
+    params: [account],
+  }]
+
+  const [elevRes, expedRes] = await Promise.all([
+    retryableMulticall(abi.cartographerElevation, elevCalls, 'fetchUserElevationInfo'),
+    retryableMulticall(abi.expedition, expedCalls, 'fetchExpeditionInfo')
+  ])
+  if (elevRes == null) return null
 
   const usersTotems = {
     [Elevation.OASIS]: {
       totem: 0,
       totemSelectionRound: 0,
-    }
+    },
+    [Elevation.EXPEDITION]: expedRes == null ? {
+        totem: null,
+        totemSelectionRound: null,
+      } :
+      {
+        totem: expedRes[0].deitySelected ? expedRes[0].deity : null,
+        totemSelectionRound: new BigNumber(expedRes[0].deitySelectionRound._hex),
+      }
   }
 
   elevationUtils.elevationOnly.forEach((elevation, index) => {
-    const { totemSelected, totem, totemSelectionRound } = res[index]
+    const { totemSelected, totem, totemSelectionRound } = elevRes[index]
     usersTotems[elevation] = {
       totem: totemSelected ? totem : null,
       totemSelectionRound,

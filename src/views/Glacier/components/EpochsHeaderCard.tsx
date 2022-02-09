@@ -42,13 +42,13 @@ const EpochsHeaderCard: React.FC = () => {
                         <br/>
                         <br/>
                         <Text bold monospace small>SUMMIT in the Glacier can either be:</Text>
-                        - Harvested after thawing for no tax
+                        - Harvested after Epoch has Thawed for no tax
                         <br/>
-                        - harvested while frozen for a 50% tax
+                        - Harvested while frozen for a 50% tax
                         <br/>
                         (50% burned, 50% to EVEREST holders)
                         <br/>
-                        - locked for EVEREST at any time without tax
+                        - Locked for EVEREST at any time without tax
                         <br/>(requires lock duration {`>`}= 30 days)
                     </Text>
                 </Flex>

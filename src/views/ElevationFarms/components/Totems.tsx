@@ -2,11 +2,12 @@ import React from 'react'
 import styled from 'styled-components'
 import { Elevation, elevationUtils } from 'config/constants/types'
 import { Flex } from 'uikit'
-import { useElevationTotem, useSelectedElevation } from 'state/hooks'
+import { useSelectedElevation } from 'state/hooks'
 import Totem from './Totem'
 import SelectedTotem from '../../../uikit/components/Totem/SelectedTotem'
 import { elevationPalette } from 'theme/colors'
 import chroma from 'chroma-js'
+import { useElevationUserTotem } from 'state/hooksNew'
 
 const HeaderWrapper = styled(Flex)`
   padding: 40px;
@@ -81,7 +82,7 @@ const renderTotems = (elevation: Elevation, totems: number[], selectedTotem: num
 
 const Totems: React.FC = () => {
   const elevation = useSelectedElevation()
-  const selectedTotem = useElevationTotem(elevation)
+  const selectedTotem = useElevationUserTotem(elevation)
   if (elevation == null) return null
   const remainingTotems = elevationUtils.totemsArray(elevation).filter((totem) => totem !== selectedTotem)
   const colorGradient = chroma

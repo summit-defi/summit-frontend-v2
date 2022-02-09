@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToTokenInfos, stateToFarmsElevationData, stateToLifetimeSummitBonuses, stateToLifetimeSummitWinnings, stateToFarmsUserDataLoaded } from "./base";
+import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToTokenInfos, stateToFarmsElevationData, stateToLifetimeSummitBonuses, stateToLifetimeSummitWinnings, stateToFarmsUserDataLoaded, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToElevationsInfos, stateToFarmsElevationsData } from "./base";
 import { getFarmInteracting, getFormattedBigNumber } from "utils"
 import { BN_ZERO, Elevation, elevationUtils } from "config/constants";
 import { useSelector } from "./utils";
@@ -259,3 +259,23 @@ const selectFarmsUserDataLoaded = createSelector(
 export const useFarmsUserDataLoaded = () => useSelector(selectFarmsUserDataLoaded)
 
 
+
+
+const selectElevationsRolledOverInfo = createSelector(
+    stateToFarmsElevationsData,
+    stateToExpeditionSummitWinnings,
+    stateToExpeditionUsdcWinnings,
+    (elevationData, expedSummitWinnings, expedUsdcWinnings) => {
+        return elevationUtils.allWithExpedition.map((elev) => {
+            if (elev === Elevation.EXPEDITION) return {
+                summitWinnings: expedSummitWinnings,
+                usdcWinnings: expedUsdcWinnings,
+            }
+            return {
+                summitWinnings: elevationData[elevationUtils.toInt(elev)]?.claimable || BN_ZERO,
+                usdcWinnings: BN_ZERO,
+            }
+        })
+    }
+)
+export const useElevationsRolledOverInfo = () => useSelector(selectElevationsRolledOverInfo)

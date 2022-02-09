@@ -4,8 +4,7 @@ import { Modal, Flex, Text, HighlightedText, ExternalLinkButton, SummitButton, M
 import { getSummitLpSymbol } from 'config/constants'
 
 interface Props {
-  elevation: Elevation
-  markShown: () => void
+  elevation?: Elevation
   onDismiss?: () => void
 }
 
@@ -111,15 +110,12 @@ const ElevationExtendedDescription = {
   ),
 }
 
-export const ElevationUnlockedModal: React.FC<Props> = ({ elevation, markShown, onDismiss }) => {
-  const handleDismiss = () => {
-    markShown()
-    onDismiss()
-  }
+export const ElevationUnlockedModal: React.FC<Props> = ({ elevation, onDismiss }) => {
+  console.log("RENDER ELEVATION UNLOCKED MODAL", elevation)
   return (
     <Modal
       title="JUST UNLOCKED"
-      onDismiss={handleDismiss}
+      onDismiss={onDismiss}
       headerless
       elevationGlow={elevation}
       elevationCircleHeader={elevation}
@@ -138,7 +134,7 @@ export const ElevationUnlockedModal: React.FC<Props> = ({ elevation, markShown, 
           LEARN MORE ABOUT THE {elevation}
         </ExternalLinkButton>
         <ModalActions>
-          <SummitButton secondary elevation={elevation} onClick={handleDismiss}>
+          <SummitButton secondary elevation={elevation} onClick={onDismiss}>
             CLOSE
           </SummitButton>
           <SummitButton elevation={elevation} as="a" href={`/${elevation.toLowerCase()}`} onClick={onDismiss}>

@@ -5,13 +5,12 @@ import TokenInput from '../../../components/TokenInput'
 import { getFullDisplayBalance } from '../../../utils/formatBalance'
 import { Elevation, elevToPalette } from 'config/constants/types'
 import ElevationSelector from './ElevationSelector'
-import { useElevationTotem } from 'state/hooks'
 import { isNumber } from 'lodash'
 import Totem from './Totem'
 import { elevationPalette } from 'theme/colors'
 import { useRewardsWillBeClaimedModal, RewardsWillBeClaimedType } from 'components/RewardsWillBeClaimedModal'
 import { useSelectTotemModal } from 'components/SelectTotemModal'
-import { useSymbolElevateModalInfo } from 'state/hooksNew'
+import { useElevationUserTotem, useSymbolElevateModalInfo } from 'state/hooksNew'
 
 interface ElevateModalProps {
   symbol: string
@@ -58,7 +57,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
   const [selectedSourceElevation, setSelectedSourceElevation] = useState(sourceElevation || null)
   const [selectedTargetElevation, setSelectedTargetElevation] = useState(targetElevation || null)
   const targetElevationPalette = elevToPalette(selectedTargetElevation)
-  const totem = useElevationTotem(selectedTargetElevation)
+  const totem = useElevationUserTotem(selectedTargetElevation)
   const { onPresentSelectTotemModal } = useSelectTotemModal(selectedTargetElevation)
 
   const [sourceClaimable, setSourceClaimable] = useState(null)

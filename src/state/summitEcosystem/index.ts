@@ -20,6 +20,11 @@ const getLocalStorageVariables = () => {
         0 :
         JSON.parse(localStorage.getItem(`${elevation}_winning_totem`) || 'null')
     ),
+    elevMarkedWinningRound: elevationUtils.allWithExpedition.map((elevation): number =>
+      elevation === Elevation.OASIS ?
+        0 :
+        JSON.parse(localStorage.getItem(`${elevation}_marked_winning_round`) || '0')
+    ),
     totemSelectionRounds: elevationUtils.all.map((elevation): number =>
       elevation === Elevation.OASIS ?
         0 :
@@ -65,15 +70,30 @@ export const SummitEcosystemSlice = createSlice({
     setElevationsData: (state, action) => {
       const elevationsData = action.payload
       state.elevationsInfo = elevationUtils.elevationExpedition.map((elevation) => {
+        const elevInt = elevationUtils.toInt(elevation)
+        const roundNumber = elevationsData[elevation].roundNumber
+
         localStorage.setItem(`${elevation}_winning_totem`, `${elevationsData[elevation].winningTotem}`)
-        state.winningTotems[elevationUtils.toInt(elevation)] = elevationsData[elevation].winningTotem
+        state.winningTotems[elevInt] = elevationsData[elevation].winningTotem
         localStorage.setItem(`${elevation}_ecosystem_info`, JSON.stringify(elevationsData[elevation], null, 2))
+
+        if (
+          (state.totems[elevInt] != null) &&
+          (state.totems[elevInt] === elevationsData[elevation].winningTotem) &&
+          (roundNumber > state.elevMarkedWinningRound[elevInt])
+        ) {
+          state.elevationRolloversToShow.push(elevation)
+        }
+
+        state.elevMarkedWinningRound[elevInt] = roundNumber
+        localStorage.setItem(`${elevation}_marked_winning_round`, JSON.stringify(roundNumber, null, 2))
+
         return elevationsData[elevation]
       })
     },
     setTotemsData: (state, action) => {
       const totemsData = action.payload
-      elevationUtils.all.forEach((elevation) => {
+      elevationUtils.allWithExpedition.forEach((elevation) => {
         state.totems[elevationUtils.toInt(elevation)] = totemsData[elevation].totem
         state.totemSelectionRounds[elevationUtils.toInt(elevation)] = totemsData[elevation].totemSelectionRound
         localStorage.setItem(`${state.activeAccount}/${elevation}_totem`, `${totemsData[elevation].totem}`)
@@ -108,13 +128,8 @@ export const SummitEcosystemSlice = createSlice({
       const hash = action.payload
       state.pendingTxs = state.pendingTxs.filter((tx) => tx.hash !== hash)
     },
-    addElevationRolloverToShow: (state, action) => {
-      const elevation = action.payload
-      state.elevationRolloversToShow = [...state.elevationRolloversToShow, elevation]
-    },
-    removeElevationRolloverToShow: (state, action) => {
-      const elevation = action.payload
-      state.elevationRolloversToShow = state.elevationRolloversToShow.filter((rollover) => rollover !== elevation)
+    clearElevationRolloversToShow: (state) => {
+      state.elevationRolloversToShow = []
     },
     setChainId: (state, action) => {
       state.chainId = action.payload
@@ -153,8 +168,7 @@ export const {
   setLiveFarms,
   addPendingTransaction,
   removePendingTransaction,
-  addElevationRolloverToShow,
-  removeElevationRolloverToShow,
+  clearElevationRolloversToShow,
   setRolloverRewardInNativeToken,
   setExpeditionPot,
   setPendingExpeditionTx,

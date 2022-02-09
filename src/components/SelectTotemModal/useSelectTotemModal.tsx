@@ -1,15 +1,15 @@
 import React from 'react'
 import { useModal } from 'uikit'
-import { useElevationTotem } from 'state/hooks'
 import SelectTotemModal from './SelectTotemModal'
 import { Elevation } from 'config/constants/types'
+import { useElevationUserTotem } from 'state/hooksNew'
 
 interface ReturnType {
   onPresentSelectTotemModal: () => void
 }
 
 const useSelectTotemModal = (elevation: Elevation, preselectedTotem?: number, alsoSelectFaith = false, existingFaith?: number): ReturnType => {
-  const userTotem = useElevationTotem(elevation)
+  const userTotem = useElevationUserTotem(elevation)
   const [onPresentSelectTotemModal] = useModal(
     <SelectTotemModal
       elevation={elevation}
