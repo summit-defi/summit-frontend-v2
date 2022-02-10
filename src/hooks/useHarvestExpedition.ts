@@ -18,7 +18,7 @@ const useHarvestExpedition = () => {
     async () => {
       try {
         setPending(true)
-        await harvestExpedition(expedition, account)
+        await harvestExpedition(expedition)
         toastSuccess(`Expedition Harvested`)
       } catch (error) {
         toastError(`Error Harvesting Expedition`, (error as Error).message)

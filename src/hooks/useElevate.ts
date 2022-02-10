@@ -19,7 +19,7 @@ const useElevate = () => {
     async (symbol: string, token: string, sourceElevation: Elevation, targetElevation: Elevation, amount: string, decimals: number) => {
       try {
         setPending(true)
-        await elevate(cartographer, token, sourceElevation, targetElevation, amount, account, decimals)
+        await elevate(cartographer, token, sourceElevation, targetElevation, amount, decimals)
         toastSuccess(`${symbol} Elevate Confirmed`)
       } catch (error) {
         toastError(`${symbol} Elevate Failed`, (error as Error).message)

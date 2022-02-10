@@ -21,7 +21,7 @@ const useWithdraw = (farmToken: string, elevation: Elevation) => {
       const filteredAmount = amount || '0'
       try {
         setPending(true)
-        await withdraw(cartographer, farmToken, elevation, filteredAmount, account, decimals)
+        await withdraw(cartographer, farmToken, elevation, filteredAmount, decimals)
         toastSuccess(`${symbol} Withdraw Confirmed`)
       } catch (error) {
         toastError(`${symbol} Withdraw Failed`, (error as Error).message)

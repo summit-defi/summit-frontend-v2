@@ -21,7 +21,7 @@ const useLockFarmSummitForEverest = () => {
       const filteredAmount = amount || '0'
       try {
         setPending(true)
-        await lockFarmSummitForEverest(cartographer, sourceElevation, filteredAmount, account)
+        await lockFarmSummitForEverest(cartographer, sourceElevation, filteredAmount)
         toastSuccess(`SUMMIT Locked for Everest`)
       } catch (error) {
         toastError(`SUMMIT Lock for Everest Failed`, (error as Error).message)

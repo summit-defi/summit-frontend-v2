@@ -23,16 +23,16 @@ export const useLockSummit = (type: LockSummitButtonType, summitAmount: BigNumbe
         const summitAmountString = summitAmount.toString()
         switch (type) {
           case LockSummitButtonType.IncreaseLockedSummit:
-            await increaseLockedSummit(everestToken, summitAmountString, account)
+            await increaseLockedSummit(everestToken, summitAmountString)
             toastSuccess(`Locked SUMMIT Amount Increased`)
             break
           case LockSummitButtonType.IncreaseLockDuration:
-            await increaseLockDuration(everestToken, lockDurationSeconds, account)
+            await increaseLockDuration(everestToken, lockDurationSeconds)
             toastSuccess(`SUMMIT Lock Duration Increased`)
             break
           default:
           case LockSummitButtonType.LockSummit:
-            await lockSummit(everestToken, summitAmountString, lockDurationSeconds, account)
+            await lockSummit(everestToken, summitAmountString, lockDurationSeconds)
             toastSuccess(`SUMMIT locked for EVEREST`)
             break
         }

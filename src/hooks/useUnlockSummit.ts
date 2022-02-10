@@ -18,7 +18,7 @@ export const useUnlockSummit = () => {
       const filteredAmount = amount || '0'
       try {
         setPending(true)
-        await withdrawLockedSummit(everestToken, filteredAmount, account)
+        await withdrawLockedSummit(everestToken, filteredAmount)
         toastSuccess(`SUMMIT Unlocked`)
       } catch (error) {
         toastError(`Error unlocking SUMMIT`, (error as Error).message)

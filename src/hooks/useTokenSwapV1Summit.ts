@@ -1,5 +1,4 @@
 import { useCallback, useState } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import { getV1SummitTokenAddress, tokenSwapV1Summit, approve, getSummitTokenAddress, getErc20Contract } from 'utils'
 import { useSummitToken } from './useContract'
 import useToast from './useToast'
@@ -7,7 +6,6 @@ import { useV1SummitTokenApproved, useV1SummitTokenBalance } from './useV1Summit
 
 
 export const useTokenSwapV1Summit = () => {
-  const { account } = useWeb3React()
   const summitAddress = getSummitTokenAddress()
   const summitToken = useSummitToken()
   const [approvePending, setApprovePending] = useState(false)
@@ -25,7 +23,7 @@ export const useTokenSwapV1Summit = () => {
     try {
       setApprovePending(true)
       const v1SummitToken = getErc20Contract(v1SummitAddress)
-      await approve(v1SummitToken, summitAddress, account)
+      await approve(v1SummitToken, summitAddress)
       toastSuccess('SUMMIT V1 Approved')
     } catch (error) {
       toastError('Error Approving SUMMIT V1', (error as Error).message)
@@ -33,7 +31,6 @@ export const useTokenSwapV1Summit = () => {
       setApprovePending(false)
     }
   }, [
-    account,
     v1SummitAddress,
     summitAddress,
     setApprovePending,
@@ -46,7 +43,7 @@ export const useTokenSwapV1Summit = () => {
     const filteredAmount = amount || '0'
     try {
       setSwapPending(true)
-      await tokenSwapV1Summit(summitToken, filteredAmount, account)
+      await tokenSwapV1Summit(summitToken, filteredAmount)
       toastSuccess('SUMMIT token swap Succeeded')
     } catch (error) {
       toastError('Error in SUMMIT token swap', (error as Error).message)
@@ -54,7 +51,6 @@ export const useTokenSwapV1Summit = () => {
       setSwapPending(false)
     }
   }, [
-    account,
     summitToken,
     setSwapPending,
     toastSuccess,

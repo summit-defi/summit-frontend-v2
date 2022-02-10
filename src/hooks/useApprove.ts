@@ -19,7 +19,7 @@ export const useApprove = (farmToken: string, tokenName: string) => {
   const handleApprove = useCallback(async () => {
     try {
       setPending(true)
-      await approve(lpContract, getCartographerAddress(), account)
+      await approve(lpContract, getCartographerAddress())
       toastSuccess(`${tokenName} Approved`)
     } catch (error) {
       toastError(`${tokenName} Approval Failed`, (error as Error).message)
@@ -44,7 +44,7 @@ export const useApproveAddress = (farmToken: string, spender: string, tokenName:
   const handleApprove = useCallback(async () => {
     try {
       setPending(true)
-      await approve(lpContract, spender, account)
+      await approve(lpContract, spender)
       toastSuccess(`${tokenName} Approved`)
     } catch (error) {
       toastError(`${tokenName} Approval Failed`, (error as Error).message)

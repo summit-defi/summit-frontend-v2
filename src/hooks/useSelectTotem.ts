@@ -65,8 +65,7 @@ export const useSelectTotemAndOrFaith = () => {
           expedition,
           elevation,
           totem,
-          faith,
-          account
+          faith
         )
         toastSuccess(getCallTypeSuccessMsg(callType, elevation, totem))
       } catch (error) {

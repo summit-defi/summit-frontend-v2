@@ -3,7 +3,7 @@ import { Elevation, elevationUtils } from 'config/constants/types'
 import { ethers } from 'ethers'
 import { callWithEstimateGas } from './estimateGas'
 
-export const approve = async (tokenContract, targetAddress, account) => {
+export const approve = async (tokenContract, targetAddress) => {
   return callWithEstimateGas(
     tokenContract,
     'approve',
@@ -31,7 +31,7 @@ export const stake = async (cartographer, token, elevation, amount, account, dec
   )
 }
 
-export const withdraw = async (cartographer, token, elevation, amount, account, decimals) => {
+export const withdraw = async (cartographer, token, elevation, amount, decimals) => {
   return callWithEstimateGas(
     cartographer,
     'withdraw',
@@ -43,7 +43,7 @@ export const withdraw = async (cartographer, token, elevation, amount, account, 
   )
 }
 
-export const claimPool = async (cartographer, token, elevation, account) => {
+export const claimPool = async (cartographer, token, elevation) => {
   return callWithEstimateGas(
     cartographer,
     'deposit',
@@ -51,7 +51,7 @@ export const claimPool = async (cartographer, token, elevation, account) => {
   )
 }
 
-export const claimElevation = async (cartographer, elevation, account) => {
+export const claimElevation = async (cartographer, elevation) => {
   return callWithEstimateGas(
     cartographer,
     'claimElevation',
@@ -59,7 +59,7 @@ export const claimElevation = async (cartographer, elevation, account) => {
   )
 }
 
-export const selectTotemAndOrFaith = async (cartographer, expedition, elevation, totem, faith, account) => {
+export const selectTotemAndOrFaith = async (cartographer, expedition, elevation, totem, faith) => {
   const isExpedition = elevation === Elevation.EXPEDITION
 
   if (isExpedition) {
@@ -93,20 +93,20 @@ export const selectTotemAndOrFaith = async (cartographer, expedition, elevation,
   )
 }
 
-export const enterExpedition = async (expedition, account) => {
+export const enterExpedition = async (expedition) => {
   return callWithEstimateGas(
     expedition,
     'joinExpedition'
   )
 }
-export const harvestExpedition = async (expedition, account) => {
+export const harvestExpedition = async (expedition) => {
   return callWithEstimateGas(
     expedition,
     'harvestExpedition'
   )
 }
 
-export const elevate = async (cartographer, token, sourceElevation, targetElevation, amount, account, decimals) => {
+export const elevate = async (cartographer, token, sourceElevation, targetElevation, amount, decimals) => {
   return callWithEstimateGas(
     cartographer,
     'elevate',
@@ -120,7 +120,7 @@ export const elevate = async (cartographer, token, sourceElevation, targetElevat
 }
 
 // V1 --> V2 Token swap
-export const tokenSwapV1Summit = async (summitToken, v1SummitBalance, account) => {
+export const tokenSwapV1Summit = async (summitToken, v1SummitBalance) => {
   return callWithEstimateGas(
     summitToken,
     'tokenSwap',
@@ -129,7 +129,7 @@ export const tokenSwapV1Summit = async (summitToken, v1SummitBalance, account) =
 }
 
 // EPOCH
-export const harvestEpoch = async (summitGlacier, epochIndex, amount, lockForEverest, account) => {
+export const harvestEpoch = async (summitGlacier, epochIndex, amount, lockForEverest) => {
   return callWithEstimateGas(
     summitGlacier,
     'harvestWinnings',
@@ -142,7 +142,7 @@ export const harvestEpoch = async (summitGlacier, epochIndex, amount, lockForEve
 }
 
 // EVEREST LOCKING
-export const lockSummit = async (everestToken, amount, duration, account) => {
+export const lockSummit = async (everestToken, amount, duration) => {
   return callWithEstimateGas(
     everestToken,
     'lockSummit',
@@ -152,28 +152,28 @@ export const lockSummit = async (everestToken, amount, duration, account) => {
     ]
   )
 }
-export const increaseLockedSummit = async (everestToken, amount, account) => {
+export const increaseLockedSummit = async (everestToken, amount) => {
   return callWithEstimateGas(
     everestToken,
     'increaseLockedSummit',
     [amount]
   )
 }
-export const increaseLockDuration = async (everestToken, duration, account) => {
+export const increaseLockDuration = async (everestToken, duration) => {
   return callWithEstimateGas(
     everestToken,
     'increaseLockDuration',
     [duration]
   )
 }
-export const withdrawLockedSummit = async (everestToken, amount, account) => {
+export const withdrawLockedSummit = async (everestToken, amount) => {
   return callWithEstimateGas(
     everestToken,
     'withdrawLockedSummit',
     [new BigNumber(amount).times(new BigNumber(10).pow(18)).toString()]
   )
 }
-export const lockFarmSummitForEverest = async (cartographer, sourceElevation, amount, account) => {
+export const lockFarmSummitForEverest = async (cartographer, sourceElevation, amount) => {
   return callWithEstimateGas(
     cartographer,
     'elevateAndLockStakedSummit',
@@ -185,14 +185,14 @@ export const lockFarmSummitForEverest = async (cartographer, sourceElevation, am
 }
 
 // SUMMIT ECOSYSTEM
-export const rolloverElevation = async (cartographer, elevation, account) => {
+export const rolloverElevation = async (cartographer, elevation) => {
   return callWithEstimateGas(
     cartographer,
     'rollover',
     [elevationUtils.toInt(elevation)]
   )
 }
-export const rolloverExpedition = async (expedition, account) => {
+export const rolloverExpedition = async (expedition) => {
   return callWithEstimateGas(
     expedition,
     'rollover'

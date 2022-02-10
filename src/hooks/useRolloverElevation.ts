@@ -31,9 +31,9 @@ const useRolloverElevation = () => {
       setElevsPending((elevs) => ({ ...elevs, [elevation]: true }))
       try {
         if (elevation === Elevation.EXPEDITION) {
-          await rolloverExpedition(expedition, account)
+          await rolloverExpedition(expedition)
         } else {
-          await rolloverElevation(cartographer, elevation, account)
+          await rolloverElevation(cartographer, elevation)
         }
         toastSuccess(
           `THE ${elevation}: ${isUnlock ? 'Unlocked' : 'Rolled Over'}`,

@@ -17,7 +17,7 @@ export const useEnterExpedition = () => {
     async () => {
       try {
         setEntryPending(true)
-        await enterExpedition(expedition, account)
+        await enterExpedition(expedition)
         toastSuccess('Entered the EXPEDITION')
       } catch (error) {
         toastError('Entering the EXPEDITION Failed', (error as Error).message)
