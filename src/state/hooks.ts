@@ -19,7 +19,7 @@ import { useLocation } from 'react-router-dom'
 import { getFarmConfigs } from 'config/constants/farms'
 import useTheme from 'hooks/useTheme'
 import { updateExpeditionUserPotentialWinningsAsync, updateExpeditionUserWinningsAsync } from './expedition'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 
 export const useMediaQuery = (query) => {
   const [matches, setMatches] = useState(false)
@@ -214,7 +214,7 @@ export const useMultiElevStaked = () => {
 // Expeditions
 
 export const useExpeditionFetching = () => {
-  const { account } = useWallet()
+  const { account } = useWeb3React()
   const { slowRefresh } = useRefresh()
   const dispatch = useDispatch()
   useEffect(() => {
@@ -299,7 +299,7 @@ export const useUserTVLs = () => {
 
 export const useExpeditionPotTotalValue = (): number => {
   return 0
-  // const { account } = useWallet()
+  // const { account } = useWeb3React()
   // const { expeditions } = useExpeditions(account)
   // const pricesPerToken = usePricesPerToken()
   // const expeditionPotTotalValue = useSelector((state: State) => state.summitEcosystem.expeditionPotTotalValue)
@@ -321,7 +321,7 @@ export const useExpeditionPotTotalValue = (): number => {
 
 export const useExpeditionDisbursedValue = (): number => {
   return 0
-  // const { account } = useWallet()
+  // const { account } = useWeb3React()
   // const { expeditions } = useExpeditions(account)
   // const pricesPerToken = usePricesPerToken()
 

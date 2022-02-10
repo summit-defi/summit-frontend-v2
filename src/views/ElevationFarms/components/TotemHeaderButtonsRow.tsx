@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Elevation, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import styled from 'styled-components'
 import { Text, Flex, Spinner, Lock, ElevationPuck, ArtworkTotem } from 'uikit'
@@ -102,10 +102,10 @@ const TotemHeaderButtonsRow: React.FC = () => {
   const { onPresentTotemWinnersModal } = useTotemWinnersModal(elevation)
   const { onPresentSelectTotemModal } = useSelectTotemModal(elevation)
 
-  const handlePresentSelectTotemModal = () => {
+  const handlePresentSelectTotemModal = useCallback(() => {
     if (totemSwitchDisabled) return
     onPresentSelectTotemModal()
-  }
+  }, [totemSwitchDisabled, onPresentSelectTotemModal])
 
 
   return (

@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import { Elevation } from 'config/constants/types'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { getFormattedBigNumber } from 'utils'
 import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
@@ -43,10 +43,10 @@ export const RewardsWillBeClaimedModal: React.FC<Props> = ({
 }) => {
 
 
-  const handleConfirm = () => {
+  const handleConfirm = useCallback(() => {
     if (transactionToConfirm != null) transactionToConfirm()
     onDismiss()
-  }
+  }, [transactionToConfirm, onDismiss])
 
   switch(rewardClaimType) {
     case RewardsWillBeClaimedType.Elevate:

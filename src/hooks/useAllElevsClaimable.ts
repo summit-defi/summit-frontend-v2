@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { abi, getSubCartographerAddress, groupByAndMap, retryableMulticall } from 'utils/'
 import useRefresh from './useRefresh'
 import BigNumber from 'bignumber.js'
@@ -8,7 +8,7 @@ import { elevationUtils } from 'config/constants'
 
 export const useAllElevsClaimable = () => {
   const [earnedAndVesting, setEarnedAndVesting] = useState<Map<string | number, BigNumber>>(null)
-  const { account }: { account: string } = useWallet()
+  const { account } = useWeb3React()
   const { fastRefresh } = useRefresh()
   const farmConfigs = useFarmConfigs()
 

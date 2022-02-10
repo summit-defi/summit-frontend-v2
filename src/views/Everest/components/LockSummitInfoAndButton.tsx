@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import BigNumber from 'bignumber.js'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { SummitPalette } from 'config/constants'
 import { useApproveAddress } from 'hooks/useApprove'
 import { useSummitToken } from 'hooks/useContract'
@@ -34,7 +34,7 @@ const lockSummitButtonText = (approved: boolean, type: LockSummitButtonType) => 
 }
 
 export const LockSummitInfoAndButton: React.FC<LockSummitButtonProps> = ({ approved, disabled, type, amount, duration, everestAward, lockRelease }) => {
-    const { account } = useWallet()
+    const { account } = useWeb3React()
 
     // APPROVAL
     const everestAddress = getEverestTokenAddress()
@@ -59,14 +59,14 @@ export const LockSummitInfoAndButton: React.FC<LockSummitButtonProps> = ({ appro
         />
     )
 
-    const handleButtonPress = () => {
+    const handleButtonPress = useCallback(() => {
         if (lockSummitPending) return
         if (!approved) {
             onApprove()
             return
         }
         onPresentLockSummitConfirmModal()
-    }
+    }, [lockSummitPending, approved, onApprove, onPresentLockSummitConfirmModal])
     return (
         <Flex flexDirection='column' width='calc(100% - 72px)' alignItems='center' justifyContent='center' gap='8px'>
             { showLockRelease &&

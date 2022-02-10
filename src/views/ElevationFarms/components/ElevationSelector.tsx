@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { Flex, Lock } from 'uikit'
 import SummitButton from 'uikit/components/Button/SummitButton'
@@ -166,10 +166,10 @@ const FarmTypeSelector: React.FC<Props> = ({
   selectElevation,
 }) => {
   const selectedIndex = elevations.findIndex((elevation) => elevation === selected)
-  const handleSelectElevation = (elevation) => {
+  const handleSelectElevation = useCallback((elevation) => {
     if (isLocked || disabled || disabledElevations.includes(elevation)) return
     selectElevation(elevation)
-  }
+  }, [isLocked, disabled, disabledElevations, selectElevation])
 
   return (
     <SelectorFlex>

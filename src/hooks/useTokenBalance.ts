@@ -1,26 +1,25 @@
 import { useEffect, useState } from 'react'
 import BigNumber from 'bignumber.js'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { provider } from 'web3-core'
+import { useWeb3React } from '@web3-react/core'
 import { abi, getSummitTokenAddress, getTokenBalance, retryableMulticall } from 'utils'
 import useRefresh from './useRefresh'
 
 const useSummitTokenBalance = () => {
   const [balance, setBalance] = useState(new BigNumber(0))
-  const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
+  const { account } = useWeb3React()
   const { fastRefresh } = useRefresh()
   const summitAddress = getSummitTokenAddress()
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const res = await getTokenBalance(ethereum, summitAddress, account)
+      const res = await getTokenBalance(summitAddress, account)
       setBalance(new BigNumber(res))
     }
 
-    if (account && ethereum) {
+    if (account) {
       fetchBalance()
     }
-  }, [account, ethereum, summitAddress, fastRefresh])
+  }, [account, summitAddress, fastRefresh])
 
   return balance
 }

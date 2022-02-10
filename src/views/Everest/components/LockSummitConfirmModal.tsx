@@ -1,4 +1,4 @@
-import React, {  } from 'react'
+import React, { useCallback } from 'react'
 import { Flex, Text, Modal, HighlightedText, ModalActions, SummitButton } from 'uikit'
 import { getFormattedBigNumber } from '../../../utils/formatBalance'
 import { LockSummitButtonType } from 'state/types'
@@ -28,10 +28,10 @@ const LockSummitConfirmModal: React.FC<LockSummitConfirmModalProps> = ({
   const lockDurationString = lockDurationTextLong(lockDuration)
   const releaseDate = timestampToDateWithYear(lockRelease)
 
-  const handleConfirm = () => {
+  const handleConfirm = useCallback(() => {
     onDismiss()
     onLockSummit()
-  }
+  }, [onDismiss, onLockSummit])
 
   return (
     <Modal

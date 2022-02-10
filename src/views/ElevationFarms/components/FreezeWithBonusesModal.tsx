@@ -1,6 +1,6 @@
 /* eslint-disable react/no-array-index-key */
 import { Elevation, elevationUtils } from 'config/constants/types'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { getFormattedBigNumber } from 'utils'
 import styled from 'styled-components'
 import { Flex, Modal, ModalActions, HighlightedText, Text, SummitButton, TokenSymbolImage } from 'uikit'
@@ -57,10 +57,10 @@ export const FreezeWithBonusesModal: React.FC<Props> = ({
     } = useElevationWinningsContributions(elevation)
 
 
-    const handleFreezeWinnings = () => {
+    const handleFreezeWinnings = useCallback(() => {
         onFreezeWinnings(elevation)
         onDismiss()
-    }
+    }, [onFreezeWinnings, elevation, onDismiss])
 
     return (
         <Modal title="FREEzE|br|WINNINGS" onDismiss={onDismiss} headerless elevationCircleHeader={elevation}>

@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import React, { memo, useCallback } from "react"
 import { SummitPalette } from "config/constants"
 import useHarvestExpedition from "hooks/useHarvestExpedition"
 import { useExpeditionWinnings } from "state/hooksNew"
@@ -18,16 +18,15 @@ export const ExpeditionWinnings: React.FC = memo(() => {
     const anySummitWinnings = summitWinnings.isGreaterThan(0)
     const anyUsdcWinnings = usdcWinnings.isGreaterThan(0)
 
-    if (!anySummitWinnings && !anyUsdcWinnings) return null
-
     const rawSummitWinnings = getBalanceNumber(summitWinnings)
     const rawUsdcWinnings = getBalanceNumber(usdcWinnings, 6)
 
-
-    const handleHarvestExpedition = () => {
+    const handleHarvestExpedition = useCallback(() => {
         if (!(anySummitWinnings || anyUsdcWinnings) || pending) return
         onHarvestExpedition()
-    }
+    }, [anySummitWinnings, anyUsdcWinnings, pending, onHarvestExpedition])
+
+    if (!anySummitWinnings && !anyUsdcWinnings) return null
 
     return (
         <Flex gap='36px' mt='36px' flexDirection='column' width='100%' maxWidth='650px !important' alignItems='center' justifyContent='center' position='relative'>

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { useDispatch } from 'react-redux'
 import { fetchFarmUserDataAsync } from 'state/actions'
 import { elevate } from 'utils/callHelpers'
@@ -12,7 +12,7 @@ const useElevate = () => {
   const dispatch = useDispatch()
   const [pending, setPending] = useState(false)
   const { toastSuccess, toastError } = useToast()
-  const { account } = useWallet()
+  const { account } = useWeb3React()
   const cartographer = useCartographer()
 
   const handleElevate = useCallback(

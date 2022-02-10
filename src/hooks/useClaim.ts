@@ -1,20 +1,20 @@
 import { useCallback, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { useDispatch } from 'react-redux'
 import { fetchFarmUserDataAsync } from 'state/actions'
 import { claimPool, claimElevation, capitalizeFirstLetter } from 'utils'
 import { useCartographer } from './useContract'
-import useToast from './useToast'
+import { useTransactionToasts } from './useToast'
 import { Elevation } from 'config/constants/types'
 import { fetchTokensUserDataAsync } from 'state/tokens'
 
 
 export const useClaimPool = (farmToken: string, elevation: Elevation) => {
   const dispatch = useDispatch()
-  const { account } = useWallet()
+  const { account } = useWeb3React()
   const cartographer = useCartographer()
   const [pending, setPending] = useState(false)
-  const { toastSuccess, toastError } = useToast()
+  const { toastSuccess, toastError } = useTransactionToasts()
 
   const handleClaim = useCallback(async () => {
     try {
@@ -44,10 +44,10 @@ export const useClaimPool = (farmToken: string, elevation: Elevation) => {
 
 export const useClaimElevation = () => {
   const dispatch = useDispatch()
-  const { account } = useWallet()
+  const { account } = useWeb3React()
   const cartographer = useCartographer()
   const [claimPending, setClaimPending] = useState(false)
-  const { toastSuccess, toastError } = useToast()
+  const { toastSuccess, toastError } = useTransactionToasts()
 
   const handleClaimElevation = useCallback(
     async (elevation: Elevation) => {

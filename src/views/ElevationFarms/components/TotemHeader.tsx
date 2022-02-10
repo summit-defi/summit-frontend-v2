@@ -12,7 +12,7 @@ import ElevationTotemBattle from './ElevationTotemBattle'
 import ElevationYieldBet from './ElevationYieldBet'
 import MultiElevStaked from './MultiElevStaked'
 import TotemHeaderButtonsRow from './TotemHeaderButtonsRow'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import MultiElevYieldBet from './MultiElevYieldBet'
 import MultiElevWinningsAndClaim from './MultiElevWinningsAndClaim'
 import { LifetimeSummitWinnings } from './LifetimeSummitWinnings'
@@ -47,8 +47,20 @@ const StyledUnlockButton = styled(UnlockButton)`
   margin: 32px auto 0px auto;
 `
 
+
+
+const getListeners = component => {
+  return Object.fromEntries(
+    Object
+        .entries(component.props) // Get the props
+        .filter(([key, value]) => key.startsWith("on")) // Filter event listeners
+  );
+};
+
 const ElevSpecificSection = memo(() => {
   const elevationTab = useElevationFarmsTab()
+
+
   return (
     <>
       { elevationTab !== ElevationFarmTab.OASIS && <ElevationYieldBet/> }
@@ -80,7 +92,7 @@ const TotemHeaderAccountSection = memo(() => {
 
 const TotemHeader: React.FC = () => {
   const elevationTab = useElevationFarmsTab()
-  const { account }: { account: string } = useWallet()
+  const { account } = useWeb3React()
 
   return (
     <HeaderCardsWrapper>

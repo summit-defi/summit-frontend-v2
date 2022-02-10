@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { HighlightedText, MobileColumnFlex, Text, Skeleton } from 'uikit'
 import { getFormattedBigNumber } from 'utils'
 import { useElevationFarmsTab } from 'state/hooks'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 
 const Wrapper = styled.div`
     display: flex;
@@ -53,7 +53,7 @@ const DashboardLifetimeSummitWinnings: React.FC = memo(() => {
     const userDataLoaded = useFarmsUserDataLoaded()
     const rawLifetimeSummitWinnings = getFormattedBigNumber(lifetimeSummitWinnings)
     const rawLifetimeSummitBonuses = getFormattedBigNumber(lifetimeSummitBonuses)
-    const { account } = useWallet()
+    const { account } = useWeb3React()
 
     if (account == null) return null
 

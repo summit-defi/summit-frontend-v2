@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { useDispatch } from 'react-redux'
 import { useEverestToken } from './useContract'
 import { useTransactionToasts } from './useToast'
@@ -8,7 +8,7 @@ import { withdrawLockedSummit } from 'utils'
 
 export const useUnlockSummit = () => {
   const dispatch = useDispatch()
-  const { account } = useWallet()
+  const { account } = useWeb3React()
   const everestToken = useEverestToken()
   const [pending, setPending] = useState(false)
   const { toastSuccess, toastError } = useTransactionToasts()

@@ -8,7 +8,7 @@ import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
 import TokenInput from 'components/TokenInput'
 import { useApprove } from 'hooks/useApprove'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import UnlockButton from 'components/UnlockButton'
 
 interface Props {
@@ -43,7 +43,7 @@ const FarmCardUserApprove: React.FC<Props> = ({
   setPending,
   lpContract,
 }) => {
-  const { account } = useWallet()
+  const { account } = useWeb3React()
 
   // APPROVE ACTION
   const { onApprove, pending: approvalPending } = useApprove(lpContract, symbol)

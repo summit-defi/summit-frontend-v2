@@ -59,6 +59,10 @@ export const SummitEcosystemSlice = createSlice({
       state.activeAccount = action.payload
       localStorage.setItem('ActiveAccount', JSON.stringify(action.payload))
     },
+    clearActiveAccount: (state, action) => {
+      state.activeAccount = null
+      localStorage.setItem('ActiveAccount', JSON.stringify(undefined))
+    },
     setSummitEnabled: (state, action) => {
       state.summitEnabled = action.payload
       localStorage.setItem('SummitEnabled', JSON.stringify(action.payload))
@@ -157,6 +161,7 @@ export const SummitEcosystemSlice = createSlice({
 // Actions
 export const {
   setActiveAccount,
+  clearActiveAccount,
   setSummitEnabled,
   setDeityDivider,
   setChainId,

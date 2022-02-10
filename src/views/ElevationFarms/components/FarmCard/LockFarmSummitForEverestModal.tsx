@@ -104,10 +104,10 @@ const LockFarmSummitForEverestModal: React.FC<LockFarmSummitForEverestProps> = (
   ])
 
   // CONFIRM ELEVATE
-  const handleConfirmLock = () => {
+  const handleConfirmLock = useCallback(() => {
     onDismiss()
     onConfirmLock(selectedSourceElevation, val)
-  }
+  }, [onDismiss, onConfirmLock, selectedSourceElevation, val])
 
 
 

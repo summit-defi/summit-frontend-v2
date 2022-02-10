@@ -1,35 +1,26 @@
 import React from 'react'
-// import bsc, { UseWalletProvider } from '@binance-chain/bsc-use-wallet'
-import * as bsc from '@binance-chain/bsc-use-wallet'
 import { Provider } from 'react-redux'
-import getRpcUrl from 'utils/getRpcUrl'
+import { Web3ReactProvider } from '@web3-react/core'
 import { RefreshContextProvider } from 'contexts/RefreshContext'
 import { store } from 'state'
 import { ToastsProvider } from 'contexts/ToastsContext'
 import { ModalProvider } from 'uikit'
 import { ThemeContextProvider } from 'contexts/ThemeContext'
+import { getLibrary } from 'utils'
 
 const Providers: React.FC = ({ children }) => {
-  const rpcUrl = getRpcUrl()
-  const chainId = parseInt(process.env.REACT_APP_CHAIN_ID)
   return (
-    <Provider store={store}>
-      <ThemeContextProvider>
-        <ToastsProvider>
-          <bsc.UseWalletProvider
-            chainId={chainId}
-            connectors={{
-              walletconnect: { rpcUrl },
-              bsc,
-            }}
-          >
+    <Web3ReactProvider getLibrary={getLibrary}>
+      <Provider store={store}>
+        <ThemeContextProvider>
+          <ToastsProvider>
             <ModalProvider>
               <RefreshContextProvider>{children}</RefreshContextProvider>
             </ModalProvider>
-          </bsc.UseWalletProvider>
-        </ToastsProvider>
-      </ThemeContextProvider>
-    </Provider>
+          </ToastsProvider>
+        </ThemeContextProvider>
+      </Provider>
+    </Web3ReactProvider>
   )
 }
 

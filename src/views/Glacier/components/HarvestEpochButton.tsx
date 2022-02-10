@@ -1,5 +1,5 @@
+import React, { useMemo, useCallback } from 'react'
 import { useHarvestEpoch } from 'hooks/useHarvestEpoch'
-import React, { useMemo } from 'react'
 import { makeSelectEpochByIndex, useSelector } from 'state/hooksNew'
 import { useModal, SummitButton } from 'uikit'
 import HarvestEpochModal from './HarvestEpochModal'
@@ -22,10 +22,10 @@ const HarvestEpochButton: React.FC<Props> = ({ epochIndex, width = '160px', heig
             onHarvestEpoch={onHarvestEpoch}
         />
     )
-    const handlePresentHarvestEpoch = () => {
+    const handlePresentHarvestEpoch = useCallback(() => {
         if (harvestEpochPending || nothingToHarvest) return
         onPresentHarvestEpoch()
-    }
+    }, [harvestEpochPending, nothingToHarvest, onPresentHarvestEpoch])
 
     return (
         <SummitButton

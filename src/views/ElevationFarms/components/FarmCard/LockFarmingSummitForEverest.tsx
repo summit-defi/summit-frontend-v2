@@ -1,4 +1,4 @@
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { SummitPalette } from 'config/constants'
 import useLockFarmSummitForEverest from 'hooks/useLockFarmSummitForEverest'
 import React, { memo } from 'react'
@@ -10,7 +10,7 @@ import LockFarmSummitForEverestModal from './LockFarmSummitForEverestModal'
 export const LockFarmingSummitForEverest: React.FC = memo(() => {
     const elevation = useSelectedElevation()
     const { pending, onLockFarmSummitForEverest } = useLockFarmSummitForEverest()
-    const { account } = useWallet()
+    const { account } = useWeb3React()
 
     const [onPresentLockFarmSummit] = useModal(
         <LockFarmSummitForEverestModal
@@ -18,9 +18,6 @@ export const LockFarmingSummitForEverest: React.FC = memo(() => {
             onConfirmLock={onLockFarmSummitForEverest}
         />,
     )
-    const handleLockSummit = () => {
-        onPresentLockFarmSummit()
-    }
 
     return (
         <Flex flexDirection='column' gap='12px' alignItems='center' justifyContent='flex-start'>
@@ -32,7 +29,7 @@ export const LockFarmingSummitForEverest: React.FC = memo(() => {
                 isLoading={pending}
                 disabled={account == null}
                 padding='18px'
-                onClick={handleLockSummit}
+                onClick={onPresentLockFarmSummit}
             >
                 LOCK STAKED
                 <br/>

@@ -111,7 +111,6 @@ const ElevationExtendedDescription = {
 }
 
 export const ElevationUnlockedModal: React.FC<Props> = ({ elevation, onDismiss }) => {
-  console.log("RENDER ELEVATION UNLOCKED MODAL", elevation)
   return (
     <Modal
       title="JUST UNLOCKED"

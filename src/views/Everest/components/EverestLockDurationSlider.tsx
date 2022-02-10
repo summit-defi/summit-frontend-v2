@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { Flex } from 'uikit'
 import Slider from 'rc-slider'
 import styled from 'styled-components'
-import { transparentize, linearGradient } from 'polished'
+import { linearGradient } from 'polished'
 import 'rc-slider/assets/index.css'
 import { pressableMixin } from 'uikit/util/styledMixins'
 import { getPaletteGradientStops, lockDurationSliderMarks, lockDurationSliderPerc, sliderPercLockDuration } from 'utils'
@@ -119,11 +119,11 @@ const EverestLockDurationSlider: React.FC<Props> = ({ existingLockDuration, setL
     const [perc, setPerc] = useState(existingLockDuration != null ? existingDurPerc : lockDurationSliderPerc(30))
 
 
-    const handleSetLockDuration = (markPerc) => {
+    const handleSetLockDuration = useCallback((markPerc) => {
         const clampedPerc = Math.max(markPerc, existingDurPerc)
         setPerc(clampedPerc)
         setLockDuration(sliderPercLockDuration(clampedPerc))
-    }
+    }, [existingDurPerc, setPerc, setLockDuration])
 
     return (
         <SliderWrapper>

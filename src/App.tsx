@@ -1,16 +1,15 @@
 import React, { useEffect, Suspense, lazy } from 'react'
 import { useDispatch } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import { ResetCSS } from 'uikit'
 import BigNumber from 'bignumber.js'
+import { useWeb3React } from '@web3-react/core'
 import { useFetchPublicData } from 'state/hooks'
 import useGetDocumentTitlePrice from './hooks/useGetDocumentTitlePrice'
 import GlobalStyle from './style/Global'
 import Menu from './components/Menu'
 import PageLoader from './components/PageLoader'
 import { fetchFarmUserDataAsync } from 'state/farms'
-import useWeb3 from 'hooks/useWeb3'
 import { fetchUserTotemsAsync, setActiveAccount } from 'state/summitEcosystem'
 import ElevationBackground from 'components/ElevationBackground'
 import styled from 'styled-components'
@@ -23,6 +22,7 @@ import { fetchUserEpochsAsync } from 'state/glacier'
 import { fetchEverestDataAsync } from 'state/everest'
 import RoundRolloversTracker from 'RoundRolloversTracker'
 import { updateExpeditionUserWinningsAsync } from 'state/expedition'
+import useEagerConnect from 'hooks/useEagerConnect'
 
 const Home = lazy(() => import('./views/Home'))
 const ElevationFarms = lazy(() => import('./views/ElevationFarms'))
@@ -42,59 +42,17 @@ BigNumber.config({
   DECIMAL_PLACES: 80,
 })
 
+const GlobalHooks = () => {
+  useFetchPublicData()
+  useGetDocumentTitlePrice()
+  useFetchExpeditionPotTotalValue()
+  useEagerConnect()
+  return null
+}
+
 const App: React.FC = () => {
-  const { account, connect } = useWallet()
-  useEffect(() => {
-    if (!account && window.localStorage.getItem('connectorId')) {
-      connect('injected')
-    }
-  }, [account, connect])
-
+  const { account } = useWeb3React()
   const dispatch = useDispatch()
-  const web3 = useWeb3()
-
-  useEffect(() => {
-    const suggestChainId = async () => {
-      const targetChainId = parseInt(process.env.REACT_APP_CHAIN_ID)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      const existingChainId = parseInt(window.ethereum.networkVersion)
-      
-      if (targetChainId !== existingChainId) {
-        try {
-          await web3.givenProvider.request({
-            method: "wallet_switchEthereumChain",
-            params: [{ chainId: '0x61' }],
-          });
-        } catch (err: any) {
-          if (err.code === 4902) {
-            try {
-              await web3.givenProvider.request({
-                method: "wallet_addEthereumChain",
-                params: [
-                  {
-                    chainId: '0x61',
-                    chainName: "BSC Testnet",
-                    rpcUrls: ["https://data-seed-prebsc-1-s1.binance.org:8545/"],
-                    nativeCurrency: {
-                      name: "BNB",
-                      symbol: "BNB",
-                      decimals: 18,
-                    },
-                    blockExplorerUrls: ["https://testnet.bscscan.com/"],
-                  },
-                ],
-              });
-            } catch (err2: any) {
-              console.error(err2.message);
-            }
-          }
-        }
-      }
-    }
-    
-    suggestChainId()
-  }, [web3])
 
   useEffect(() => {
     if (account) {
@@ -106,16 +64,13 @@ const App: React.FC = () => {
       dispatch(fetchUserEpochsAsync(account))
       dispatch(fetchEverestDataAsync(account))
     }
-  }, [account, dispatch, web3])
-
-  useFetchPublicData()
-  useGetDocumentTitlePrice()
-  useFetchExpeditionPotTotalValue()
+  }, [account, dispatch])
 
   return (
     <StyledRouter>
       <ResetCSS />
       <GlobalStyle />
+      <GlobalHooks />
       <ElevationBackground />
       <ExpeditionBackground />
       <PageForcedDarkComponent />

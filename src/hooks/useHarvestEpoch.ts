@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { useDispatch } from 'react-redux'
 import { harvestEpoch } from 'utils'
 import { useSummitGlacier } from './useContract'
@@ -8,7 +8,7 @@ import { fetchUserEpochsAsync } from 'state/glacier'
 
 export const useHarvestEpoch = (epochIndex: number) => {
   const dispatch = useDispatch()
-  const { account } = useWallet()
+  const { account } = useWeb3React()
   const summitGlacier = useSummitGlacier()
   const [harvestEpochPending, setHarvestEpochPending] = useState(false)
   const { toastSuccess, toastError } = useTransactionToasts()

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { betaTokenMint } from 'utils/callHelpers'
 import { useTransactionToasts } from 'hooks/useToast'
 import { provider } from 'web3-core'

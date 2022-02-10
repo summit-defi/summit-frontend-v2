@@ -1,4 +1,4 @@
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import BigNumber from 'bignumber.js'
 import TokenInput from 'components/TokenInput'
 import { SummitPalette } from 'config/constants'
@@ -19,7 +19,7 @@ interface Props {
 
 
 export const InitialSummitLockSection: React.FC<Props> = ({ summitBalance, summitApproved }) => {
-    const { account } = useWallet()
+    const { account } = useWeb3React()
     const currentTimestamp = useCurrentTimestampOnce()
 
     const [lockAmount, setLockAmount] = useState<BigNumber | null>(null)

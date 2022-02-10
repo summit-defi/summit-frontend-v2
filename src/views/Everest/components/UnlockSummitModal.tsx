@@ -85,10 +85,10 @@ const UnlockSummitModal: React.FC<UnlockSummitProps> = ({
   }, [fullBalance, setVal, setValInvalid, setEverestToBurn, setNotEnoughEverest, everestLockMult, everestBalance])
 
   // CONFIRM ELEVATE
-  const handleUnlockSummit = () => {
+  const handleUnlockSummit = useCallback(() => {
     onDismiss()
     onUnlockSummit(val)
-  }
+  }, [onDismiss, onUnlockSummit, val])
 
   const infoTextColor = notEnoughEverest ? 'red' : ''
 

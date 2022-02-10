@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { useDispatch } from 'react-redux'
 import { fetchFarmUserDataAsync } from 'state/actions'
 import { useCartographer } from './useContract'
@@ -13,7 +13,7 @@ const useLockFarmSummitForEverest = () => {
   const dispatch = useDispatch()
   const [pending, setPending] = useState(false)
   const { toastSuccess, toastError } = useTransactionToasts()
-  const { account } = useWallet()
+  const { account } = useWeb3React()
   const cartographer = useCartographer()
 
   const handleLockFarmSummitForEverest = useCallback(

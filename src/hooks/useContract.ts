@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { AbiItem } from 'web3-utils'
 import { ContractOptions } from 'web3-eth-contract'
-import useWeb3 from 'hooks/useWeb3'
 import {
   abiItem,
   getSummitTokenAddress,
@@ -12,17 +11,25 @@ import {
   getSummitLpAddress,
   getEverestTokenAddress,
   getSummitGlacierAddress,
+  getContract,
+  getProviderOrSigner,
+  getCartographerContract,
+  getExpeditionContract,
 } from 'utils/'
+import useActiveWeb3React from './useActiveWeb3React'
 
-const useContract = (abi: AbiItem, address: string, contractOptions?: ContractOptions) => {
-  const web3 = useWeb3()
-  const [contract, setContract] = useState(new web3.eth.Contract(abi, address, contractOptions))
+const useContract = (ABI: any, address: string | undefined, withSignerIfPossible = true) => {
+  const { library, account } = useActiveWeb3React()
 
-  useEffect(() => {
-    setContract(new web3.eth.Contract(abi, address, contractOptions))
-  }, [abi, address, contractOptions, web3])
-
-  return contract
+  return useMemo(() => {
+    if (!address || !ABI || !library) return null
+    try {
+      return getContract(address, ABI, withSignerIfPossible ? getProviderOrSigner(library, account) as any : null)
+    } catch (error) {
+      console.error('Failed to get contract', error)
+      return null
+    }
+  }, [address, ABI, library, withSignerIfPossible, account])
 }
 
 /**
@@ -44,13 +51,12 @@ export const useSummitLp = () => {
 }
 
 export const useCartographer = () => {
-  return useContract(abiItem.cartographer, getCartographerAddress())
-}
-export const useCartographerOasis = () => {
-  return useContract(abiItem.cartographerOasis, getCartographerOasisAddress())
+  const { library } = useActiveWeb3React()
+  return useMemo(() => getCartographerContract(library.getSigner()), [library])
 }
 export const useExpedition = () => {
-  return useContract(abiItem.expedition, getExpeditionAddress())
+  const { library } = useActiveWeb3React()
+  return useMemo(() => getExpeditionContract(library.getSigner()), [library])
 }
 export const useElevationHelper = () => {
   return useContract(abiItem.elevationHelper, getElevationHelperAddress())

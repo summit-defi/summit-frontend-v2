@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { Contract } from 'web3-eth-contract'
 import { useDispatch } from 'react-redux'
 import { approve } from 'utils/callHelpers'
@@ -13,7 +13,7 @@ export const useApprove = (lpContract: Contract, tokenName: string) => {
   const dispatch = useDispatch()
   const [pending, setPending] = useState(false)
   const { toastSuccess, toastError } = useToast()
-  const { account }: { account: string } = useWallet()
+  const { account } = useWeb3React()
   const cartographer = useCartographer()
 
   const handleApprove = useCallback(async () => {
@@ -38,7 +38,7 @@ export const useApproveAddress = (lpContract: Contract, spender: string, tokenNa
   const dispatch = useDispatch()
   const [pending, setPending] = useState(false)
   const { toastSuccess, toastError } = useToast()
-  const { account }: { account: string } = useWallet()
+  const { account } = useWeb3React()
 
   const handleApprove = useCallback(async () => {
     try {

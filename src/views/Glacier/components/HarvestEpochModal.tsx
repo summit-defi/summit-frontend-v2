@@ -128,11 +128,11 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
     setValInvalid(false)
   }, [fullHarvestableBalance, setVal, setValInvalid])
 
-  const handleConfirmHarvestEpoch = () => {
+  const handleConfirmHarvestEpoch = useCallback(() => {
     if (invalidVal) return
     onDismiss()
     onHarvestEpoch(val, lockForEverest)
-  }
+  }, [invalidVal, onDismiss, onHarvestEpoch, val, lockForEverest])
 
 
   return (

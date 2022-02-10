@@ -18,7 +18,6 @@ const FarmCardDashboardElevationLinks: React.FC<Props> = ({ symbol }) => {
           return (
             <SummitButton
               key={elev}
-              onClick={() => null}
               summitPalette={elev}
               as={Link}
               replace

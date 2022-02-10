@@ -1,7 +1,7 @@
 import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { Flex, Text, Card, CardBody, HighlightedText, Token3DFloating, ChevronRightIcon, Lock } from 'uikit'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import UnlockButton from 'components/UnlockButton'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { useTokenSwapV1Summit } from 'hooks/useTokenSwapV1Summit'
@@ -81,7 +81,7 @@ const EntryFlowItem: React.FC<{ flowItem: TokenSwapFlowItem, flowIndex: number, 
 }
 
 const SummitTokenSwapCard = () => {
-  const { account } = useWallet()
+  const { account } = useWeb3React()
   const dispatch = useDispatch()
 
   const {
@@ -97,15 +97,6 @@ const SummitTokenSwapCard = () => {
   const swapUnlocked = useSummitTokenSwapUnlocked()
 
   const rawV1SummitBalance = getBalanceNumber(v1SummitBalance)
-
-  const handleApproveButtonPressed = () => {
-    if (approvePending || v1SummitApproved) return
-    onApprove()
-  }
-  const handleSwapButtonPressed = () => {
-    if (swapPending || invalidSwap || !swapUnlocked || !v1SummitApproved) return
-    onTokenSwap(swapVal)
-  }
 
   const handleMinimizeSwapCard = useCallback(
     () => dispatch(updateSummitSwapMinimized(true)),
@@ -179,6 +170,16 @@ const SummitTokenSwapCard = () => {
   }, [v1SummitBalance])
   const [swapVal, setSwapVal] = useState(fullSwapBalance)
   const [invalidSwap, setInvalidSwapVal] = useState(false)
+
+  const handleApproveButtonPressed = useCallback(() => {
+    if (approvePending || v1SummitApproved) return
+    onApprove()
+  }, [approvePending, v1SummitApproved, onApprove])
+
+  const handleSwapButtonPressed = useCallback(() => {
+    if (swapPending || invalidSwap || !swapUnlocked || !v1SummitApproved) return
+    onTokenSwap(swapVal)
+  }, [swapPending, invalidSwap, swapUnlocked, v1SummitApproved, onTokenSwap, swapVal])
 
   const validSwapVal = (testVal, swapBalance) => {
     return (

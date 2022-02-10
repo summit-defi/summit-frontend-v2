@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { getBalanceNumber } from 'utils'
 import { Text, Flex, Skeleton, HighlightedText, useModal } from 'uikit'
 import styled from 'styled-components'
@@ -46,10 +46,10 @@ const ElevClaim: React.FC<ElevProps> = ({ elevation, claimable }) => {
       onFreezeWinnings={onClaimElevation}
     />
   )
-  const handlePresentFreezeElev = () => {
+  const handlePresentFreezeElev = useCallback(() => {
     if (claimPending || elevationLocked || nothingToClaim) return
     onPresentFreezeElev()
-  }
+  }, [claimPending, elevationLocked, nothingToClaim, onPresentFreezeElev])
 
   return (
     <SummitButton

@@ -125,7 +125,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
   }
 
   // CONFIRM ELEVATE
-  const handleConfirmElevate = () => {
+  const handleConfirmElevate = useCallback(() => {
     onDismiss()
     presentRewardsWillBeClaimedModal({
       elevateInfo: {
@@ -136,7 +136,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
       },
       transactionToConfirm: () => onConfirmElevate(symbol, farmToken, selectedSourceElevation, selectedTargetElevation, val, decimals),
     })
-  }
+  }, [decimals, farmToken, selectedSourceElevation, selectedTargetElevation, sourceClaimable, symbol, targetClaimable, val, onDismiss, presentRewardsWillBeClaimedModal, onConfirmElevate])
 
   return (
     <Modal

@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { useDispatch } from 'react-redux'
 import { increaseLockDuration, increaseLockedSummit, lockSummit } from 'utils'
 import { useEverestToken } from './useContract'
@@ -10,7 +10,7 @@ import { fetchEverestDataAsync } from 'state/everest'
 
 export const useLockSummit = (type: LockSummitButtonType, summitAmount: BigNumber | null, duration: number | null) => {
   const dispatch = useDispatch()
-  const { account } = useWallet()
+  const { account } = useWeb3React()
   const everestToken = useEverestToken()
   const [lockSummitPending, setLockSummitPending] = useState(false)
   const { toastSuccess, toastError } = useTransactionToasts()

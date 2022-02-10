@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import useWeb3 from 'hooks/useWeb3'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import Page from 'components/layout/Page'
 import { UserEverestCard, EverestStatsCard } from './components'
 import styled from 'styled-components'
@@ -24,12 +24,11 @@ const HeaderCardsWrapper = styled(Flex)`
 
 const Everest: React.FC = () => {
   const dispatch = useDispatch()
-  const web3 = useWeb3()
-  const { account } = useWallet()
+  const { account } = useWeb3React()
   const { fastRefresh } = useRefresh()
   useEffect(() => {
     dispatch(fetchEverestDataAsync(account))
-  }, [account, dispatch, fastRefresh, web3])
+  }, [account, dispatch, fastRefresh])
 
   const everestDataLoaded = useEverestDataLoaded()
 

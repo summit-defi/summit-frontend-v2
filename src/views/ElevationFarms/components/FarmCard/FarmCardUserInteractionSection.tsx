@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Flex, Text, Lock, ExternalLinkButton } from 'uikit'
 import { getContract } from 'utils'
@@ -7,7 +7,7 @@ import FarmCardUserWithdraw from './FarmCardUserWithdraw'
 import FarmCardUserElevate from './FarmCardUserElevate'
 import FarmCardMobileDepositWithdrawSelector from './FarmCardMobileDepositWithdrawSelector'
 import { useMediaQuery, useSelectedElevation } from 'state/hooks'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { roundStatusLockReason, useElevationInteractionsLockedBreakdown, useFarmAndUserTokenInteractionSectionInfo } from 'state/hooksNew'
 import FarmCardUserApprove from './FarmCardUserApprove'
 import FarmCardUserDeposit from './FarmCardUserDeposit'
@@ -87,113 +87,6 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
     isApproved,
   ])
 
-  // MOBILE DEPOSIT WITHDRAW SELECTOR
-  const mobileDepositWithdrawSelector = useCallback(
-    () =>
-      isMobile && (
-        <FarmCardMobileDepositWithdrawSelector
-          isApproved={isApproved}
-          elevation={elevation}
-          setMobileDepositWithdraw={setMobileDepositWithdraw}
-        />
-      ),
-    [isMobile, elevation, setMobileDepositWithdraw, isApproved],
-  )
-
-  // DEPOSIT SECTION
-  const approveDepositSection = useCallback(
-    () => {
-      if (isMobile && mobileDepositWithdraw !== 0) return null
-      if (isApproved) return (
-        <FarmCardUserDeposit
-          farmToken={farmToken}
-          symbol={symbol}
-          elevationLocked={elevationLocked}
-          walletBalance={walletBalance}
-          decimals={decimals}
-          depositFeeBP={depositFeeBP}
-          elevation={elevation}
-          disabled={disabled}
-          claimable={elevClaimable}
-          setPending={setApproveDepositPending}
-        />
-      )
-      return (
-        <FarmCardUserApprove
-          symbol={symbol}
-          walletBalance={walletBalance}
-          decimals={decimals}
-          depositFeeBP={depositFeeBP}
-          elevation={elevation}
-          lpContract={lpContract}
-          setPending={setApproveDepositPending}
-        />
-      )
-    },
-    [
-      farmToken,
-      elevation,
-      decimals,
-      isMobile,
-      mobileDepositWithdraw,
-      elevationLocked,
-      symbol,
-      walletBalance,
-      depositFeeBP,
-      elevClaimable,
-      isApproved,
-      disabled,
-      lpContract,
-      setApproveDepositPending,
-    ],
-  )
-
-  // WITHDRAW SECTION
-  const withdrawSection = useCallback(
-    () =>
-      (!isMobile || mobileDepositWithdraw === 1) && (
-        <FarmCardUserWithdraw
-          farmToken={farmToken}
-          elevation={elevation}
-          symbol={symbol}
-          elevationLocked={elevationLocked}
-          stakedBalance={elevStaked}
-          claimable={elevClaimable}
-          decimals={decimals}
-          withdrawalFee={taxBP}
-          disabled={disabled}
-          setPending={setWithdrawPending}
-        />
-      ),
-    [
-      farmToken,
-      elevation,
-      decimals,
-      isMobile,
-      mobileDepositWithdraw,
-      elevationLocked,
-      symbol,
-      elevStaked,
-      elevClaimable,
-      taxBP,
-      disabled,
-      setWithdrawPending,
-    ],
-  )
-
-  // ELEVATE SECTION
-  const elevateSection = useCallback(
-    () =>
-      (!isMobile || mobileDepositWithdraw === 2) && (
-        <FarmCardUserElevate
-          symbol={symbol}
-          elevationLocked={elevationLocked}
-          disabled={disabled}
-        />
-      ),
-    [isMobile, mobileDepositWithdraw, elevationLocked, symbol, disabled],
-  )
-
   return (
     <Flex flexDirection='column' alignItems='center' justifyContent='center'>
       { elevationLocked &&
@@ -205,10 +98,57 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
         </Flex>
       }
       <MobileVerticalFlex>
-        {mobileDepositWithdrawSelector()}
-        {approveDepositSection()}
-        {withdrawSection()}
-        {elevateSection()}
+        { isMobile &&
+          <FarmCardMobileDepositWithdrawSelector
+            isApproved={isApproved}
+            elevation={elevation}
+            setMobileDepositWithdraw={setMobileDepositWithdraw}
+          />
+        }
+        { (!isMobile || mobileDepositWithdraw === 0) && (isApproved ?
+          <FarmCardUserDeposit
+            farmToken={farmToken}
+            symbol={symbol}
+            elevationLocked={elevationLocked}
+            walletBalance={walletBalance}
+            decimals={decimals}
+            depositFeeBP={depositFeeBP}
+            elevation={elevation}
+            disabled={disabled}
+            claimable={elevClaimable}
+            setPending={setApproveDepositPending}
+          /> :
+          <FarmCardUserApprove
+            symbol={symbol}
+            walletBalance={walletBalance}
+            decimals={decimals}
+            depositFeeBP={depositFeeBP}
+            elevation={elevation}
+            lpContract={lpContract}
+            setPending={setApproveDepositPending}
+          />
+        )}
+        { (!isMobile || mobileDepositWithdraw === 1) &&
+          <FarmCardUserWithdraw
+            farmToken={farmToken}
+            elevation={elevation}
+            symbol={symbol}
+            elevationLocked={elevationLocked}
+            stakedBalance={elevStaked}
+            claimable={elevClaimable}
+            decimals={decimals}
+            withdrawalFee={taxBP}
+            disabled={disabled}
+            setPending={setWithdrawPending}
+          />
+        }
+        {(!isMobile || mobileDepositWithdraw === 2) &&
+          <FarmCardUserElevate
+            symbol={symbol}
+            elevationLocked={elevationLocked}
+            disabled={disabled}
+          />
+        }
       </MobileVerticalFlex>
       <MobileVerticalFlexText width="100%" mt="24px">
         <Flex flexDirection="row" justifyContent="space-around" alignItems="center" width='100%'>

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { elevationUtils } from 'config/constants/types'
 import { getBalanceNumber } from 'utils'
 import { Text, Flex, HighlightedText, Skeleton, useModal } from 'uikit'
@@ -7,7 +7,7 @@ import { useSelectedElevation } from 'state/hooks'
 import CardValue from 'views/Home/components/CardValue'
 import ContributionBreakdown from './ContributionBreakdown'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { useElevationWinningsContributions, useUserElevationClaimable, useElevationInteractionsLocked, useFarmsUserDataLoaded } from 'state/hooksNew'
+import { useElevationWinningsContributions, useElevationInteractionsLocked, useFarmsUserDataLoaded } from 'state/hooksNew'
 import styled from 'styled-components'
 import { FreezeWithBonusesModal } from './FreezeWithBonusesModal'
 
@@ -44,10 +44,6 @@ const ElevationWinnings: React.FC = () => {
       onFreezeWinnings={onClaimElevation}
     />
   )
-  const handlePresentFreezeElev = () => {
-    if (claimPending || elevationLocked || nothingToClaim) return
-    onPresentFreezeElev()
-  }
 
 
   return (
@@ -87,7 +83,7 @@ const ElevationWinnings: React.FC = () => {
           isLoading={claimPending}
           disabled={nothingToClaim}
           width='200px'
-          onClick={handlePresentFreezeElev}
+          onClick={onPresentFreezeElev}
         >
           FREEZE {elevation}
           <br />

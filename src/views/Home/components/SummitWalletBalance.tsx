@@ -1,6 +1,6 @@
 import React from 'react'
 import { Text } from 'uikit'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import useSummitTokenBalance from 'hooks/useTokenBalance'
 import { getBalanceNumber } from 'utils/formatBalance'
 import CardValue from './CardValue'
@@ -8,7 +8,7 @@ import { Elevation } from 'config/constants/types'
 
 const SummitWalletBalance = () => {
   const summitBalance = useSummitTokenBalance()
-  const { account } = useWallet()
+  const { account } = useWeb3React()
 
   if (!account) {
     return (

@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
 import styled, { css } from 'styled-components'
-import { darken, linearGradient } from 'polished'
+import { linearGradient } from 'polished'
 import { pressableMixin } from 'uikit/util/styledMixins'
 import { getPaletteGradientStops  } from 'utils'
 import { Elevation } from 'config/constants'
@@ -145,10 +145,10 @@ const marks = {
 const FaithSlider: React.FC<Props> = ({ existingFaith, setFaith }) => {
     const [perc, setPerc] = useState(existingFaith)
 
-    const handleSetFaith = (markPerc) => {
+    const handleSetFaith = useCallback((markPerc) => {
         setPerc(markPerc)
         setFaith(markPerc)
-    }
+    }, [setPerc, setFaith])
 
     return (
         <SliderWrapper>

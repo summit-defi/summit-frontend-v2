@@ -1,14 +1,13 @@
 import { useCallback, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
-import { getV1SummitTokenAddress, tokenSwapV1Summit, approve, getSummitTokenAddress, getContract } from 'utils'
+import { useWeb3React } from '@web3-react/core'
+import { getV1SummitTokenAddress, tokenSwapV1Summit, approve, getSummitTokenAddress, getContract, getSummitTokenContract, getErc20Contract } from 'utils'
 import { useSummitToken } from './useContract'
 import useToast from './useToast'
-import { provider } from 'web3-core'
 import { useV1SummitTokenApproved, useV1SummitTokenBalance } from './useV1SummitToken'
 
 
 export const useTokenSwapV1Summit = () => {
-  const { account, ethereum }: { account: string; ethereum: provider } = useWallet()
+  const { account } = useWeb3React()
   const summitAddress = getSummitTokenAddress()
   const summitToken = useSummitToken()
   const [approvePending, setApprovePending] = useState(false)
@@ -25,7 +24,7 @@ export const useTokenSwapV1Summit = () => {
   const handleApproveSummitV1 = useCallback(async () => {
     try {
       setApprovePending(true)
-      const v1SummitToken = getContract(ethereum, v1SummitAddress)
+      const v1SummitToken = getErc20Contract(v1SummitAddress)
       await approve(v1SummitToken, summitAddress, account)
       toastSuccess('SUMMIT V1 Approved')
     } catch (error) {
@@ -35,7 +34,6 @@ export const useTokenSwapV1Summit = () => {
     }
   }, [
     account,
-    ethereum,
     v1SummitAddress,
     summitAddress,
     setApprovePending,

@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { Elevation } from 'config/constants/types'
 import { Flex, Text, SummitButton } from 'uikit'
 import { useSelectedElevation, useTotemSelectionPending } from 'state/hooks'
 import { useElevationUserTotem } from 'state/hooksNew'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { useSelectTotemModal } from 'components/SelectTotemModal'
 
 const StyledText = styled(Text)`
@@ -54,16 +54,16 @@ const Line4 = {
 const ElevationIntroduction: React.FC = () => {
   const elevation = useSelectedElevation()
   const userTotem = useElevationUserTotem(elevation)
-  const { account }: { account: string } = useWallet()
+  const { account } = useWeb3React()
   const { onPresentSelectTotemModal } = useSelectTotemModal(elevation)
   const totemSelectionPending = useTotemSelectionPending()
   
-  if (elevation == null || userTotem != null) return null
-
-  const handlePresentSelectTotemModal = () => {
+  const handlePresentSelectTotemModal = useCallback(() => {
     if (totemSelectionPending) return
     onPresentSelectTotemModal()
-  }
+  }, [totemSelectionPending, onPresentSelectTotemModal])
+
+  if (elevation == null || userTotem != null) return null
   
   return (
     <Flex flexDirection="column" alignItems="center" justifyContent="center">

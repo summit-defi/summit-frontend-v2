@@ -1,11 +1,11 @@
 import React from 'react'
 import { useWalletModal } from 'uikit'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
 import SummitButton from 'uikit/components/Button/SummitButton'
+import useAuth from 'hooks/useAuth'
 
 const UnlockButton = ({ summitPalette = null, ...props}) => {
-  const { connect, reset } = useWallet()
-  const { onPresentConnectModal } = useWalletModal(connect, reset)
+  const { login, logout } = useAuth()
+  const { onPresentConnectModal } = useWalletModal(login, logout)
 
   return (
     <SummitButton onClick={onPresentConnectModal} summitPalette={summitPalette} {...props}>

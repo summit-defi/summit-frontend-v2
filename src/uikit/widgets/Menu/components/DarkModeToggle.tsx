@@ -1,6 +1,5 @@
+import React, { useCallback } from 'react'
 import { SummitPalette, ElevOrPalette } from 'config/constants/types'
-import { darken } from 'polished'
-import React from 'react'
 import styled from 'styled-components'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { pressableMixin } from 'uikit/util/styledMixins'
@@ -72,15 +71,15 @@ const StyledMoonIcon = styled(MoonIcon)<{ visible: boolean }>`
 `
 
 const DarkModeToggle: React.FC<Props> = ({ summitPalette, isDark, toggleTheme }) => {
-  const handleToggleTheme = () => {
+  const handleToggleTheme = useCallback(() => {
     if (summitPalette === SummitPalette.EXPEDITION) return
     toggleTheme()
-  }
+  }, [summitPalette, toggleTheme])
   return (
     <ToggleWrapper disabled={summitPalette === SummitPalette.EXPEDITION} onClick={handleToggleTheme}>
       <BGSunIcon color="white" />
       <BGMoonIcon color="#575757" />
-      <StyledSummitButton summitPalette={summitPalette} visible={!isDark} onClick={() => null}>
+      <StyledSummitButton summitPalette={summitPalette} visible={!isDark}>
         <StyledSunIcon color="white" visible={!isDark} />
         <StyledMoonIcon color="white" visible={isDark} />
       </StyledSummitButton>

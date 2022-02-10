@@ -128,7 +128,7 @@ const ContributionComponent: React.FC<Contribution & ContProps> = ({symbol, elev
 
     const tabTarget = `/${elevationToUrl[elevation]}/${symbol.toLowerCase()}`
 
-    return <ElevationBar perc={perc} elevation={elevation} focused={focused} to={tabTarget} onClick={null} replace>
+    return <ElevationBar perc={perc} elevation={elevation} focused={focused} to={tabTarget} replace>
         <ElevationText monospace small elevation={elevation} focused={focused}>{elevation}</ElevationText>
         { (focused == null || focused === elevation) &&
             <ValueText monospace bold>{val != null ? val : `${perc.toFixed(1)}%`}</ValueText>

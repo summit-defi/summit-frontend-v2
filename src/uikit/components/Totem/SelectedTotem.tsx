@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { Elevation } from 'config/constants/types'
 import ArtworkTotem from './ArtworkTotem'
@@ -28,11 +28,11 @@ interface TotemProps {
 }
 
 const SelectedTotem: React.FC<TotemProps> = ({ elevation, totem, size, navSize, disabled, onSelect }) => {
-  const handleSelectTotem = () => {
+  const handleSelectTotem = useCallback(() => {
     if (!disabled && onSelect) {
       onSelect(totem)
     }
-  }
+  }, [disabled, onSelect, totem])
   return (
     <Clickable onClick={handleSelectTotem} disabled={disabled}>
       <ArtworkTotem

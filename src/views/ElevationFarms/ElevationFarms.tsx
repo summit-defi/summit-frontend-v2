@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react'
 import { Route, useRouteMatch } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { Text, Flex } from 'uikit'
 import FlexLayout from 'components/layout/Flex'
 import Page from 'components/layout/Page'

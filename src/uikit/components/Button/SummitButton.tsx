@@ -1,4 +1,4 @@
-import React, { cloneElement, ElementType, isValidElement } from 'react'
+import React, { cloneElement, ElementType, isValidElement, useCallback } from 'react'
 import styled from 'styled-components'
 import getExternalLinkProps from '../../util/getExternalLinkProps'
 import { Lock, Spinner } from '../Svg'
@@ -45,10 +45,10 @@ const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): 
     classNames.push('summit-button--disabled')
   }
 
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (isLoading || isLocked || isDisabled) return
     onClick()
-  }
+  }, [isLoading, isLocked, isDisabled, onClick])
 
   return (
     <SummitStyledButton

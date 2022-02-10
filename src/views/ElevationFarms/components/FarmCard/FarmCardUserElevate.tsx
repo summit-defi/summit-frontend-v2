@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Flex, Text, useModal } from 'uikit'
 import { Elevation } from 'config/constants/types'
 import styled from 'styled-components'
@@ -32,12 +32,12 @@ const FarmCardUserElevate: React.FC<Props> = ({ symbol, elevationLocked, disable
       onConfirmElevate={onElevate}
     />,
   )
-  const handleSelectElevation = (selectedElevation) => {
+  const handleSelectElevation = useCallback((selectedElevation) => {
     onPresentElevate({
       sourceElevation: selectedElevation === elevation ? undefined : elevation,
       targetElevation: selectedElevation,
     })
-  }
+  }, [onPresentElevate, elevation])
 
   const elevations = [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT]
   const disabledElevations = elevations.filter((elevToDisable) => !elevsLaunched[elevToDisable])

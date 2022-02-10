@@ -7,7 +7,7 @@ import CardValue from 'views/Home/components/CardValue'
 import ElevationContributionBreakdown from '../ElevationContributionBreakdown'
 import { useSelectedElevation } from 'state/hooks'
 import BigNumber from 'bignumber.js'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 
 const StakingInfoItem = styled(Flex)`
     flex-direction: column;
@@ -45,7 +45,7 @@ interface Props {
 
 const FarmStakingContribution: React.FC<Props> = ({ symbol, userDataLoaded, elevationsStaked, pricePerToken, decimals }) => {
     const elevation = useSelectedElevation()
-    const { account } = useWallet()
+    const { account } = useWeb3React()
 
     const [stakedUSD, stakingContributions] = useMemo(
         () => {

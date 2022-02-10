@@ -1,4 +1,4 @@
-import React, { memo, useState, useMemo } from "react"
+import React, { memo, useState, useCallback, useMemo } from "react"
 import BigNumber from "bignumber.js"
 import { FaithSlider } from "components/SelectTotemModal"
 import { BN_ZERO, Elevation } from "config/constants"
@@ -128,14 +128,14 @@ const faithChanged = updatedFaith != null
 
 const { pending: faithPending, onSelectTotemAndOrSafetyFactor: onSelectFaith } = useSelectTotemAndOrFaith()
 
-const handleUpdateFaith = () => {
+const handleUpdateFaith = useCallback(() => {
     if (faithPending || !faithChanged) return
     onSelectFaith(
         Elevation.EXPEDITION,
         null,
         updatedFaith
     )
-}
+}, [faithPending, faithChanged, updatedFaith, onSelectFaith])
 
 const {
     summitGuaranteedWinnings,

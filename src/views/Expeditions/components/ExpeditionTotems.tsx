@@ -1,5 +1,5 @@
 import { Elevation } from 'config/constants/types'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { Flex, Spinner, Text, SpinnerKeyframes } from 'uikit'
 import { getFormattedBigNumber } from 'utils'
@@ -159,14 +159,14 @@ const ExpeditionTotems: React.FC = () => {
   const { onPresentSelectTotemModal: onConfirmBearDeity } = useSelectTotemModal(Elevation.EXPEDITION, 0, faith != null, faith)
   const { onPresentSelectTotemModal: onConfirmBullDeity } = useSelectTotemModal(Elevation.EXPEDITION, 1, faith != null, faith)
 
-  const handleConfirmBullDeity = () => {
+  const handleConfirmBullDeity = useCallback(() => {
     if (totemSelectionPending) return
     onConfirmBullDeity()
-  }
-  const handleConfirmBearDeity = () => {
+  }, [totemSelectionPending, onConfirmBullDeity])
+  const handleConfirmBearDeity = useCallback(() => {
     if (totemSelectionPending) return
     onConfirmBearDeity()
-  }
+  }, [totemSelectionPending, onConfirmBearDeity])
 
   return (
     <Flex justifyContent="space-around">

@@ -31,11 +31,11 @@ const PanelBody: React.FC<Props> = ({ isPushed, pushNav, isMobile, links }) => {
   const userDeity = useExpeditionUserDeity()
 
   // Close the menu when a user clicks a link on mobile
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
     if (isMobile) {
       pushNav(false)
     }
-  }
+  }, [isMobile, pushNav])
 
   const entryIcon = useCallback(
     (elevation, icon) => {

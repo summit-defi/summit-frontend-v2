@@ -95,11 +95,6 @@ const SelectTotemModal: React.FC<Props> = ({
   const totemToConfirmName = elevationUtils.getElevationTotemName(elevation, totemToConfirm, false)
   const elevationName = `${elevation}`
 
-
-  const handleSelectTotemToConfirm = (totem: number) => {
-    setTotemToConfirm(totem)
-  }
-
   const updateFaithText = (!alsoSelectFaith || existingFaith === faithToConfirm) ?
     null :
     '(WITH FAITH)'
@@ -157,7 +152,7 @@ const SelectTotemModal: React.FC<Props> = ({
             <br />
             Your yield contributed is moved to your new totem.
           </Text>
-          <InitialSelectionTotems elevation={elevation} userTotem={userTotem} onSelect={handleSelectTotemToConfirm} />
+          <InitialSelectionTotems elevation={elevation} userTotem={userTotem} onSelect={setTotemToConfirm} />
         </Flex>
       )}
     </Modal>

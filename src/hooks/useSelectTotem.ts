@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react'
-import { useWallet } from '@binance-chain/bsc-use-wallet'
+import { useWeb3React } from '@web3-react/core'
 import { useDispatch } from 'react-redux'
 import { fetchExpeditionUserDataAsync, fetchUserTotemsAsync } from 'state/actions'
 import { Elevation, elevationUtils } from 'config/constants/types'
@@ -48,7 +48,7 @@ export const useSelectTotemAndOrFaith = () => {
   const [pending, setPending] = useState(false)
   const { toastSuccess, toastError } = useTransactionToasts()
   const dispatch = useDispatch()
-  const { account }: { account: string } = useWallet()
+  const { account } = useWeb3React()
   const cartographer = useCartographer()
   const expedition = useExpedition()
 

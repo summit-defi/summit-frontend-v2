@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { FaithSlider } from 'components/SelectTotemModal'
 import { Elevation, SummitPalette } from 'config/constants'
 import { useEnterExpedition } from 'hooks/useEnterExpedition'
@@ -7,6 +7,7 @@ import styled from 'styled-components'
 import { Flex, Text, SummitButton } from 'uikit'
 import Divider from './Divider'
 import { useExpeditionEntryFlow } from 'state/hooksNew'
+import { Link } from 'react-router-dom'
 
 const DivineBonus = 20
 
@@ -105,14 +106,14 @@ const SelectFaithFlowItem: React.FC = () => {
     const { pending: faithPending, onSelectTotemAndOrSafetyFactor: onSelectFaith } = useSelectTotemAndOrFaith()
     const [ faith, setFaith ] = useState(null)
 
-    const handleSelectFaith = () => {
+    const handleSelectFaith = useCallback(() => {
         if (faithPending || faith == null) return
         onSelectFaith(
             Elevation.EXPEDITION,
             null,
             faith
         )
-    }
+    }, [faithPending, faith, onSelectFaith])
 
     const faithText = faith != null ? `${faith}%` : '-'
     const invFaithText = faith != null ? `${100 - faith}%` : '-'
@@ -168,10 +169,10 @@ const GetEverestFlowItem: React.FC = () => {
             Is there any greater Summit than EVEREST itself?
         </Text>
         <SummitButton
-            onClick={() => null}
+            as={Link}
             summitPalette={SummitPalette.EVEREST}
-            as="a"
-            href='/everest'
+            to='/everest'
+            replace
             mt='12px'
         >
             GET EVEREST
@@ -185,10 +186,10 @@ const GetEverestFlowItem: React.FC = () => {
 const EnterTheExpeditionFlowItem: React.FC = () => {
     const { entryPending, onEnterExpedition } = useEnterExpedition()
 
-    const handleEnterExpedition = () => {
+    const handleEnterExpedition = useCallback(() => {
         if (entryPending) return
         onEnterExpedition()
-    }
+    }, [entryPending, onEnterExpedition])
 
     return <Flex mt='24px' gap='24px' flexDirection='column' alignItems='center' justifyContent='center' pl='24px' pr='24px'>
         <Text bold monospace small textAlign='center' style={{maxWidth: '500px'}}>

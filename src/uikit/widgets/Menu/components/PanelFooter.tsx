@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import * as IconModule from '../icons'
 import { SvgProps } from '../../../components/Svg'
@@ -35,7 +35,12 @@ const Icons = (IconModule as unknown) as { [key: string]: React.FC<SvgProps> }
 
 const PanelFooter: React.FC<Props> = ({ pushNav, additionals, isMobile }) => {
   // Close the menu when a user clicks a link on mobile
-  const handleClick = isMobile ? () => pushNav(false) : undefined
+  const handleClick = useCallback(
+    () => {
+      if (isMobile) pushNav(false)
+    },
+    [isMobile, pushNav]
+  )
 
   return (
     <Container isPushed={false}>

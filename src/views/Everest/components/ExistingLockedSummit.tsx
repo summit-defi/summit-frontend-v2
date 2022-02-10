@@ -38,10 +38,6 @@ export const ExistingLockedSummit: React.FC<ExistingLockedSummitProps> = ({ lock
         />,
     )
 
-    const handleUnlockSummit = () => {
-        onPresentUnlockSummitModal()
-    }
-
     return (
         <ExistingLockedSummitFlex flexDirection='column' alignItems='flex-start' justifyContent='center'>
             <Text bold monospace small>{rawSummitLocked} SUMMIT is locked until {releaseDate}.</Text>
@@ -49,7 +45,7 @@ export const ExistingLockedSummit: React.FC<ExistingLockedSummitProps> = ({ lock
             { matured &&
                 <SummitButton
                     summitPalette={ SummitPalette.EVEREST }
-                    onClick={handleUnlockSummit}
+                    onClick={onPresentUnlockSummitModal}
                     disabled={pending}
                     padding='0px'
                     height='24px'

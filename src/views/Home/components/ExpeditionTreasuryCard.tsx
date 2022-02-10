@@ -6,6 +6,7 @@ import { Elevation, SummitPalette } from 'config/constants'
 import { InverseDeity } from 'views/ElevationFarms/components/InverseDeity'
 import CardValue from './CardValue'
 import { useExpeditionDisbursedValue, useExpeditionPotTotalValue } from 'state/hooks'
+import { Link } from 'react-router-dom'
 
 const StyledFarmStakingCard = styled(Card)`
     min-height: 376px;
@@ -68,19 +69,19 @@ const ExpeditionTreasuryCard: React.FC = () => {
 
                 <Flex alignItems='center' justifyContent='center' gap='12px' mt='12px'>
                     <SummitButton
-                        onClick={() => null}
                         summitPalette={SummitPalette.EVEREST}
-                        as="a"
-                        href='/everest'
+                        as={Link}
+                        to='/everest'
+                        replace
                         mt='12px'
                     >
                         GET EVEREST
                     </SummitButton>
                     <SummitButton
-                        onClick={() => null}
                         summitPalette={SummitPalette.EXPEDITION}
-                        as="a"
-                        href='/expedition'
+                        as={Link}
+                        to='/expedition'
+                        replace
                         mt='12px'
                     >
                         JOIN EXPEDITION
