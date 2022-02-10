@@ -15,7 +15,8 @@ const Wrapper = styled.div`
     width: 100%;
     
     ${({ theme }) => theme.mediaQueries.nav} {
-        margin-top: -86px;
+        position: absolute;
+        top: 18px;
     }
 `
 
@@ -59,7 +60,7 @@ const DashboardLifetimeSummitWinnings: React.FC = memo(() => {
     return (
         <Wrapper>
             <ItemFlex>
-                <Text bold monospace small>
+                <Text textAlign='center' bold monospace small>
                     LIFETIME WINNINGS
                 </Text>
                 { userDataLoaded ?
@@ -76,7 +77,7 @@ const DashboardLifetimeSummitWinnings: React.FC = memo(() => {
             </ItemFlex>
             <Spacer/>
             <ItemFlex>
-                <Text bold monospace small>
+                <Text textAlign='center' bold monospace small>
                     LIFETIME LOYALTY BONUS
                 </Text>
                 { userDataLoaded ?

@@ -15,7 +15,7 @@ const BaseSymbolIcon = styled.div<{ elevation: string; width: number; height: nu
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  filter: drop-shadow(1px 1px 2px ${transparentize(0.5, '#000000')});
+  box-shadow: 1px 1px 2px ${({ theme }) => theme.colors.textShadow};
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
 `

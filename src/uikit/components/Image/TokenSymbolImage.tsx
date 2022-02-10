@@ -1,4 +1,3 @@
-import { transparentize } from 'polished'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -13,6 +12,7 @@ const BaseSymbolIcon = styled.div<{ symbol: string; width: number; height: numbe
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  filter: drop-shadow(1px 1px 1px ${({ theme }) => theme.colors.textShadow});
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
 `

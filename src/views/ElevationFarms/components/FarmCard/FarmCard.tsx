@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useEffect, useRef } from 'react'
 import BigNumber from 'bignumber.js'
 import styled, { css } from 'styled-components'
 import { Flex, Text } from 'uikit'
@@ -22,6 +22,7 @@ const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
   text-align: center;
   transition: all 250ms;
   width: 100%;
+  scroll-margin: 156px;
   background: ${({ theme }) => theme.colors.background};
   border-bottom-width: 1px;
   border-bottom-style: solid;
@@ -99,6 +100,8 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
   const singleFarmSymbol = useSingleFarmSelected()
   const userDataLoaded = useFarmsUserDataLoaded()
   const expanded = singleFarmSymbol === symbol
+  const [currentElevTab, setCurrentElevTab] = useState(elevationTab)
+  const cardRef = useRef(null)
 
   const {
     allocation,
@@ -117,6 +120,22 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
   const isInteracting = useMemo(
     () => getFarmInteracting(farm),
     [farm],
+  )
+
+  useEffect(
+    () => {
+      if (expanded && currentElevTab !== elevationTab) {
+        setCurrentElevTab(elevationTab)
+        console.log({
+          scrollIntoView: true,
+        })
+        cardRef.current.scrollIntoView({
+          behavior: 'smooth',
+        })
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [elevationTab, expanded]
   )
 
   const farmElevationsStaked = useMemo(
@@ -159,7 +178,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
 
 
   return (
-    <FCard $locked={false} $expanded={expanded}>
+    <FCard $locked={false} ref={cardRef} $expanded={expanded}>
       <PressableFlex $expanded={expanded}>
         <PressableBackground to={targetUrl} replace/>
         { farmComment != null && <Text monospace bold italic fontSize='13px' mb='14px' textAlign='center'>* {farmComment}</Text> }

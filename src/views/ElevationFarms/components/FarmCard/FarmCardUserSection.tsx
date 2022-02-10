@@ -4,7 +4,6 @@ import { Elevation } from 'config/constants/types'
 import FarmCardTokenSection from './FarmCardTokenSection'
 import FarmCardUserInteractionSection from './FarmCardUserInteractionSection'
 import { useSelectedElevation } from 'state/hooks'
-import useVisibility from 'hooks/useVisibility'
 import FarmCardDashboardElevationLinks from './FarmCardDashboardElevationLinks'
 
 const ExpandableSection = styled.div<{ isExpanded: boolean, elevation?: Elevation }>`
@@ -37,24 +36,7 @@ interface Props {
 }
 
 const FarmCardUserSection: React.FC<Props> = ({ isExpanded, symbol }) => {
-  const [isVisible, currentElement] = useVisibility<HTMLDivElement>()
   const elevation = useSelectedElevation()
-  const [currentElev, setCurrentElev] = useState(elevation)
-
-  useEffect(
-    () => {
-      if (currentElement && currentElev !== elevation && isVisible) {
-        setCurrentElev(elevation)
-        currentElement.current.scrollIntoView({
-          block: 'center',
-        })
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [elevation, isVisible, currentElement]
-  )
-
-
 
   const [expanded, setExpanded] = useState(false)
   useEffect(() => {
@@ -62,7 +44,7 @@ const FarmCardUserSection: React.FC<Props> = ({ isExpanded, symbol }) => {
   }, [isExpanded, setExpanded])
 
   return (
-    <ExpandableSection ref={currentElement} isExpanded={expanded} elevation={elevation}>
+    <ExpandableSection isExpanded={expanded} elevation={elevation}>
       <Divider />
       <FarmCardTokenSection
         symbol={symbol}

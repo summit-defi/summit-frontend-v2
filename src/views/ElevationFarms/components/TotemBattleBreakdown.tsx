@@ -27,6 +27,7 @@ const ExpectedMultText = styled(Text)<{ invis?: boolean }>`
 `
 
 const TotemMultText = styled(Text)`
+  border-radius: 4px;
   position: absolute;
   font-size: 12px;
   bottom: -18px;
@@ -52,6 +53,13 @@ const TotemResultsWrapper = styled(Flex)<{ elevation: Elevation, multiElev: bool
     padding-left: ${({ multiElev}) => multiElev ? 32 : 6}px;
     padding-right: ${({ multiElev}) => multiElev ? 32 : 6}px; 
   }
+
+  .rule-line:nth-child(even) {
+    opacity: 0.08;
+  }
+  & > .rule-line {
+      background-color: ${({ theme, elevation }) => theme.colors[elevation]};
+  }
 `
 
 const TotemPosition = styled(Flex)<{ topOffset: number }>`
@@ -68,13 +76,14 @@ const DashedLine = styled.div<{ leftClipped: boolean, rightClipped: boolean }>`
   border-top: 1px dashed ${({ theme }) => theme.colors.text};
 `
 
-const RuleLine = styled.div<{ topOffset: number }>`
+const RuleLine = styled.div<{ index: number }>`
   position: absolute;
   left: 0px;
   right: 0px;
-  top: ${({ topOffset }) => topOffset + (TotemHeight / 2)}px;
-  opacity: 0.2;
-  border-top: 1px solid ${({ theme }) => theme.colors.text};
+  top: ${({ index }) => (21.5 * index) + (TotemHeight / 2) - (21.5 * 1.5)}px;
+  height: 21.5px;
+  opacity: 0.16;
+  border-radius: ${({ index }) => index === 0 ? '12px 12px 0px 0px' : index === 6 ? '0px 0px 12px 12px' : 'none'};
 `
 
 const TotemScale = styled.div<{ scale: number }>`
@@ -148,24 +157,26 @@ const calcScale = (mult, elevation: Elevation) => {
 }
 
 
-const RulerLine: React.FC<{ i: number, elevation: Elevation }> = ({ i, elevation }) => {
-  const expectedMult = elevationUtils.totemCount(elevation)
-  const maxMult = expectedMult + (expectedMult * 0.4)
-  const mult = maxMult - (i * expectedMult * 0.2)
-  return (<RuleLine topOffset={calcTopOffset(mult, elevation)}/>)
-}
+const RulerLine: React.FC<{ i: number }> = React.memo(({ i }) => {
+  return (<RuleLine className='rule-line' index={i}/>)
+})
 
-const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, secondRow: boolean, isMobile: boolean, multiElev: boolean }> = ({ elevation, children, fullWidth, secondRow, isMobile, multiElev }) => {
+const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, secondRow: boolean, isMobile: boolean, multiElev: boolean }> = React.memo(({ elevation, children, fullWidth, secondRow, isMobile, multiElev }) => {
   const expectedMultiplier = elevationUtils.totemCount(elevation)
   return (
     <TotemBattleAreaWrapper fullWidth={fullWidth} secondRow={secondRow}>
       <ExpectedMultText invis={secondRow} bold monospace>{expectedMultiplier}x</ExpectedMultText>
       <TotemResultsWrapper elevation={elevation} multiElev={multiElev}>
-        <RulerLine elevation={elevation} i={0}/>
-        <RulerLine elevation={elevation} i={1}/>
+        <RulerLine i={0}/>
+        <RulerLine i={1}/>
+        <RulerLine i={2}/>
+        <RulerLine i={3}/>
+        <RulerLine i={4}/>
+        <RulerLine i={5}/>
+        <RulerLine i={6}/>
+        {/* <LeftFade/>
+        <RightFade/> */}
         <DashedLine leftClipped={secondRow} rightClipped={elevation === Elevation.SUMMIT && !secondRow && isMobile && !multiElev}/>
-        <RulerLine elevation={elevation} i={3}/>
-        <RulerLine elevation={elevation} i={4}/>
         {children}
       </TotemResultsWrapper>
       { secondRow && <RowCombinerLeft/>}
@@ -174,7 +185,7 @@ const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, seco
       { fullWidth && <ExpectedMultText invis={!secondRow} bold monospace>{expectedMultiplier}x</ExpectedMultText> }
     </TotemBattleAreaWrapper>
   )
-}
+})
 
 
 const IconCrown = styled.div`
@@ -296,4 +307,4 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
   )
 }
 
-export default TotemBattleBreakdown
+export default React.memo(TotemBattleBreakdown)

@@ -63,10 +63,6 @@ const StyledHighlightedText = styled(HighlightedText)<{ fontSize: string; letter
   text-shadow: none;
 `
 
-const DeityWrapper = styled.div`
-    filter: drop-shadow(-0.5vw 0.5vw 0.5vw white) drop-shadow(-4vw 2vw 4vw #ae6481) drop-shadow(4vw -2vw 4vw #0d172e);
-`
-
 const Cards = styled(BaseLayout)`
   align-items: stretch;
   justify-content: stretch;

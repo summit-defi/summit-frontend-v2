@@ -32,16 +32,15 @@ const TotemBackground = styled.div<{
 
 const TotemIcon = styled.div<{ totemName: string; crowned: boolean }>`
   position: absolute;
-  top: -10px;
+  top: ${({ crowned }) => crowned ? -20 : -10}px;
   left: -10px;
   right: -10px;
-  bottom: -10px;
+  bottom: ${({ crowned }) => crowned ? 0 : -10}px;
   background-image: ${({ totemName }) => `url("/images/totemArtwork/${totemName}_FULL.png")`};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  filter: ${({ crowned }) =>
-    !crowned ? 'drop-shadow(3px 3px 6px black)' : 'drop-shadow(0 0 4px white) drop-shadow(3px 3px 10px gold)'};
+  filter: drop-shadow(2px 0px 2px black);
 `
 
 const ElevationForeground = styled.div<{ elevation: Elevation; crowned: boolean }>`
@@ -54,7 +53,7 @@ const ElevationForeground = styled.div<{ elevation: Elevation; crowned: boolean 
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  filter: drop-shadow(3px 3px 6px black);
+  filter: drop-shadow(2px 0px 2px black);
 `
 
 const ArtworkCrown = styled.div<{ desktopSize?: string; mobileSize?: string }>`

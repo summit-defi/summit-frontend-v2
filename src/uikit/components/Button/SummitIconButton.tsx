@@ -12,7 +12,6 @@ const SummitIconButton = styled.div<{ elevation: Elevation; isLocked?: boolean, 
   height: 52px;
   margin-left: 10px;
   margin-right: 10px;
-  transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
