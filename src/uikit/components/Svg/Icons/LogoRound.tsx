@@ -3,7 +3,8 @@ import styled from 'styled-components'
 import { SvgProps } from '../types'
 
 const ShadowSvg = styled.svg`
-  filter: drop-shadow(1px 1px 2px ${({ theme }) => theme.colors.textShadow});
+  box-shadow: 1px 1px 2px ${({ theme }) => theme.colors.textShadow};
+  border-radius: 50px;
 `
 
 const LogoRound: React.FC<SvgProps> = (props) => {

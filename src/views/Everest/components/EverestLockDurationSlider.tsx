@@ -7,6 +7,7 @@ import 'rc-slider/assets/index.css'
 import { pressableMixin } from 'uikit/util/styledMixins'
 import { getPaletteGradientStops, lockDurationSliderMarks, lockDurationSliderPerc, sliderPercLockDuration } from 'utils'
 import { SummitPalette } from 'config/constants'
+import { selectorWrapperMixin } from 'uikit/widgets/Selector/styles'
 
 const ButtonHeight = 28
 
@@ -22,8 +23,7 @@ const SliderWrapper = styled(Flex)`
         height: ${ButtonHeight}px;
         border-radius: ${ButtonHeight / 2}px;
         top: ${(ButtonHeight / -2) + 6}px;
-        background-color: ${({ theme }) => transparentize(0.85, theme.colors.text)};
-        box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
+        ${selectorWrapperMixin}
     }
     .rc-slider-track {
         display: none;
@@ -65,7 +65,6 @@ const SliderWrapper = styled(Flex)`
 `
 
 const FakeMarkDot = styled.div<{ perc: number, disabled: boolean }>`
-    transition: transform 0.2s;
     position: absolute;
     left: ${({ perc }) => perc}%;
     width: 32px;
@@ -96,7 +95,6 @@ const FakeSliderHandle = styled.div<{ perc: number }>`
     height: ${ButtonHeight - 4}px;
     padding: 0px;
     border: none;
-    transition: all 100ms;
     pointer-events: none;
     margin-top: -6px;
     margin-left: -12px;

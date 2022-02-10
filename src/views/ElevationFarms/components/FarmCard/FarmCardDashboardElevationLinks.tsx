@@ -1,14 +1,13 @@
 import React, {  } from 'react'
 import { Flex, Text, SummitButton } from 'uikit'
 import { elevationToUrl, elevationUtils } from 'config/constants'
+import { Link } from 'react-router-dom'
 
 interface Props {
   symbol: string
 }
 
 const FarmCardDashboardElevationLinks: React.FC<Props> = ({ symbol }) => {
-
-  
   
   return (
     <Flex flexDirection='column' width='100%' gap='8px' mt='4px' alignItems='center' justifyContent='center'>
@@ -21,11 +20,12 @@ const FarmCardDashboardElevationLinks: React.FC<Props> = ({ symbol }) => {
               key={elev}
               onClick={() => null}
               summitPalette={elev}
-              as="a"
+              as={Link}
+              replace
               height='24px'
               width='160px'
               padding='0px'
-              href={tabTarget}
+              to={tabTarget}
             >
               THE {elev}
             </SummitButton>

@@ -3,6 +3,7 @@ import { ElevOrPalette } from 'config/constants/types'
 import { darken } from 'polished'
 import styled, { css } from 'styled-components'
 import { HighlightedText, Lock } from 'uikit'
+import { SelectorWrapperBase } from 'uikit/widgets/Selector/styles'
 
 export interface InputProps {
   endAdornment?: React.ReactNode
@@ -38,7 +39,7 @@ const Input: React.FC<InputProps> = ({
           value={value}
           onChange={onChange}
         />
-        {!!tokenSymbol && <HighlightedText fontSize="12px">{tokenSymbol}</HighlightedText>}
+        {!!tokenSymbol && <SymbolText fontSize='12px' monospace>{tokenSymbol}</SymbolText>}
       </InputWrapper>
       {!!endAdornment && endAdornment}
       {isLocked && <StyledLock width="28px" />}
@@ -46,22 +47,18 @@ const Input: React.FC<InputProps> = ({
   )
 }
 
-const StyledInputWrapper = styled.div<{ disabled: boolean, isLocked: boolean }>`
+const StyledInputWrapper = styled(SelectorWrapperBase)`
   position: relative;
   align-items: center;
-
-  background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
 
   border-radius: 16px;
   display: flex;
   height: 62px;
   padding: 0 ${(props) => props.theme.spacing[3]}px;
-  box-shadow: ${({ theme, isLocked }) => isLocked ? 'none' : `inset 2px 2px 4px ${theme.colors.textShadow}`};
 
   ${({ disabled }) =>
     disabled &&
     css`
-      box-shadow: none;
       opacity: 0.5;
     `}
 
@@ -77,7 +74,7 @@ const StyledLock = styled(Lock)`
   position: absolute;
   transform: rotate(20deg);
   fill: white;
-  filter: drop-shadow(0px 0px 8px black) drop-shadow(0px 0px 2px black);
+  filter: drop-shadow(1px 1px 4px black);
   z-index: 4;
   top: 0;
   left: 0;
@@ -92,6 +89,10 @@ const InputWrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
+`
+
+const SymbolText = styled(HighlightedText)`
+  text-shadow: none;
 `
 
 export const StyledInput = styled.input<{ summitPalette?: ElevOrPalette }>`

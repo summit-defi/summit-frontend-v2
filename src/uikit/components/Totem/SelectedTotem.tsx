@@ -7,7 +7,6 @@ import { pressableMixin } from 'uikit/util/styledMixins'
 const Clickable = styled.div<{ disabled?: boolean }>`
   cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   position: relative;
-  transition: transform 0.2s;
 
   ${({ theme, disabled }) =>
     pressableMixin({

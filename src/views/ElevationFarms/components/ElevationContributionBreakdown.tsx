@@ -3,7 +3,7 @@ import React from 'react'
 import styled, { DefaultTheme } from 'styled-components'
 import { transparentize } from 'polished'
 import { Flex, Skeleton, Text } from 'uikit'
-import { NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { pressableMixin } from 'uikit/util/styledMixins'
 
 const BarHeight = 24
@@ -36,7 +36,7 @@ const EmptyElevationBar = styled.div`
     background-color: transparent;
 `
 
-const ElevationBar = styled(NavLink)<{ elevation?: Elevation, perc: number, focused?: Elevation }>`
+const ElevationBar = styled(Link)<{ elevation?: Elevation, perc: number, focused?: Elevation }>`
     position: relative;
     display: flex;
     flex-direction: row;
@@ -128,7 +128,7 @@ const ContributionComponent: React.FC<Contribution & ContProps> = ({symbol, elev
 
     const tabTarget = `/${elevationToUrl[elevation]}/${symbol.toLowerCase()}`
 
-    return <ElevationBar perc={perc} elevation={elevation} focused={focused} to={tabTarget} onClick={null}>
+    return <ElevationBar perc={perc} elevation={elevation} focused={focused} to={tabTarget} onClick={null} replace>
         <ElevationText monospace small elevation={elevation} focused={focused}>{elevation}</ElevationText>
         { (focused == null || focused === elevation) &&
             <ValueText monospace bold>{val != null ? val : `${perc.toFixed(1)}%`}</ValueText>

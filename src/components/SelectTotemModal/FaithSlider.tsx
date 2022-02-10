@@ -8,6 +8,7 @@ import { getPaletteGradientStops  } from 'utils'
 import { Elevation } from 'config/constants'
 import { Flex } from 'uikit/components/Box'
 import { Text } from 'uikit/components/Text'
+import { selectorWrapperMixin } from 'uikit/widgets/Selector/styles'
 
 const ButtonHeight = 28
 
@@ -23,8 +24,7 @@ const SliderWrapper = styled(Flex)`
         height: ${ButtonHeight}px;
         border-radius: ${ButtonHeight / 2}px;
         top: ${(ButtonHeight / -2) + 6}px;
-        background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
-        box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
+        ${selectorWrapperMixin}
     }
     .rc-slider-track {
         display: none;
@@ -66,7 +66,6 @@ const SliderWrapper = styled(Flex)`
 `
 
 const FakeMarkDot = styled.div<{ perc: number, isExisting?: boolean }>`
-    transition: transform 0.2s;
     position: absolute;
     left: ${({ perc }) => perc}%;
     width: 32px;
@@ -112,7 +111,6 @@ const FakeSliderHandle = styled.div<{ perc: number }>`
     height: ${ButtonHeight - 4}px;
     padding: 0px;
     border: none;
-    transition: all 100ms;
     pointer-events: none;
     margin-top: -6px;
     margin-left: -12px;

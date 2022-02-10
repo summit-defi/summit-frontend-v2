@@ -16,7 +16,6 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     background-color: ${({ theme }) => theme.colors.background};
-    transition: background-color 0.6s;
     position: relative;
     overflow-x: hidden;
 

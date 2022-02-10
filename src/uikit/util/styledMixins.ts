@@ -1,4 +1,7 @@
+import { ElevOrPalette } from 'config/constants'
+import { linearGradient } from 'polished'
 import { css, DefaultTheme, FlattenSimpleInterpolation } from 'styled-components'
+import { getPaletteGradientStops, getPalettePerfBackgroundColor } from 'utils'
 
 export const pressableMixin = ({
   theme,
@@ -12,30 +15,49 @@ export const pressableMixin = ({
   hoverStyles?: FlattenSimpleInterpolation
   disabledStyles?: FlattenSimpleInterpolation
   enabledStyles?: FlattenSimpleInterpolation
-}) =>
-  disabled
-    ? css`
-        cursor: not-allowed;
-        opacity: 0.5;
-        box-shadow: none;
+}) => {
+  if (disabled) return css`
+    cursor: not-allowed;
+    opacity: 0.5;
+    box-shadow: none;
 
-        ${disabledStyles}
-      `
-    : css`
-        cursor: pointer;
-        opacity: 1;
+    ${disabledStyles}
+  `
 
-        ${theme.mediaQueries.nav} {
-          &:hover {
-            transform: translateY(-2px);
-            ${hoverStyles}
-          }
-        }
+  return css`
+    cursor: pointer;
+    opacity: 1;
 
-        &:active {
-          transform: translateY(2px);
-          box-shadow: none;
-        }
+    ${theme.mediaQueries.nav} {
+      &:hover {
+        transform: translateY(-2px);
+        ${hoverStyles}
+      }
+    }
 
-        ${enabledStyles}
-      `
+    &:active {
+      transform: translateY(0px);
+      opacity: 0.5;
+    }
+
+    ${enabledStyles}
+  `
+}
+
+export const paletteLinearGradientBackground = ({
+  secondary,
+  summitPalette,
+}: {
+  secondary: boolean,
+  summitPalette?: ElevOrPalette,
+}) => {
+  if (secondary) return css`
+    background: none;
+  `
+  return css`
+    background: ${linearGradient({
+      colorStops: getPaletteGradientStops(summitPalette),
+      toDirection: '120deg',
+    })}};
+  `
+}

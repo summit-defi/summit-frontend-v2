@@ -54,6 +54,7 @@ export type Colors = {
   textSubtle: string
   borderColor: string
   card: string
+  selectorBackground: string
 
   textGold: string
 

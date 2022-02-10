@@ -26,7 +26,6 @@ const ActiveRing = styled.div<{ isActive: boolean; elevation?: string; backgroun
   right: 5px;
   bottom: 5px;
   border: ${({ theme, elevation }) => `3px solid ${theme.colors[elevation]}`};
-  transition: all 300ms;
   border-radius: 50px;
   opacity: ${({ isActive }) => (isActive ? 1 : 0)};
   transform: ${({ isActive }) => `scale(${isActive ? 1 : 0.8})`};

@@ -8,7 +8,6 @@ const SummitIconButton = styled.div<{ elevation: Elevation; isLocked?: boolean, 
   position: relative;
   background-color: ${({ theme }) => theme.colors.background};
   border-radius: 200px;
-  box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
   width: 52px;
   height: 52px;
   margin-left: 10px;
@@ -29,12 +28,15 @@ const SummitIconButton = styled.div<{ elevation: Elevation; isLocked?: boolean, 
       theme,
       disabled: isLocked || isLoading,
       disabledStyles: css`
-        filter: grayscale(1) brightness(1.2);
+        filter: grayscale(1);
         opacity: 0.75;
+      `,
+      hoverStyles: css`
+        box-shadow: 2px 2px 4px ${theme.colors.textShadow};
       `,
       enabledStyles: css`
         background: ${theme.colors.cardHover};
-        box-shadow: ${`2px 2px 8px ${theme.colors.textShadow}`};
+        box-shadow: ${`1px 1px 2px ${theme.colors.textShadow}`};
       `,
     })}
 
@@ -47,7 +49,7 @@ const SummitIconButton = styled.div<{ elevation: Elevation; isLocked?: boolean, 
     content: '';
     background-color: ${({ theme, elevation }) => theme.colors[elevation]};
     border-radius: 50px;
-    box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
+    box-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`};
   }
 `
 

@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { Flex } from 'uikit'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { pressableMixin } from 'uikit/util/styledMixins'
+import { SelectorWrapperBase } from 'uikit/widgets/Selector/styles'
 
 const buttonWidth = 180
 const buttonHeight = 28
@@ -17,14 +18,13 @@ const SelectorFlex = styled(Flex)`
   margin-right: 6px;
 `
 
-const SelectorWrapper = styled(Flex)`
+const SelectorWrapper = styled(SelectorWrapperBase)`
+  display: flex;
   justify-content: center;
   margin: 4px 0px;
   height: ${buttonHeight}px;
   width: ${buttonWidth * 2};
   border-radius: 22px;
-  background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
-  box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
   position: relative;
 `
 
@@ -49,8 +49,6 @@ const TextButton = styled.div`
   height: ${buttonHeight}px;
   line-height: ${buttonHeight}px;
   text-align: center;
-
-  transition: transform 0.2s;
 
   ${pressableMixin}
 `

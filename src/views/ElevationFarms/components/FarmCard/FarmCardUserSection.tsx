@@ -12,7 +12,7 @@ const ExpandableSection = styled.div<{ isExpanded: boolean, elevation?: Elevatio
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: all 300ms;
+  transition: max-height 250ms, opacity 250ms;
   overflow: hidden;
   padding-left: 24px;
   padding-right: 24px;

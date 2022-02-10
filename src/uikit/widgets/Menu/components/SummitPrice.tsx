@@ -15,13 +15,6 @@ const PriceLink = styled.a`
   align-items: center;
   margin-right: 18px;
   margin-left: 18px;
-  text-shadow: 1px 1px 2px ${({ theme }) => theme.colors.textShadow};
-
-  svg {
-    transition: transform 0.2s;
-  }
-
-  transition: all 200ms;
 
   ${pressableMixin}
 `

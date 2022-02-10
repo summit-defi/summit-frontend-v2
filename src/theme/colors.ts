@@ -47,6 +47,7 @@ export const lightColors: Colors = {
   textSubtle: '#46557d',
   borderColor: '#98a3ac',
   card: '#FFFFFF',
+  selectorBackground: 'rgba(87, 87, 87, 0.2)',
   gradients: {
     bubblegum: 'linear-gradient(139.73deg, #E6FDFF 0%, #F3EFFF 100%)',
   },
@@ -71,6 +72,7 @@ export const darkColors: Colors = {
   textSubtle: '#FFFFFF',
   borderColor: '#ebf2fd',
   card: '#0F152A',
+  selectorBackground: 'rgba(205, 231, 255, 0.2)',
   DASH: '#3e7fa2',
   gradients: {
     bubblegum: 'linear-gradient(139.73deg, #313D5C 0%, #3D2A54 100%)',
@@ -91,4 +93,16 @@ export const elevationPalette = {
   GOLD: ['#FCC965', '#F7BA56', '#F3AC4A', '#EE9F3D', '#EA9130', '#EA9130'],
   EVEREST: ['#017B88', '#30A0A4', '#90B7B4', '#AECEBF', '#DEDDBE', '#D9B28B', '#D9B28B'],
   RED: ['#FFBABA', '#FF7B7B', '#FF5252', '#FF0000', '#A70000', '#900000', '#900000']
+}
+export const paletteSingleColor = {
+  BASE: '#3E80A2',
+  DASH: '#0E3858',
+  OASIS: '#8eb4d0',
+  PLAINS: '#2F8846',
+  MESA: '#A2663E',
+  SUMMIT: '#7B7D93',
+  EXPEDITION: '#865075',
+  GOLD: '#F7BA56',
+  EVEREST: '#017B88',
+  RED: '#FF7B7B',
 }

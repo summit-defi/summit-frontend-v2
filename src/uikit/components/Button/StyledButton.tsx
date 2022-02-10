@@ -1,5 +1,6 @@
-import styled, { DefaultTheme } from 'styled-components'
+import styled, { css, DefaultTheme } from 'styled-components'
 import { space, layout, variant } from 'styled-system'
+import { pressableMixin } from 'uikit/util/styledMixins'
 import { scaleVariants, styleVariants } from './theme'
 import { BaseButtonProps } from './types'
 
@@ -35,8 +36,6 @@ const getDisabledStyles = ({ isLoading, isLocked = false, theme }: ThemedButtonP
   return `
     &:disabled,
     &.summit-button--disabled {
-      background-color: ${theme.colors.backgroundDisabled};
-      border-color: ${theme.colors.backgroundDisabled};
       box-shadow: none;
       cursor: not-allowed;
     }
@@ -48,7 +47,6 @@ const StyledButton = styled.button<BaseButtonProps>`
   align-items: center;
   border: 0;
   border-radius: 6px;
-  box-shadow: 0px -1px 0px 0px rgba(14, 14, 44, 0.4) inset;
   display: inline-flex;
   font-family: inherit;
   font-size: 14px;
@@ -57,7 +55,14 @@ const StyledButton = styled.button<BaseButtonProps>`
   letter-spacing: 0.03em;
   line-height: 1;
   outline: 0;
-  transition: background-color, transform, width, 0.2s;
+
+  ${({ theme, disabled }) => pressableMixin({
+    theme,
+    disabled,
+    hoverStyles: css`
+      box-shadow: 2px 2px 4px ${theme.colors.textShadow};
+    `
+  })}
 
   &:hover:not(:disabled):not(.summit-button--disabled):not(.summit-button--disabled):not(:active) {
     /* opacity: 0.65; */

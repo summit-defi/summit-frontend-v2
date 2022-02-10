@@ -40,14 +40,14 @@ export interface MenuEntry {
 }
 
 export interface PanelProps {
-  isDark: boolean
-  toggleTheme: () => void
   currentLang: string
   links: Array<MenuEntry>
   additionals: Array<MenuEntry>
 }
 
 export interface NavProps extends PanelProps {
+  isDark: boolean
+  toggleTheme: () => void
   account?: string
   login: Login
   profile?: Profile

@@ -13,7 +13,6 @@ const BaseSymbolIcon = styled.div<{ symbol: string; width: number; height: numbe
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  filter: drop-shadow(1px 1px 2px ${transparentize(0.5, '#000000')});
   width: ${({ width }) => width}px;
   height: ${({ height }) => height}px;
 `

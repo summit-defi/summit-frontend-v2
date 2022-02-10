@@ -10,7 +10,7 @@ const StyledLock = styled(Lock)`
   align-self: center;
   transform: rotate(20deg);
   fill: white;
-  filter: drop-shadow(0px 0px 8px black) drop-shadow(0px 0px 2px black);
+  filter: drop-shadow(1px 1px 4px black);
 `
 const StyledSpinner = styled(Spinner)`
   position: absolute;
@@ -30,7 +30,6 @@ const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): 
     secondary,
     children,
     summitPalette,
-    style,
     onClick,
     ...rest
   } = props
@@ -59,14 +58,11 @@ const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): 
       summitPalette={summitPalette}
       secondary={secondary}
       disabled={isDisabled || isLocked}
-      style={{ ...style }}
       onClick={handleClick}
       {...internalProps}
       {...rest}
     >
       <>
-        {isLocked && <StyledLock width="28px" />}
-        {isLoading && <StyledSpinner className="spinner" />}
         {isValidElement(startIcon) &&
           cloneElement(startIcon, {
             mr: '0.5rem',
@@ -76,6 +72,8 @@ const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): 
           cloneElement(endIcon, {
             ml: '0.5rem',
           })}
+        {isLocked && <StyledLock width="28px" />}
+        {isLoading && <StyledSpinner className="spinner" />}
       </>
     </SummitStyledButton>
   )

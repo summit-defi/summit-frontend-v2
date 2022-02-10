@@ -25,7 +25,6 @@ const TotemBackground = styled.div<{ elevation; color?: string; pressable; size;
   border-radius: 50px;
   background-color: ${({ color, theme, elevation }) => color || theme.colors[elevation]};
   box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
-  transition: transform 0.2s;
 
   &:hover {
     transform: ${({ pressable }) => (pressable ? 'scale(1.1)' : 'none')};

@@ -54,7 +54,6 @@ const PanelBody: React.FC<Props> = ({ isPushed, pushNav, isMobile, links }) => {
     <Container>
       {links.map((entry) => {
         const calloutClass = entry.calloutClass ? entry.calloutClass : undefined
-        const elevationInt = elevationUtils.toInt(entry.elevation)
 
         const isActive = !entry.neverHighlight && entry.icon != null && entry.keyPaths.includes(keyPath)
 
@@ -88,7 +87,7 @@ const PanelBody: React.FC<Props> = ({ isPushed, pushNav, isMobile, links }) => {
                   elevationLocked={false}
                 />
               )}
-              <LinkLabel isActive={isActive} isPushed={isPushed} elevation={entry.elevation || entry.label}>
+              <LinkLabel isActive={isActive} isPushed={isPushed} elevation={entry.elevation || entry.palette || entry.label}>
                 {entry.icon == null && ' - '}
                 {entry.label.split('|').map((text) => (text === 'br' ? <br key={text} /> : text))}
               </LinkLabel>

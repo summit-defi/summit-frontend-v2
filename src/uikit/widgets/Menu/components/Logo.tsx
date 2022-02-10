@@ -22,7 +22,6 @@ const StyledLink = styled(Link)`
     width: 177px;
     display: block;
   }
-  transition: transform 0.2s;
   justify-content: center;
 
   ${({ theme }) => theme.mediaQueries.nav} {
@@ -34,7 +33,7 @@ const StyledLink = styled(Link)`
 
 const Logo: React.FC<Props> = ({ isDark, href, summitPalette }) => {
   return (
-    <StyledLink as="a" href={href} aria-label="Summit home page">
+    <StyledLink to={href} replace aria-label="Summit home page">
       <LogoWithText isDark={isDark} className="desktop-icon" summitPalette={summitPalette} />
     </StyledLink>
   )

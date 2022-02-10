@@ -1,8 +1,12 @@
 import { ElevOrPalette, SummitPalette } from 'config/constants/types'
-import { elevationPalette } from 'theme/colors'
+import { elevationPalette, paletteSingleColor } from 'theme/colors'
 
 export const getPaletteGradientColors = (summitPalette: ElevOrPalette | null): string[] => {
   return elevationPalette[summitPalette || SummitPalette.BASE]
+}
+
+export const getPalettePerfBackgroundColor = (summitPalette: ElevOrPalette | null): string => {
+  return paletteSingleColor[summitPalette || SummitPalette.BASE]
 }
 
 export const getPaletteGradientStops = (summitPalette: ElevOrPalette | null): string[] => {

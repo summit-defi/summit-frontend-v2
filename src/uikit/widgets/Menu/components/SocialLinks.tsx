@@ -10,7 +10,6 @@ import styled from 'styled-components'
 const Icons = (IconModule as unknown) as { [key: string]: React.FC<SvgProps> }
 
 const StyledLink = styled(Link)`
-  transition: all 200ms;
   ${pressableMixin}
 `
 

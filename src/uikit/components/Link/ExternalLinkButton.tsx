@@ -20,8 +20,7 @@ const StyleButton = styled(Link)<{ summitPalette?: ElevOrPalette }>`
   cursor: pointer;
   color: ${({ theme, summitPalette: elevation }) =>
     darken(0.2, elevation ? theme.colors[elevation] : theme.colors.text)};
-  transition: transform 0.2s;
-  font-size: 13;
+  font-size: 13px;
   font-weight: bold;
   font-family: Courier Prime, monospace;
 

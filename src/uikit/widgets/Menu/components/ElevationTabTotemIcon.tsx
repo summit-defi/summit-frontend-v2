@@ -16,20 +16,19 @@ const Wrapper = styled.div<{ selected: boolean }>`
   align-items: center;
   justify-content: center;
   position: relative;
-  transition: opacity 200ms;
   opacity: ${({ selected }) => selected ? 0 : 1};
 `
 
-const Background = styled.div<{ elevation: string }>`
+const Background = styled.div<{ elevation: string, crowned: boolean }>`
   position: absolute;
   top: 12px;
   left: 12px;
   right: 12px;
   bottom: 12px;
-  background-color: ${({ theme, elevation }) => theme.colors[elevation]};
+  background-color: ${({ theme, elevation, crowned }) => crowned ? '#fccd60' : theme.colors[elevation]};
   transform: all 300ms;
   border-radius: 50px;
-  box-shadow: 1px 1px 2px ${({ theme }) => theme.colors.textShadow};
+  box-shadow: 1px 1px 2px ${({ theme, crowned }) => crowned ? 'white' : theme.colors.textShadow};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -69,7 +68,7 @@ const ElevationTabTotemIcon: React.FC<Props> = ({
   crowned,
 }) => (
   <Wrapper className="selectableIcon" selected={selected}>
-    <Background elevation={elevation} />
+    <Background elevation={elevation} crowned={crowned} className='totem-background-circle' />
     <Icon elevation={elevation} totem={totem} />
     {crowned && <IconCrown />}
   </Wrapper>

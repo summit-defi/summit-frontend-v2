@@ -4,6 +4,7 @@ import React from 'react'
 import styled from 'styled-components'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { pressableMixin } from 'uikit/util/styledMixins'
+import { SelectorWrapperBase } from 'uikit/widgets/Selector/styles'
 import { SunIcon, MoonIcon } from '../icons'
 
 interface Props {
@@ -12,20 +13,13 @@ interface Props {
   toggleTheme: () => void
 }
 
-const ToggleWrapper = styled.div<{ disabled: boolean }>`
+const ToggleWrapper = styled(SelectorWrapperBase)`
   position: relative;
-  background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
-  box-shadow: ${({ theme }) => `inset 2px 2px 4px ${theme.colors.textShadow}`};
   width: 58px;
   height: 32px;
   border-radius: 20px;
-  transition: all 300ms;
 
-  ${({ theme, disabled }) =>
-    pressableMixin({
-      theme,
-      disabled
-    })};
+  ${pressableMixin}
 `
 
 const BGSunIcon = styled(SunIcon)`
@@ -51,7 +45,6 @@ const StyledSummitButton = styled(SummitButton)<{ visible: boolean }>`
   left: ${({ visible }) => (visible ? 28 : 2)}px;
   padding: 0px;
 
-  transition: all 300ms;
   pointer-events: none;
 `
 
@@ -64,7 +57,6 @@ const StyledSunIcon = styled(SunIcon)<{ visible: boolean }>`
   bottom: 0px;
   right: 0px;
   margin: auto;
-  transition: opacity 300ms;
   opacity: ${({ visible }) => (visible ? 1 : 0)};
 `
 const StyledMoonIcon = styled(MoonIcon)<{ visible: boolean }>`
@@ -76,7 +68,6 @@ const StyledMoonIcon = styled(MoonIcon)<{ visible: boolean }>`
   bottom: 0px;
   right: 0px;
   margin: auto;
-  transition: opacity 300ms;
   opacity: ${({ visible }) => (visible ? 1 : 0)};
 `
 

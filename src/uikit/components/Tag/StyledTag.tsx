@@ -22,11 +22,10 @@ export const StyledTag = styled.div<ThemedProps>`
   display: inline-flex;
   font-size: 12px;
   font-weight: bold;
-  height: 24px;
+  height: 20px;
   line-height: 1.5;
   padding: 0 6px;
   white-space: nowrap;
-  box-shadow: 1px 1px 3px ${({ theme }) => theme.colors.textShadow};
 
   svg {
     fill: ${({ elevation, theme, outline, variant }) =>

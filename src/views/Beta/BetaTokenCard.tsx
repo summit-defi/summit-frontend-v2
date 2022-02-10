@@ -10,7 +10,6 @@ const BTCard = styled(Flex)`
   justify-content: space-around;
   position: relative;
   text-align: center;
-  transition: all 0.2s;
   width: 100%;
   background: ${({ theme }) => theme.colors.background};
   border-bottom-width: 1px;

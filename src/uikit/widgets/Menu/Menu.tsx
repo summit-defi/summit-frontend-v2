@@ -154,9 +154,7 @@ const Menu: React.FC<NavProps> = ({
         <Panel
           isPushed={isPushed}
           isMobile={isMobile}
-          isDark={isDark}
           currentLang={currentLang}
-          toggleTheme={toggleTheme}
           pushNav={setIsPushed}
           links={links}
           additionals={additionals}

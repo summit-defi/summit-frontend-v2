@@ -19,7 +19,6 @@ const StyleButton = styled(Text).attrs({ role: 'button' })`
   display: flex;
   align-items: center;
   color: ${({ theme }) => darken(0.2, theme.colors.OASIS)};
-  transition: transform 0.2s;
 
   ${pressableMixin}
 `

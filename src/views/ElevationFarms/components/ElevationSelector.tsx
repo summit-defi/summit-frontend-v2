@@ -5,6 +5,7 @@ import SummitButton from 'uikit/components/Button/SummitButton'
 import { darken } from 'polished'
 import { Elevation } from 'config/constants/types'
 import { pressableMixin } from 'uikit/util/styledMixins'
+import { SelectorWrapperBase } from 'uikit/widgets/Selector/styles'
 
 const buttonWidth = 85
 const buttonWidthVertical = 140
@@ -25,20 +26,17 @@ const StyledLock = styled(Lock)`
   z-index: 4;
 `
 
-const SelectorWrapper = styled(Flex)<{
+const SelectorWrapper = styled(SelectorWrapperBase)<{
   elevationsCount: number
   vertical: boolean
   desktopOnlyVertical: boolean
-  isLocked: boolean
-  isDisabled: boolean
 }>`
+  display: flex;
   flex-direction: row;
   justify-content: center;
   height: ${buttonHeight + 4}px;
   width: ${({ elevationsCount }) => buttonWidth * elevationsCount}px;
   border-radius: 16px;
-  background-color: ${({ theme }) => darken(0.1, theme.colors.background)};
-  box-shadow: ${({ theme, isLocked, isDisabled }) => (isLocked || isDisabled) ? 'none' : `inset 2px 2px 4px ${theme.colors.textShadow}`};
   position: relative;
 
   ${({ vertical, elevationsCount }) =>
@@ -129,9 +127,6 @@ const TextButton = styled.div<{
       disabledStyles: css`
         text-shadow: none;
       `,
-      enabledStyles: css`
-        transition: transform 0.2s;
-      `,
     })}
 
   ${({ vertical }) =>
@@ -181,7 +176,7 @@ const FarmTypeSelector: React.FC<Props> = ({
       <SelectorWrapper
         elevationsCount={elevations.length}
         isLocked={isLocked}
-        isDisabled={disabled}
+        disabled={disabled}
         vertical={vertical}
         desktopOnlyVertical={desktopOnlyVertical}
       >

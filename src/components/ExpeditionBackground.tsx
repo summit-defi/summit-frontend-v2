@@ -13,7 +13,7 @@ const BackgroundImage = styled.div<{ elevation?: Elevation }>`
   height: 120%;
   width: 100%;
   pointer-events: none;
-  transition: opacity 0.6s ease-in-out;
+
   transform: translateY(-65px) scale(1.01);
   transform-origin: bottom center;
   opacity: ${({ elevation }) => (elevation === Elevation.EXPEDITION ? 1 : 0)};

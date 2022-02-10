@@ -10,7 +10,7 @@ interface Props {
 }
 
 const ConnectModal: React.FC<Props> = ({ login, onDismiss = () => null }) => (
-  <Modal title="Connect|br|wallet" onDismiss={onDismiss} headerless elevationCircleHeader="CONNECT|br|WALLET">
+  <Modal title="Connect|br|wallet" onDismiss={onDismiss} headerless elevationCircleHeader="BASE">
     {config.map((entry, index) => (
       <WalletCard
         key={entry.title}

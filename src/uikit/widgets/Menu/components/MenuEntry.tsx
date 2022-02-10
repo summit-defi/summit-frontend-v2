@@ -14,13 +14,10 @@ export interface Props {
 }
 
 const LinkLabel = styled.div<{ isPushed: boolean; isActive: boolean; elevation?: string }>`
-  transition: color 0.2s;
   flex-grow: 1;
   padding-left: 8px;
   font-weight: ${({ isActive }) => (isActive ? 'bold' : '400')};
   color: ${({ isActive, elevation, theme }) => (isActive && elevation ? theme.colors[elevation] : theme.colors.text)};
-  text-shadow: 1px 1px 2px
-    ${({ theme, isActive, elevation }) => (isActive && elevation ? theme.colors[elevation] : theme.colors.textShadow)};
 `
 
 const MenuEntry = styled.div<Props>`
@@ -34,7 +31,6 @@ const MenuEntry = styled.div<Props>`
   letter-spacing: 1px;
   border-left: 3px solid transparent;
   color: ${({ isActive, theme }) => (isActive ? theme.colors.text : theme.colors.textSubtle)};
-  transition: all 0.2s;
 
   a {
     display: flex;
@@ -47,10 +43,6 @@ const MenuEntry = styled.div<Props>`
 
   svg {
     fill: ${({ isActive, theme }) => (isActive ? theme.colors.primary : theme.colors.textSubtle)};
-  }
-
-  .selectableIcon {
-    transition: transform 0.2s;
   }
 
   ${({ theme, disabled, elevation }) =>

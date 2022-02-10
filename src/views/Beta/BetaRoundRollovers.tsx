@@ -2,9 +2,9 @@ import React from 'react'
 import styled from 'styled-components'
 import { Flex, Text } from 'uikit'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { Elevation, elevationUtils } from 'config/constants'
+import { elevationUtils } from 'config/constants'
 import useRolloverElevation from 'hooks/useRolloverElevation'
-import { rolloverOrUnlockAvailable, RoundStatus, useElevationRoundStatus, elevationLocked, useElevationsRoundStatuses } from 'state/hooksNew'
+import { rolloverOrUnlockAvailable, RoundStatus, elevationLocked, useElevationsRoundStatuses } from 'state/hooksNew'
 
 const BTCard = styled(Flex)`
   align-self: baseline;
@@ -12,7 +12,6 @@ const BTCard = styled(Flex)`
   justify-content: space-around;
   position: relative;
   text-align: center;
-  transition: all 0.2s;
   width: 100%;
   background: ${({ theme }) => theme.colors.background};
   margin-bottom: 24px;

@@ -4,7 +4,7 @@ import styled, { css } from 'styled-components'
 import { Flex, Text } from 'uikit'
 import { BN_ZERO, Elevation, ElevationFarmTab, elevationFarmTabToUrl, elevationUtils } from 'config/constants/types'
 import { useElevationFarmsTab, useSingleFarmSelected } from 'state/hooks'
-import { NavLink } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import FarmCardUserSectionExpander from './FarmCardUserSectionExpander'
 import FarmIconAndAllocation from './FarmIconAndAllocation'
 import FarmStakingContribution, { ElevationsStaked } from './FarmStakingContribution'
@@ -20,7 +20,7 @@ const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
   justify-content: space-around;
   position: relative;
   text-align: center;
-  transition: all 0.2s;
+  transition: all 250ms;
   width: 100%;
   background: ${({ theme }) => theme.colors.background};
   border-bottom-width: 1px;
@@ -44,13 +44,13 @@ const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
 `
 
 const PressableFlex = styled.div<{ $expanded: boolean }>`
-  display: relative;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: flex-start;
   flex-direction: column;
   padding: 16px 20px 16px 20px;
-  transition: all 300ms;
+  transition: all 250ms;
   flex-wrap: wrap;
   ${({ $expanded }) =>
     !$expanded &&
@@ -66,7 +66,7 @@ const PressableFlex = styled.div<{ $expanded: boolean }>`
     `}
 `
 
-const PressableBackground = styled(NavLink)`
+const PressableBackground = styled(Link)`
   position: absolute;
   left: 0px;
   right: 0px;
@@ -161,7 +161,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
   return (
     <FCard $locked={false} $expanded={expanded}>
       <PressableFlex $expanded={expanded}>
-        <PressableBackground to={targetUrl}/>
+        <PressableBackground to={targetUrl} replace/>
         { farmComment != null && <Text monospace bold italic fontSize='13px' mb='14px' textAlign='center'>* {farmComment}</Text> }
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }
         <FarmNumericalInfoFlex>

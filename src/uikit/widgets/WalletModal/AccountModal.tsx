@@ -19,7 +19,7 @@ const AccountModal: React.FC<Props> = ({ account, logout, onDismiss = () => null
   const accountEtherscanLink = etherscan.replace('0xACCOUNT', account)
 
   return (
-    <Modal title="Your wallet" onDismiss={onDismiss} elevationCircleHeader="WALLET" headerless>
+    <Modal title="Your wallet" onDismiss={onDismiss} elevationCircleHeader="BASE" headerless>
       <Text
         fontSize="20px"
         bold

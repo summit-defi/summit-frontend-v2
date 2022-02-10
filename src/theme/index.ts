@@ -1,7 +1,5 @@
 import { AlertTheme } from '../uikit/components/Alert/types'
 import { CardTheme } from '../uikit/components/Card/types'
-import { RadioTheme } from '../uikit/components/Radio/types'
-import { ToggleTheme } from '../uikit/components/Toggle/types'
 import { TooltipTheme } from '../uikit/components/Tooltip/types'
 import { NavTheme } from '../uikit/widgets/Menu/types'
 import { ModalTheme } from '../uikit/widgets/Modal/types'
@@ -15,8 +13,6 @@ export interface PancakeTheme {
   card: CardTheme
   nav: NavTheme
   modal: ModalTheme
-  radio: RadioTheme
-  toggle: ToggleTheme
   tooltip: TooltipTheme
   breakpoints: Breakpoints
   mediaQueries: MediaQueries
