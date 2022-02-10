@@ -3,10 +3,8 @@ import { Flex, TooltipModalType } from 'uikit'
 import BoundedProgressBar from '../BoundedProgressBar'
 import { timestampToDate } from 'utils'
 import { useFarmUserTokenSectionInfo } from 'state/hooksNew'
-import { useCurrentTimestamp, useCurrentTimestampOnce } from 'state/hooks'
+import { useCurrentTimestampOnce } from 'state/hooks'
 import { clamp } from 'lodash'
-import { TokenSymbol } from 'config/constants'
-import { LockFarmingSummitForEverest } from './LockFarmingSummitForEverest'
 
 interface Props {
   symbol: string
@@ -44,7 +42,6 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
 
   return (
     <Flex flexWrap='wrap' justifyContent='center' flexDirection='row' width='100%' mb='18px' mt='6px' style={{gap: '24px'}}>
-      { symbol === TokenSymbol.SUMMIT && <LockFarmingSummitForEverest/>}
       { depositFeeBP > 0 && false &&
         <BoundedProgressBar
           tooltipType={TooltipModalType.DepositFee}

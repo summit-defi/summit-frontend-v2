@@ -9,7 +9,7 @@ interface ThemedButtonProps extends BaseButtonProps {
   isLocked?: boolean
 }
 
-const getDisabledStyles = ({ isLoading, isLocked = false, theme }: ThemedButtonProps) => {
+const getDisabledStyles = ({ isLoading, isLocked = false }: ThemedButtonProps) => {
   if (isLocked) {
     return `
       &:disabled,

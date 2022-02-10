@@ -30,7 +30,7 @@ const ElevationFarms: React.FC = () => {
   const { path } = useRouteMatch()
   const farmsLoaded = useFarmsLoaded()
 
-  const { account }: { account: string | null } = useWallet()
+  const { account } = useWeb3React()
   const [stakedFarms, unstakedFarms] = useStakedUnstakedFarmSymbols()
 
   const dispatch = useDispatch()

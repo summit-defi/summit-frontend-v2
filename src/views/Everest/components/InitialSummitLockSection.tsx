@@ -89,7 +89,6 @@ export const InitialSummitLockSection: React.FC<Props> = ({ summitBalance, summi
             <EverestLockDurationSlider
                 existingLockDuration={null}
                 setLockDuration={setLockDuration}
-                disabled={account == null}
             />
 
             <LockSummitInfoAndButton

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { elevationUtils } from 'config/constants/types'
 import { getBalanceNumber } from 'utils'
 import { Text, Flex, HighlightedText, Skeleton, useModal } from 'uikit'

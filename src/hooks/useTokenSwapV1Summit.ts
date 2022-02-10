@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import { getV1SummitTokenAddress, tokenSwapV1Summit, approve, getSummitTokenAddress, getContract, getSummitTokenContract, getErc20Contract } from 'utils'
+import { getV1SummitTokenAddress, tokenSwapV1Summit, approve, getSummitTokenAddress, getErc20Contract } from 'utils'
 import { useSummitToken } from './useContract'
 import useToast from './useToast'
 import { useV1SummitTokenApproved, useV1SummitTokenBalance } from './useV1SummitToken'

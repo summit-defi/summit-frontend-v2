@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Flex, Text } from 'uikit'
 import { getEpochTimestamps, getPaletteGradientStops, getTimeRemainingText, timestampToDate } from 'utils'
 import { useEpochVariableTickTimestamp } from 'state/hooks'
-import { darken, linearGradient, transparentize } from 'polished'
+import { linearGradient } from 'polished'
 import { SummitPalette } from 'config/constants'
 
 const EndMarkerHeight = 65

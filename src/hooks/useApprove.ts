@@ -1,25 +1,25 @@
 import { useCallback, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import { Contract } from 'web3-eth-contract'
 import { useDispatch } from 'react-redux'
 import { approve } from 'utils/callHelpers'
-import { useCartographer } from './useContract'
+import { useERC20 } from './useContract'
 import useToast from './useToast'
 import { fetchTokensUserDataAsync } from 'state/tokens'
 import { fetchEverestDataAsync } from 'state/everest'
+import { getCartographerAddress } from 'utils'
 
 // Approve a Farm
-export const useApprove = (lpContract: Contract, tokenName: string) => {
+export const useApprove = (farmToken: string, tokenName: string) => {
   const dispatch = useDispatch()
   const [pending, setPending] = useState(false)
   const { toastSuccess, toastError } = useToast()
   const { account } = useWeb3React()
-  const cartographer = useCartographer()
+  const lpContract = useERC20(farmToken)
 
   const handleApprove = useCallback(async () => {
     try {
       setPending(true)
-      await approve(lpContract, cartographer.options.address, account)
+      await approve(lpContract, getCartographerAddress(), account)
       toastSuccess(`${tokenName} Approved`)
     } catch (error) {
       toastError(`${tokenName} Approval Failed`, (error as Error).message)
@@ -28,17 +28,18 @@ export const useApprove = (lpContract: Contract, tokenName: string) => {
       dispatch(fetchTokensUserDataAsync(account))
       dispatch(fetchEverestDataAsync(account))
     }
-  }, [account, dispatch, lpContract, cartographer, setPending, toastSuccess, toastError, tokenName])
+  }, [account, dispatch, lpContract, setPending, toastSuccess, toastError, tokenName])
 
   return { onApprove: handleApprove, pending }
 }
 
 // Approve a Farm
-export const useApproveAddress = (lpContract: Contract, spender: string, tokenName: string) => {
+export const useApproveAddress = (farmToken: string, spender: string, tokenName: string) => {
   const dispatch = useDispatch()
   const [pending, setPending] = useState(false)
   const { toastSuccess, toastError } = useToast()
   const { account } = useWeb3React()
+  const lpContract = useERC20(farmToken)
 
   const handleApprove = useCallback(async () => {
     try {

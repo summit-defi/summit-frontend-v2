@@ -1,4 +1,3 @@
-import { transparentize } from 'polished'
 import React from 'react'
 import styled from 'styled-components'
 

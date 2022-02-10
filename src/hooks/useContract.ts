@@ -1,20 +1,13 @@
-import { useEffect, useMemo, useState } from 'react'
-import { AbiItem } from 'web3-utils'
-import { ContractOptions } from 'web3-eth-contract'
+import { useMemo } from 'react'
 import {
-  abiItem,
-  getSummitTokenAddress,
-  getCartographerAddress,
-  getExpeditionAddress,
-  getCartographerOasisAddress,
-  getElevationHelperAddress,
-  getSummitLpAddress,
-  getEverestTokenAddress,
-  getSummitGlacierAddress,
   getContract,
   getProviderOrSigner,
   getCartographerContract,
   getExpeditionContract,
+  getErc20Contract,
+  getSummitGlacierContract,
+  getEverestTokenContract,
+  getSummitTokenContract,
 } from 'utils/'
 import useActiveWeb3React from './useActiveWeb3React'
 
@@ -37,17 +30,17 @@ const useContract = (ABI: any, address: string | undefined, withSignerIfPossible
  */
 
 export const useERC20 = (address: string) => {
-  return useContract(abiItem.ERC20, address)
+  const { library } = useActiveWeb3React()
+  return useMemo(() => getErc20Contract(address, library.getSigner()), [library, address])
 }
 
 export const useSummitToken = () => {
-  return useContract(abiItem.summitToken, getSummitTokenAddress())
+  const { library } = useActiveWeb3React()
+  return useMemo(() => getSummitTokenContract(library.getSigner()), [library])
 }
 export const useEverestToken = () => {
-  return useContract(abiItem.everestToken, getEverestTokenAddress())
-}
-export const useSummitLp = () => {
-  return useContract(abiItem.ERC20, getSummitLpAddress())
+  const { library } = useActiveWeb3React()
+  return useMemo(() => getEverestTokenContract(library.getSigner()), [library])
 }
 
 export const useCartographer = () => {
@@ -59,10 +52,12 @@ export const useExpedition = () => {
   return useMemo(() => getExpeditionContract(library.getSigner()), [library])
 }
 export const useElevationHelper = () => {
-  return useContract(abiItem.elevationHelper, getElevationHelperAddress())
+  const { library } = useActiveWeb3React()
+  return useMemo(() => getSummitGlacierContract(library.getSigner()), [library])
 }
 export const useSummitGlacier = () => {
-  return useContract(abiItem.summitGlacier, getSummitGlacierAddress())
+  const { library } = useActiveWeb3React()
+  return useMemo(() => getSummitGlacierContract(library.getSigner()), [library])
 }
 
 export default useContract

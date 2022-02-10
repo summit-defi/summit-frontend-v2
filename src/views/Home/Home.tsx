@@ -25,15 +25,6 @@ const Hero = styled.div`
   text-align: center;
 `
 
-const BackgroundedFlex = styled(Flex)`
-  background-color: ${({ theme }) => theme.colors.background};
-  max-width: 500px;
-  margin: 36px auto;
-  padding: 36px 24px;
-  border-radius: 6px;
-  box-shadow: 2px 2px 12px -4px rgba(25, 19, 38, 0.4), 2px 2px 8px rgba(25, 19, 38, 0.2);
-`
-
 const SwapMinGrid = styled(BaseLayout)`
   align-items: stretch;
   justify-content: stretch;

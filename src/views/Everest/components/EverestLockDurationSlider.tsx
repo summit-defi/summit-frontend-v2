@@ -109,11 +109,10 @@ const FakeSliderHandle = styled.div<{ perc: number }>`
 
 interface Props {
     existingLockDuration: number | null
-    disabled?: boolean
     setLockDuration: (number) => void
 }
 
-const EverestLockDurationSlider: React.FC<Props> = ({ existingLockDuration, setLockDuration, disabled = false }) => {
+const EverestLockDurationSlider: React.FC<Props> = ({ existingLockDuration, setLockDuration }) => {
     const existingDurPerc = existingLockDuration != null ? lockDurationSliderPerc(existingLockDuration) : null
     const marks = lockDurationSliderMarks(existingLockDuration)
     const [perc, setPerc] = useState(existingLockDuration != null ? existingDurPerc : lockDurationSliderPerc(30))

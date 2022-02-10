@@ -47,16 +47,6 @@ const StyledUnlockButton = styled(UnlockButton)`
   margin: 32px auto 0px auto;
 `
 
-
-
-const getListeners = component => {
-  return Object.fromEntries(
-    Object
-        .entries(component.props) // Get the props
-        .filter(([key, value]) => key.startsWith("on")) // Filter event listeners
-  );
-};
-
 const ElevSpecificSection = memo(() => {
   const elevationTab = useElevationFarmsTab()
 

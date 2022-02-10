@@ -3,7 +3,6 @@ import BigNumber from 'bignumber.js'
 import { useWeb3React } from '@web3-react/core'
 import { getSummitTokenAddress, getSummitTokenContract, getTokenApproved, getTokenBalance, getV1SummitTokenAddress } from 'utils'
 import useRefresh from './useRefresh'
-import { useSummitToken } from './useContract'
 
 export const useV1SummitTokenBalance = () => {
   const [balance, setBalance] = useState(new BigNumber(0))
@@ -49,7 +48,7 @@ export const useV1SummitTokenApproved = () => {
 const getSummitSwapUnlocked = async (): Promise<boolean> => {
   const contract = getSummitTokenContract()
   try {
-    const paused: boolean = await contract.methods.paused().call()
+    const paused: boolean = await contract.paused()
     localStorage.setItem('SummitSwapEnabled', JSON.stringify(!paused, null, 2))
     return !paused
   } catch (e) {

@@ -7,6 +7,8 @@ import useElevate from 'hooks/useElevate'
 import ElevateModal from '../ElevateModal'
 import { useSymbolElevateSelectorInfo } from 'state/hooksNew'
 import { useSelectedElevation } from 'state/hooks'
+import { LockFarmingSummitForEverest } from './LockFarmingSummitForEverest'
+import { TokenSymbol } from 'config/constants'
 
 interface Props {
   symbol: string
@@ -57,10 +59,16 @@ const FarmCardUserElevate: React.FC<Props> = ({ symbol, elevationLocked, disable
         selectElevation={handleSelectElevation}
       />
       <CenteredInfoText fontSize="12px" bold monospace>
-        * NO TAX ON
-        <br />
-        ELEVATE
+        { symbol === TokenSymbol.SUMMIT ? 
+          <LockFarmingSummitForEverest/> :
+          <>
+            * NO TAX ON
+            <br />
+            ELEVATE
+          </>
+        }
       </CenteredInfoText>
+      
     </Flex>
   )
 }

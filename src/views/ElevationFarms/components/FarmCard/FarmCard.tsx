@@ -126,9 +126,6 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     () => {
       if (expanded && currentElevTab !== elevationTab) {
         setCurrentElevTab(elevationTab)
-        console.log({
-          scrollIntoView: true,
-        })
         cardRef.current.scrollIntoView({
           behavior: 'smooth',
         })

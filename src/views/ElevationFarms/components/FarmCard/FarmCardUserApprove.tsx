@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo } from 'react'
 import { Flex, Text } from 'uikit'
 import { Elevation } from 'config/constants/types'
 import { getFullDisplayBalance } from 'utils'
-import { Contract } from 'web3-eth-contract'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import BigNumber from 'bignumber.js'
 import styled from 'styled-components'
@@ -17,7 +16,7 @@ interface Props {
   decimals: number
   depositFeeBP: number
   elevation: Elevation
-  lpContract: Contract
+  farmToken: string
   setPending: (boolean) => void
 }
 
@@ -40,13 +39,13 @@ const FarmCardUserApprove: React.FC<Props> = ({
   decimals,
   depositFeeBP,
   elevation,
+  farmToken,
   setPending,
-  lpContract,
 }) => {
   const { account } = useWeb3React()
 
   // APPROVE ACTION
-  const { onApprove, pending: approvalPending } = useApprove(lpContract, symbol)
+  const { onApprove, pending: approvalPending } = useApprove(farmToken, symbol)
 
   useEffect(() => {
     setPending(approvalPending)

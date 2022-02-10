@@ -1,5 +1,4 @@
 import { ElevOrPalette } from 'config/constants/types'
-import { darken } from 'polished'
 import styled from 'styled-components'
 import { Text } from './Text'
 
@@ -21,7 +20,7 @@ export const HighlightedText = styled(Text)<{
   font-size: ${({ header, fontSize }) => fontSize || (header ? '22' : '16')}px !important;
   color: ${({ theme, gold }) => (gold ? theme.colors.textGold : theme.colors.text)};
   text-shadow: 1px 1px 2px
-    ${({ theme, summitPalette: elevation, gold }) => {
+    ${({ theme, summitPalette: elevation }) => {
       // eslint-disable-next-line no-nested-ternary
       return theme.isDark
         ? 'BLACK'

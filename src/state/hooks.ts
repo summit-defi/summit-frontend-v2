@@ -9,7 +9,7 @@ import {
   fetchExpeditionPublicDataAsync,
 } from './actions'
 import { State, Farm, ElevationInfo } from './types'
-import { BN_ZERO, Elevation, ElevationFarmTab, ElevationUnlockRound, elevationUtils, FarmConfig, ForceElevationRetired, SummitPalette } from '../config/constants/types'
+import { BN_ZERO, Elevation, ElevationFarmTab, elevationUtils, FarmConfig, SummitPalette } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
   fetchElevationHelperInfoAsync,

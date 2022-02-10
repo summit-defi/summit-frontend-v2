@@ -18,6 +18,24 @@ const StyledSpinner = styled(Spinner)`
   filter: drop-shadow(0px 0px 4px black);
 `
 
+const SecondaryInset = styled.div`
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  left: 2px;
+  bottom: 2px;
+  border-radius: 50px;
+  background-color: ${({ theme }) => theme.colors.cardHover};
+`
+
+const ChildWrapper = styled.div`
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+`
+
 const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): JSX.Element => {
   const {
     startIcon,
@@ -27,7 +45,7 @@ const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): 
     isLoading,
     isLocked,
     disabled,
-    secondary,
+    secondary = false,
     children,
     summitPalette,
     onClick,
@@ -46,28 +64,31 @@ const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): 
   }
 
   const handleClick = useCallback(() => {
-    if (isLoading || isLocked || isDisabled) return
+    if (isLoading || isLocked || isDisabled || onClick == null) return
     onClick()
   }, [isLoading, isLocked, isDisabled, onClick])
 
   return (
     <SummitStyledButton
       $isLoading={isLoading}
-      isLocked={isLocked}
+      $isLocked={isLocked}
       className={classNames.join(' ')}
-      summitPalette={summitPalette}
-      secondary={secondary}
+      $summitPalette={summitPalette}
+      $secondary={secondary}
       disabled={isDisabled || isLocked}
       onClick={handleClick}
       {...internalProps}
       {...rest}
     >
       <>
+        { secondary && <SecondaryInset/> }
         {isValidElement(startIcon) &&
           cloneElement(startIcon, {
             mr: '0.5rem',
           })}
-        {children}
+        <ChildWrapper>
+          {children}
+        </ChildWrapper>
         {isValidElement(endIcon) &&
           cloneElement(endIcon, {
             ml: '0.5rem',
@@ -89,7 +110,6 @@ SummitButton.defaultProps = {
   elevation: null,
   href: null,
   secondary: false,
-  secondaryColor: null,
 }
 
 export default SummitButton

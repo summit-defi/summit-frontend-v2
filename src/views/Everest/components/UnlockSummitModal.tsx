@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Flex, Text, Modal, ModalActions, SummitButton, Lock } from 'uikit'
+import { Flex, Text, Modal, ModalActions, SummitButton } from 'uikit'
 import { BN_ZERO, SummitPalette } from 'config/constants/types'
 import { isNumber } from 'lodash'
 import { getFormattedBigNumber, getFullDisplayBalance } from 'utils'

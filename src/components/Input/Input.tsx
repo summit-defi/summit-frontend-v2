@@ -1,6 +1,5 @@
 import React from 'react'
 import { ElevOrPalette } from 'config/constants/types'
-import { darken } from 'polished'
 import styled, { css } from 'styled-components'
 import { HighlightedText, Lock } from 'uikit'
 import { SelectorWrapperBase } from 'uikit/widgets/Selector/styles'

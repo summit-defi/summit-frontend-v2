@@ -1,5 +1,4 @@
 import React, { useMemo } from 'react'
-import { useWeb3React } from '@web3-react/core'
 import useTheme from 'hooks/useTheme'
 import { Menu as UikitMenu } from 'uikit'
 import { getMenuItems } from './config'
@@ -12,9 +11,6 @@ const Menu = (props) => {
   const { login, logout } = useAuth()
   const { account } = useActiveWeb3React()
 
-  console.log({
-    account
-  })
   const { isDark, toggleTheme } = useTheme()
   const summitPriceUsd = useSummitPrice()
   const userDeity = useExpeditionUserDeity()

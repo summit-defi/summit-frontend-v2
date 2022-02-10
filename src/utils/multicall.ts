@@ -1,8 +1,6 @@
 import { Interface } from '@ethersproject/abi'
-import { getWeb3 } from 'utils/web3'
-import { abiItem } from './abi'
-import { getMulticallAddress } from './addressHelpers'
 import { retryDecorator } from './callHelpers'
+import { getMulticallContract } from './contractHelpers'
 import { chunkArray } from './helpers'
 
 export interface Call {
@@ -12,12 +10,11 @@ export interface Call {
 }
 
 export const multicall = async (abi: any[], calls: Call[]) => {
-  const web3 = getWeb3()
-  const multi = new web3.eth.Contract(abiItem.multicall, getMulticallAddress())
+  const multi = getMulticallContract()
   const itf = new Interface(abi)
 
   const calldata = calls.map((call) => [call.address.toLowerCase(), itf.encodeFunctionData(call.name, call.params)])
-  const { returnData } = await multi.methods.aggregate(calldata).call()
+  const { returnData } = await multi.aggregate(calldata)
   const res = returnData.map((call, i) => itf.decodeFunctionResult(calls[i].name, call))
 
   return res

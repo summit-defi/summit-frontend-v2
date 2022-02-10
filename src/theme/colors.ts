@@ -94,15 +94,3 @@ export const elevationPalette = {
   EVEREST: ['#017B88', '#30A0A4', '#90B7B4', '#AECEBF', '#DEDDBE', '#D9B28B', '#D9B28B'],
   RED: ['#FFBABA', '#FF7B7B', '#FF5252', '#FF0000', '#A70000', '#900000', '#900000']
 }
-export const paletteSingleColor = {
-  BASE: '#3E80A2',
-  DASH: '#0E3858',
-  OASIS: '#8eb4d0',
-  PLAINS: '#2F8846',
-  MESA: '#A2663E',
-  SUMMIT: '#7B7D93',
-  EXPEDITION: '#865075',
-  GOLD: '#F7BA56',
-  EVEREST: '#017B88',
-  RED: '#FF7B7B',
-}

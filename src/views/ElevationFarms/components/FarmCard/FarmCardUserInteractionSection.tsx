@@ -1,8 +1,6 @@
 import React, { useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { Flex, Text, Lock, ExternalLinkButton } from 'uikit'
-import { getContract } from 'utils'
-import { provider } from 'web3-core'
 import FarmCardUserWithdraw from './FarmCardUserWithdraw'
 import FarmCardUserElevate from './FarmCardUserElevate'
 import FarmCardMobileDepositWithdrawSelector from './FarmCardMobileDepositWithdrawSelector'
@@ -49,7 +47,7 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
     totemNotSelected,
   } = useElevationInteractionsLockedBreakdown(elevation)
   const elevationLocked = farmInteractionsLocked || totemNotSelected
-  const { account, ethereum }: { account: string | null, ethereum: provider } = useWallet()
+  const { account } = useWeb3React()
 
   const {
     // FARM INFO
@@ -72,9 +70,6 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
   const [mobileDepositWithdraw, setMobileDepositWithdraw] = useState(isMobile ? 0 : -1)
 
   const isApproved = account && farmAllowance && farmAllowance.isGreaterThan(0)
-  const lpContract = useMemo(() => {
-    return getContract(ethereum as provider, farmToken)
-  }, [ethereum, farmToken])
 
   // PENDING STATES
   const [approveDepositPending, setApproveDepositPending] = useState<boolean>(false)
@@ -124,7 +119,7 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
             decimals={decimals}
             depositFeeBP={depositFeeBP}
             elevation={elevation}
-            lpContract={lpContract}
+            farmToken={farmToken}
             setPending={setApproveDepositPending}
           />
         )}

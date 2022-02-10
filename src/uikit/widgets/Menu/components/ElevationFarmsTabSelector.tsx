@@ -50,7 +50,7 @@ const SelectedSummitButton = styled(SummitButton) <{
 
 const TextButton = styled(Link)<{
     selected: boolean,
-    crowned: boolean,
+    $crowned: boolean,
 }>`
     width: ${buttonWidth}px;
     height: ${buttonHeight}px;
@@ -64,7 +64,7 @@ const TextButton = styled(Link)<{
 
     &:hover {
         > .selectableIcon .totem-background-circle {
-            box-shadow: 2px 2px 4px ${({ theme, crowned }) => crowned ? 'white' : theme.colors.textShadow};
+            box-shadow: 2px 2px 4px ${({ theme, $crowned }) => $crowned ? 'white' : theme.colors.textShadow};
         }
     }
     &:active {
@@ -125,7 +125,7 @@ const ElevationFarmsTabSelector: React.FC = () => {
                             key={tab}
                             to={tabTarget}
                             selected={tab === selectedTab}
-                            crowned={crowned}
+                            $crowned={crowned}
                             replace
                         >
                             { (tab === ElevationFarmTab.DASH || userTotem == null) ?

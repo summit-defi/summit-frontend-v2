@@ -7,7 +7,6 @@ import { useCartographer } from './useContract'
 import { useTransactionToasts } from './useToast'
 import { Elevation } from 'config/constants/types'
 import { fetchTokensUserDataAsync } from 'state/tokens'
-import BigNumber from 'bignumber.js'
 
 const useStake = (farmToken: string, elevation: Elevation) => {
   const dispatch = useDispatch()

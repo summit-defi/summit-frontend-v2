@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import useWeb3 from 'hooks/useWeb3'
 import { useWeb3React } from '@web3-react/core'
 import Page from 'components/layout/Page'
 import { UserEverestCard, EverestStatsCard } from './components'

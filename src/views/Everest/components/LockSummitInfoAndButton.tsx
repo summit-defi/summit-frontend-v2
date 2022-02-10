@@ -3,12 +3,11 @@ import BigNumber from 'bignumber.js'
 import { useWeb3React } from '@web3-react/core'
 import { SummitPalette } from 'config/constants'
 import { useApproveAddress } from 'hooks/useApprove'
-import { useSummitToken } from 'hooks/useContract'
 import { useLockSummit } from 'hooks/useLockSummit'
 import { LockSummitButtonType } from 'state/types'
 import { Flex, Text, useModal } from 'uikit'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { getEverestTokenAddress, getFormattedBigNumber, timestampToDateWithYear } from 'utils'
+import { getEverestTokenAddress, getFormattedBigNumber, getSummitTokenAddress, timestampToDateWithYear } from 'utils'
 import LockSummitConfirmModal from './LockSummitConfirmModal'
 import UnlockButton from 'components/UnlockButton'
 
@@ -38,8 +37,7 @@ export const LockSummitInfoAndButton: React.FC<LockSummitButtonProps> = ({ appro
 
     // APPROVAL
     const everestAddress = getEverestTokenAddress()
-    const summitContract = useSummitToken()
-    const { onApprove, pending: approvalPending } = useApproveAddress(summitContract, everestAddress, 'SUMMIT')
+    const { onApprove, pending: approvalPending } = useApproveAddress(getSummitTokenAddress(), everestAddress, 'SUMMIT')
 
     // INFO
     const showLockRelease = type !== LockSummitButtonType.IncreaseLockedSummit

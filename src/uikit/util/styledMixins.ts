@@ -1,7 +1,7 @@
 import { ElevOrPalette } from 'config/constants'
 import { linearGradient } from 'polished'
 import { css, DefaultTheme, FlattenSimpleInterpolation } from 'styled-components'
-import { getPaletteGradientStops, getPalettePerfBackgroundColor } from 'utils'
+import { getPaletteGradientStops } from 'utils'
 
 export const pressableMixin = ({
   theme,
@@ -45,14 +45,16 @@ export const pressableMixin = ({
 }
 
 export const paletteLinearGradientBackground = ({
+  theme,
   secondary,
   summitPalette,
 }: {
+  theme: DefaultTheme,
   secondary: boolean,
   summitPalette?: ElevOrPalette,
 }) => {
-  if (secondary) return css`
-    background: none;
+  if (secondary && summitPalette == null) return css`
+    background: ${theme.colors.text};
   `
   return css`
     background: ${linearGradient({

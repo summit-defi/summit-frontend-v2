@@ -1,4 +1,4 @@
-import { BN_ZERO, SummitPalette } from "config/constants"
+import { SummitPalette } from "config/constants"
 import React, { memo, useCallback } from "react"
 import { useSummitPrice, useEverestStatsInfo } from "state/hooksNew"
 import styled from "styled-components"
