@@ -59,7 +59,7 @@ export const SummitEcosystemSlice = createSlice({
       state.activeAccount = action.payload
       localStorage.setItem('ActiveAccount', JSON.stringify(action.payload))
     },
-    clearActiveAccount: (state, action) => {
+    clearActiveAccount: (state) => {
       state.activeAccount = null
       localStorage.setItem('ActiveAccount', JSON.stringify(undefined))
     },
@@ -75,7 +75,7 @@ export const SummitEcosystemSlice = createSlice({
       const elevationsData = action.payload
       state.elevationsInfo = elevationUtils.elevationExpedition.map((elevation) => {
         const elevInt = elevationUtils.toInt(elevation)
-        const roundNumber = elevationsData[elevation].roundNumber
+        const {roundNumber} = elevationsData[elevation]
 
         localStorage.setItem(`${elevation}_winning_totem`, `${elevationsData[elevation].winningTotem}`)
         state.winningTotems[elevInt] = elevationsData[elevation].winningTotem

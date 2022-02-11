@@ -1,6 +1,6 @@
 import React from 'react'
 import { Elevation, elevationUtils } from 'config/constants/types'
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 import { elevationPalette } from 'theme/colors'
 import { Text, Flex, useMatchBreakpoints } from 'uikit'
 import Totem from './Totem'
@@ -24,6 +24,17 @@ const ExpectedMultText = styled(Text)<{ invis?: boolean }>`
   font-size: 12px;
   width: 24px;
   opacity: ${({ invis }) => invis ? 0 : 1};
+`
+
+const BattleText = styled(Text)<{ elevation: Elevation }>`
+  position: absolute;
+  font-weight: 900;
+  opacity: 0.3;
+  font-size: 4.55vw;
+  letter-spacing: 7px;
+  transform: rotate(-8deg);
+  pointer-events: none;
+  color: ${({ theme, elevation }) => theme.colors[elevation]};
 `
 
 const TotemMultText = styled(Text)`
@@ -58,7 +69,10 @@ const TotemResultsWrapper = styled(Flex)<{ elevation: Elevation, multiElev: bool
     opacity: 0.08;
   }
   & > .rule-line {
-      background-color: ${({ theme, elevation }) => theme.colors[elevation]};
+    background-color: ${({ theme, elevation }) => theme.colors[elevation]};
+  }
+  & > * > .selected-totem-indicator {
+    background-color: ${({ theme, elevation }) => theme.colors[elevation]};
   }
 `
 
@@ -105,6 +119,27 @@ const TotemResultWrapper = styled(Flex)`
   flex-direction: column;
   position: relative;  
   height: 100%;
+`
+
+const PulseKeyframes = keyframes`
+  0%: {
+    height: 0%;
+    opacity: 0.5;
+  }
+  50%, 100% {
+    height: 100%;
+    opacity: 0;
+  }
+`
+
+const ArenaPulse = styled.div<{ elevation: Elevation }>`
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  height: 1px; 
+  opacity: 0.5;
+  background-color: ${({ theme, elevation}) => theme.colors[elevation]};
+  animation: ${PulseKeyframes} 4s infinite ease-out;
 `
 
 const RowCombinerRight = styled.div`
@@ -164,7 +199,7 @@ const RulerLine: React.FC<{ i: number }> = React.memo(({ i }) => {
 const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, secondRow: boolean, isMobile: boolean, multiElev: boolean }> = React.memo(({ elevation, children, fullWidth, secondRow, isMobile, multiElev }) => {
   const expectedMultiplier = elevationUtils.totemCount(elevation)
   return (
-    <TotemBattleAreaWrapper fullWidth={fullWidth} secondRow={secondRow}>
+    <TotemBattleAreaWrapper fullWidth={fullWidth} secondRow={secondRow} className='totem-arena'>
       <ExpectedMultText invis={secondRow} bold monospace>{expectedMultiplier}x</ExpectedMultText>
       <TotemResultsWrapper elevation={elevation} multiElev={multiElev}>
         <RulerLine i={0}/>
@@ -174,6 +209,8 @@ const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, seco
         <RulerLine i={4}/>
         <RulerLine i={5}/>
         <RulerLine i={6}/>
+        <ArenaPulse elevation={elevation}/>
+        { !multiElev && <BattleText elevation={elevation}>{elevation} BATTLE ARENA</BattleText> }
         {/* <LeftFade/>
         <RightFade/> */}
         <DashedLine leftClipped={secondRow} rightClipped={elevation === Elevation.SUMMIT && !secondRow && isMobile && !multiElev}/>
@@ -203,6 +240,15 @@ const IconCrown = styled.div`
   pointer-events: none;
 `
 
+const SelectedTotemIndicator = styled.div`
+  position: absolute;
+  left: -6px;
+  right: -6px;
+  top: 0px;
+  bottom: 0px;
+  opacity: 0.3;
+`
+
 interface TotemInfo {
   totem: number
   crowned: boolean
@@ -222,6 +268,7 @@ const TotemBattleResult: React.FC<TotemResultProps> = ({ totemInfo, elevation, c
 
   return (
     <TotemResultWrapper>
+      {selected && <SelectedTotemIndicator className='selected-totem-indicator' /> }
       <TotemPosition topOffset={topOffset}>
         <TotemMultText bold monospace>{totemInfo.mult == null ? '' : `${isFinite(totemInfo.mult) ? totemInfo.mult.toFixed(1) : 'INF '}x`}</TotemMultText>
         <TotemScale scale={totemScale}>
@@ -229,8 +276,8 @@ const TotemBattleResult: React.FC<TotemResultProps> = ({ totemInfo, elevation, c
             elevation={elevation}
             totem={totemInfo.totem}
             color={color}
-            selected={selected}
             pressable={false}
+            selected={selected}
             size='46'
           />
           {totemInfo.crowned && <IconCrown />}

@@ -2,6 +2,7 @@
 
 import { getLinks } from 'config/constants'
 import { nodes } from './getRpcUrl'
+import { CHAIN_ID } from '../config/constants/networks'
 
 /**
  * Prompt the user to add BSC as a network on Metamask, or switch to BSC if the wallet is on a different network
@@ -13,7 +14,7 @@ export const setupNetwork = async () => {
     const provider = window.ethereum
     if (provider) {
         const existingChainId = parseInt(provider.networkVersion)
-        const targetChainId = parseInt(process.env.REACT_APP_CHAIN_ID, 10)
+        const targetChainId = parseInt(CHAIN_ID, 10)
         if (targetChainId !== existingChainId) {
             try {
                 await provider.request({

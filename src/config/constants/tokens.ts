@@ -1,7 +1,8 @@
 import { PriceableTokenMap } from './types'
-import { getChainId } from './chainId'
 import { bscTestnetPeggedTokens, bscTestnetTokens } from './chainFarms/bsc_testnet/tokens'
 import addresses from './contracts'
+import { CHAIN_ID } from './networks'
+import memoize from 'fast-memoize'
 
 const chainPeggedTokens = {
   56: [],
@@ -9,10 +10,9 @@ const chainPeggedTokens = {
   250: [],
 }
 
-export const getPeggedTokens = () => {
-  const chainId = getChainId()
-  return chainPeggedTokens[chainId]
-}
+export const getPeggedTokens = memoize(() => {
+  return chainPeggedTokens[CHAIN_ID]
+})
 
 const chainTokens = {
   56: [],
@@ -46,7 +46,6 @@ const replaceTokensSummitAddresses = (chainId, tokens: PriceableTokenMap): Price
   return newTokens
 }
 
-export const getPriceableTokens = (): PriceableTokenMap => {
-  const chainId = getChainId()
-  return replaceTokensSummitAddresses(chainId, chainTokens[chainId])
-}
+export const getPriceableTokens = memoize((): PriceableTokenMap => {
+  return replaceTokensSummitAddresses(CHAIN_ID, chainTokens[CHAIN_ID])
+})

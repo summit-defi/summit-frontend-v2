@@ -1,101 +1,76 @@
 import addresses from 'config/constants/contracts'
 import { Elevation } from 'config/constants/types'
-
-const getChainId = () => {
-  return JSON.parse(localStorage.getItem('ChainId')) || '97'
-}
+import { CHAIN_ID } from '../config/constants/networks'
 
 export const getSummitTokenAddress = () => {
-  const chainId = getChainId()
-  return addresses.summitToken[chainId]
+  return addresses.summitToken[CHAIN_ID]
 }
 export const getV1SummitTokenAddress = () => {
-  const chainId = getChainId()
-  return addresses.oldSummitToken[chainId]
+  return addresses.oldSummitToken[CHAIN_ID]
 }
 export const getEverestTokenAddress = () => {
-  const chainId = getChainId()
-  return addresses.everestToken[chainId]
+  return addresses.everestToken[CHAIN_ID]
 }
 export const getSummitLpAddress = () => {
-  const chainId = getChainId()
-  return addresses.summitLpToken[chainId]
+  return addresses.summitLpToken[CHAIN_ID]
 }
 export const getCartographerAddress = () => {
-  const chainId = getChainId()
-  return addresses.cartographer[chainId]
+  return addresses.cartographer[CHAIN_ID]
 }
 export const getCartographerOasisAddress = () => {
-  const chainId = getChainId()
-  return addresses.cartographerOasis[chainId]
+  return addresses.cartographerOasis[CHAIN_ID]
 }
 export const getCartographerPlainsAddress = () => {
-  const chainId = getChainId()
-  return addresses.cartographerPlains[chainId]
+  return addresses.cartographerPlains[CHAIN_ID]
 }
 export const getCartographerMesaAddress = () => {
-  const chainId = getChainId()
-  return addresses.cartographerMesa[chainId]
+  return addresses.cartographerMesa[CHAIN_ID]
 }
 export const getCartographerSummitAddress = () => {
-  const chainId = getChainId()
-  return addresses.cartographerSummit[chainId]
+  return addresses.cartographerSummit[CHAIN_ID]
 }
 export const getSubCartographerAddress = (elevation: Elevation) => {
-  const chainId = getChainId()
   switch (elevation) {
-    case Elevation.OASIS: return addresses.cartographerOasis[chainId]
-    case Elevation.PLAINS: return addresses.cartographerPlains[chainId]
-    case Elevation.MESA: return addresses.cartographerMesa[chainId]
-    case Elevation.SUMMIT: return addresses.cartographerSummit[chainId]
+    case Elevation.OASIS: return addresses.cartographerOasis[CHAIN_ID]
+    case Elevation.PLAINS: return addresses.cartographerPlains[CHAIN_ID]
+    case Elevation.MESA: return addresses.cartographerMesa[CHAIN_ID]
+    case Elevation.SUMMIT: return addresses.cartographerSummit[CHAIN_ID]
     default: return ''
   }
 }
 export const getExpeditionAddress = () => {
-  const chainId = getChainId()
-  return addresses.expedition[chainId]
+  return addresses.expedition[CHAIN_ID]
 }
 export const getElevationHelperAddress = () => {
-  const chainId = getChainId()
-  return addresses.elevationHelper[chainId]
+  return addresses.elevationHelper[CHAIN_ID]
 }
 export const getSummitGlacierAddress = () => {
-  const chainId = getChainId()
-  return addresses.summitGlacier[chainId]
+  return addresses.summitGlacier[CHAIN_ID]
 }
 export const getMulticallAddress = () => {
-  const chainId = getChainId()
-  return addresses.multicall[chainId]
+  return addresses.multicall[CHAIN_ID]
 }
 export const getAmmFactoryAddress = () => {
-  const chainId = getChainId()
-  return addresses.ammFactory[chainId]
+  return addresses.ammFactory[CHAIN_ID]
 }
 export const getAmmRouterAddress = () => {
-  const chainId = getChainId()
-  return addresses.ammRouter[chainId]
+  return addresses.ammRouter[CHAIN_ID]
 }
 export const getWrappedNativeTokenAddress = () => {
-  const chainId = getChainId()
-  return addresses.wrappedNativeToken[chainId]
+  return addresses.wrappedNativeToken[CHAIN_ID]
 }
 export const getPeggedTokenAddress = () => {
-  const chainId = getChainId()
-  return addresses.peggedToken[chainId]
+  return addresses.peggedToken[CHAIN_ID]
 }
 export const getNativePeggedLpAddress = () => {
-  const chainId = getChainId()
-  return addresses.nativePeggedLp[chainId]
+  return addresses.nativePeggedLp[CHAIN_ID]
 }
 export const getExpeditionTreasuryAddress = () => {
-  const chainId = getChainId()
-  return addresses.expeditionTreasury[chainId]
+  return addresses.expeditionTreasury[CHAIN_ID]
 }
 export const getBalancer2PoolPriceOracleAddress = () => {
-  const chainId = getChainId()
-  return addresses.beethoven2PoolOracle[chainId]
+  return addresses.beethoven2PoolOracle[CHAIN_ID]
 }
 export const getBalancerMultiPoolPriceOracleAddress = () => {
-  const chainId = getChainId()
-  return addresses.beethovenMultiPoolOracle[chainId]
+  return addresses.beethovenMultiPoolOracle[CHAIN_ID]
 }

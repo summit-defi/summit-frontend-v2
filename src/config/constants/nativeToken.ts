@@ -1,7 +1,7 @@
 import { PriceableToken } from './types'
 import { bscTestnetTokens } from './chainFarms/bsc_testnet/tokens'
-import { getChainId } from './chainId'
 import { TokenSymbol } from './tokenSymbols'
+import { CHAIN_ID } from './networks'
 
 const chainNativeTokenSymbol = {
   56: '',
@@ -10,8 +10,7 @@ const chainNativeTokenSymbol = {
 }
 
 export const getNativeTokenSymbol = (): string => {
-  const chainId = getChainId()
-  return chainNativeTokenSymbol[chainId]
+  return chainNativeTokenSymbol[CHAIN_ID]
 }
 
 const chainWrappedNativeTokenSymbol = {
@@ -25,6 +24,5 @@ export const getChainWrappedNativeToken = (): PriceableToken | null => {
 }
 
 export const getChainWrappedNativeTokenSymbol = (): TokenSymbol | null => {
-  const chainId = getChainId()
-  return chainWrappedNativeTokenSymbol[chainId]
+  return chainWrappedNativeTokenSymbol[CHAIN_ID]
 }

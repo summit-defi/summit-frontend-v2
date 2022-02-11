@@ -1,5 +1,5 @@
 import { bscTestnetLinks } from './chainFarms/bsc_testnet/links'
-import { getChainId } from './chainId'
+import { CHAIN_ID } from './networks'
 
 export interface ExternalLinks {
   exchange: string
@@ -15,15 +15,13 @@ const chainLinks = {
 }
 
 export const getLinks = (): ExternalLinks => {
-  const chainId = getChainId()
-  return chainLinks[chainId]
+  return chainLinks[CHAIN_ID]
 }
 
 export const getEtherscanName = (): string => {
-  const chainId = getChainId()
   return {
     56: 'BscScan',
     97: 'BscTestnetScan',
     250: 'FtmScan',
-  }[chainId]
+  }[CHAIN_ID]
 }

@@ -7,7 +7,7 @@ import { SummitButton, useModal } from 'uikit'
 import LockFarmSummitForEverestModal from './LockFarmSummitForEverestModal'
 
 
-export const LockFarmingSummitForEverest: React.FC = memo(() => {
+export const LockFarmingSummitForEverest: React.FC<{ disabled: boolean, isLocked: boolean }> = memo(({ disabled, isLocked }) => {
     const elevation = useSelectedElevation()
     const { pending, onLockFarmSummitForEverest } = useLockFarmSummitForEverest()
     const { account } = useWeb3React()
@@ -23,7 +23,8 @@ export const LockFarmingSummitForEverest: React.FC = memo(() => {
         <SummitButton
             summitPalette={SummitPalette.EVEREST}
             isLoading={pending}
-            disabled={account == null}
+            disabled={account == null || disabled}
+            isLocked={isLocked}
             padding='18px'
             width='140px'
             onClick={onPresentLockFarmSummit}

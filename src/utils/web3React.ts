@@ -2,7 +2,7 @@ import { InjectedConnector } from '@web3-react/injected-connector'
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector'
 import { BscConnector } from '@binance-chain/bsc-connector'
 import { Web3Provider } from '@ethersproject/providers'
-import { CHAIN_ID } from './networks'
+import { CHAIN_ID } from '../config/constants/networks'
 import getNodeUrl from './getRpcUrl'
 import { ConnectorNames } from 'uikit/widgets/WalletModal/types'
 

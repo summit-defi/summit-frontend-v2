@@ -1,8 +1,8 @@
 import { bscTestnetFarms, bscTestnetFarmTokens } from './chainFarms/bsc_testnet/farms'
-import { getChainId } from './chainId'
 import { FarmConfig } from './types'
 import memoize from 'fast-memoize'
 import { UserTokenData } from 'state/types'
+import { CHAIN_ID } from './networks'
 
 const chainFarms: { [key: string]: (chainId) => FarmConfig[] } = {
   56: () => [],
@@ -11,8 +11,7 @@ const chainFarms: { [key: string]: (chainId) => FarmConfig[] } = {
 }
 
 const getFarmConfigsMemoizable = () => {
-  const chainId = getChainId()
-  return chainFarms[chainId](chainId)
+  return chainFarms[CHAIN_ID](CHAIN_ID)
 }
 
 export const getFarmConfigs = memoize(getFarmConfigsMemoizable)
@@ -24,8 +23,7 @@ const chainFarmTokens: { [key: string]: (chainId) => UserTokenData[] } = {
 }
 
 const getFarmTokensMemoizable = () => {
-  const chainId = getChainId()
-  return chainFarmTokens[chainId](chainId)
+  return chainFarmTokens[CHAIN_ID](CHAIN_ID)
 }
 
 export const getFarmTokens = memoize(getFarmTokensMemoizable)

@@ -1,4 +1,4 @@
-import { getChainId } from './chainId'
+import { CHAIN_ID } from './networks'
 
 const chainSummitLpSymbol = {
   56: '',
@@ -7,6 +7,5 @@ const chainSummitLpSymbol = {
 }
 
 export const getSummitLpSymbol = (): string => {
-  const chainId = getChainId()
-  return chainSummitLpSymbol[chainId]
+  return chainSummitLpSymbol[CHAIN_ID]
 }

@@ -58,7 +58,7 @@ const useAuth = () => {
 
     const logout = useCallback(() => {
         deactivate()
-        dispatch(clearActiveAccount(undefined))
+        dispatch(clearActiveAccount())
         window.localStorage.removeItem(connectorLocalStorageKey)
     }, [deactivate, dispatch])
 
