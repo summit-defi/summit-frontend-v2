@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react'
-import BigNumber from 'bignumber.js'
 import { useWeb3React } from '@web3-react/core'
 import { getSummitTokenAddress, getSummitTokenContract, getTokenApproved, getTokenBalance, getV1SummitTokenAddress } from 'utils'
 import useRefresh from './useRefresh'
+import { BN_ZERO } from 'config/constants'
 
 export const useV1SummitTokenBalance = () => {
-  const [balance, setBalance] = useState(new BigNumber(0))
+  const [balance, setBalance] = useState(BN_ZERO)
   const { account } = useWeb3React()
   const { fastRefresh } = useRefresh()
   const v1SummitAddress = getV1SummitTokenAddress()
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const res = await getTokenBalance(v1SummitAddress, account)
-      setBalance(new BigNumber(res))
+      const bal = await getTokenBalance(v1SummitAddress, account)
+      setBalance(bal)
     }
 
     if (account) {

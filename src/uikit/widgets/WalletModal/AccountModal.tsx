@@ -16,7 +16,7 @@ interface Props {
 
 const AccountModal: React.FC<Props> = ({ account, logout, onDismiss = () => null }) => {
   const { etherscan } = getLinks()
-  const accountEtherscanLink = `${etherscan}/account/${account}`
+  const accountEtherscanLink = `${etherscan}address/${account}`
 
   return (
     <Modal title="Your wallet" onDismiss={onDismiss} elevationCircleHeader="BASE" headerless>

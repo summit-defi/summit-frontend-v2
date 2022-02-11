@@ -12,8 +12,8 @@ const useSummitTokenBalance = () => {
 
   useEffect(() => {
     const fetchBalance = async () => {
-      const res = await getTokenBalance(summitAddress, account)
-      setBalance(new BigNumber(res))
+      const bal = await getTokenBalance(summitAddress, account)
+      setBalance(bal)
     }
 
     if (account) {

@@ -1,5 +1,12 @@
-import { stateToSummitSwapMinimized, stateToElevationRolloversToShow } from "./base";
+import { createSelector } from "@reduxjs/toolkit";
+import { stateToSummitSwapMinimized, stateToElevationRolloversToShow, stateToFarmsUserDataLoaded } from "./base";
 import { useSelector } from "./utils";
 
 export const useSummitSwapMinimized = () => useSelector(stateToSummitSwapMinimized)
-export const useElevationRolloversToShow = () => useSelector(stateToElevationRolloversToShow)
+
+const selectElevationRolloversToShow = createSelector(
+    stateToElevationRolloversToShow,
+    stateToFarmsUserDataLoaded,
+    (elevationRolloversToShow, userDataLoaded) => userDataLoaded ? elevationRolloversToShow : []
+)
+export const useElevationRolloversToShow = () => useSelector(selectElevationRolloversToShow)

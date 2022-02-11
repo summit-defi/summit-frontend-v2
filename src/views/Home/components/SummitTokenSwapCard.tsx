@@ -13,6 +13,7 @@ import BigNumber from 'bignumber.js'
 import { updateSummitSwapMinimized } from 'state/summitEcosystem'
 import { useDispatch } from 'react-redux'
 import { useSummitTokenSwapUnlocked } from 'hooks/useV1SummitToken'
+import { registerToken } from 'utils/wallet'
 
 const StyledFarmStakingCard = styled(Card)`
   min-height: 376px;
@@ -104,64 +105,15 @@ const SummitTokenSwapCard = () => {
   )
 
 
-  const addWatchSummitToken = useCallback(async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const provider = window.ethereum
-    if (provider) {
-      try {
-        // wasAdded is a boolean. Like any RPC method, an error may be thrown.
-        const wasAdded = await provider.request({
-          method: 'wallet_watchAsset',
-          params: {
-            type: 'ERC20',
-            options: {
-              address: v2SummitAddress,
-              symbol: 'SUMMIT',
-              decimals: '18',
-              image: `${window.location.origin}/images/tokens/SUMMIT.png`,
-            },
-          },
-        })
+  const addWatchSummitToken = useCallback(
+    () => registerToken(v2SummitAddress, 'SUMMIT', 'SUMMIT', 18),
+    [v2SummitAddress]
+  )
 
-        if (wasAdded) {
-          console.log('Token was added')
-        }
-      } catch (error) {
-        // TODO: find a way to handle when the user rejects transaction or it fails
-      }
-    }
-  }, [v2SummitAddress])
-
-  const deprecateV1SummitToken = useCallback(async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    const provider = window.ethereum
-    if (provider) {
-      try {
-        // wasAdded is a boolean. Like any RPC method, an error may be thrown.
-        const wasAdded = await provider.request({
-          method: 'wallet_watchAsset',
-          params: {
-            type: 'ERC20',
-            options: {
-              address: v1SummitAddress,
-              symbol: 'V1 SUMMIT',
-              decimals: '18',
-              image: `${window.location.origin}/images/tokens/SUMMITV1.png`,
-            },
-          },
-        })
-
-        if (wasAdded) {
-          console.log('Token was added')
-        }
-      } catch (error) {
-        // TODO: find a way to handle when the user rejects transaction or it fails
-      }
-    }
-  }, [v1SummitAddress])
-
+  const deprecateV1SummitToken = useCallback(
+    () => registerToken(v1SummitAddress, 'V1 SUMMIT', 'SUMMITV1', 18),
+    [v1SummitAddress]
+  )
 
 
   // SWAP TOKEN INPUT

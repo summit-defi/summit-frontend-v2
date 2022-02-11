@@ -6,6 +6,7 @@ import { Contract } from '@ethersproject/contracts'
 import { simpleRpcProvider } from 'utils/providers'
 import { getCartographerAddress, getElevationHelperAddress, getEverestTokenAddress, getExpeditionAddress, getMulticallAddress, getSummitGlacierAddress, getSummitTokenAddress } from './addressHelpers'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import { BN_ZERO } from 'config/constants'
 
 type SignerLike = Signer | Provider | JsonRpcSigner
 
@@ -64,13 +65,13 @@ export const getMulticallContract = () => {
 export const getTokenBalance = async (
   tokenAddress: string,
   userAddress: string,
-): Promise<string> => {
+): Promise<BigNumber> => {
   const contract = getErc20Contract(tokenAddress)
   try {
-    const balance: string = await contract.balanceOf(userAddress)
-    return balance
+    const balance = await contract.balanceOf(userAddress)
+    return new BigNumber(balance._hex)
   } catch (e) {
-    return '0'
+    return BN_ZERO
   }
 }
 
@@ -81,8 +82,8 @@ export const getTokenApproved = async (
 ): Promise<boolean> => {
   const contract = getErc20Contract(tokenAddress)
   try {
-    const allowance: string = await contract.allowance(userAddress, targetAddress)
-    return new BigNumber(allowance).gt(0)
+    const allowance: BigNumber = await contract.allowance(userAddress, targetAddress)
+    return allowance.gt(0)
   } catch (e) {
     return false
   }
