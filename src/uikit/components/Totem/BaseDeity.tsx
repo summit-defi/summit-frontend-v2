@@ -1,7 +1,7 @@
 import { elevationUtils, Elevation } from 'config/constants/types'
 import styled, { css } from 'styled-components'
 
-export const BaseDeity = styled.div<{ deity: number; selected: boolean }>`
+export const BaseDeity = styled.div<{ deity: number; selected: boolean, inverted?: boolean }>`
   /* background-image: url("/images/expedition/${({ selected }) => selected ? 'DEITY_GLOW' : 'EMPTY_DEITY_GLOW'}.png"); */
   background-color: transparent;
 
@@ -43,7 +43,7 @@ export const BaseDeity = styled.div<{ deity: number; selected: boolean }>`
     width: 185%;
     height: 185%;
     transform: scaleX(${({ deity }) => deity === 0 ? -1 : 1});
-    background-image: url("/images/expedition/${({ selected }) => selected ? 'DEITY_GLOW' : 'EMPTY_DEITY_GLOW'}.png");
+    background-image: url("/images/expedition/${({ selected, inverted }) => selected ? `${inverted ? 'INV_' : ''}DEITY_GLOW` : 'EMPTY_DEITY_GLOW'}.png");
     background-repeat: no-repeat;
     background-position: center;
     background-size: auto 100%;

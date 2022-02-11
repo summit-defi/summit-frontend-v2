@@ -165,29 +165,33 @@ const SummitTokenSwapCard = () => {
     <StyledFarmStakingCard>
       <CardBody style={{height: '100%', display: 'flex', flex: '1', flexDirection: 'column', gap: '32px'}}>
 
-        <Flex width='100%' justifyContent='center' alignItems='center'>
-          <Flex flexDirection='column' alignItems='center' justifyContent='center'>
-            <StyledHighlightedText fontSize="16px" letterSpacing="2px" mb='-8px'>
-              V1
-            </StyledHighlightedText>
-            <GreyToken3DFloating width="96px" />
-          </Flex>
+        <Flex width='100%' justifyContent='space-around' alignItems='center'>
+          <Flex>
+            <Flex flexDirection='column' alignItems='center' justifyContent='center'>
+              <StyledHighlightedText fontSize="16px" letterSpacing="2px" mb='-8px'>
+                V1
+              </StyledHighlightedText>
+              <GreyToken3DFloating width="96px" />
+            </Flex>
 
 
-          <Flex mb='24px'>
-            <ChevronRightIcon width="24px" mr="-8px" key="a" />
-            <ChevronRightIcon width="24px" ml="-8px" key="b" />
+            <Flex mb='24px'>
+              <ChevronRightIcon width="24px" mr="-8px" key="a" />
+              <ChevronRightIcon width="24px" ml="-8px" key="b" />
+            </Flex>
+            
+            <Flex flexDirection='column' alignItems='center' justifyContent='center'>
+              <StyledHighlightedText fontSize="16px" letterSpacing="2px" mb='-8px'>
+                V2
+              </StyledHighlightedText>
+              <Token3DFloating width="96px" />
+            </Flex>
           </Flex>
           
-          <Flex flexDirection='column' alignItems='center' justifyContent='center'>
-            <StyledHighlightedText fontSize="16px" letterSpacing="2px" mb='-8px'>
-              V2
-            </StyledHighlightedText>
-            <Token3DFloating width="96px" />
-          </Flex>
-          
-          <StyledHighlightedText fontSize="16px" letterSpacing="2px" mt='-32px'>
-            TOKEN SWAP
+          <StyledHighlightedText fontSize="16px" letterSpacing="2px" mt='-18px'>
+            TOKEN
+            <br/>
+            SWAP
           </StyledHighlightedText>
         </Flex>
         

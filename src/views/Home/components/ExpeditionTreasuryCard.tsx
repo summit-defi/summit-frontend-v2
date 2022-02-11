@@ -16,15 +16,12 @@ const StyledFarmStakingCard = styled(Card)`
     flex-direction: column;
 `
 
-const DeityWrapper = styled.div`
-    filter: drop-shadow(-0.5vw 0.5vw 0.5vw white) drop-shadow(-4vw 2vw 4vw #ae6481) drop-shadow(4vw -2vw 4vw #0d172e);
-`
-
 const StyledHighlightedText = styled(HighlightedText)<{ fontSize: string; letterSpacing: string }>`
     letter-spacing: ${({ letterSpacing }) => letterSpacing};
     font-weight: 900;
     font-size: ${({ fontSize }) => fontSize};
     text-shadow: none;
+    z-index: 2;
 `
 
 const ExpeditionTreasuryCard: React.FC = () => {
@@ -34,9 +31,7 @@ const ExpeditionTreasuryCard: React.FC = () => {
     return (
         <StyledFarmStakingCard>
             <CardBody style={{height: '100%', display: 'flex', flex: '1', flexDirection: 'column', alignItems: 'center', justifyContent: 'space-between'}}>
-                <DeityWrapper>
-                <InverseDeity deity={0} selected />
-                </DeityWrapper>
+                <InverseDeity deity={0} selected inverted />
 
                 <StyledHighlightedText fontSize="16px" mt='-32px' letterSpacing="2px">
                     EXPEDITION TREASURY:
