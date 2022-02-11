@@ -22,7 +22,7 @@ const StyledLock = styled(Lock)`
   align-self: center;
   transform: rotate(20deg);
   fill: white;
-  filter: drop-shadow(0px 0px 8px black) drop-shadow(0px 0px 2px black);
+  filter: drop-shadow(0px 0px 4px black);
   z-index: 4;
 `
 

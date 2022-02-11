@@ -36,7 +36,7 @@ export const HeaderArtwork = styled.div<{ elevation: string }>`
   position: relative;
   background-image: ${({ elevation }) =>
     `url("/images/summit/elevationArtwork${elevation || 'BASE'}.jpg")`};
-  filter: drop-shadow(3px 3px 6px black);
+  box-shadow: 1px 1px 2px ${({ theme }) => theme.colors.textShadow};
   border-radius: ${PuckSize}px;
   background-size: cover;
   width: ${PuckSize}px;
