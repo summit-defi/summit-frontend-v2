@@ -26,15 +26,18 @@ const ExpectedMultText = styled(Text)<{ invis?: boolean }>`
   opacity: ${({ invis }) => invis ? 0 : 1};
 `
 
-const BattleText = styled(Text)<{ elevation: Elevation }>`
+const BattleText = styled.svg<{ elevation: Elevation }>`
   position: absolute;
   font-weight: 900;
-  opacity: 0.3;
-  font-size: 4.55vw;
-  letter-spacing: 7px;
+  opacity: 0.2;
+  /* font-size: 4.5vw; */
+  /* letter-spacing: 7px; */
   transform: rotate(-8deg);
   pointer-events: none;
-  color: ${({ theme, elevation }) => theme.colors[elevation]};
+  & > .battle-svg-text {
+    letter-spacing: 2px;
+    fill: ${({ theme, elevation }) => theme.colors[elevation]};
+  }
 `
 
 const TotemMultText = styled(Text)`
@@ -210,7 +213,12 @@ const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, seco
         <RulerLine i={5}/>
         <RulerLine i={6}/>
         <ArenaPulse elevation={elevation}/>
-        { !multiElev && <BattleText elevation={elevation}>{elevation} BATTLE ARENA</BattleText> }
+        { !multiElev && <BattleText viewBox="0 0 250 50" elevation={elevation}>
+          <text x='50%' y='50%' className='battle-svg-text' textAnchor='middle' dominantBaseline='middle'>{elevation} BATTLE ARENA</text>
+        </BattleText> }
+        {/* <svg >
+          <text x="0" y="15">Fit Me</text>
+        </svg> */}
         {/* <LeftFade/>
         <RightFade/> */}
         <DashedLine leftClipped={secondRow} rightClipped={elevation === Elevation.SUMMIT && !secondRow && isMobile && !multiElev}/>
