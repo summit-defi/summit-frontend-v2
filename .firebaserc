@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "summit-beta"
+  },
+  "targets": {
+    "summit-beta": {
+      "hosting": {
+        "ftm": [
+          "summit-ftm-00001"
+        ],
+        "beta": [
+          "summit-beta"
+        ]
+      }
+    }
   }
 }

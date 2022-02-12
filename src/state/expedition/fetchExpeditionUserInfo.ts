@@ -32,11 +32,11 @@ export const fetchExpeditionUserData = async (account) => {
 }
 
 export const fetchExpeditionWinnings = async (account) => {
-  const call = ({
+  const call = {
     address: getExpeditionAddress(),
     name: 'rewards',
     params: [account],
-  })
+  }
 
   const res = await retryableMulticall(abi.expedition, [call], 'fetchExpeditionWinnings')
 

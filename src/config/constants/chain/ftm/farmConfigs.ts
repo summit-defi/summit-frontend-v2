@@ -1,0 +1,96 @@
+import { TokenSymbol } from 'config/constants/tokenSymbols'
+import { MultiElevAllocationConfig } from '../../types'
+
+const baseElevations = {
+  OASIS: { live: true, exists: true, },
+  PLAINS: { live: true, exists: true, },
+  MESA: { live: true, exists: true, },
+  SUMMIT: { live: true, exists: true, },
+}
+
+export const farmConfigs: { [key: string]: MultiElevAllocationConfig } = {
+  [TokenSymbol.SUMMIT]: {
+    allocation: 700,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: true,
+    elevations: baseElevations,
+  },
+  [TokenSymbol.EVEREST]: {
+    allocation: 900,
+    taxBP: 0,
+    depositFeeBP: 0,
+    native: true,
+    elevations: baseElevations,
+  },
+  [TokenSymbol.TOMB_FTM]: {
+    allocation: 500,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations,
+  },
+  [TokenSymbol.TSHARE_FTM]: {
+    allocation: 500,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations,
+  },
+  [TokenSymbol.FTM_BOO]: {
+    allocation: 100,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations,
+  },
+  [TokenSymbol.BPT_BEETS_FTM]: {
+    allocation: 200,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations,
+  },
+  [TokenSymbol.FANTOM_OF_THE_OPERA]: {
+    allocation: 200,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations,
+  },
+  [TokenSymbol.GRAND_ORCH]: {
+    allocation: 200,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations,
+  },
+  [TokenSymbol.BOO]: {
+    allocation: 300,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations,
+  },
+  [TokenSymbol.BATTLE_OF_THE_BANDS]: {
+    allocation: 200,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations,
+  },
+  [TokenSymbol['2SHARES_FTM']]: {
+    allocation: 1000,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations,
+  },
+  [TokenSymbol['2OMB_FTM']]: {
+    allocation: 1000,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations,
+  },
+}

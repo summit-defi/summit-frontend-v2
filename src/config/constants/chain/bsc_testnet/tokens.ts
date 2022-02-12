@@ -5,7 +5,7 @@ export const bscTestnetPeggedTokens = {
   [TokenSymbol.USDC]: true,
 }
 
-export const bscTestnetTokens: { [key in keyof typeof TokenSymbol]: PriceableToken } = {
+export const bscTestnetTokens: { [key: string]: PriceableToken } = {
   [TokenSymbol.wBNB]: {
     assetType: TokenAssetType.SingleAsset,
     symbol: TokenSymbol.wBNB,

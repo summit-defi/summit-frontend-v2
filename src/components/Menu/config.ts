@@ -1,6 +1,6 @@
 import { MenuEntry } from 'uikit'
 import { Elevation, elevationUtils } from 'config/constants/types'
-import { getSummitTokenAddress } from 'utils'
+import { ChainIncludesBetaTab, getSummitTokenAddress } from 'utils'
 
 const getTotemIcon = (elevation, locked, totem) => {
   if (locked) return 'elevationLock'
@@ -48,12 +48,12 @@ export const getMenuItems = (
     external: true,
   },
 
-  {
+  ChainIncludesBetaTab() ? {
     label: 'BETA',
     href: '/beta',
     icon: 'totemIcons/BETA.png',
     keyPaths: ['beta']
-  },
+  } : null,
   {
     label: 'ELEVATION|br|FARMS',
     icon: 'totemOtter',
@@ -89,4 +89,4 @@ export const getMenuItems = (
     elevation: Elevation.EXPEDITION,
     keyPaths: ['expedition'],
   },
-]
+].filter((entry) => entry != null)

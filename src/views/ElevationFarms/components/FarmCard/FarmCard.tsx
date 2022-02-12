@@ -104,6 +104,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
   const cardRef = useRef(null)
 
   const {
+    name,
     allocation,
     decimals,
     summitPerYear,
@@ -124,7 +125,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
 
   useEffect(
     () => {
-      if (expanded && currentElevTab !== elevationTab) {
+      if (expanded && currentElevTab !== elevationTab && cardRef.current != null) {
         setCurrentElevTab(elevationTab)
         cardRef.current.scrollIntoView({
           behavior: 'smooth',
@@ -181,7 +182,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
         { farmComment != null && <Text monospace bold italic fontSize='13px' mb='14px' textAlign='center'>* {farmComment}</Text> }
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }
         <FarmNumericalInfoFlex>
-          <FarmIconAndAllocation symbol={symbol} allocation={allocation} live={live}/>
+          <FarmIconAndAllocation symbol={symbol} name={name} allocation={allocation} live={live}/>
           <FarmStakingContribution symbol={symbol} userDataLoaded={userDataLoaded} elevationsStaked={farmElevationsStaked} pricePerToken={pricePerToken} decimals={decimals}/>
           <FarmAPYBreakdown summitPerYear={summitPerYear} totalValue={totalValue}/>
           <FarmTotalValue totalValue={totalValue}/>

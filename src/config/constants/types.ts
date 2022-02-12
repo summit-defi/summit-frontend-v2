@@ -418,6 +418,7 @@ export interface MultiElevAllocationConfig {
 }
 
 export interface MultiElevFarmConfig extends MultiElevAllocationConfig, PriceableToken  {
+  name?: string
   passthroughStrategy?: string
   getUrl?: string
 }

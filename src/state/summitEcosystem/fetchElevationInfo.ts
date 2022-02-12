@@ -23,11 +23,11 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
       name: 'roundEndTimestamp',
       params: [elevationUtils.toInt(elev)],
     },
-    {
-      address: elevationHelperAddress,
-      name: 'historicalWinningTotems',
-      params: [elevationUtils.toInt(elev)],
-    },
+    // {
+    //   address: elevationHelperAddress,
+    //   name: 'historicalWinningTotems',
+    //   params: [elevationUtils.toInt(elev)],
+    // },
     {
       address: elevationHelperAddress,
       name: 'roundNumber',
@@ -38,13 +38,17 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
   const res = await retryableMulticall(abi.elevationHelper, calls.flat(), 'fetchElevationsData_elevHelper')
   if (res == null) return null
 
+  const roundNumbers = elevations.map((_, elevIndex) => {
+    return new BigNumber(res[elevIndex * 3 + 2][0]._hex).toNumber()
+  })
+
   const prevWinningsMultipliersCalls = []
   const elevRounds = []
   
   elevations.forEach((elev, elevIndex) => {
     if (elev === Elevation.EXPEDITION) return
 
-    const maxRoundNumber = Math.max(new BigNumber(res[elevIndex * 4 + 3][0]._hex).toNumber() - 1, 0)
+    const maxRoundNumber = Math.max(roundNumbers[elevIndex], 0)
     const minRoundNumber = Math.max(maxRoundNumber - 5, 1)
     const rounds = range(maxRoundNumber, minRoundNumber - 1, -1);
     elevRounds.push(rounds)
@@ -55,11 +59,31 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
     }))
   })
 
-  const prevWinningsMultipliersRes = await retryableMulticall(
-    abi.cartographerElevation,
-    prevWinningsMultipliersCalls,
-    'fetchElevationsData_cartElev',
-  )
+  const historicalWinnersCalls = elevations
+    .filter((_, elevIndex) => roundNumbers[elevIndex] > 0)
+    .map((elev) => ({
+        address: elevationHelperAddress,
+        name: 'historicalWinningTotems',
+        params: [elevationUtils.toInt(elev)],
+    }))
+
+  // TODO: REVISIT THIS
+  const [prevWinningsMultipliersRes] = await Promise.all([
+    retryableMulticall(
+      abi.cartographerElevation,
+      prevWinningsMultipliersCalls,
+      'fetchElevationsData_cartElev',
+    ),
+    // retryableMulticall(
+    //   abi.elevationHelper,
+    //   historicalWinnersCalls,
+    //   'fetchElevationsData_historicalWinners',
+    // )
+  ])
+
+  // console.log({
+  //   historicalWinningTotems
+  // })
 
   const elevPrevWinningsMultipliers = []
   let cumRoundsCount = 0
@@ -84,15 +108,15 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
     elevations,
     (elev) => elev,
     (elev, index) => {
-      const unlockTimestamp = new BigNumber(res[index * 4 + 0]).toNumber()
+      const unlockTimestamp = new BigNumber(res[index * 3 + 0]).toNumber()
 
-      const roundEndTimestamp = new BigNumber(res[index * 4 + 1]).toNumber()
-      const roundNumber = new BigNumber(res[index * 4 + 3][0]._hex).toNumber()
+      const roundEndTimestamp = new BigNumber(res[index * 3 + 1]).toNumber()
+      const roundNumber = new BigNumber(res[index * 3 + 2][0]._hex).toNumber()
 
       // TODO: Remove clipping for mainnet launch
       const clipPrevWinners = roundNumber <= 10
-      const totemWinAcc = res[index * 4 + 2][0].map((item) => new BigNumber(item._hex).toNumber())
-      const prevWinners = res[index * 4 + 2][1].map((item) => new BigNumber(item._hex).toNumber()).slice(0, clipPrevWinners ? -1 : undefined)
+      const totemWinAcc = [] // res[index * 3 + 2][0].map((item) => new BigNumber(item._hex).toNumber())
+      const prevWinners = [] // res[index * 3 + 2][1].map((item) => new BigNumber(item._hex).toNumber()).slice(0, clipPrevWinners ? -1 : undefined)
 
       let prevWinningsMultipliers = []
       if (elev !== Elevation.EXPEDITION) {

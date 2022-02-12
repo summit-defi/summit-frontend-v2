@@ -1,5 +1,6 @@
 import { PriceableTokenMap } from './types'
-import { bscTestnetPeggedTokens, bscTestnetTokens } from './chainFarms/bsc_testnet/tokens'
+import { bscTestnetPeggedTokens, bscTestnetTokens } from './chain/bsc_testnet/tokens'
+import { ftmPeggedTokens, ftmTokens } from './chain/ftm/tokens'
 import addresses from './contracts'
 import { CHAIN_ID } from './networks'
 import memoize from 'fast-memoize'
@@ -7,7 +8,7 @@ import memoize from 'fast-memoize'
 const chainPeggedTokens = {
   56: [],
   97: bscTestnetPeggedTokens,
-  250: [],
+  250: ftmPeggedTokens,
 }
 
 export const getPeggedTokens = memoize(() => {
@@ -17,7 +18,7 @@ export const getPeggedTokens = memoize(() => {
 const chainTokens = {
   56: [],
   97: bscTestnetTokens,
-  250: [],
+  250: ftmTokens,
 }
 
 

@@ -21,17 +21,18 @@ const MultiplierTag: React.FC<{ allocation: number }> = memo(({ allocation }) =>
 
 interface Props {
     symbol: string
+    name?: string
     allocation: number
     live: boolean
 }
 
-const FarmIconAndAllocation: React.FC<Props> = ({ symbol, allocation, live }) => {
+const FarmIconAndAllocation: React.FC<Props> = ({ symbol, name, allocation, live }) => {
     return (
         <Flex gap='8px' width='180px' justifyContent="flex-start" alignItems="center">
             <TokenSymbolImage symbol={symbol} width={52} height={52} />
             <Flex flexDirection="column" alignItems="flex-start">
                 <Text italic monospace bold fontSize="14px" lineHeight="14px" mb="4px" textAlign="left">
-                    {symbol}
+                    {name || symbol}
                 </Text>
                 <MultiplierTag allocation={live ? allocation : 0}/>
             </Flex>
