@@ -1,3 +1,4 @@
+import { TokensWithCustomArtwork } from 'config/constants'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -18,21 +19,22 @@ const BaseSymbolIcon = styled.div<{ symbol: string; width: number; height: numbe
 `
 
 const SingleSymbolIcon = styled(BaseSymbolIcon)`
+  position: absolute;
   left: 50%;
   top: 50%;
   transform: translateX(-50%) translateY(-50%) scale(0.85);
 `
 
 const LpASymbolIcon = styled(BaseSymbolIcon)`
-  top: 0px;
-  left: 0px;
+  top: -10px;
+  left: -10px;
   z-index: 1;
   transform: scale(0.6);
 `
 
 const LpBSymbolIcon = styled(BaseSymbolIcon)`
-  bottom: 0px;
-  right: 0px;
+  bottom: -5px;
+  right: -5px;
   z-index: 2;
   transform: scale(0.8);
 `
@@ -57,10 +59,9 @@ const symbolSortPrio = (symbol): number => {
 const SymbolImage: React.FC<Props> = ({ symbol, width, height }) => {
   const symbolPartsRaw = symbol.split('-')
   const symbolParts = symbolPartsRaw.sort((a, b) => (symbolSortPrio(a) > symbolSortPrio(b) ? 1 : -1))
-  const singleSymbols = []
   return (
     <LpSymbolWrapper width={width} height={height}>
-      {(singleSymbols.includes(symbol) || symbolParts.length === 1) ? (
+      {(TokensWithCustomArtwork[symbol] || symbolParts.length === 1) ? (
         <SingleSymbolIcon symbol={symbol} width={width} height={height} />
       ) : (
         <>

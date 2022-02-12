@@ -95,7 +95,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
   const { farmType, liveFarms } = useFarmFilters()
   const farmBySymbolSelector = useMemo(makeSelectFarmBySymbol, [])
   const farm = useSelector((state) => farmBySymbolSelector(state, symbol))
-  const pricePerToken = useSelector((state) => state.prices.pricesPerToken[symbol] || new BigNumber(1))
+  const pricePerToken = useSelector((state) => state.prices.pricesPerToken != null ? (state.prices.pricesPerToken[symbol] || new BigNumber(1)) : new BigNumber(1))
   const elevationTab = useElevationFarmsTab()
   const singleFarmSymbol = useSingleFarmSelected()
   const userDataLoaded = useFarmsUserDataLoaded()

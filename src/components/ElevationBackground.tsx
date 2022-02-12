@@ -4,7 +4,7 @@ import { useSelectedElevation } from 'state/hooks'
 import styled from 'styled-components'
 
 const BackgroundImage = styled.div<{ elevation: Elevation | null }>`
-  background-image: ${({ theme }) => `url("/images/summit/backgroundBASE${theme.isDark ? '_DARK' : '_LIGHT'}.jpg")`};
+  background-image: ${({ theme, elevation }) => `url("/images/summit/background${elevation || 'BASE'}${theme.isDark ? '_DARK' : '_LIGHT'}.jpg")`};
   position: fixed;
   background-position: center right;
   background-attachment: fixed;

@@ -26,7 +26,7 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
     decimals: 18,
   },
   [TokenSymbol.EVEREST]: {
-    assetType: TokenAssetType.SingleAsset,
+    assetType: TokenAssetType.Everest,
     symbol: TokenSymbol.EVEREST,
     tokenAddress: '0xC687806Cfd11B5330d7c3aE6f18B18DC71e1083e',
     decimals: 18,
@@ -56,7 +56,7 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
     decimals: 18,
   },
   [TokenSymbol.BATTLE_OF_THE_BANDS]: {
-    assetType: TokenAssetType.Balancer2Pool,
+    assetType: TokenAssetType.BalancerMultiPool,
     symbol: TokenSymbol.BATTLE_OF_THE_BANDS,
     tokenAddress: '0x9af1f0e9ac9c844a4a4439d446c1437807183075',
     decimals: 18,
@@ -72,10 +72,11 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
     balancerMultiPoolPid: '0xd47d2791d3b46f9452709fa41855a045304d6f9d000100000000000000000004',
   },
   [TokenSymbol.FANTOM_OF_THE_OPERA]: {
-    assetType: TokenAssetType.Balancer2Pool,
+    assetType: TokenAssetType.BalancerMultiPool,
     symbol: TokenSymbol.FANTOM_OF_THE_OPERA,
     tokenAddress: '0xcdF68a4d525Ba2E90Fe959c74330430A5a6b8226',
     decimals: 18,
+    balancerMultiPoolPid: '0xcdf68a4d525ba2e90fe959c74330430a5a6b8226000200000000000000000008',
   },
   [TokenSymbol.BOO]: {
     assetType: TokenAssetType.SingleAsset,
@@ -104,35 +105,42 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
     assetType: TokenAssetType.SingleAsset,
     symbol: TokenSymbol.wBTC,
     tokenAddress: '0x321162Cd933E2Be498Cd2267a90534A804051b11',
-    lpAddress: '0xfdb9ab8b9513ad9e419cf19530fee49d412c3ee3',
     decimals: 8,
   },
   [TokenSymbol.wETH]: {
     assetType: TokenAssetType.SingleAsset,
     symbol: TokenSymbol.wETH,
     tokenAddress: '0x74b23882a30290451A17c44f4F05243b6b58C76d',
-    lpAddress: '0xf0702249f4d3a25cd3ded7859a165693685ab577',
     decimals: 18,
   },
   [TokenSymbol.fMATIC]: {
     assetType: TokenAssetType.SingleAsset,
     symbol: TokenSymbol.fMATIC,
     tokenAddress: '0x40DF1Ae6074C35047BFF66675488Aa2f9f6384F3',
-    lpAddress: '0x7051C6F0C1F1437498505521a3bD949654923fE1',
     decimals: 18,
   },
   [TokenSymbol.fAVAX]: {
     assetType: TokenAssetType.SingleAsset,
     symbol: TokenSymbol.fAVAX,
     tokenAddress: '0x511D35c52a3C244E7b8bd92c0C297755FbD89212',
-    lpAddress: '0x5DF809e410d9CC577f0d01b4E623C567C7aD56c1',
     decimals: 18,
   },
   [TokenSymbol.fBNB]: {
     assetType: TokenAssetType.SingleAsset,
     symbol: TokenSymbol.fBNB,
     tokenAddress: '0xD67de0e0a0Fd7b15dC8348Bb9BE742F3c5850454',
-    lpAddress: '0x956de13ea0fa5b577e4097be837bf4ac80005820',
+    decimals: 18,
+  },
+  [TokenSymbol.fSOL]: {
+    assetType: TokenAssetType.SingleAsset,
+    symbol: TokenSymbol.fBNB,
+    tokenAddress: '0x44F7237df00E386af8e79B817D05ED9f6FE0f296',
+    decimals: 18,
+  },
+  [TokenSymbol.fLUNA]: {
+    assetType: TokenAssetType.SingleAsset,
+    symbol: TokenSymbol.fBNB,
+    tokenAddress: '0x95dD59343a893637BE1c3228060EE6afBf6F0730',
     decimals: 18,
   },
 }

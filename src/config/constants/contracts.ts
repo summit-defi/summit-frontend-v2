@@ -77,7 +77,8 @@ export default {
     "250": "0x33365E1B22BbeF5766419e19f77c15fD3E0a8Ae5"
   },
   "beethovenMultiPoolOracle": {
-    "97": "0xdDE494d67e6d343AC1460135df84b7BCa9448B54"
+    "97": "0xdDE494d67e6d343AC1460135df84b7BCa9448B54",
+    '250': '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce'
   },
   "peggedToken": {
     "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",

@@ -40,7 +40,7 @@ const TotemIcon = styled.div<{ totemName: string; crowned: boolean }>`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  filter: drop-shadow(2px 0px 2px black);
+  filter: drop-shadow(2px 0px 1px black);
 `
 
 const ElevationForeground = styled.div<{ elevation: Elevation; crowned: boolean }>`

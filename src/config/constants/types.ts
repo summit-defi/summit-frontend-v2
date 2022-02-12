@@ -381,6 +381,7 @@ export type PriceableTokenMap = { [key: string]: PriceableToken }
 
 export enum TokenAssetType {
   Stablecoin = 'Stablecoin',
+  Everest = 'Everest',
   SingleAsset = 'SingleAsset',
   LP = 'LP',
   WrappedNative = 'WrappedNative',

@@ -19,7 +19,7 @@ export const bscTestnetTokens: { [key: string]: PriceableToken } = {
     decimals: 18,
   },
   [TokenSymbol.EVEREST]: {
-    assetType: TokenAssetType.SingleAsset,
+    assetType: TokenAssetType.Everest,
     symbol: TokenSymbol.EVEREST,
     tokenAddress: '0x83Db6A464E88FF9bD77d0737847F2d6B43239346',
     decimals: 18,

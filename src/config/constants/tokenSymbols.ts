@@ -20,7 +20,7 @@ export enum TokenSymbol {
     wFTM = 'wFTM',
     TOMB = 'TOMB',
     TOMB_FTM = 'TOMB-FTM',
-    TSHARE_FTM = 'TSHARE_FTM',
+    TSHARE_FTM = 'TSHARE-FTM',
     TSHARE = 'TSHARE',
     BOO = 'BOO',
     FTM_BOO = 'FTM-BOO',
@@ -39,4 +39,47 @@ export enum TokenSymbol {
     fBNB = 'BNB',
     fLUNA = 'LUNA',
     fSOL = 'SOL',
+}
+
+export const TokensWithCustomArtwork = {
+    // SHARED
+    [TokenSymbol.SUMMIT]: false,
+    [TokenSymbol.EVEREST]: false,
+    [TokenSymbol.USDC]: false,
+    
+    // BSC TESTNET
+    [TokenSymbol.wBNB]: false,
+    [TokenSymbol.CAKE]: false,
+    [TokenSymbol.BIFI]: false,
+    [TokenSymbol.GS0]: false,
+    [TokenSymbol.GS1]: false,
+    [TokenSymbol.GS2]: false,
+    [TokenSymbol.GS3]: false,
+    [TokenSymbol.GS4]: false,
+    [TokenSymbol.GS5]: false,
+
+    // FTM
+    [TokenSymbol.FTM]: false,
+    [TokenSymbol.wFTM]: false,
+    [TokenSymbol.TOMB]: false,
+    [TokenSymbol.TOMB_FTM]: false,
+    [TokenSymbol.TSHARE_FTM]: false,
+    [TokenSymbol.TSHARE]: false,
+    [TokenSymbol.BOO]: false,
+    [TokenSymbol.FTM_BOO]: false,
+    [TokenSymbol['2OMB']]: false,
+    [TokenSymbol['2SHARES']]: false,
+    [TokenSymbol['2OMB_FTM']]: false,
+    [TokenSymbol['2SHARES_FTM']]: false,
+    [TokenSymbol.BPT_BEETS_FTM]: true,
+    [TokenSymbol.GRAND_ORCH]: true,
+    [TokenSymbol.BATTLE_OF_THE_BANDS]: true,
+    [TokenSymbol.FANTOM_OF_THE_OPERA]: true,
+    [TokenSymbol.wETH]: false,
+    [TokenSymbol.wBTC]: false,
+    [TokenSymbol.fMATIC]: false,
+    [TokenSymbol.fAVAX]: false,
+    [TokenSymbol.fBNB]: false,
+    [TokenSymbol.fLUNA]: false,
+    [TokenSymbol.fSOL]: false,
 }
