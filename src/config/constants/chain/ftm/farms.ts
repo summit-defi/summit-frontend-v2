@@ -42,6 +42,13 @@ const ftmBooFarm: MultiElevFarmConfig = {
   getUrl: 'https://spookyswap.finance/add/FTM/0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE',
 }
 
+const booFarm: MultiElevFarmConfig = {
+  symbol: TokenSymbol.BOO,
+  ...farmConfigs[TokenSymbol.BOO],
+  ...ftmTokens[TokenSymbol.BOO],
+  getUrl: 'https://spookyswap.finance/swap?outputCurrency=0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE',
+}
+
 const fidelioDuettoFarm: MultiElevFarmConfig = {
   symbol: TokenSymbol.BPT_BEETS_FTM,
   name: 'Fidelio Duetto',
@@ -94,12 +101,13 @@ const farms = [
   tombFtmFarm,
   tshareFtmFarm,
   ftmBooFarm,
+  booFarm,
   fidelioDuettoFarm,
+  twoSharesFtmFarm,
+  twOmbFtmFarm,
   fantomOfTheOperaFarm,
   grandOrchestraFarm,
   battleOfTheBandsFarm,
-  twoSharesFtmFarm,
-  twOmbFtmFarm,
 ]
 
 export const ftmFarms = (chainId) => {

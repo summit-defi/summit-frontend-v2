@@ -48,7 +48,7 @@ const MenuPageSpecificHeader: React.FC<Props> = ({ isDark, isPushed }) => {
     const keyPath = location.pathname.split('/')[1]
 
     const isExpedition = keyPath === 'expedition'
-    const isFarmTab = ['beta', 'elevations', 'oasis', 'plains', 'mesa', 'summit'].includes(keyPath)
+    const isFarmTab = ['rollover', 'elevations', 'oasis', 'plains', 'mesa', 'summit'].includes(keyPath)
     
     const logoVisible = !isMobile || (!isFarmTab && !isExpedition)
     const roundProgressVisible = !isMobile || !isPushed

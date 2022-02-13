@@ -73,7 +73,7 @@ export type Colors = {
   GLACIER: string
 
   AUDIT: string
-  BETA: string
+  ROLLOVER: string
   BASE: string
   EVEREST: string
 }

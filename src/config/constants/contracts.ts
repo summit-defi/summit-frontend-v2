@@ -71,7 +71,7 @@ export default {
     "250": "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83"
   },
   "expeditionTreasury": {
-    "250": "0xF3265e6b1e9683E719d88a658D25b61888713188"
+    "250": "0x00676eF184C36EBf73d0F3059D2a6909F02AA893"
   },
   "beethoven2PoolOracle": {
     "250": "0x33365E1B22BbeF5766419e19f77c15fD3E0a8Ae5"

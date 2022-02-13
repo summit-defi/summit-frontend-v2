@@ -14,6 +14,7 @@ export const getFarmToken = ({
 }) => {
     switch (assetType) {
         case TokenAssetType.LP: return lpAddress
+        case TokenAssetType.Summit:
         case TokenAssetType.Everest:
         case TokenAssetType.Stablecoin:
         case TokenAssetType.SingleAsset:
@@ -30,7 +31,7 @@ export const getFarmType = ({
 }) => {
     switch (assetType) {
         case TokenAssetType.LP: return FarmType.LP
-        case TokenAssetType.Everest:
+        case TokenAssetType.Summit:
         case TokenAssetType.Stablecoin:
         case TokenAssetType.SingleAsset:
         case TokenAssetType.WrappedNative:

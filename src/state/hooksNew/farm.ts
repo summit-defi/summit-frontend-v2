@@ -96,7 +96,7 @@ const selectFarmUserTokenSectionInfo = createSelector(
 )
 export const useFarmUserTokenSectionInfo = (symbol: string) => useSelector((state) => selectFarmUserTokenSectionInfo(state, symbol))
 
-export const useSummitPrice = () => useSelector((state) => state.prices.pricesPerToken?.SUMMIT || new BigNumber(1.5))
+export const useSummitPrice = () => useSelector((state) => state.prices.pricesPerToken?.SUMMIT || new BigNumber(15))
 
 const selectSymbolElevateModalInfo = createSelector(
     stateToFarms,

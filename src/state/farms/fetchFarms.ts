@@ -6,6 +6,7 @@ import {
   getCartographerAddress,
   retryDecorator,
   getSubCartographerAddress,
+  groupByAndMap,
 } from 'utils/'
 import { Elevation, elevationUtils } from '../../config/constants/types'
 import { SECONDS_PER_YEAR } from 'config'
@@ -35,7 +36,7 @@ export const fetchFarms = async () => {
     */
 
     const [
-      [alloc, allocEmissionMultiplier, elevEmissionMultiplier, tokenDepositFee, tokenWithdrawalTax, summitPerSecond],
+      [alloc, allocEmissionMultiplier, oasisEmissionMultiplier, plainsEmissionMultiplier, mesaEmissionMultiplier, summitEmissionMultiplier, tokenDepositFee, tokenWithdrawalTax, summitPerSecond],
       [oasisPoolInfo],
       [plainsPoolInfo],
       [mesaPoolInfo],
@@ -56,6 +57,21 @@ export const fetchFarms = async () => {
           address: cartographerAddress,
           name: 'tokenElevationEmissionMultiplier',
           params: [farmToken, 0],
+        },
+        {
+          address: cartographerAddress,
+          name: 'tokenElevationEmissionMultiplier',
+          params: [farmToken, 1],
+        },
+        {
+          address: cartographerAddress,
+          name: 'tokenElevationEmissionMultiplier',
+          params: [farmToken, 2],
+        },
+        {
+          address: cartographerAddress,
+          name: 'tokenElevationEmissionMultiplier',
+          params: [farmToken, 3],
         },
         {
           address: cartographerAddress,
@@ -80,32 +96,55 @@ export const fetchFarms = async () => {
       }])),
     ])
 
-    const summitPerYear = new BigNumber(summitPerSecond)
-      .times(SECONDS_PER_YEAR)
-      .times(new BigNumber(elevEmissionMultiplier))
-      .times(new BigNumber(allocEmissionMultiplier))
-      .div(new BigNumber(10).pow(24))
+    const elevSummitPerYear = groupByAndMap(
+      elevationUtils.all,
+      (elev) => elev,
+      (elev) => {
+        const elevEmissionMultiplier = elev === Elevation.OASIS ?
+          oasisEmissionMultiplier :
+          elev === Elevation.PLAINS ?
+            plainsEmissionMultiplier :
+            elev === Elevation.MESA ?
+              mesaEmissionMultiplier :
+              summitEmissionMultiplier
+        return new BigNumber(summitPerSecond)
+          .times(SECONDS_PER_YEAR)
+          .times(new BigNumber(elevEmissionMultiplier))
+          .times(new BigNumber(allocEmissionMultiplier))
+          .div(new BigNumber(10).pow(24))
+      }
+    )
+
+    // const summitPerYear = new BigNumber(summitPerSecond)
+    //   .times(SECONDS_PER_YEAR)
+    //   .times(new BigNumber(elevEmissionMultiplier))
+    //   .times(new BigNumber(allocEmissionMultiplier))
+    //   .div(new BigNumber(10).pow(24))
 
     const elevationsInfo = {
       [Elevation.OASIS]: {
         live: oasisPoolInfo.live,
         launched: true,
         supply: new BigNumber(oasisPoolInfo.supply._hex),
+        summitPerYear: elevSummitPerYear[Elevation.OASIS],
       },
       [Elevation.PLAINS]: {
         live: plainsPoolInfo.live,
         launched: plainsPoolInfo.launched,
         supply: new BigNumber(plainsPoolInfo.supply._hex),
+        summitPerYear: elevSummitPerYear[Elevation.PLAINS],
       },
       [Elevation.MESA]: {
         live: mesaPoolInfo.live,
         launched: mesaPoolInfo.launched,
         supply: new BigNumber(mesaPoolInfo.supply._hex),
+        summitPerYear: elevSummitPerYear[Elevation.MESA],
       },
       [Elevation.SUMMIT]: {
         live: summitPoolInfo.live,
         launched: summitPoolInfo.launched,
         supply: new BigNumber(summitPoolInfo.supply._hex),
+        summitPerYear: elevSummitPerYear[Elevation.SUMMIT],
       }
     }
 
@@ -115,7 +154,6 @@ export const fetchFarms = async () => {
       elevations: merge({}, farmConfig.elevations, elevationsInfo),
       depositFeeBP: new BigNumber(tokenDepositFee),
       taxBP: new BigNumber(tokenWithdrawalTax),
-      summitPerYear,
     }
   }
 

@@ -117,10 +117,14 @@ const ElevationRoundProgress: React.FC = () => {
             let nearLockHighlight = true
             const durationToLock = duration - RoundLockTime
             const timeToLock = timeRemaining - RoundLockTime
-            const pillPerc = clamp((100 * (durationToLock - timeToLock)) / durationToLock, 0, 100)
+            let pillPerc = clamp((100 * (durationToLock - timeToLock)) / durationToLock, 0, 100)
             let evenGrowHighlight = false
             let textPerc = 50
-            if (isUnlockBar) {
+            if (status === RoundStatus.SummitNotYetEnabled) {
+                nearLockHighlight = false
+                timerText = 'ROUND: NOT YET ENABLED'
+                pillPerc = 0
+            } else if (isUnlockBar) {
                 nearLockHighlight = false
                 timerText = `THE ${elevation} UNLOCKS IN: ${getTimeRemainingText(timeRemaining)}`
             } else {
@@ -153,7 +157,7 @@ const ElevationRoundProgress: React.FC = () => {
             }
 
         },
-        [timeRemaining, isUnlockBar, duration, elevation]
+        [status, timeRemaining, isUnlockBar, duration, elevation]
     )
 
     const {
@@ -172,7 +176,7 @@ const ElevationRoundProgress: React.FC = () => {
             <ProgressBar isExpedition={isExpedition} perc={pillPerc} isUnlockBar={isUnlockBar}/>
             <ProgressPill isExpedition={isExpedition} perc={pillPerc}/>
             { timeRemaining != null && <TextBubble isExpedition={isExpedition} perc={textPerc}>
-                { timeRemaining === 0 && <StyledSpinner className="spinner" /> }
+                { timeRemaining === 0 && status !== RoundStatus.SummitNotYetEnabled && <StyledSpinner className="spinner" /> }
                 <TimerText
                     isExpedition={isExpedition}
                     bold

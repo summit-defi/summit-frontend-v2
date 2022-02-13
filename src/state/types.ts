@@ -16,6 +16,7 @@ export interface FarmElevation extends FarmElevationConfig {
   bonusBP?: number
   claimableBonus?: BigNumber
   yieldContributed?: BigNumber
+  summitPerYear?: BigNumber
 }
 export interface FarmElevations {
   [Elevation.OASIS]: FarmElevation
@@ -26,7 +27,6 @@ export interface FarmElevations {
 export interface Farm extends FarmConfig {
   elevations: FarmElevations
 
-  summitPerYear?: BigNumber
   getUrl?: string
 }
 

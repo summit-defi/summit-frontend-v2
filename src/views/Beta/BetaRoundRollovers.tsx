@@ -14,7 +14,10 @@ const BTCard = styled(Flex)`
   text-align: center;
   width: 100%;
   background: ${({ theme }) => theme.colors.background};
-  margin-bottom: 24px;
+  max-width: 850px;
+  margin: 0px auto 24px auto;
+  box-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`};
+  border-radius: 4px;
 
   &:first-child {
     margin-top: 0px;
@@ -47,7 +50,10 @@ const BetaRoundRolloversCard: React.FC = () => {
   return (
     <BTCard>
       <WrapperFlex>
-        <Text monospace italic small mb='14px' textAlign='center'>* The BETA requires manually rolling over rounds, it will be done automatically in the real V2</Text>
+        <Text monospace italic small mb='14px' textAlign='center'>
+          Thanks for keeping the SUMMIT ecosystem up to date!.
+          Ping any of the team members to reimburse your gas costs.
+        </Text>
 
         <FarmNumericalInfoFlex>
           { elevationUtils.elevationExpedition.map((elevation, elevDataIndex) => (

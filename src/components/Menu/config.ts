@@ -1,6 +1,6 @@
 import { MenuEntry } from 'uikit'
 import { Elevation, elevationUtils } from 'config/constants/types'
-import { ChainIncludesBetaTab, getSummitTokenAddress } from 'utils'
+import { ChainIncludesBetaTokens, getSummitTokenAddress } from 'utils'
 
 const getTotemIcon = (elevation, locked, totem) => {
   if (locked) return 'elevationLock'
@@ -24,7 +24,7 @@ export const getMenuItems = (
   },
   {
     label: 'V1 DAPP',
-    href: 'https://ftmV1.summitdefi.com',
+    href: 'https://app.summitdefi.com',
     external: true,
   },
   {
@@ -48,12 +48,6 @@ export const getMenuItems = (
     external: true,
   },
 
-  ChainIncludesBetaTab() ? {
-    label: 'BETA',
-    href: '/beta',
-    icon: 'totemIcons/BETA.png',
-    keyPaths: ['beta']
-  } : null,
   {
     label: 'ELEVATION|br|FARMS',
     icon: 'totemOtter',
@@ -89,4 +83,11 @@ export const getMenuItems = (
     elevation: Elevation.EXPEDITION,
     keyPaths: ['expedition'],
   },
+
+  (ChainIncludesBetaTokens() || true) ? {
+    label: 'ROLLOVER',
+    href: '/rollover',
+    icon: 'totemIcons/BETA.png',
+    keyPaths: ['rollover']
+  } : null
 ].filter((entry) => entry != null)

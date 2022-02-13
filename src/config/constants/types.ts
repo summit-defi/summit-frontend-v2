@@ -366,20 +366,26 @@ export interface Address {
   4002?: string // ftm testnet
 }
 
-
+export interface TokenWithWeight {
+  token: string,
+  weight: number,
+}
 export interface PriceableToken {
   symbol: string
   assetType: TokenAssetType
   decimals: number
   tokenAddress?: string
   lpAddress?: string
-  containingTokens?: string[]
-  balancerMultiPoolPid?: string
+  balancerMultiPoolInfo?: {
+    poolId: string,
+    pricingTokens: TokenWithWeight[]
+  }
 }
 
 export type PriceableTokenMap = { [key: string]: PriceableToken }
 
 export enum TokenAssetType {
+  Summit = 'Summit',
   Stablecoin = 'Stablecoin',
   Everest = 'Everest',
   SingleAsset = 'SingleAsset',

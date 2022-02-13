@@ -12,6 +12,7 @@ interface Props {
 
 const PriceLink = styled.a`
   display: flex;
+  opacity: 0.5;
   align-items: center;
   margin-right: 18px;
   margin-left: 18px;

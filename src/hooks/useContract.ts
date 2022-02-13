@@ -8,6 +8,7 @@ import {
   getSummitGlacierContract,
   getEverestTokenContract,
   getSummitTokenContract,
+  getV1SummitTokenAddress,
 } from 'utils/'
 import useActiveWeb3React from './useActiveWeb3React'
 
@@ -32,6 +33,13 @@ const useContract = (ABI: any, address: string | undefined, withSignerIfPossible
 export const useERC20 = (address: string) => {
   const { library } = useActiveWeb3React()
   return useMemo(() => getErc20Contract(address, library.getSigner()), [library, address])
+}
+
+
+
+export const useV1SummitToken = () => {
+  const { library } = useActiveWeb3React()
+  return useMemo(() => getErc20Contract(getV1SummitTokenAddress(), library.getSigner()), [library])
 }
 
 export const useSummitToken = () => {

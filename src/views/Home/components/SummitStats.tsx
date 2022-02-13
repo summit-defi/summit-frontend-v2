@@ -24,15 +24,12 @@ const Row = styled.div`
   margin-bottom: 8px;
 `
 
-const SummitStats = () => {
+const SummitStats: React.FC = () => {
   const totalSupply = useTotalSummitSupply()
   const burnedBalance = useBurnedSummitBalance()
   const summitPrice = useSummitPrice()
   const farm = useSummitPerSecond()
-  const treasury = farm.times(200).div(1000)
-  const totalSummitPerSecond = farm.plus(treasury)
-  const farmPerc = farm.div(totalSummitPerSecond).times(100).toNumber()
-  const treasuryPerc = treasury.div(totalSummitPerSecond).times(100).toNumber()
+  const totalSummitPerSecond = farm
   const circSupply = totalSupply ? totalSupply.minus(burnedBalance) : new BigNumber(0)
   const summitSupply = getBalanceNumber(circSupply)
   const burnedSupply = getBalanceNumber(burnedBalance)
@@ -76,8 +73,9 @@ const SummitStats = () => {
               Breakdown
             </Text>
             <SummitEmissionDoughnut
-              poolEmission={farmPerc}
-              treasuryEmission={treasuryPerc}
+              poolEmission={80}
+              lpGenEmission={10}
+              treasuryEmission={10}
             />
           </Flex>
           <Flex flexDirection="column" alignItems="center" justifyContent="center">

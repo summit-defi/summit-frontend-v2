@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
-import { getV1SummitTokenAddress, tokenSwapV1Summit, approve, getSummitTokenAddress, getErc20Contract } from 'utils'
-import { useSummitToken } from './useContract'
+import { getV1SummitTokenAddress, tokenSwapV1Summit, approve, getSummitTokenAddress } from 'utils'
+import { useSummitToken, useV1SummitToken } from './useContract'
 import useToast from './useToast'
 import { useV1SummitTokenApproved, useV1SummitTokenBalance } from './useV1SummitToken'
 
@@ -13,6 +13,7 @@ export const useTokenSwapV1Summit = () => {
   const { toastSuccess, toastError } = useToast()
 
   const v1SummitAddress = getV1SummitTokenAddress()
+  const v1SummitContract = useV1SummitToken()
 
   const v1SummitApproved = useV1SummitTokenApproved()
   const v1SummitBalance = useV1SummitTokenBalance()
@@ -22,8 +23,7 @@ export const useTokenSwapV1Summit = () => {
   const handleApproveSummitV1 = useCallback(async () => {
     try {
       setApprovePending(true)
-      const v1SummitToken = getErc20Contract(v1SummitAddress)
-      await approve(v1SummitToken, summitAddress)
+      await approve(v1SummitContract, summitAddress)
       toastSuccess('SUMMIT V1 Approved')
     } catch (error) {
       toastError('Error Approving SUMMIT V1', (error as Error).message)
@@ -31,7 +31,7 @@ export const useTokenSwapV1Summit = () => {
       setApprovePending(false)
     }
   }, [
-    v1SummitAddress,
+    v1SummitContract,
     summitAddress,
     setApprovePending,
     toastSuccess,

@@ -5,6 +5,9 @@ export const ftmPeggedTokens = {
   [TokenSymbol.USDC]: true,
 }
 
+// SUMMIT POOL ID: 0x9b99145008204301de44eddc2ad4615ed3d61538000100000000000000000208
+// SUMMIT POOL ADDRESS: 0x9b99145008204301de44edDC2aD4615ED3d61538
+
 export const ftmTokens: { [key: string]: PriceableToken } = {
   [TokenSymbol.wFTM]: {
     assetType: TokenAssetType.WrappedNative,
@@ -20,10 +23,20 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
     decimals: 6,
   },
   [TokenSymbol.SUMMIT]: {
-    assetType: TokenAssetType.SingleAsset,
+    assetType: TokenAssetType.Summit,
     symbol: TokenSymbol.SUMMIT,
     tokenAddress: '0xSUMMIT',
     decimals: 18,
+    balancerMultiPoolInfo: {
+      poolId: '0x1577eb091d3933a89be62130484e090bb8bd0e5800010000000000000000020f',
+      pricingTokens: [{
+        token: TokenSymbol.wFTM,
+        weight: 20,
+      }, {
+        token: TokenSymbol.USDC,
+        weight: 20,
+      }]
+    }
   },
   [TokenSymbol.EVEREST]: {
     assetType: TokenAssetType.Everest,
@@ -60,23 +73,48 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
     symbol: TokenSymbol.BATTLE_OF_THE_BANDS,
     tokenAddress: '0x9af1f0e9ac9c844a4a4439d446c1437807183075',
     decimals: 18,
-    containingTokens: [TokenSymbol.wFTM, TokenSymbol.fMATIC, TokenSymbol.fAVAX, TokenSymbol.fBNB, TokenSymbol.fLUNA, TokenSymbol.fSOL],
-    balancerMultiPoolPid: '0x9af1f0e9ac9c844a4a4439d446c14378071830750001000000000000000000da',
+    balancerMultiPoolInfo: {
+      poolId: '0x9af1f0e9ac9c844a4a4439d446c14378071830750001000000000000000000da',
+      pricingTokens: [{
+        token: TokenSymbol.wFTM,
+        weight: 20,
+      }, {
+        token: TokenSymbol.fBNB,
+        weight: 16,
+      }, {
+        token: TokenSymbol.fMATIC,
+        weight: 16,
+      }]
+    }
   },
   [TokenSymbol.GRAND_ORCH]: {
     assetType: TokenAssetType.BalancerMultiPool,
     symbol: TokenSymbol.GRAND_ORCH,
     tokenAddress: '0xd47d2791d3b46f9452709fa41855a045304d6f9d',
     decimals: 18,
-    containingTokens: [TokenSymbol.wFTM, TokenSymbol.wBTC, TokenSymbol.wETH],
-    balancerMultiPoolPid: '0xd47d2791d3b46f9452709fa41855a045304d6f9d000100000000000000000004',
+    balancerMultiPoolInfo: {
+      poolId: '0xd47d2791d3b46f9452709fa41855a045304d6f9d000100000000000000000004',
+      pricingTokens: [{
+        token: TokenSymbol.wFTM,
+        weight: 33.333,
+      }, {
+        token: TokenSymbol.wBTC,
+        weight: 33.333,
+      }]
+    }
   },
   [TokenSymbol.FANTOM_OF_THE_OPERA]: {
     assetType: TokenAssetType.BalancerMultiPool,
     symbol: TokenSymbol.FANTOM_OF_THE_OPERA,
     tokenAddress: '0xcdF68a4d525Ba2E90Fe959c74330430A5a6b8226',
     decimals: 18,
-    balancerMultiPoolPid: '0xcdf68a4d525ba2e90fe959c74330430a5a6b8226000200000000000000000008',
+    balancerMultiPoolInfo: {
+      poolId: '0xcdf68a4d525ba2e90fe959c74330430a5a6b8226000200000000000000000008',
+      pricingTokens: [{
+        token: TokenSymbol.wFTM,
+        weight: 70,
+      }]
+    }
   },
   [TokenSymbol.BOO]: {
     assetType: TokenAssetType.SingleAsset,
@@ -133,14 +171,14 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
   },
   [TokenSymbol.fSOL]: {
     assetType: TokenAssetType.SingleAsset,
-    symbol: TokenSymbol.fBNB,
+    symbol: TokenSymbol.fSOL,
     tokenAddress: '0x44F7237df00E386af8e79B817D05ED9f6FE0f296',
     decimals: 18,
   },
   [TokenSymbol.fLUNA]: {
     assetType: TokenAssetType.SingleAsset,
-    symbol: TokenSymbol.fBNB,
+    symbol: TokenSymbol.fLUNA,
     tokenAddress: '0x95dD59343a893637BE1c3228060EE6afBf6F0730',
-    decimals: 18,
+    decimals: 6,
   },
 }

@@ -5,6 +5,7 @@ import { stateToElevationInfo, stateToElevationsInfos, stateToElevationUserTotem
 import { useState, useEffect, useMemo } from "react"
 
 export enum RoundStatus {
+    SummitNotYetEnabled = 'SummitNotYetEnabled',
     NotYetUnlocked = 'NotYetUnlocked',
     UnlockAvailable = 'UnlockAvailable',
     Active = 'Active',
@@ -18,6 +19,7 @@ export const roundStatusLockReason = (status: RoundStatus, elevation: Elevation)
         case RoundStatus.NotYetUnlocked: return `THE ${elevation} Farms are locked until the Elevation Unlocks`
         case RoundStatus.RolloverLockout: return `THE ${elevation} Farms are locked until the Round Ends`
         case RoundStatus.RolloverAvailable: return `THE ${elevation} Farms are locked until the Round Finalizes`
+        case RoundStatus.SummitNotYetEnabled: return `The Summit Ecosystem has not yet been enabled`
         case RoundStatus.Active:
         default: return ''
     }
@@ -74,7 +76,11 @@ export const useElevationRoundStatusAndProgress = (elevation: Elevation) => {
             let endTimestamp
             let duration
             let status
-            if (roundNumber === 0) {
+            if (unlockTimestamp === 0 && elevation !== Elevation.OASIS) {
+                endTimestamp = unlockTimestamp
+                duration = ElevationUnlockDuration[elevation]
+                status = RoundStatus.SummitNotYetEnabled
+            } else if (roundNumber === 0) {
                 endTimestamp = unlockTimestamp
                 duration = ElevationUnlockDuration[elevation]
                 if (currentTimestamp >= unlockTimestamp) status = RoundStatus.UnlockAvailable
@@ -87,7 +93,7 @@ export const useElevationRoundStatusAndProgress = (elevation: Elevation) => {
                 else status = RoundStatus.Active
             }
 
-            if (elevation === Elevation.OASIS) {
+            if (elevation === Elevation.OASIS && status !== RoundStatus.SummitNotYetEnabled) {
                 status = RoundStatus.Active
             }
 

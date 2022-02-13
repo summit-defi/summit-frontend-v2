@@ -59,31 +59,30 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
     }))
   })
 
+  const elevsWithHistory = []
   const historicalWinnersCalls = elevations
     .filter((_, elevIndex) => roundNumbers[elevIndex] > 0)
-    .map((elev) => ({
+    .map((elev) => {
+      elevsWithHistory.push(elev)
+      return {
         address: elevationHelperAddress,
         name: 'historicalWinningTotems',
         params: [elevationUtils.toInt(elev)],
-    }))
+      }
+    })
 
-  // TODO: REVISIT THIS
-  const [prevWinningsMultipliersRes] = await Promise.all([
+  const [prevWinningsMultipliersRes, historicalWinningTotems] = await Promise.all([
     retryableMulticall(
       abi.cartographerElevation,
       prevWinningsMultipliersCalls,
       'fetchElevationsData_cartElev',
     ),
-    // retryableMulticall(
-    //   abi.elevationHelper,
-    //   historicalWinnersCalls,
-    //   'fetchElevationsData_historicalWinners',
-    // )
+    retryableMulticall(
+      abi.elevationHelper,
+      historicalWinnersCalls,
+      'fetchElevationsData_historicalWinners',
+    )
   ])
-
-  // console.log({
-  //   historicalWinningTotems
-  // })
 
   const elevPrevWinningsMultipliers = []
   let cumRoundsCount = 0
@@ -113,10 +112,16 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
       const roundEndTimestamp = new BigNumber(res[index * 3 + 1]).toNumber()
       const roundNumber = new BigNumber(res[index * 3 + 2][0]._hex).toNumber()
 
-      // TODO: Remove clipping for mainnet launch
-      const clipPrevWinners = roundNumber <= 10
-      const totemWinAcc = [] // res[index * 3 + 2][0].map((item) => new BigNumber(item._hex).toNumber())
-      const prevWinners = [] // res[index * 3 + 2][1].map((item) => new BigNumber(item._hex).toNumber()).slice(0, clipPrevWinners ? -1 : undefined)
+      let totemWinAcc = []
+      let prevWinners = []
+      const historyIndex = elevsWithHistory.indexOf(elev)
+      if (historyIndex > -1) {
+        totemWinAcc = historicalWinningTotems[historyIndex][0].map((winAcc) => new BigNumber(winAcc._hex).toNumber())// res[index * 3 + 2][0].map((item) => new BigNumber(item._hex).toNumber())
+        prevWinners = historicalWinningTotems[historyIndex][1].map((winningTotem) => new BigNumber(winningTotem._hex).toNumber())// res[index * 3 + 2][0].map((item) => new BigNumber(item._hex).toNumber())
+      } else {
+        totemWinAcc = []
+        prevWinners = []
+      }
 
       let prevWinningsMultipliers = []
       if (elev !== Elevation.EXPEDITION) {

@@ -1,7 +1,5 @@
 import { useDispatch } from 'react-redux'
-import {
-  getExpeditionTreasuryAddress,
-} from 'utils/'
+import { getExpeditionTreasuryAddress } from 'utils/'
 import { useEffect } from 'react'
 import axios from 'axios'
 import useRefresh from 'hooks/useRefresh'
@@ -18,7 +16,7 @@ export const useFetchExpeditionPotTotalValue = async () => {
         .then(res => {
           dispatch(setExpeditionPot(res.data.usd_value))
         })
-        .catch(err => {
+        .catch(() => {
           dispatch(setExpeditionPot(0))
         })
     },

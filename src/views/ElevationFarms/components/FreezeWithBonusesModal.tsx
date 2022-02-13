@@ -94,6 +94,8 @@ export const FreezeWithBonusesModal: React.FC<Props> = ({
                     <SummitButton
                         summitPalette={elevation}
                         onClick={handleFreezeWinnings}
+                        width='200px'
+                        padding='0px'
                     >
                         FREEZE WINNINGS
                     </SummitButton>

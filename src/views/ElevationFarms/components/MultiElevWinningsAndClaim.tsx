@@ -57,7 +57,7 @@ const ElevClaim: React.FC<ElevProps> = ({ elevation, claimable }) => {
       isLocked={elevationLocked}
       isLoading={claimPending}
       disabled={nothingToClaim}
-      width='170px'
+      width='200px'
       style={{padding: '0px'}}
       onClick={handlePresentFreezeElev}
     >

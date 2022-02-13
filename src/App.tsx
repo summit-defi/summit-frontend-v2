@@ -23,7 +23,6 @@ import { fetchEverestDataAsync } from 'state/everest'
 import RoundRolloversTracker from 'RoundRolloversTracker'
 import { updateExpeditionUserWinningsAsync } from 'state/expedition'
 import useEagerConnect from 'hooks/useEagerConnect'
-import { ChainIncludesBetaTab } from 'utils'
 
 const Home = lazy(() => import('./views/Home'))
 const ElevationFarms = lazy(() => import('./views/ElevationFarms'))
@@ -82,11 +81,11 @@ const App: React.FC = () => {
             <Route path="/" exact>
               <Home />
             </Route>
-            { ChainIncludesBetaTab() &&
-              <Route path='/beta' exact>
-                <BetaTokens />
-              </Route>
-            }
+            {/* { ChainIncludesBetaTab() && */}
+            <Route path='/rollover' exact>
+              <BetaTokens />
+            </Route>
+            {/* } */}
             <Route path={['/elevations', '/oasis', '/plains', '/mesa', '/summit']}>
               <ElevationFarms />
             </Route>

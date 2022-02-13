@@ -15,7 +15,7 @@ const GlobalStyle = createGlobalStyle`
     overflow-x: hidden;
   }
   body {
-    background-color: ${({ theme }) => theme.colors.background};
+    background-color: #121421;
     position: relative;
     overflow-x: hidden;
 

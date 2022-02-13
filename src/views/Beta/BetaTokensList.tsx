@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { ElevationPuck, ExternalLinkButton, Flex, Text } from 'uikit'
 import { getPriceableTokens, TokenSymbol } from 'config/constants'
 import BetaRoundRollovers from './BetaRoundRollovers'
+import { ChainIncludesBetaTokens } from 'utils'
 
 const BetaTokens = {
   [TokenSymbol.CAKE]: true,
@@ -39,7 +40,7 @@ const InfoCard = styled(Flex)`
   max-width: 650px;
   background-color: ${({ theme }) => theme.colors.background};
   border-radius: 4px;
-  box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
+  box-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`};
   width: 100%;
   height: 100%;
   gap: 24px;
@@ -56,27 +57,25 @@ const BetaTokensList: React.FC = () => {
     <Page>
       <InfoCard>
         <ElevationPuck elevation='BASE'>
-          <Text bold fontSize='24px' color='#CB0000'>
-            BETA
+          <Text bold fontSize='24px'>
+            ROLLOVER
+            ROUNDS
           </Text>
         </ElevationPuck>
         <Text bold monospace small textAlign='center'>
-          BETA test tokens and round rollovers are available below.
-          <br/>
-          The beta uses temporary values for many constants. Dont take the values as set in stone.
+          This page is used in case the server that handles calling the Rollovers for each elevation goes down while the Summit Team is sleeping. If you need to manually roll over the round, the Summit Team will reimburse you double the gas it cost to execute the rollover.
           <br/>
           <br/>
-          The CAKE token is used as the SUMMIT V1 token
-          <br/>
-          for the purposes of testing the V1 to V2 SUMMIT swap.
-          <br/>
+          You shouldnt ever need to use this, but its software and things can go wrong sometimes.
         </Text>
+        { ChainIncludesBetaTokens() &&
         <ExternalLinkButton href='https://testnet.binance.org/faucet-smart'>
             Get Testnet BNB
         </ExternalLinkButton>
+        }
       </InfoCard>
       <BetaRoundRollovers/>
-      {betaTokens.map((betaToken) => (
+      {ChainIncludesBetaTokens() && betaTokens.map((betaToken) => (
         <BetaTokenCard
           key={betaToken.symbol}
           token={betaToken}

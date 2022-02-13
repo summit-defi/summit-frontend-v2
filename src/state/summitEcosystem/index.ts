@@ -32,8 +32,13 @@ const getLocalStorageVariables = () => {
     ),
     chainId: JSON.parse(localStorage.getItem('ChainId')) || '97',
     farmType: (localStorage.getItem('FarmType') || FarmType.All) as FarmType,
-    elevationsInfo: elevationUtils.elevationExpedition.map((elev) => 
-      JSON.parse(localStorage.getItem(`${elev}_ecosystem_info`) || 'null')
+    // elevationsInfo: [],
+    elevationsInfo: elevationUtils.elevationExpedition.map((elev) => {
+      console.log({
+        elev
+      })
+      return JSON.parse(localStorage.getItem(`${elev}_ecosystem_info`) || 'null')
+    } 
     ),
     summitSwapMinimized: JSON.parse(localStorage.getItem('SummitSwapMinimized') || 'false')
   }

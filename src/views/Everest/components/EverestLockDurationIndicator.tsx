@@ -69,6 +69,20 @@ const SliderWrapper = styled(Flex)`
         font-weight: 13px;
         pointer-events: none;
     }
+
+
+
+    .slider-mark-text {
+        font-size: 12px;
+        line-height: 1.5;
+        font-family: Courier Prime, monospace;
+        letter-spacing: 0.5px;
+        color: ${({ theme }) => theme.colors.text};
+    }
+
+    .lock-mult {
+        margin-top: 24px;
+    }
 `
 
 const FakeMarkDot = styled.div<{ perc: number }>`

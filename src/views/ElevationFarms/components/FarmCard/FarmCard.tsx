@@ -107,7 +107,6 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     name,
     allocation,
     decimals,
-    summitPerYear,
     elevations,
   } = farm
 
@@ -115,6 +114,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     comment: farmComment,
     warning: farmWarning,
     supply: lpSupply,
+    summitPerYear = farm.elevations[Elevation.OASIS].summitPerYear || BN_ZERO,
     live = true,
   } = farm.elevations[elevationTab] || {}
 
@@ -165,6 +165,20 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     [lpSupply, elevationTab, elevations, pricePerToken, decimals]
   )
 
+  const aprTotalValue: BigNumber = useMemo(
+    () => {
+      let supply = BN_ZERO
+      if (elevationTab === ElevationFarmTab.DASH) {
+        supply = elevations[Elevation.OASIS].supply || BN_ZERO
+      } else {
+        supply = lpSupply
+      }
+      if (supply == null) return new BigNumber(0)
+      return supply.div(new BigNumber(10).pow(decimals)).times(pricePerToken)
+    },
+    [lpSupply, elevationTab, elevations, pricePerToken, decimals]
+  )
+
   const targetUrl = `/${(elevationFarmTabToUrl[elevationTab] || 'elevations').toLowerCase()}${expanded ? '' : `/${symbol.toLowerCase()}`}`
 
   const retired = (!live || allocation === 0)
@@ -184,7 +198,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
         <FarmNumericalInfoFlex>
           <FarmIconAndAllocation symbol={symbol} name={name} allocation={allocation} live={live}/>
           <FarmStakingContribution symbol={symbol} userDataLoaded={userDataLoaded} elevationsStaked={farmElevationsStaked} pricePerToken={pricePerToken} decimals={decimals}/>
-          <FarmAPYBreakdown summitPerYear={summitPerYear} totalValue={totalValue}/>
+          <FarmAPYBreakdown summitPerYear={summitPerYear} totalValue={aprTotalValue}/>
           <FarmTotalValue totalValue={totalValue}/>
         </FarmNumericalInfoFlex>
       </PressableFlex>

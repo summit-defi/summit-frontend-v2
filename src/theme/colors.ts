@@ -22,7 +22,7 @@ export const brandColors = {
   EXPEDITION: '#ebf2fd',
 
   AUDIT: '#000418',
-  BETA: '#DB00FF',
+  ROLLOVER: '#DB00FF',
   BASE: '#3e7fa2',
   EVEREST: '#017B88',
   GLACIER: '#39749e',

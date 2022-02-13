@@ -33,12 +33,8 @@ export const lockDurationSliderMarksMemoizable = (userLockDuration?: number) => 
                 fontWeight: (userLockDuration == null && duration === 30) || (duration === userLockDuration) ? '700' : '400'
             },
             label: <>
-                {durationText}
-                <br/>
-                <br/>
-                <br/>
-                <br/>
-                {(multBP / 10000).toFixed(1)}x
+                <p className='slider-mark-text lock-mult-dur'>{durationText}</p>
+                <p className='slider-mark-text lock-mult'>{(multBP / 10000).toFixed(2)}x</p>
             </>
         }
     }

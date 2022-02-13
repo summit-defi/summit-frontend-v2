@@ -85,8 +85,7 @@ export const useCurrentTimestampOnce = (): number => {
 // Farms
 
 export const useFarms = (): Farm[] => {
-  const selectorFarms = useSelector((state: State) => state.farms.data)
-  return selectorFarms
+  return useSelector((state: State) => state.farms.data)
 }
 export const useFarmsLoaded = (): boolean => {
   return useSelector((state: State) => state.farms.farmsLoaded)
@@ -246,20 +245,31 @@ export const usePricesPerToken = () => {
 export const useTotalValue = (elevation?: Elevation): BigNumber => {
   const farms = useFarms()
   const pricesPerToken = usePricesPerToken()
+  const [tvl, setTvl] = useState(BN_ZERO)
 
-  return useMemo(
-    () => farms
-      .reduce((accumValue, farm) => {
-        let crossElevSupplyRaw = new BigNumber(0)
-        elevationUtils.all
-          .filter((elev) => elevation == null ? true : elev === elevation)
-          .forEach((elev) => {
-            crossElevSupplyRaw = crossElevSupplyRaw.plus(farm.elevations[elev].supply)
-          })
-        return accumValue.plus((crossElevSupplyRaw || new BigNumber(0)).div(new BigNumber(10).pow(farm.decimals || 18)).times(pricesPerToken != null && pricesPerToken[farm.symbol] ? pricesPerToken[farm.symbol] : new BigNumber(1)))
-      }, new BigNumber(0)),
+  useEffect(
+    () => {
+      const volume = farms
+        .reduce((accumValue, farm) => {
+          let crossElevSupplyRaw = new BigNumber(0)
+          elevationUtils.all
+            .filter((elev) => elevation == null ? true : elev === elevation)
+            .forEach((elev) => {
+              crossElevSupplyRaw = crossElevSupplyRaw.plus(farm.elevations[elev].supply)
+            })
+          return accumValue.plus((crossElevSupplyRaw || new BigNumber(0)).div(new BigNumber(10).pow(farm.decimals || 18)).times(pricesPerToken != null && pricesPerToken[farm.symbol] ? pricesPerToken[farm.symbol] : new BigNumber(1)))
+        }, new BigNumber(0))
+      
+        
+      if (isNaN(volume.toNumber())) {
+        return
+      }
+      setTvl(volume)
+    },
     [farms, pricesPerToken, elevation]
   )
+
+  return tvl
 }
 
 export const useUserTVLs = () => {
@@ -298,25 +308,7 @@ export const useUserTVLs = () => {
 }
 
 export const useExpeditionPotTotalValue = (): number => {
-  return 0
-  // const { account } = useWeb3React()
-  // const { expeditions } = useExpeditions(account)
-  // const pricesPerToken = usePricesPerToken()
-  // const expeditionPotTotalValue = useSelector((state: State) => state.summitEcosystem.expeditionPotTotalValue)
-
-  // return useMemo(
-  //   () => {
-  //     const expeditionsRewards = expeditions.reduce((acc, expedition) => {
-  //       const rewardsRemaining = getBalanceNumber(expedition.rewardsRemaining || new BigNumber(0), expedition.rewardToken.decimals)
-  //       const expeditionTokenPrice = (pricesPerToken != null && pricesPerToken[expedition.rewardToken.symbol] ? pricesPerToken[expedition.rewardToken.symbol].toNumber() : 1)
-  //       const rewardsDisbursed = expedition.disbursedOffset || 0
-  //       const rewardsBonusRemaining = expedition.bonusRewardsRemaining || 0
-  //       return acc + ((rewardsRemaining - rewardsDisbursed + rewardsBonusRemaining) * expeditionTokenPrice)
-  //     }, 0)
-  //     return (expeditionsRewards || 0) + expeditionPotTotalValue
-  //   },
-  //   [expeditions, expeditionPotTotalValue, pricesPerToken]
-  // )
+  return useSelector((state: State) => state.summitEcosystem.expeditionPotTotalValue)
 }
 
 export const useExpeditionDisbursedValue = (): number => {

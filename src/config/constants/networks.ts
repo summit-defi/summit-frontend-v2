@@ -7,6 +7,6 @@ export const ChainUsesPricingData = () => {
     return false
 }
 
-export const ChainIncludesBetaTab = () => {
+export const ChainIncludesBetaTokens = () => {
     return CHAIN_ID === '97'
 }
