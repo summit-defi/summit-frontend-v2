@@ -13,6 +13,7 @@ interface CardValueProps {
   summitPalette?: ElevOrPalette
   gold?: boolean
   isMultiplier?: boolean
+  color?: string
 }
 
 const CardValue: React.FC<CardValueProps> = ({
@@ -25,6 +26,7 @@ const CardValue: React.FC<CardValueProps> = ({
   postfixFontSize,
   summitPalette,
   gold = false,
+  color,
 }) => {
   const { countUp, update } = useCountUp({
     start: 0,
@@ -43,12 +45,12 @@ const CardValue: React.FC<CardValueProps> = ({
   }, [value, updateValue])
 
   return (
-    <HighlightedText bold monospace fontSize={fontSize} summitPalette={summitPalette} header gold={gold}>
+    <HighlightedText color={color} bold monospace fontSize={fontSize} summitPalette={summitPalette} header gold={gold}>
       {prefix}
       {countUp}
       {isMultiplier && 'X'}
       {postfix != null && (
-        <HighlightedText bold summitPalette={summitPalette} fontSize={postfixFontSize || fontSize} header ml="6px" mt='2px' gold={gold}>
+        <HighlightedText color={color} bold summitPalette={summitPalette} fontSize={postfixFontSize || fontSize} header ml="6px" mt='2px' gold={gold}>
           {postfix}
         </HighlightedText>
       )}

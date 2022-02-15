@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { ResetCSS } from 'uikit'
 import BigNumber from 'bignumber.js'
 import { useWeb3React } from '@web3-react/core'
-import { useFetchPublicData } from 'state/hooks'
+import { useFetchExpeditionApr, useFetchPublicData } from 'state/hooks'
 import useGetDocumentTitlePrice from './hooks/useGetDocumentTitlePrice'
 import GlobalStyle from './style/Global'
 import Menu from './components/Menu'
@@ -43,6 +43,7 @@ BigNumber.config({
 })
 
 const GlobalHooks = () => {
+  useFetchExpeditionApr()
   useFetchPublicData()
   useGetDocumentTitlePrice()
   useFetchExpeditionPotTotalValue()

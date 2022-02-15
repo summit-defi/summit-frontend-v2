@@ -1,6 +1,11 @@
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import { getFullDisplayBalance, groupByAndMap } from 'utils'
+import useRefresh from 'hooks/useRefresh'
 import { createSelector } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import { stateToExpeditionUserDataLoaded, stateToExpeditionLoaded, stateToExpeditionSummitRoundEmission, stateToExpeditionUsdcRoundEmission, stateToExpeditionUserData, stateToEnteredExpedition, stateToExpeditionDeitiedSupply, stateToExpeditionDeitySupplies, stateToExpeditionSafeSupply, stateToExpeditionInfo, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToExpeditionFaith, stateToExpeditionDeity, stateToDeityDivider, stateToWinningDeity, stateToTotemSelectionPending, stateToExpeditionEverestOwned } from './base'
+import { stateToExpeditionUserDataLoaded, stateToExpeditionLoaded, stateToExpeditionSummitRoundEmission, stateToExpeditionUsdcRoundEmission, stateToExpeditionUserData, stateToEnteredExpedition, stateToExpeditionDeitiedSupply, stateToExpeditionDeitySupplies, stateToExpeditionSafeSupply, stateToExpeditionInfo, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToExpeditionFaith, stateToExpeditionDeity, stateToDeityDivider, stateToWinningDeity, stateToTotemSelectionPending, stateToExpeditionEverestOwned, stateToFarms, stateToExpeditionAPR } from './base'
+import { BN_ZERO, getFarmConfigs } from 'config/constants'
 
 const selectExpeditionLoaded = createSelector(
     stateToExpeditionLoaded,
@@ -99,3 +104,51 @@ const selectExpeditionTotemHeaderInfo = createSelector(
     })
 )
 export const useExpeditionTotemHeaderInfo = () => useSelector(selectExpeditionTotemHeaderInfo)
+
+
+
+
+
+
+
+// EXPED APR
+const selectFarmsTotalVolumes = createSelector(
+    stateToFarms,
+    (farms) => {
+        return groupByAndMap(
+            farms.filter((farm) => farm.beefyVaultApiName != null),
+            (farm) => farm.symbol,
+            (farm) => Object.values(farm.elevations).reduce((vol, elevInfo) => {
+                return vol.plus(elevInfo?.supply || BN_ZERO)
+            }, BN_ZERO)
+        )
+    }
+)
+
+export const useFarmsTotalVolumes = () => useSelector(selectFarmsTotalVolumes)
+
+export const useFetchFarmBeefyAprs = () => {
+    const farmConfigs = getFarmConfigs()
+    const initAprs = JSON.parse(localStorage.getItem('FarmAprs') || '{}')
+    const [aprs, setAprs] = useState(initAprs)
+    const { slowRefresh } = useRefresh()
+
+    useEffect(
+        () => {
+            axios.get(`https://api.beefy.finance/apy/breakdown`)
+                .then(res => {
+                    const farmAprs = groupByAndMap(
+                        farmConfigs.filter((farm) => farm.beefyVaultApiName != null),
+                        (farm) => farm.symbol,
+                        (farm) => (res.data[farm.beefyVaultApiName]?.tradingApr || 0) + (res.data[farm.beefyVaultApiName]?.vaultApr || 0)
+                    )
+                    setAprs(farmAprs)
+                })
+        },
+        [slowRefresh, farmConfigs, setAprs]
+    )
+
+    return aprs
+}
+
+export const useExpeditionApr = () => useSelector(stateToExpeditionAPR)

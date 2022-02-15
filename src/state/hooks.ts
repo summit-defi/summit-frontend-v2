@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
-import { getFormattedBigNumber, epochEndTimestamp, epochThawTimestamp } from 'utils'
+import { getFormattedBigNumber, epochEndTimestamp, epochThawTimestamp, getFullDisplayBalance, groupByAndMap } from 'utils'
 import {
   fetchFarmsPublicDataAsync,
   fetchExpeditionUserDataAsync,
@@ -14,12 +14,14 @@ import { fetchPricesAsync } from './prices'
 import {
   fetchElevationHelperInfoAsync,
   fetchElevationsPublicDataAsync,
+  setExpeditionApr,
 } from './summitEcosystem'
 import { useLocation } from 'react-router-dom'
 import { getFarmConfigs } from 'config/constants/farms'
 import useTheme from 'hooks/useTheme'
 import { updateExpeditionUserPotentialWinningsAsync, updateExpeditionUserWinningsAsync } from './expedition'
 import { useWeb3React } from '@web3-react/core'
+import { useEverestStatsInfo, useFarmsTotalVolumes, useFetchFarmBeefyAprs } from './hooksNew'
 
 export const useMediaQuery = (query) => {
   const [matches, setMatches] = useState(false)
@@ -479,3 +481,34 @@ export const useCurrentSummitPalette = (): SummitPalette => {
     }
   }, [location])
 }
+
+
+// EXPED APR
+
+
+export const useFetchExpeditionApr = () => {
+  const farmsVolumes = useFarmsTotalVolumes()
+  const farmsAprs = useFetchFarmBeefyAprs()
+  const pricesPerToken = usePricesPerToken()
+  const { totalSummitLocked } = useEverestStatsInfo()
+  const dispatch = useDispatch()
+
+  useEffect(
+      () => {
+        const totalUsd = Object.entries(farmsAprs).reduce((runningUsd, [symbol, apr]) => {
+            return runningUsd + (farmsVolumes[symbol] != null ?
+                farmsVolumes[symbol].times(apr).dividedBy(new BigNumber(10).pow(18)) :
+                BN_ZERO
+            ).times(pricesPerToken[symbol]).toNumber()
+          },
+          0
+        )
+        const summitLockedValue = totalSummitLocked.dividedBy(new BigNumber(10).pow(18)).times(pricesPerToken.SUMMIT).toNumber()
+        if (totalUsd > 0 && summitLockedValue >= 0) {
+          dispatch(setExpeditionApr((totalUsd / summitLockedValue) * 100 * 0.8))
+        }
+      },
+      [farmsVolumes, farmsAprs, pricesPerToken, totalSummitLocked, dispatch]
+  )
+}
+

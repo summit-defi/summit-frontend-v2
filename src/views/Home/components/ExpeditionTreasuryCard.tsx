@@ -7,6 +7,7 @@ import { InverseDeity } from 'views/ElevationFarms/components/InverseDeity'
 import CardValue from './CardValue'
 import { useExpeditionDisbursedValue, useExpeditionPotTotalValue } from 'state/hooks'
 import { Link } from 'react-router-dom'
+import { ExpeditionAPRIndicator } from 'views/Everest/components/ExpeditionAPRIndicator'
 
 const StyledFarmStakingCard = styled(Card)`
     min-height: 376px;
@@ -44,6 +45,7 @@ const ExpeditionTreasuryCard: React.FC = () => {
                     gold
                     summitPalette={Elevation.OASIS}
                 />
+
                 <StyledHighlightedText fontSize="14px" letterSpacing="2px" mt='8px' mb='0px'>
                     DISBURSED TO DATE:
                 </StyledHighlightedText>
@@ -55,6 +57,11 @@ const ExpeditionTreasuryCard: React.FC = () => {
                     gold
                     summitPalette={Elevation.OASIS}
                 />
+
+                <Flex mt='12px' mb='12px' width='95%'>
+                    <ExpeditionAPRIndicator/>
+                </Flex>
+
                 <Text textAlign='center' bold monospace italic mt='8px'>
                     100% of the Expedition Treasury
                     will be given back exclusively to

@@ -7,6 +7,7 @@ import { EverestUserData, LockSummitButtonType } from 'state/types'
 import { Flex } from 'uikit'
 import { getExpectedEverestAward, getFullDisplayBalance } from 'utils'
 import { ExistingLockedSummit } from './ExistingLockedSummit'
+import { ExpeditionAPRIndicator } from './ExpeditionAPRIndicator'
 import { LockSummitInfoAndButton } from './LockSummitInfoAndButton'
 
 interface Props {
@@ -54,6 +55,8 @@ export const IncreaseLockedAmountSection: React.FC<Props> = ({ userEverestInfo }
         
     return (
         <Flex gap='18px' flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+            <ExpeditionAPRIndicator/>
+            
             <TokenInput
                 value={val}
                 summitPalette={SummitPalette.EVEREST}

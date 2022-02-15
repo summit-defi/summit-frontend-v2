@@ -64,22 +64,34 @@ export const RewardsWillBeClaimedModal: React.FC<Props> = ({
       break
   }
 
+  const earningsOrWinnings = elevation === Elevation.OASIS ? 'Earnings' : 'Winnings'
+
   return (
-    <Modal title="REWARDS TO|br|FREEZE" onDismiss={onDismiss} headerless elevationCircleHeader={elevateInfo?.targetElevation || elevation}>
+    <Modal title={`${earningsOrWinnings}|br|TO FREEZE`} onDismiss={onDismiss} headerless elevationCircleHeader={elevateInfo?.targetElevation || elevation}>
       { (rewardClaimType === RewardsWillBeClaimedType.Farm || rewardClaimType === RewardsWillBeClaimedType.FullElevation) &&
         <>
-          <Text bold monospace textAlign='center'>This {transactionName} will also<br/>claim your available</Text>
-          <HighlightedText summitPalette={elevation} gold fontSize='24px' mt='12px'>{getFormattedBigNumber(claimable)}</HighlightedText>
-          <HighlightedText summitPalette={elevation} gold fontSize='16px' mb='12px'>SUMMIT</HighlightedText>
-          <Text bold monospace textAlign='center'>{elevation === Elevation.OASIS ? 'earnings' : 'rewards'} from the {rewardClaimType === RewardsWillBeClaimedType.Farm ? 'Farm' : elevation}</Text>
+          <Text bold monospace textAlign='center'>
+            This {transactionName} will
+            <br/>
+            Freeze your available
+          </Text>
+          <HighlightedText summitPalette={elevation} gold fontSize='24px' mt='12px'>
+            {getFormattedBigNumber(claimable)}
+          </HighlightedText>
+          <HighlightedText summitPalette={elevation} gold fontSize='16px' mb='12px'>
+            SUMMIT
+          </HighlightedText>
+          <Text bold monospace textAlign='center'>
+            {earningsOrWinnings} to the Glacier.
+          </Text>
         </>
       }
       { rewardClaimType === RewardsWillBeClaimedType.Elevate &&
         <>
           <Text bold monospace mb='24px' textAlign='center'>
-            Elevating will freeze your earned
+            Elevating will Freeze your earned rewards from
             <br/>
-            rewards from both the source and target farms:
+            both the source and target farms to the Glacier:
           </Text>
           { (elevateInfo?.sourceEarned || new BigNumber(0)).isGreaterThan(0) &&
             <HorizontalDisplayBalance>
@@ -99,15 +111,23 @@ export const RewardsWillBeClaimedModal: React.FC<Props> = ({
       }
       { [Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT].includes(elevation) && rewardClaimType !== RewardsWillBeClaimedType.FullElevation &&
         <Text bold monospace italic textAlign='center' small mt='24px'>
-          This will only claim rewards from
+          This will only Freeze rewards from
           <br/>
           THIS specific farm at the {elevation}.
           <br/>
-          It will not claim rewards from other farms.
+          It will not Freeze rewards from other farms.
         </Text>
       }
+
+
+      <Text bold monospace italic small textAlign='center' mt='16px'>
+        This will NOT reset your
+        <br/>
+        Fairness Tax or Loyalty Bonus
+      </Text>
+
       <ModalActions>
-        <SummitButton elevation={elevation} secondary onClick={handleConfirm}>
+        <SummitButton summitPalette={elevation} secondary onClick={handleConfirm}>
           CONFIRM
         </SummitButton>
       </ModalActions>

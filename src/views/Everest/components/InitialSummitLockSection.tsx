@@ -9,6 +9,7 @@ import { LockSummitButtonType } from 'state/types'
 import { Flex, Text } from 'uikit'
 import { getExpectedEverestAward, getFullDisplayBalance, lockDurationTextLong } from 'utils'
 import EverestLockDurationSlider from './EverestLockDurationSlider'
+import { ExpeditionAPRIndicator } from './ExpeditionAPRIndicator'
 import { LockSummitInfoAndButton } from './LockSummitInfoAndButton'
 
 
@@ -71,6 +72,8 @@ export const InitialSummitLockSection: React.FC<Props> = ({ summitBalance, summi
                 EVEREST is non-transferrable, and is needed
                 to unlock your SUMMIT when your lock period matures.
             </Text>
+
+            <ExpeditionAPRIndicator/>
 
             <TokenInput
                 value={val}

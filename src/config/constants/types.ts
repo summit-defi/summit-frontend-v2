@@ -428,6 +428,7 @@ export interface MultiElevFarmConfig extends MultiElevAllocationConfig, Priceabl
   name?: string
   passthroughStrategy?: string
   getUrl?: string
+  beefyVaultApiName?: string
 }
 
 export interface FarmConfig extends MultiElevFarmConfig {

@@ -75,7 +75,7 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
   const winningNumbersCalls = elevations.map((elev, elevIndex) => ({
     address: summitTrustedSeederModuleAddress,
     name: 'getRandomNumber',
-    params: [elevationUtils.toInt(elev), roundNumbers[elevIndex]]
+    params: [elevationUtils.toInt(elev), Math.max(0, roundNumbers[elevIndex] - 1)]
   }))
 
   const [prevWinningsMultipliersRes, historicalWinningTotems, winningNumbersRes] = await Promise.all([

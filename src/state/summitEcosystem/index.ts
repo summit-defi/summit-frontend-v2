@@ -40,9 +40,9 @@ const getLocalStorageVariables = () => {
     // elevationsInfo: [],
     elevationsInfo: elevationUtils.elevationExpedition.map((elev) => {
       return JSON.parse(localStorage.getItem(`${elev}_ecosystem_info`) || 'null')
-    } 
-    ),
-    summitSwapMinimized: JSON.parse(localStorage.getItem('SummitSwapMinimized') || 'false')
+    }),
+    summitSwapMinimized: JSON.parse(localStorage.getItem('SummitSwapMinimized') || 'false'),
+    expeditionAPR: parseFloat(JSON.parse(localStorage.getItem('ExpeditionAPR') || '0')),
   }
 }
 
@@ -163,6 +163,10 @@ export const SummitEcosystemSlice = createSlice({
     setSummitSwapMinimized: (state, action) => {
       state.summitSwapMinimized = action.payload
       localStorage.setItem('SummitSwapMinimized', JSON.stringify(action.payload))
+    },
+    setExpeditionApr: (state, action) => {
+      state.expeditionAPR = action.payload
+      localStorage.setItem('ExpeditionAPR', JSON.stringify(action.payload))
     }
   },
 })
@@ -188,6 +192,7 @@ export const {
   setPendingExpeditionTx,
   setSummitSwapMinimized,
   setPendingTotemSelection,
+  setExpeditionApr,
 } = SummitEcosystemSlice.actions
 
 // Thunks

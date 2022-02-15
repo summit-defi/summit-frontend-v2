@@ -18,7 +18,7 @@ export const HighlightedText = styled(Text)<{
   font-style: italic;
   text-align: center;
   font-size: ${({ header, fontSize }) => fontSize || (header ? '22' : '16')}px !important;
-  color: ${({ theme, gold }) => (gold ? theme.colors.textGold : theme.colors.text)};
+  color: ${({ theme, gold, color }) => color != null ? color : (gold ? theme.colors.textGold : theme.colors.text)};
   text-shadow: 1px 1px 2px
     ${({ theme, summitPalette: elevation }) => {
       // eslint-disable-next-line no-nested-ternary
