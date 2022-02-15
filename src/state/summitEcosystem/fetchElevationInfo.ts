@@ -4,6 +4,7 @@ import {
   abi,
   groupByAndMap,
   getSubCartographerAddress,
+  getSummitTrustedSeederModuleAddress,
 } from 'utils/'
 import BigNumber from 'bignumber.js'
 import { Elevation, elevationUtils } from 'config/constants/types'
@@ -11,6 +12,7 @@ import { range } from 'lodash'
 
 export const fetchElevationsData = async (elevation?: Elevation) => {
   const elevationHelperAddress = getElevationHelperAddress()
+  const summitTrustedSeederModuleAddress = getSummitTrustedSeederModuleAddress()
   const elevations = elevation != null ? [elevation] : elevationUtils.elevationExpedition
   const calls = elevations.map((elev) => [
     {
@@ -23,11 +25,6 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
       name: 'roundEndTimestamp',
       params: [elevationUtils.toInt(elev)],
     },
-    // {
-    //   address: elevationHelperAddress,
-    //   name: 'historicalWinningTotems',
-    //   params: [elevationUtils.toInt(elev)],
-    // },
     {
       address: elevationHelperAddress,
       name: 'roundNumber',
@@ -42,15 +39,18 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
     return new BigNumber(res[elevIndex * 3 + 2][0]._hex).toNumber()
   })
 
+
+
+
   const prevWinningsMultipliersCalls = []
   const elevRounds = []
   
   elevations.forEach((elev, elevIndex) => {
     if (elev === Elevation.EXPEDITION) return
 
-    const maxRoundNumber = Math.max(roundNumbers[elevIndex], 0)
+    const maxRoundNumber = Math.max(roundNumbers[elevIndex] - 1, 0)
     const minRoundNumber = Math.max(maxRoundNumber - 5, 1)
-    const rounds = range(maxRoundNumber, minRoundNumber - 1, -1);
+    const rounds = range(maxRoundNumber, minRoundNumber - 1, -1)
     elevRounds.push(rounds)
     rounds.forEach((round) => prevWinningsMultipliersCalls.push({
       address: getSubCartographerAddress(elev),
@@ -71,7 +71,14 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
       }
     })
 
-  const [prevWinningsMultipliersRes, historicalWinningTotems] = await Promise.all([
+  // WINNING NUMBERS
+  const winningNumbersCalls = elevations.map((elev, elevIndex) => ({
+    address: summitTrustedSeederModuleAddress,
+    name: 'getRandomNumber',
+    params: [elevationUtils.toInt(elev), roundNumbers[elevIndex]]
+  }))
+
+  const [prevWinningsMultipliersRes, historicalWinningTotems, winningNumbersRes] = await Promise.all([
     retryableMulticall(
       abi.cartographerElevation,
       prevWinningsMultipliersCalls,
@@ -81,6 +88,11 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
       abi.elevationHelper,
       historicalWinnersCalls,
       'fetchElevationsData_historicalWinners',
+    ),
+    retryableMulticall(
+      abi.summitTrustedSeederModule,
+      winningNumbersCalls,
+      'fetchElevationsData_rngWinningNumbers',
     )
   ])
 
@@ -106,11 +118,11 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
   return groupByAndMap(
     elevations,
     (elev) => elev,
-    (elev, index) => {
-      const unlockTimestamp = new BigNumber(res[index * 3 + 0]).toNumber()
+    (elev, elevIndex) => {
+      const unlockTimestamp = new BigNumber(res[elevIndex * 3 + 0]).toNumber()
 
-      const roundEndTimestamp = new BigNumber(res[index * 3 + 1]).toNumber()
-      const roundNumber = new BigNumber(res[index * 3 + 2][0]._hex).toNumber()
+      const roundEndTimestamp = new BigNumber(res[elevIndex * 3 + 1]).toNumber()
+      const roundNumber = new BigNumber(res[elevIndex * 3 + 2][0]._hex).toNumber()
 
       let totemWinAcc = []
       let prevWinners = []
@@ -125,12 +137,14 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
 
       let prevWinningsMultipliers = []
       if (elev !== Elevation.EXPEDITION) {
-        prevWinningsMultipliers = elevPrevWinningsMultipliers[index]
+        prevWinningsMultipliers = elevPrevWinningsMultipliers[elevIndex]
       }
 
       const winningTotem = elev === Elevation.OASIS ?
         0 :
         (roundNumber <= 1 || prevWinners.length === 0) ? null : prevWinners[0]
+
+      const winningNumberDrawn = new BigNumber(winningNumbersRes[elevIndex][0]._hex).toNumber()
         
       return {
         unlockTimestamp,
@@ -140,6 +154,7 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
         prevWinners,
         prevWinningsMultipliers,
         winningTotem,
+        winningNumberDrawn,
       }
     },
   )

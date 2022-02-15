@@ -20,6 +20,11 @@ const getLocalStorageVariables = () => {
         0 :
         JSON.parse(localStorage.getItem(`${elevation}_winning_totem`) || 'null')
     ),
+    winningNumbersDrawn: elevationUtils.allWithExpedition.map((elevation): number =>
+      elevation === Elevation.OASIS ?
+        0 :
+        JSON.parse(localStorage.getItem(`${elevation}_winning_number_drawn`) || 'null')
+    ),
     elevMarkedWinningRound: elevationUtils.allWithExpedition.map((elevation): number =>
       elevation === Elevation.OASIS ?
         0 :
@@ -34,9 +39,6 @@ const getLocalStorageVariables = () => {
     farmType: (localStorage.getItem('FarmType') || FarmType.All) as FarmType,
     // elevationsInfo: [],
     elevationsInfo: elevationUtils.elevationExpedition.map((elev) => {
-      console.log({
-        elev
-      })
       return JSON.parse(localStorage.getItem(`${elev}_ecosystem_info`) || 'null')
     } 
     ),
@@ -84,6 +86,8 @@ export const SummitEcosystemSlice = createSlice({
 
         localStorage.setItem(`${elevation}_winning_totem`, `${elevationsData[elevation].winningTotem}`)
         state.winningTotems[elevInt] = elevationsData[elevation].winningTotem
+        localStorage.setItem(`${elevation}_winning_number_drawn`, `${elevationsData[elevation].winningNumberDrawn}`)
+        state.winningNumbersDrawn[elevInt] = elevationsData[elevation].winningNumberDrawn
         localStorage.setItem(`${elevation}_ecosystem_info`, JSON.stringify(elevationsData[elevation], null, 2))
 
         if (

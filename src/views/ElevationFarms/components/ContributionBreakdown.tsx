@@ -1,6 +1,8 @@
+import { Elevation } from 'config/constants'
 import React from 'react'
 import styled from 'styled-components'
 import { ElevationImage, Flex, Skeleton, Text, TokenSymbolImage } from 'uikit'
+import Totem from './Totem'
 
 const BarHeight = 50
 
@@ -15,6 +17,17 @@ const ContributionWrapper = styled.div<{ perc: number, index: number }>`
     z-index: ${({ index }) => 10 - index};
 `
 
+const ContributionGoldHighlight = styled.div<{ perc: number }>`
+    position: absolute;
+    background-color: #FCC965;
+    opacity: 0.4;
+    border-radius: 4px;
+    top: -22px;
+    left: 0px;
+    right: -1px;
+    bottom: ${({ perc }) => perc < 11 ? '-30' : '-10'}px;
+`
+
 const TitleWrapper = styled(Flex)`
     flex-direction: row;
     align-items: center;
@@ -26,11 +39,12 @@ const TitleWrapper = styled(Flex)`
     /* overflow: hidden; */
 `
 
-const ValueText = styled(Text)<{ perc: number, index: number, isBonusVal?: boolean }>`
+const ValueText = styled(Text)<{ perc: number, index: number, isTotem?: boolean, isBonusVal?: boolean }>`
     position: absolute;
     font-size: 12px;
     line-height: 18px;
     height: 18px;
+    width: ${({ isTotem }) => isTotem ? '40px': 'auto'};
     flex-wrap: wrap;
     overflow: hidden;
     bottom: ${({ isBonusVal }) => isBonusVal ? -14 : 0}px;
@@ -40,7 +54,7 @@ const ValueText = styled(Text)<{ perc: number, index: number, isBonusVal?: boole
     
     ${({ theme }) => theme.mediaQueries.nav} {
         display: ${({ isBonusVal, perc }) => isBonusVal && perc < 10 ? 'none' : 'block'};
-        transform: ${({ perc }) => perc < 10 ? 'rotate(70deg) translateX(35%)' : 'none'};
+        transform: ${({ perc }) => perc < 11 ? 'rotate(70deg) translateX(35%)' : 'none'};
     }
 `
 
@@ -102,6 +116,7 @@ const ContributionSkeleton = styled(Skeleton)`
 interface Contribution {
     token?: boolean
     elevation?: boolean
+    totem?: boolean
     title?: string
     val?: string
     bonusVal?: string
@@ -110,15 +125,34 @@ interface Contribution {
     index?: number
 }
 
-const ContributionComponent: React.FC<Contribution> = ({token = false, elevation = false, title, val, bonusVal, perc, index}) => {
+const TotemImage: React.FC<{ info: string }> = ({ info }) => {
+    const [elevation, totem] = info.split('_')
+    return (
+        <Totem
+            elevation={elevation as Elevation}
+            totem={parseInt(totem)}
+            color=''
+            pressable={false}
+            size='24'
+            navSize='24'
+        />
+    )
+}
+
+const ContributionComponent: React.FC<Contribution> = ({token = false, elevation = false, totem=false, title, val, bonusVal, perc, index}) => {
+    const goldHighlight = totem ?
+        !!parseInt(title.split('_')[2]) :
+        bonusVal != null
     return <ContributionWrapper perc={perc} index={index}>
+        { goldHighlight && <ContributionGoldHighlight perc={perc}/>}
         {title != null && <TitleWrapper>
             { token && <TokenSymbolImage symbol={title} width={36} height={36} />}
             { elevation && <ElevationImage elevation={title} width={36} height={36} />}
-            <LowPercHideText monospace perc={perc} lineHeight='14px' ml='4px' mr='4px' small textAlign='center'>{title}</LowPercHideText>
+            { totem && <TotemImage info={title}/> }
+            { !totem && <LowPercHideText monospace perc={perc} lineHeight='14px' ml='4px' mr='4px' small textAlign='center'>{title}</LowPercHideText> }
         </TitleWrapper>}
         <VerticalBar perc={100}/>
-        <ValueText monospace bold perc={perc} index={index}>{val != null ? val : `${perc}%`}</ValueText>
+        <ValueText monospace bold perc={perc} gold={goldHighlight} isTotem={totem} index={index}>{val != null ? val : `${perc}%`}</ValueText>
         { bonusVal != null && <ValueText monospace bold gold isBonusVal perc={perc} index={index}>{bonusVal}</ValueText> }
     </ContributionWrapper>
 }
@@ -126,7 +160,7 @@ const ContributionComponent: React.FC<Contribution> = ({token = false, elevation
 interface Props {
     loaded: boolean
     breakingDownTitle: string
-    breakdownType?: 'ELEVATION' | 'FARM'
+    breakdownType?: 'ELEVATION' | 'FARM' | 'TOTEM'
     contributions: Contribution[]
 }
 
@@ -135,7 +169,7 @@ const ContributionBreakdown: React.FC<Props> = ({loaded, breakingDownTitle, brea
 
     return (
         <Wrapper>
-            <Text bold monospace>{breakingDownTitle} BY {breakdownType}:</Text>
+            { breakdownType !== 'TOTEM' && <Text bold monospace>{breakingDownTitle} BY {breakdownType}:</Text> }
             <BarWrapper>
                 { !loaded ?
                     <>

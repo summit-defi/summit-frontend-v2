@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Flex, HighlightedText, MobileColumnFlex, Text, TokenSymbolImage } from 'uikit'
 import { MobileRowFlex } from 'uikit/components/Box/Flex'
 import { getEpochTimestamps, getFormattedBigNumber, timestampToDate } from 'utils'
-import HarvestEpochButton from './HarvestEpochButton'
+import HarvestEpochButtons from './HarvestEpochButton'
 import { makeSelectEpochByIndex, useSelector, useThawedEpochIndices } from 'state/hooksNew'
 
 const MobileBreak = styled.br`
@@ -46,7 +46,7 @@ const ThawedEpoch: React.FC<{ epochIndex: number }> = ({ epochIndex }) => {
                 <TokenSymbolImage symbol='ThawedSUMMIT' width={40} height={40} />
                 <HighlightedText bold monospace fontSize='22px' ml='4px' mr='4px' lineHeight='22px'>{rawFrozen}</HighlightedText>
             </MobileColumnFlex>
-            <HarvestEpochButton epochIndex={epoch.index} width='160px' height='28px' />
+            <HarvestEpochButtons epochIndex={epoch.index} width='160px' height='28px' />
         </StyledMobileColumnFlex>
     )
 }

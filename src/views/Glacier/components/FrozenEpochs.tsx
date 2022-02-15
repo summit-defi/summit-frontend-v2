@@ -5,7 +5,7 @@ import { Flex, HighlightedText, Text, TokenSymbolImage } from 'uikit'
 import { getEpochTimestamps, getBalanceNumber, timestampToDate } from 'utils'
 import CardValue from 'views/Home/components/CardValue'
 import EpochProgressBar from './EpochProgressBar'
-import HarvestEpochButton from './HarvestEpochButton'
+import HarvestEpochButtons from './HarvestEpochButton'
 
 const MobileBreak = styled.br`
     display: default;
@@ -70,7 +70,7 @@ const FrozenEpoch: React.FC<{ epochIndex: number }> = ({ epochIndex }) => {
                     </HighlightedText>
                 </Flex>
             </Flex>
-            <HarvestEpochButton epochIndex={epoch.index} width='160px' height='28px' />
+            <HarvestEpochButtons epochIndex={epoch.index} width='160px' height='28px' />
         </FrozenEpochCard>
     )
 }

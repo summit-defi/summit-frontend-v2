@@ -4,7 +4,7 @@ import type { Signer } from '@ethersproject/abstract-signer'
 import type { Provider } from '@ethersproject/providers'
 import { Contract } from '@ethersproject/contracts'
 import { simpleRpcProvider } from 'utils/providers'
-import { getCartographerAddress, getElevationHelperAddress, getEverestTokenAddress, getExpeditionAddress, getMulticallAddress, getSummitGlacierAddress, getSummitTokenAddress } from './addressHelpers'
+import { getCartographerAddress, getElevationHelperAddress, getEverestTokenAddress, getExpeditionAddress, getMulticallAddress, getSummitGlacierAddress, getSummitTokenAddress, getSummitTrustedSeederModuleAddress } from './addressHelpers'
 import { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { BN_ZERO } from 'config/constants'
 
@@ -48,6 +48,10 @@ export const getExpeditionContract = (signer?: SignerLike) => {
 
 export const getElevationHelperContract = (signer?: SignerLike) => {
   return getContract(abiItem.elevationHelper, getElevationHelperAddress(), signer)
+}
+
+export const getSummitTrustedSeederModuleContract = (signer?: SignerLike) => {
+  return getContract(abiItem.summitTrustedSeederModule, getSummitTrustedSeederModuleAddress(), signer)
 }
 
 export const getSummitGlacierContract = (signer?: SignerLike) => {

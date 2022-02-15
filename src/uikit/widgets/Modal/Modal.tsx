@@ -12,6 +12,7 @@ import { ElevationPuck } from './ElevationPuck'
 
 interface Props extends InjectedProps {
   title: string
+  HeaderComponent?: React.ReactNode
   hideCloseButton?: boolean
   onBack?: () => void
   bodyPadding?: string
@@ -117,6 +118,7 @@ const AbsoluteIconButton = styled(IconButton)`
 
 const Modal: React.FC<Props> = ({
   title,
+  HeaderComponent,
   onDismiss,
   onBack,
   children,
@@ -152,6 +154,7 @@ const Modal: React.FC<Props> = ({
           )}
         </ModalHeader>
       )}
+      { HeaderComponent != null && HeaderComponent}
       <ScrollableContent flexDirection="column" p={bodyPadding} elevationCircleHeader={elevationCircleHeader}>
         {children}
         {headerless && !hideCloseButton && (

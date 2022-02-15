@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { ElevationPuck, Flex, Text } from 'uikit'
+import { ElevationPuck, Flex, MobileColumnFlex, Text } from 'uikit'
 import { CurrentEpochSection } from './CurrentEpochSection'
 import { GlacierTotalSummitAmounts } from './GlacierTotalSummitAmounts'
 import { ThawedEpochsSection } from './ThawedEpochsSection'
@@ -11,7 +11,7 @@ const EpochsCard = styled(Flex)`
     padding: 16px;
     padding-top: 112px;
     padding-bottom: 24px;
-    margin-top: 124px;
+    margin-top: 64px;
     background-color: ${({ theme }) => theme.colors.background};
     border-radius: 4px;
     box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
@@ -32,7 +32,8 @@ const EpochsHeaderCard: React.FC = () => {
                 </Text>
             </ElevationPuck>
             <GlacierTotalSummitAmounts/>
-            <Flex gap='24px' mt='12px' mb='16px' width='100%' alignItems='center'>
+            <ThawedEpochsSection/>
+            <MobileColumnFlex gap='24px' mt='12px' mb='16px' width='100%' alignItems='center'>
                 <Flex flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
                     <Text monospace small textAlign='center'>
                         The GLACIER holds your frozen SUMMIT winnings from
@@ -53,8 +54,7 @@ const EpochsHeaderCard: React.FC = () => {
                     </Text>
                 </Flex>
                 <CurrentEpochSection/>
-            </Flex>
-            <ThawedEpochsSection/>
+            </MobileColumnFlex>
         </EpochsCard>
     )
 }

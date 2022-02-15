@@ -11,7 +11,7 @@ interface ReturnType {
 }
 
 const useTotemWinnersModal = (elevation: Elevation): ReturnType => {
-  const { recentWinners, recentWinningsMultipliers, winsAccum } = useTotemHistoricalData(elevation)
+  const { recentWinners, recentWinningsMultipliers, winsAccum, winningNumberDrawn } = useTotemHistoricalData(elevation)
   const showTotemWinnersModalButton = recentWinners.length > 0
   const userTotem = useElevationUserTotem(elevation)
   const [onPresentTotemWinnersModal] = useModal(
@@ -21,6 +21,7 @@ const useTotemWinnersModal = (elevation: Elevation): ReturnType => {
       recentWinners={recentWinners}
       recentWinningsMultipliers={recentWinningsMultipliers}
       winsAccum={winsAccum}
+      winningNumberDrawn={winningNumberDrawn}
     />,
   )
   return { onPresentTotemWinnersModal, showTotemWinnersModalButton }

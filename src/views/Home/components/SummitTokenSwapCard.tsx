@@ -164,8 +164,31 @@ const SummitTokenSwapCard = () => {
   return (
     <StyledFarmStakingCard>
       <CardBody style={{height: '100%', display: 'flex', flex: '1', flexDirection: 'column', gap: '32px'}}>
+        <Flex alignItems='center' justifyContent='space-between' ml='-12px' mr='-12px' mt='-12px' mb='12px'>
+          <Flex flexDirection='column' alignItems='flex-start' justifyContent='center' mb='-12px'>
+            <Text bold monospace letterSpacing="2px">
+              SUMMIT TOKEN SWAP:
+            </Text>
 
-        <Flex width='100%' justifyContent='space-around' alignItems='center'>
+            <Flex justifyContent='center' alignItems='center'>
+              <GreyToken3DFloating width="48px" />
+
+              <Flex mb='12px'>
+                <ChevronRightIcon width="24px" mr="-8px" key="a" />
+                <ChevronRightIcon width="24px" ml="-8px" key="b" />
+              </Flex>
+              
+              <Token3DFloating width="48px" />
+            </Flex>
+          </Flex>
+
+
+          <SummitButton onClick={handleMinimizeSwapCard} height={24} padding={41}>
+            HIDE
+          </SummitButton>
+        </Flex>
+
+        {/* <Flex width='100%' justifyContent='space-around' alignItems='center'>
           <Flex>
             <Flex flexDirection='column' alignItems='center' justifyContent='center'>
               <StyledHighlightedText fontSize="16px" letterSpacing="2px" mb='-8px'>
@@ -193,7 +216,7 @@ const SummitTokenSwapCard = () => {
             <br/>
             SWAP
           </StyledHighlightedText>
-        </Flex>
+        </Flex> */}
         
 
         { !swapUnlocked && 
@@ -211,6 +234,12 @@ const SummitTokenSwapCard = () => {
             <Text monospace small>Add V2 SUMMIT to Wallet</Text>
             <SummitButton onClick={addWatchSummitToken} height={24} padding={36}>
               + <img style={{ marginLeft: 8 }} width={16} src="/images/wallet/metamask.png" alt="metamask logo" />
+            </SummitButton>
+          </Flex>
+          <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
+            <Text monospace small>Mark V1 SUMMIT Deprecated</Text>
+            <SummitButton onClick={deprecateV1SummitToken} height={24} padding={36} summitPalette={'RED' as SummitPalette}>
+              - <img style={{ marginLeft: 8 }} width={16} src="/images/wallet/metamask.png" alt="metamask logo" />
             </SummitButton>
           </Flex>
           <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
@@ -272,27 +301,7 @@ const SummitTokenSwapCard = () => {
               >
                 SWAP V1 FOR V2 SUMMIT
             </SummitButton>
-          </Flex>
-
-          <EntryFlowItem
-            flowItem={TokenSwapFlowItem.Cleanup}
-            flowIndex={3}
-            completed={false}
-            active={v1SummitApproved}
-          />
-
-          <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
-            <Text monospace small>Mark V1 SUMMIT Deprecated</Text>
-            <SummitButton onClick={deprecateV1SummitToken} height={24} padding={36} summitPalette={'RED' as SummitPalette}>
-              - <img style={{ marginLeft: 8 }} width={16} src="/images/wallet/metamask.png" alt="metamask logo" />
-            </SummitButton>
-          </Flex>
-          <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
-            <Text monospace small>Minimize Swap Card</Text>
-            <SummitButton onClick={handleMinimizeSwapCard} height={24} padding={35}>
-              HIDE
-            </SummitButton>
-          </Flex>
+          </Flex>          
         </Flex>
 
         {!account &&

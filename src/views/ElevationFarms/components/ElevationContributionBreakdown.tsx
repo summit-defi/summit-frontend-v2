@@ -47,7 +47,7 @@ const ElevationBar = styled(Link)<{ elevation?: Elevation, perc: number, focused
     margin-left: 1px;
     margin-right: 1px;
     ${elevationBarBorder}
-    transition: transform 200ms, box-shadow 200ms;
+    /* transition: transform 200ms, box-shadow 200ms; */
     ${pressableMixin}
 
     :hover {

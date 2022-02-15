@@ -107,6 +107,7 @@ export interface ElevationInfo {
   prevWinners: number[]
   prevWinningsMultipliers: number[]
   winningTotem: number | null
+  winningNumberDrawn: number | null
 }
 
 export enum FarmType {
@@ -123,6 +124,7 @@ export interface SummitEcosystemState {
   summitEnabled: boolean
   totems: Array<number | null>
   winningTotems: Array<number | null>
+  winningNumbersDrawn: Array<number | null>
   elevMarkedWinningRound: number[]
   totemSelectionRounds: Array<number | null>
   elevationsInfo: ElevationInfo[]

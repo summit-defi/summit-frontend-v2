@@ -9,6 +9,7 @@ import TokenInput from 'components/TokenInput'
 import useWithdraw from 'hooks/useWithdraw'
 import { isNumber } from 'lodash'
 import { useRewardsWillBeClaimedModal, RewardsWillBeClaimedType } from '../../../../components/RewardsWillBeClaimedModal'
+import { useFarmUserTokenFairnessTaxBP } from 'state/hooksNew'
 
 interface Props {
   farmToken: string
@@ -18,7 +19,6 @@ interface Props {
   stakedBalance: BigNumber
   decimals: number
   claimable: BigNumber
-  withdrawalFee: number
   disabled: boolean
   setPending: (boolean) => void
 }
@@ -40,11 +40,12 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
   elevationLocked,
   stakedBalance,
   decimals,
-  withdrawalFee,
   claimable,
   disabled,
   setPending,
 }) => {
+  const userFairnessTaxBP = useFarmUserTokenFairnessTaxBP(symbol)
+
   // WITHDRAW ACTION
   const { onWithdraw, pending: withdrawPending } = useWithdraw(farmToken, elevation)
 
@@ -105,7 +106,7 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
         max={fullWithdrawBalance}
         symbol={symbol}
         feeText='Fairness Tax'
-        feeBP={withdrawalFee}
+        feeBP={userFairnessTaxBP}
       />
       <CenteredSummitButton
         summitPalette={elevation}

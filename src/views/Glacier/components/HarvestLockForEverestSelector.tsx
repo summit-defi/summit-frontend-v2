@@ -63,16 +63,16 @@ const HarvestLockForEverestSelector: React.FC<Props> = ({ lockForEverest, select
       <SelectorWrapper>
         <SelectedSummitButton
           summitPalette={lockForEverest ? SummitPalette.EVEREST : SummitPalette.BASE}
-          selectedIndex={lockForEverest ? 1 : 0}
+          selectedIndex={lockForEverest ? 0 : 1}
           padding="0px"
         >
           {lockForEverest ? 'LOCK FOR EVEREST' : 'HARVEST'}
         </SelectedSummitButton>
-        <TextButton onClick={() => selectLockForEverest(false)}>
-          HARVEST
-        </TextButton>
         <TextButton onClick={() => selectLockForEverest(true)}>
           LOCK FOR EVEREST
+        </TextButton>
+        <TextButton onClick={() => selectLockForEverest(false)}>
+          HARVEST
         </TextButton>
       </SelectorWrapper>
     </SelectorFlex>

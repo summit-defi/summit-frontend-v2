@@ -16,7 +16,7 @@ const HeaderCardsWrapper = styled(Flex)`
     align-items: flex-start;
     width: 100%;
     gap: 32px;
-    margin: 124px auto 0px auto;
+    margin: 64px auto 0px auto;
     max-width: 850px;
     position: relative;
 `

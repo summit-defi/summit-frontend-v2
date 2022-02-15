@@ -410,7 +410,7 @@ export const useTotemSelectionPending = (): boolean => {
 // HISTORICAL WINNERS
 export const useTotemHistoricalData = (
   elevation: Elevation,
-): { recentWinners: number[]; recentWinningsMultipliers: number[]; winsAccum: number[] } => {
+): { recentWinners: number[]; recentWinningsMultipliers: number[]; winsAccum: number[], winningNumberDrawn: number | null } => {
   const elevationInfo = useElevationInfo(elevation)
   return useMemo(() => {
     if (elevationInfo == null || elevation === Elevation.OASIS)
@@ -418,6 +418,7 @@ export const useTotemHistoricalData = (
         recentWinners: [],
         recentWinningsMultipliers: [],
         winsAccum: [],
+        winningNumberDrawn: null,
       }
       
     return {
@@ -427,6 +428,7 @@ export const useTotemHistoricalData = (
         Math.min(6, elevationInfo.roundNumber + 1),
       ),
       winsAccum: elevationInfo.totemWinAcc,
+      winningNumberDrawn: elevationInfo.winningNumberDrawn,
     }
   }, [elevationInfo, elevation])
 }

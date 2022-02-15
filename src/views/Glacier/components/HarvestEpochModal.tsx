@@ -82,6 +82,7 @@ const LockForEverestInfoSection: React.FC<{ val: string }> = React.memo(({ val }
 
 interface HarvestEpochModalProps {
   epoch: Epoch
+  lockForEverest?: boolean
   onHarvestEpoch: (
       amount: string,
       lockForEverest: boolean,
@@ -91,6 +92,7 @@ interface HarvestEpochModalProps {
 
 const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
   epoch,
+  lockForEverest = false,
   onHarvestEpoch,
   onDismiss,
 }) => {
@@ -105,7 +107,6 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
 
   const [val, setVal] = useState(fullHarvestableBalance)
   const [invalidVal, setValInvalid] = useState(false)
-  const [lockForEverest, setLockForEverest] = useState(false)
   const summitPalette = lockForEverest ? SummitPalette.EVEREST : SummitPalette.BASE
 
   const validHarvestVal = (testVal, harvestableBalance) => {
@@ -143,12 +144,7 @@ const HarvestEpochModal: React.FC<HarvestEpochModalProps> = ({
       headerless
     >
       <Flex justifyContent="center" flexDirection="column" alignItems="center" mt='-12px' maxWidth='400px'>
-        <HarvestLockForEverestSelector
-            lockForEverest={lockForEverest}
-            selectLockForEverest={setLockForEverest}
-        />
-
-        <Text bold monospace mt="24px">
+        <Text bold monospace>
           AMOUNT TO {lockForEverest ? 'LOCK' : 'HARVEST'}:
         </Text>
         <TokenInput

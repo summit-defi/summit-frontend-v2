@@ -88,28 +88,22 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
     [setSelectedSourceElevation],
   )
 
-  useEffect(() => {
-    if (selectedSourceElevation === null) return
-    
-    setSourceClaimable(elevClaimable[selectedSourceElevation])
-    const newFullBalance = getFullDisplayBalance(
-      elevStaked[selectedSourceElevation],
-      decimals,
-    )
-    setFullBalance(newFullBalance)
-    setVal(newFullBalance)
-    setValInvalid(!validElevateVal(newFullBalance, newFullBalance))
-  }, [
-    decimals,
-    selectedSourceElevation,
-    symbol,
-    setFullBalance,
-    setSourceClaimable,
-    setVal,
-    setValInvalid,
-    elevClaimable,
-    elevStaked,
-  ])
+  useEffect(
+    () => {
+      if (selectedSourceElevation === null) return
+
+      setSourceClaimable(elevClaimable[selectedSourceElevation])
+      const newFullBalance = getFullDisplayBalance(
+        elevStaked[selectedSourceElevation],
+        decimals,
+      )
+      setFullBalance(newFullBalance)
+      setVal(newFullBalance)
+      setValInvalid(!validElevateVal(newFullBalance, newFullBalance))
+  },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedSourceElevation]
+  )
 
   const handleSelectTargetElevation = useCallback(
     (newElevation: Elevation) => setSelectedTargetElevation(newElevation),

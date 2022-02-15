@@ -6,6 +6,7 @@ import summitToken from '../config/abi/SummitToken.json'
 import everestToken from '../config/abi/EverestToken.json'
 import expedition from '../config/abi/ExpeditionV2.json'
 import elevationHelper from '../config/abi/ElevationHelper.json'
+import summitTrustedSeederModule from '../config/abi/SummitTrustedSeederRNGModule.json'
 import multicall from '../config/abi/Multicall.json'
 import summitGlacier from '../config/abi/SummitGlacier.json'
 import ERC20 from '../config/abi/ERC20.json'
@@ -24,6 +25,7 @@ export const abi = {
   everestToken,
   expedition,
   elevationHelper,
+  summitTrustedSeederModule,
   multicall,
   summitGlacier,
   ERC20,
@@ -41,6 +43,7 @@ export const abiItem = {
   everestToken: (abi.everestToken as unknown) as AbiItem,
   expedition: (abi.expedition as unknown) as AbiItem,
   elevationHelper: (abi.elevationHelper as unknown) as AbiItem,
+  summitTrustedSeederModule: (abi.summitTrustedSeederModule as unknown) as AbiItem,
   multicall: (abi.multicall as unknown) as AbiItem,
   summitGlacier: (abi.summitGlacier as unknown) as AbiItem,
   ERC20: (abi.ERC20 as unknown) as AbiItem,

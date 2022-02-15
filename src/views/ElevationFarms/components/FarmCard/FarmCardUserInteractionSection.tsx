@@ -54,7 +54,6 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
     farmToken,
     depositFeeBP,
     decimals,
-    taxBP,
     passthroughStrategy,
     getUrl,
 
@@ -132,7 +131,6 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
             stakedBalance={elevStaked}
             claimable={elevClaimable}
             decimals={decimals}
-            withdrawalFee={taxBP}
             disabled={disabled}
             setPending={setWithdrawPending}
           />

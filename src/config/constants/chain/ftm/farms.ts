@@ -11,7 +11,7 @@ const summitFarm: MultiElevFarmConfig = {
   symbol: TokenSymbol.SUMMIT,
   ...farmConfigs[TokenSymbol.SUMMIT],
   ...ftmTokens[TokenSymbol.SUMMIT],
-  getUrl: 'https://spookyswap.finance/swap?outputCurrency=0xSUMMIT',
+  getUrl: 'https://beets.fi/#/trade/0x0dDB88e14494546D07fCd94c3f0ef6D3296B1cD7',
 }
 
 const everestFarm: MultiElevFarmConfig = {

@@ -44,6 +44,9 @@ export const getExpeditionAddress = () => {
 export const getElevationHelperAddress = () => {
   return addresses.elevationHelper[CHAIN_ID]
 }
+export const getSummitTrustedSeederModuleAddress = () => {
+  return addresses.summitTrustedSeederModule[CHAIN_ID]
+}
 export const getSummitGlacierAddress = () => {
   return addresses.summitGlacier[CHAIN_ID]
 }

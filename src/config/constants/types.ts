@@ -424,7 +424,7 @@ export interface MultiElevAllocationConfig {
   elevations: FarmElevationsConfigs
 }
 
-export interface MultiElevFarmConfig extends MultiElevAllocationConfig, PriceableToken  {
+export interface MultiElevFarmConfig extends MultiElevAllocationConfig, PriceableToken {
   name?: string
   passthroughStrategy?: string
   getUrl?: string

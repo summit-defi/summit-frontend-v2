@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js/bignumber'
 import Input, { InputProps } from '../Input'
@@ -30,6 +30,14 @@ const TokenInput: React.FC<TokenInputProps> = ({
   disabled = false,
   isLocked = false,
 }) => {
+
+  const feeToTake = useMemo(
+    () => feeBP > 0 ?
+      new BigNumber(value || 0).times(feeBP / 10000).toNumber() :
+      0,
+    [value, feeBP]
+  )
+
   return (
     <StyledTokenInput>
       <StyledMaxText bold monospace>
@@ -55,7 +63,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
         value={value}
       />
       {feeBP > 0 ? (
-        <StyledFeeText monospace>{feeText}: {new BigNumber(value || 0).times(feeBP / 10000).toString()}</StyledFeeText>
+        <StyledFeeText monospace color={feeToTake > 0 ? 'red' : null}>{feeText}: {feeToTake.toFixed(4)}</StyledFeeText>
       ) : null}
     </StyledTokenInput>
   )
@@ -88,10 +96,11 @@ const StyledMaxText = styled(Text)`
   justify-content: flex-start;
 `
 
-const StyledFeeText = styled(StyledMaxText)`
+const StyledFeeText = styled(StyledMaxText)<{ color: string | null }>`
   position: absolute;
   left: 0px;
   bottom: -30px;
+  color: ${({ theme, color }) => color != null ? color : theme.colors.text};
 `
 
 export default TokenInput

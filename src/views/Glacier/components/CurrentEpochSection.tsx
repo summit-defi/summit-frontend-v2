@@ -4,7 +4,7 @@ import { Flex, HighlightedText, MobileColumnFlex, Text, TokenSymbolImage } from 
 import { epochThawTimestamp, getBalanceNumber, timestampToDate } from 'utils'
 import CardValue from 'views/Home/components/CardValue'
 import EpochProgressBar from './EpochProgressBar'
-import HarvestEpochButton from './HarvestEpochButton'
+import HarvestEpochButtons from './HarvestEpochButton'
 
 export const CurrentEpochSection: React.FC = () => {
     const currentEpoch = useCurrentEpoch()
@@ -38,7 +38,7 @@ export const CurrentEpochSection: React.FC = () => {
                     </HighlightedText>
                 </Flex>
             </MobileColumnFlex>
-            <HarvestEpochButton
+            <HarvestEpochButtons
                 epochIndex={currentEpoch.index}
             />
         </Flex>

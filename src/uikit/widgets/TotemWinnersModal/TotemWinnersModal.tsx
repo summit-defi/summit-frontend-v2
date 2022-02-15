@@ -11,6 +11,7 @@ import Totem from 'views/ElevationFarms/components/Totem'
 import { Modal } from '../Modal'
 import { elevationPalette } from 'theme/colors'
 import chroma from 'chroma-js'
+import WinningNumberTotemIndicator from './WinningNumberTotemIndicator'
 
 interface Props {
   elevation: Elevation
@@ -18,6 +19,7 @@ interface Props {
   recentWinningsMultipliers: number[]
   winsAccum: number[]
   userTotem: number | null
+  winningNumberDrawn: number | null
   onDismiss?: () => void
 }
 
@@ -26,18 +28,23 @@ const ModalLayoutFlex = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  margin-top: 100px;
+  gap: 32px;
 
   ${({ theme }) => theme.mediaQueries.nav} {
     flex-direction: row;
-    gap: 80px;
-    padding: 0px 60px;
-    margin-top: -60px;
+    margin-top: 100px;
   }
 `
 
 const MobileOnlyGap = styled.div`
-  height: 32px;
+  height: 1px;
 
+  ${({ theme }) => theme.mediaQueries.nav} {
+    display: none;
+  }
+`
+const MobileOnlyFlex = styled(Flex)`
   ${({ theme }) => theme.mediaQueries.nav} {
     display: none;
   }
@@ -55,6 +62,19 @@ const RainbowLight = keyframes`
 }
 `
 
+const ContentColumn = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  ${({ theme }) => theme.mediaQueries.nav} {
+    width: 50%;
+    min-width: 375px;
+  }
+`
+
 const StyledCardAccent = styled.div<{ elevationBackground: string }>`
   background: ${({ elevationBackground }) => elevationBackground};
 
@@ -68,11 +88,6 @@ const StyledCardAccent = styled.div<{ elevationBackground: string }>`
   bottom: 3px;
   left: 3px;
   z-index: -1;
-`
-
-const TotemPadding = styled.div`
-  margin: 24px;
-  position: relative;
 `
 const TotemLabel = styled(Text)<{ elevation: Elevation; header?: boolean; color?: string }>`
   font-weight: bold;
@@ -107,7 +122,7 @@ const TotemWithStatsWrapper = styled.div`
   padding: 4px;
 
   ${({ theme }) => theme.mediaQueries.nav} {
-    padding: 6px;
+    padding: 2px;
   }
 `
 
@@ -132,12 +147,154 @@ const getWinsPerc = (winsAccum: number[]): string[] => {
   return winsAccum.map((wins) => `${Math.round((wins * 10000) / rounds) / 100}%`)
 }
 
+const HeaderRowFlex = styled.div`
+  display: flex;
+  position: absolute;
+  flex-direction: row;
+  align-items: center;
+  height: 250px;
+  position: absolute;
+  top: -125px;
+  width: 100%;
+  padding: 0px 60px;
+  z-index: 10;
+`
+const TotemPadding = styled.div`
+  display: flex;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+const HeaderRecentWinners = styled.div<{ mobileOnly?: boolean }>`
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  display: ${({ mobileOnly }) => mobileOnly === true ? 'none' : 'flex'};
+
+  ${({ theme }) => theme.mediaQueries.nav} {
+    display: flex;
+  }
+`
+
+interface BiggestWinnerAndLoserProps {
+  elevation: Elevation
+  biggestWinner: number
+  biggestWinnerWinPerc: string
+  biggestLoser: number
+  biggestLoserWinPerc: string
+}
+const MobileCardContentBiggestWinners: React.FC<BiggestWinnerAndLoserProps> = React.memo(({ elevation, biggestWinner, biggestWinnerWinPerc, biggestLoser, biggestLoserWinPerc }) => {
+  const elevationBackground = getPaletteGradientFarmCardBackground(elevation)
+  const biggestWinnerName = elevationUtils.getElevationTotemName(elevation, biggestWinner, false)
+  const biggestLoserName = elevationUtils.getElevationTotemName(elevation, biggestLoser, false)
+  
+  return (
+    <MobileOnlyFlex gap='24px'>
+      <Flex flexDirection="column" alignItems="center">
+        <TotemPadding>
+          <StyledCardAccent elevationBackground={elevationBackground} />
+          <ArtworkTotem elevation={elevation} totem={biggestWinner} desktopSize="120" mobileSize="120" />
+        </TotemPadding>
+        <TotemLabel elevation={elevation} header={false} gold mt='16px'>
+          LUCKIEST
+          <br />
+          TOTEM
+        </TotemLabel>
+        <Text bold fontStyle="italic" gold mt='16px'>
+          {biggestWinnerName}
+        </Text>
+        <Text monospace bold fontStyle="italic" gold>
+          {biggestWinnerWinPerc} WIN
+        </Text>
+      </Flex>
+      <Flex flexDirection="column" alignItems="center">
+        <TotemPadding>
+          <StyledCardAccent elevationBackground={elevationBackground} />
+          <ArtworkTotem elevation={elevation} totem={biggestLoser} desktopSize="120" mobileSize="120" />
+        </TotemPadding>
+        <TotemLabel elevation={elevation} header={false} color="#CE0000" mt='16px'>
+          UNLUCKIEST
+          <br />
+          TOTEM
+        </TotemLabel>
+        <Text bold fontStyle="italic" color="#CE0000" mt='16px'>
+          {biggestLoserName}
+        </Text>
+        <Text monospace bold fontStyle="italic" color="#CE0000">
+          {biggestLoserWinPerc} WIN
+        </Text>
+      </Flex>
+    </MobileOnlyFlex>
+  )
+})
+
+interface HeaderPuckRowProps extends BiggestWinnerAndLoserProps {
+  winningTotem: number
+}
+const HeaderPuckRow: React.FC<HeaderPuckRowProps> = React.memo(({ elevation, winningTotem, biggestWinner, biggestWinnerWinPerc, biggestLoser, biggestLoserWinPerc }) => {
+  const elevationBackground = getPaletteGradientFarmCardBackground(elevation)
+  const biggestWinnerName = elevationUtils.getElevationTotemName(elevation, biggestWinner, false)
+  const biggestLoserName = elevationUtils.getElevationTotemName(elevation, biggestLoser, false)
+  
+
+  return (
+    <HeaderRowFlex>
+      <HeaderRecentWinners>
+        <TotemPadding>
+          <StyledCardAccent elevationBackground={elevationBackground}/>
+          <ArtworkTotem crowned elevation={elevation} totem={winningTotem} desktopSize="200" mobileSize="200" />
+        </TotemPadding>
+      </HeaderRecentWinners>
+      <HeaderRecentWinners mobileOnly>
+        <Flex flexDirection="column" alignItems="center" mt='116px'>
+          <TotemPadding>
+            <StyledCardAccent elevationBackground={elevationBackground} />
+            <ArtworkTotem elevation={elevation} totem={biggestWinner} desktopSize="120" mobileSize="120" />
+          </TotemPadding>
+          <TotemLabel elevation={elevation} header={false} gold mt='16px'>
+            LUCKIEST
+            <br />
+            TOTEM
+          </TotemLabel>
+          <Text bold fontStyle="italic" gold mt='16px'>
+            {biggestWinnerName}
+          </Text>
+          <Text monospace bold fontStyle="italic" gold>
+            {biggestWinnerWinPerc} WIN
+          </Text>
+        </Flex>
+        <Flex flexDirection="column" alignItems="center" mt='116px'>
+          <TotemPadding>
+            <StyledCardAccent elevationBackground={elevationBackground} />
+            <ArtworkTotem elevation={elevation} totem={biggestLoser} desktopSize="120" mobileSize="120" />
+          </TotemPadding>
+          <TotemLabel elevation={elevation} header={false} color="#CE0000" mt='16px'>
+            UNLUCKIEST
+            <br />
+            TOTEM
+          </TotemLabel>
+          <Text bold fontStyle="italic" color="#CE0000" mt='16px'>
+            {biggestLoserName}
+          </Text>
+          <Text monospace bold fontStyle="italic" color="#CE0000">
+            {biggestLoserWinPerc} WIN
+          </Text>
+        </Flex>
+      </HeaderRecentWinners>
+    </HeaderRowFlex>
+  )
+})
+
 const TotemWinnersModal: React.FC<Props> = ({
   elevation,
   recentWinners,
   recentWinningsMultipliers,
   winsAccum,
   userTotem,
+  winningNumberDrawn,
   onDismiss = () => null,
 }) => {
   if (recentWinners.length === 0) {
@@ -154,13 +311,10 @@ const TotemWinnersModal: React.FC<Props> = ({
     )
   }
 
-  const elevationBackground = getPaletteGradientFarmCardBackground(elevation)
   const recentWinnerName = elevationUtils.getElevationTotemName(elevation, recentWinners[0], false)
   const recentWinnerStreak = getRecentWinnerStreak(recentWinners)
   const winsPerc = getWinsPerc(winsAccum)
   const [biggestWinner, biggestLoser] = getBiggestWinnerAndLoser(winsAccum, elevation)
-  const biggestWinnerName = elevationUtils.getElevationTotemName(elevation, biggestWinner, false)
-  const biggestLoserName = elevationUtils.getElevationTotemName(elevation, biggestLoser, false)
   const totemsArray = elevationUtils.totemsArray(elevation)
   const chunkedTotems = chunkArray(5, totemsArray)
   const colorGradient = chroma
@@ -169,22 +323,32 @@ const TotemWinnersModal: React.FC<Props> = ({
     .colors(Math.max(totemsArray.length, 5))
 
   return (
-    <Modal title="TOTEM STATS" onDismiss={onDismiss} headerless elevationCircleHeader={elevation}>
+    <Modal
+      title="TOTEM STATS"
+      onDismiss={onDismiss}
+      headerless
+      HeaderComponent={<HeaderPuckRow
+        elevation={elevation}
+        winningTotem={recentWinners[0]}
+        biggestWinner={biggestWinner}
+        biggestLoser={biggestLoser}
+        biggestWinnerWinPerc={winsPerc[biggestWinner]}
+        biggestLoserWinPerc={winsPerc[biggestLoser]}
+      />}
+    >
       <ModalLayoutFlex>
-        <Flex alignItems="center" flexDirection="column">
-          <TotemLabel elevation={elevation}>WINNING TOTEM:</TotemLabel>
+        <ContentColumn>
+          
+
+          <TotemLabel elevation={elevation} mt='48px'>WINNING TOTEM:</TotemLabel>
           <TotemLabel header mb={recentWinnerStreak === 1 ? '32px' : '0px'} elevation={elevation}>
             {recentWinnerName}
           </TotemLabel>
           {recentWinnerStreak > 1 && (
-            <TotemLabel mb="32px" elevation={elevation} header={false}>
+            <TotemLabel mb="40px" elevation={elevation} header={false}>
               {recentWinnerStreak} WIN STREAK
             </TotemLabel>
           )}
-          <TotemPadding>
-            <StyledCardAccent elevationBackground={elevationBackground} />
-            <ArtworkTotem crowned elevation={elevation} totem={recentWinners[0]} desktopSize="200" mobileSize="200" />
-          </TotemPadding>
 
           <WinMultiplierLabel summitPalette={elevation} header gold>
             {recentWinningsMultipliers[0].toFixed(1)}X
@@ -193,70 +357,36 @@ const TotemWinnersModal: React.FC<Props> = ({
             WIN MULTIPLIER
           </Text>
 
-          <Text mt="32px" bold>
-            PREV 5 WINNERS
-          </Text>
-          <Flex>
-            {recentWinners.slice(1, Math.min(recentWinners.length, 6)).map((totem, index) => (
-              <TotemWithStatsWrapper key={index}>
-                <Totem
-                  elevation={elevation}
-                  totem={totem}
-                  color={colorGradient[index]}
-                  selected={totem === userTotem}
-                  pressable={false}
-                  size={`${66 - index * 8}`}
-                  navSize={`${74 - index * 8}`}
-                />
-                <Text monospace bold>
-                  {recentWinningsMultipliers[index + 1].toFixed(1)}X
-                </Text>
-              </TotemWithStatsWrapper>
-            ))}
+          {/* Winning Number */}
+          <Flex gap='12px' align-items='center' justifyContent='center' mt="46px" mb='24px' >
+            <Text monospace small lineHeight='12px' textAlign='center' mt='1px'>
+              PREV ROUND
+              <br/>
+              WINNING NUMBER DRAWN:
+            </Text>
+            <Text fontSize='18px' bold gold monospace>
+              {winningNumberDrawn}
+            </Text>
           </Flex>
-        </Flex>
+          <WinningNumberTotemIndicator elevation={elevation} winningNumberDrawn={winningNumberDrawn}/>
+
+
+          
+          
+        </ContentColumn>
 
         <MobileOnlyGap />
 
-        <Flex alignItems="center" flexDirection="column">
-          <Flex>
-            <Flex flexDirection="column" alignItems="center">
-              <TotemLabel elevation={elevation} header={false} gold>
-                LUCKIEST
-                <br />
-                TOTEM
-              </TotemLabel>
-              <TotemPadding>
-                <StyledCardAccent elevationBackground={elevationBackground} />
-                <ArtworkTotem elevation={elevation} totem={biggestWinner} desktopSize="120" mobileSize="120" />
-              </TotemPadding>
-              <Text bold fontStyle="italic" gold>
-                {biggestWinnerName}
-              </Text>
-              <Text monospace bold fontStyle="italic" gold>
-                {winsPerc[biggestWinner]} WIN
-              </Text>
-            </Flex>
-            <Flex flexDirection="column" alignItems="center">
-              <TotemLabel elevation={elevation} header={false} color="#CE0000">
-                UNLUCKIEST
-                <br />
-                TOTEM
-              </TotemLabel>
-              <TotemPadding>
-                <StyledCardAccent elevationBackground={elevationBackground} />
-                <ArtworkTotem elevation={elevation} totem={biggestLoser} desktopSize="120" mobileSize="120" />
-              </TotemPadding>
-              <Text bold fontStyle="italic" color="#CE0000">
-                {biggestLoserName}
-              </Text>
-              <Text monospace bold fontStyle="italic" color="#CE0000">
-                {winsPerc[biggestLoser]} WIN
-              </Text>
-            </Flex>
-          </Flex>
+        <ContentColumn>
+          <MobileCardContentBiggestWinners
+            elevation={elevation}
+            biggestWinner={biggestWinner}
+            biggestLoser={biggestLoser}
+            biggestWinnerWinPerc={winsPerc[biggestWinner]}
+            biggestLoserWinPerc={winsPerc[biggestLoser]}
+          />
 
-          <Text mt="32px" bold>
+          <Text mt="90px" bold monospace>
             ALL TIME WINS BREAKDOWN
           </Text>
           {chunkedTotems.map((rowTotems) => (
@@ -278,7 +408,30 @@ const TotemWinnersModal: React.FC<Props> = ({
               ))}
             </TotemBreakdownRow>
           ))}
-        </Flex>
+
+          <Text mt="32px" bold monospace>
+            LAST 5 WINNERS
+          </Text>
+          <Flex align-items='flex-end'>
+            {recentWinners.slice(0, Math.min(recentWinners.length, 5)).map((totem, index) => (
+              <TotemWithStatsWrapper key={index}>
+                <Totem
+                  elevation={elevation}
+                  totem={totem}
+                  color={colorGradient[index]}
+                  selected={totem === userTotem}
+                  crowned={index === 0}
+                  pressable={false}
+                  size={`${60 - index * 8}`}
+                  navSize={`${60 - index * 8}`}
+                />
+                <Text monospace bold>
+                  {recentWinningsMultipliers[index].toFixed(1)}X
+                </Text>
+              </TotemWithStatsWrapper>
+            ))}
+          </Flex>
+        </ContentColumn>
       </ModalLayoutFlex>
     </Modal>
   )
