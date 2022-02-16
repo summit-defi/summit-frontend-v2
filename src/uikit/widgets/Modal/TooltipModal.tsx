@@ -6,14 +6,14 @@ import SummitButton from '../../components/Button/SummitButton'
 
 export enum TooltipModalType {
     DepositFee = 'DepositFee',
-    FairnessTax = 'FairnessTax',
+    DecayingWithdrawalFee = 'DecayingWithdrawalFee',
     LoyaltyBonus = 'LoyaltyBonus',
 }
 
 const modalTitle = (type: TooltipModalType): string => {
     switch (type) {
         case TooltipModalType.DepositFee: return 'Deposit Fee'
-        case TooltipModalType.FairnessTax: return 'Fairness Tax'
+        case TooltipModalType.DecayingWithdrawalFee: return 'Decaying|br|Withdrawal Fee'
         case TooltipModalType.LoyaltyBonus: return 'Loyalty|br|Bonus'
         default: return ''
     }
@@ -21,15 +21,15 @@ const modalTitle = (type: TooltipModalType): string => {
 
 const modalContent = (type: TooltipModalType): any => {
     switch (type) {
-        case TooltipModalType.FairnessTax: return (
+        case TooltipModalType.DecayingWithdrawalFee: return (
             <>
-                Farms have a 7 day Fairness Tax that decreases from 7% to 1% (0% for the SUMMIT farm).
+                Farms have a 7 day Decaying Withdrawal Fee that decreases from 7% to 1% (0% for the SUMMIT farm).
                 <br/>
                 <br/>
-                The Fairness Tax ensures that users dont hit and run without contributing to the SUMMIT ecosystem.
+                The Decaying Withdrawal Fes ensures that users dont hit and run without contributing to the SUMMIT ecosystem.
                 <br/>
                 <br/>
-                Each Farms' Fairness Tax is shared across all Elevations, and resets on a deposit of {'>='} 5% of current deposited value.
+                Each Farms' Decaying Withdrawal Fee is shared across all Elevations, and resets on a deposit of {'>='} 5% of current deposited value.
             </>
         )
         case TooltipModalType.LoyaltyBonus: return (

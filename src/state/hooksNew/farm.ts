@@ -38,11 +38,12 @@ const selectStakedUnstakedFarmSymbols = createSelector(
 )
 export const useStakedUnstakedFarmSymbols = () => useSelector(selectStakedUnstakedFarmSymbols)
 
-export const makeSelectFarmBySymbol = () => createSelector(
+export const selectFarmBySymbol = createSelector(
     stateToFarms,
     (_, symbol: string) => symbol,
     (farms, symbol) => farms.find((farm) => farm.symbol === symbol)
 )
+export const makeSelectFarmBySymbol = () => selectFarmBySymbol
 
 const selectFarmAndUserTokenInteractionSectionInfo = createSelector(
     stateToFarms,

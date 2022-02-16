@@ -45,6 +45,10 @@ const ValueText = styled(MobileColumnFlex)`
     }
 `
 
+const NoShadowHighlightedText = styled(HighlightedText)`
+    text-shadow: none;
+`
+
 const DashboardLifetimeSummitWinnings: React.FC = memo(() => {
     const {
         lifetimeSummitWinnings,
@@ -65,29 +69,29 @@ const DashboardLifetimeSummitWinnings: React.FC = memo(() => {
                 </Text>
                 { userDataLoaded ?
                     <ValueText>
-                        <HighlightedText bold monospace fontSize='22' lineHeight='22px'>
+                        <NoShadowHighlightedText bold monospace fontSize='22' lineHeight='22px'>
                             {rawLifetimeSummitWinnings}
-                        </HighlightedText>
-                        <HighlightedText monospace fontSize='14' lineHeight='14px'>
+                        </NoShadowHighlightedText>
+                        <NoShadowHighlightedText monospace fontSize='14' lineHeight='14px'>
                             SUMMIT
-                        </HighlightedText>
+                        </NoShadowHighlightedText>
                     </ValueText> :
                     <Skeleton height={24} width={180}/>
                 }
             </ItemFlex>
             <Spacer/>
             <ItemFlex>
-                <Text textAlign='center' bold monospace small>
+                <Text textAlign='center' bold gold monospace small>
                     LIFETIME LOYALTY BONUS
                 </Text>
                 { userDataLoaded ?
                     <ValueText>
-                        <HighlightedText bold monospace fontSize='22' lineHeight='22px'>
+                        <NoShadowHighlightedText bold gold monospace fontSize='22' lineHeight='22px'>
                             {rawLifetimeSummitBonuses}
-                        </HighlightedText>
-                        <HighlightedText monospace fontSize='14' lineHeight='14px'>
+                        </NoShadowHighlightedText>
+                        <NoShadowHighlightedText monospace gold fontSize='14' lineHeight='14px'>
                             SUMMIT
-                        </HighlightedText>
+                        </NoShadowHighlightedText>
                     </ValueText> :
                     <Skeleton height={24} width={180}/>
                 }

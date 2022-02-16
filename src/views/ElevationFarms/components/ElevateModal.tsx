@@ -143,7 +143,7 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
         <Text textAlign="center" monospace small bold>
           {`Transfer ${symbol} between elevations`}
           <br/>
-          and avoid the Fairness Tax.
+          and avoid the Decaying Withdrawal Fee.
         </Text>
 
         <Flex justifyContent="space-around" alignItems="center" width="100%" mt="24px">

@@ -46,7 +46,7 @@ export const FarmAPYBreakdown: React.FC<Props> = memo(({ summitPerYear, totalVal
     const apyText = `${elevationTab === ElevationFarmTab.DASH ? 'Base' : capitalizeFirstLetter(elevationTab)} APY`
 
     const yearlyApyText = `${nFormatter(apy)}%`
-    const dailyApyText = `DAILY ${nFormatter(dailyAPR)}%`
+    const dailyApyText = `DAILY APR ${nFormatter(dailyAPR)}%`
 
     
     return (

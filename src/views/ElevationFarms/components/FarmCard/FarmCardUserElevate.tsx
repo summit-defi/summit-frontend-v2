@@ -62,7 +62,7 @@ const FarmCardUserElevate: React.FC<Props> = ({ symbol, elevationLocked, disable
         { symbol === TokenSymbol.SUMMIT ? 
           <LockFarmingSummitForEverest disabled={disabled} isLocked={elevationLocked}/> :
           <>
-            * NO TAX ON
+            * NO FEES ON
             <br />
             ELEVATE
           </>

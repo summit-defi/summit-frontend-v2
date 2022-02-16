@@ -64,7 +64,7 @@ export const FreezeWithBonusesModal: React.FC<Props> = ({
 
     return (
         <Modal title="FREEzE|br|WINNINGS" onDismiss={onDismiss} headerless elevationCircleHeader={elevation}>
-            <Flex width='100%' flexDirection='column' alignItems='center' justifyContent='center' gap='18px'>
+            <Flex width='100%' flexDirection='column' alignItems='center' justifyContent='center' gap='18px' mb='18px'>
                 <Text bold monospace textAlign='center'>FREEZE YOUR {elevation} {earningsOrWinnings}:</Text>
                 <Flex gap='12px' width='100%' alignItems='center' justifyContent='center'>
                     <HighlightedText summitPalette={elevation} fontSize='24px'>{getFormattedBigNumber(elevClaimable)}</HighlightedText>
@@ -96,6 +96,7 @@ export const FreezeWithBonusesModal: React.FC<Props> = ({
                         onClick={handleFreezeWinnings}
                         width='200px'
                         padding='0px'
+                        freezeSummitButton
                     >
                         FREEZE WINNINGS
                     </SummitButton>

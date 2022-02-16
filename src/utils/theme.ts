@@ -5,36 +5,38 @@ export const getPaletteGradientColors = (summitPalette: ElevOrPalette | null): s
   return elevationPalette[summitPalette || SummitPalette.BASE]
 }
 
-export const getPaletteGradientStops = (summitPalette: ElevOrPalette | null): string[] => {
+export const getPaletteGradientStops = (summitPalette: ElevOrPalette | null, asPx?: boolean): string[] => {
   const colors = getPaletteGradientColors(summitPalette)
+
+  const pxOrPerc = asPx === true ? 'px' : '%'
 
   if (summitPalette === 'EXPEDITION') {
     return [
-      `${colors[0]} 20%`,
-      // `${colors[1]} 21%`,
-      `${colors[1]} 35%`,
-      // `${colors[2]} 36%`,
-      `${colors[2]} 50%`,
-      // `${colors[3]} 51%`,
-      `${colors[3]} 65%`,
-      // `${colors[4]} 66%`,
-      `${colors[4]} 80%`,
-      // `${colors[5]} 81%`,
-      `${colors[4]} 100%`,
+      `${colors[0]} 20${pxOrPerc}`,
+      // `${colors[1]} 21${pxOrPerc}`,
+      `${colors[1]} 35${pxOrPerc}`,
+      // `${colors[2]} 36${pxOrPerc}`,
+      `${colors[2]} 50${pxOrPerc}`,
+      // `${colors[3]} 51${pxOrPerc}`,
+      `${colors[3]} 65${pxOrPerc}`,
+      // `${colors[4]} 66${pxOrPerc}`,
+      `${colors[4]} 80${pxOrPerc}`,
+      // `${colors[5]} 81${pxOrPerc}`,
+      `${colors[4]} 100${pxOrPerc}`,
     ]
   }
 
   return [
-    `${colors[0]} 20%`,
-    `${colors[1]} 21%`,
-    `${colors[1]} 35%`,
-    `${colors[2]} 36%`,
-    `${colors[2]} 50%`,
-    `${colors[3]} 51%`,
-    `${colors[3]} 65%`,
-    `${colors[4]} 66%`,
-    `${colors[4]} 80%`,
-    `${colors[5]} 81%`,
+    `${colors[0]} 20${pxOrPerc}`,
+    `${colors[1]} 21${pxOrPerc}`,
+    `${colors[1]} 35${pxOrPerc}`,
+    `${colors[2]} 36${pxOrPerc}`,
+    `${colors[2]} 50${pxOrPerc}`,
+    `${colors[3]} 51${pxOrPerc}`,
+    `${colors[3]} 65${pxOrPerc}`,
+    `${colors[4]} 66${pxOrPerc}`,
+    `${colors[4]} 80${pxOrPerc}`,
+    `${colors[5]} 81${pxOrPerc}`,
   ]
 }
 

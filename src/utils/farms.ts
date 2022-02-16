@@ -53,11 +53,13 @@ export const getFarmInteracting = (farm: Farm) => {
 
 export const getFarmAllElevationsIterable = memoize((farmConfigs: FarmConfig[]) => {
     return farmConfigs.map((farm) => {
-        return Object.keys(farm.elevations).map((elevation) => ({
-            symbol: farm.symbol,
-            farmToken: farm.farmToken,
-            elevation: elevation as Elevation,
-        }))
+        return Object.keys(farm.elevations)
+            // .filter((elev) => elev === Elevation.MESA)
+            .map((elevation) => ({
+                symbol: farm.symbol,
+                farmToken: farm.farmToken,
+                elevation: elevation as Elevation,
+            }))
     }).flat()
 })
 export const getFarmAllTokensIterable = memoize((farmConfigs: FarmConfig[]) => {

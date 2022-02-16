@@ -40,6 +40,8 @@ export const stateToElevationsInfos = (state: State) => state.summitEcosystem.el
 export const stateToSummitSwapMinimized = (state: State) => state.summitEcosystem.summitSwapMinimized
 export const stateToElevationRolloversToShow = (state: State) => state.summitEcosystem.elevationRolloversToShow
 export const stateToExpeditionAPR = (state: State) => state.summitEcosystem.expeditionAPR
+export const stateToTotemSelectionRounds = (state: State) => state.summitEcosystem.totemSelectionRounds
+export const stateToSceneryScreenshot = (state: State) => state.summitEcosystem.sceneryScreenshot
 
 // FARMS
 export const stateToFarmsElevationsData = (state: State) => state.farms.elevationData
@@ -57,3 +59,9 @@ export const stateToEverestAverageLockDuration = (state: State) => state.everest
 export const stateToEverestSupply = (state: State) => state.everest.everestSupply
 export const stateToEverestUserData = (state: State) => state.everest.userData
 export const stateToUserEverestOwned = (state: State) => state.everest.userData?.everestOwned || BN_ZERO
+
+// PRICES
+export const stateToPricesPerToken = (state: State) => state.prices.pricesPerToken
+
+// TOKENS
+export const stateToAvgStakingLoyaltyDuration = (state: State) => state.tokens.avgStakingLoyaltyDuration

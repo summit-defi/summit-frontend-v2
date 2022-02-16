@@ -1,5 +1,5 @@
 import { ElevOrPalette } from 'config/constants/types'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { paletteLinearGradientBackground } from 'uikit/util/styledMixins'
 import { SpinnerKeyframes } from '../Svg/Icons/Spinner'
 import StyledButton from './StyledButton'
@@ -10,6 +10,7 @@ const SummitStyledButton = styled(StyledButton)<{
   $secondary: boolean
   $summitPalette?: ElevOrPalette
   $isLocked: boolean
+  freezeSummitButton?: boolean
 }>`
   position: relative;
   height: ${({ height }) => height || 36}px;
@@ -32,6 +33,21 @@ const SummitStyledButton = styled(StyledButton)<{
     fill: white;
     animation: ${SpinnerKeyframes} 1.4s infinite linear;
   }
+
+  ${({ freezeSummitButton }) => freezeSummitButton && css`
+    &::after {
+        content: ' ';
+        position: absolute;
+        width: 215px;
+        height: 100px;
+        pointer-events: none;
+        background-image: url("/images/summit/SummitFreezeOverlay.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        transform: scaleY(0.95);
+    }
+  `}
 `
 
 export default SummitStyledButton

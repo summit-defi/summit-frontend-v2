@@ -53,10 +53,12 @@ export const fetchTokensUserData = async (account: string) => {
         farmTokens,
         (token) => token.symbol,
         (token, tokenIndex) => {
+            const staked = cartRes != null ? new BigNumber(cartRes[tokenIndex * 5 + 0][0]._hex): BN_ZERO
+            const anyStaked = staked.isGreaterThan(0)
             return {
-                staked: cartRes != null ? new BigNumber(cartRes[tokenIndex * 5 + 0][0]._hex): BN_ZERO,
+                staked,
                 bonusResetTimestamp: cartRes != null ? cartRes[tokenIndex * 5 + 1][0].toNumber() : 0,
-                bonusBP: cartRes != null ? cartRes[tokenIndex * 5 + 2][0] : 0,
+                bonusBP: cartRes != null && anyStaked ? cartRes[tokenIndex * 5 + 2][0] : 0,
                 taxResetTimestamp: cartRes != null ? cartRes[tokenIndex * 5 + 3][0].toNumber() : 0,
                 taxBP: cartRes != null ? cartRes[tokenIndex * 5 + 4][0] : 0,
                 farmAllowance: erc20Res != null ? new BigNumber(erc20Res[tokenIndex * 2 + 0][0]._hex): BN_ZERO,

@@ -59,6 +59,7 @@ const ElevClaim: React.FC<ElevProps> = ({ elevation, claimable }) => {
       disabled={nothingToClaim}
       width='200px'
       style={{padding: '0px'}}
+      freezeSummitButton
       onClick={handlePresentFreezeElev}
     >
       FREEZE {elevation}
@@ -75,7 +76,7 @@ const MultiElevWinningsAndClaim: React.FC = () => {
   const userDataLoaded = useFarmsUserDataLoaded()
 
   return (
-    <Flex width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
+    <Flex width='100%' alignItems='center' justifyContent='center' flexDirection='column' mb='18px'>
       
       <Flex alignItems='center' mb='12px' justifyContent='space-around' width='100%' maxWidth='400px'>
         <Flex flexDirection='column' justifyContent='center' alignItems='center'>

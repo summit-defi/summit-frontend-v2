@@ -38,10 +38,12 @@ export const useElevationUserTotemAndCrowned = (elevation: Elevation) => useSele
 export const selectUserTotemsAndCrowns = createSelector(
     stateToUserTotems,
     stateToWinningTotems,
-    (userTotems, winningTotems) => userTotems.map((userTotem, elevIndex) => ({
-        userTotem,
-        crowned: userTotem != null && userTotem === winningTotems[elevIndex]
-    }))
+    (userTotems, winningTotems) => {
+        return userTotems.map((userTotem, elevIndex) => ({
+            userTotem,
+            crowned: userTotem != null && userTotem === winningTotems[elevIndex]
+        }))
+    }
 )
 export const useUserTotemsAndCrowns = () => useSelector(selectUserTotemsAndCrowns)
 

@@ -32,7 +32,7 @@ export const fetchUsersTotems = async (account) => {
       } :
       {
         totem: expedRes[0].deitySelected ? expedRes[0].deity : null,
-        totemSelectionRound: new BigNumber(expedRes[0].deitySelectionRound._hex),
+        totemSelectionRound: new BigNumber(expedRes[0].deitySelectionRound._hex).toNumber(),
       }
   }
 
@@ -40,7 +40,7 @@ export const fetchUsersTotems = async (account) => {
     const { totemSelected, totem, totemSelectionRound } = elevRes[index]
     usersTotems[elevation] = {
       totem: totemSelected ? totem : null,
-      totemSelectionRound,
+      totemSelectionRound: new BigNumber(totemSelectionRound._hex).toNumber(),
     }
   })
 

@@ -43,6 +43,10 @@ const ValueText = styled(MobileColumnFlex)`
     }
 `
 
+const NoShadowHighlightedText = styled(HighlightedText)`
+    text-shadow: none;
+`
+
 const SummitIconSize = 60
 
 export const GlacierTotalSummitAmounts: React.FC = memo(() => {
@@ -59,12 +63,12 @@ export const GlacierTotalSummitAmounts: React.FC = memo(() => {
                     YOUR FROZEN SUMMIT
                 </Text>
                 <ValueText>
-                    <HighlightedText bold monospace fontSize='22' lineHeight='22px'>
+                    <NoShadowHighlightedText bold monospace fontSize='22' lineHeight='22px'>
                         {rawTotalFrozenSummit}
-                    </HighlightedText>
-                    <HighlightedText monospace fontSize='14' lineHeight='14px'>
+                    </NoShadowHighlightedText>
+                    <NoShadowHighlightedText monospace fontSize='14' lineHeight='14px'>
                         SUMMIT
-                    </HighlightedText>
+                    </NoShadowHighlightedText>
                 </ValueText>
             </ItemFlex>
             <Spacer/>
@@ -74,12 +78,12 @@ export const GlacierTotalSummitAmounts: React.FC = memo(() => {
                     YOUR THAWED SUMMIT
                 </Text>
                 <ValueText>
-                    <HighlightedText bold monospace fontSize='22' lineHeight='22px'>
+                    <NoShadowHighlightedText bold monospace fontSize='22' lineHeight='22px'>
                         {rawTotalThawedSummit}
-                    </HighlightedText>
-                    <HighlightedText monospace fontSize='14' lineHeight='14px'>
+                    </NoShadowHighlightedText>
+                    <NoShadowHighlightedText monospace fontSize='14' lineHeight='14px'>
                         SUMMIT
-                    </HighlightedText>
+                    </NoShadowHighlightedText>
                 </ValueText>
             </ItemFlex>
         </Wrapper>

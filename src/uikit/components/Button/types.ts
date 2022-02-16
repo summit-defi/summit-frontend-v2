@@ -41,6 +41,7 @@ export interface BaseButtonProps extends LayoutProps, SpaceProps {
   as?: 'a' | 'button' | typeof Link
   external?: boolean
   isLoading?: boolean
+  isLocked?: boolean
   scale?: Scale
   variant?: Variant
   disabled?: boolean
@@ -48,6 +49,8 @@ export interface BaseButtonProps extends LayoutProps, SpaceProps {
   endIcon?: ReactNode
   summitPalette?: ElevOrPalette
   secondary?: boolean
+  freezeSummitButton?: boolean
+  InsetComponent?: ReactNode
 }
 
 export type ButtonProps<P extends ElementType = 'button'> = PolymorphicComponentProps<P, BaseButtonProps>

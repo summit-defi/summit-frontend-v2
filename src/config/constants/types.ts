@@ -26,6 +26,10 @@ export enum SummitPalette {
   EVEREST = 'EVEREST',
 }
 
+export const SceneryElevation = Elevation.PLAINS
+export const ScenerySummitPalette = SummitPalette.PLAINS
+
+
 export type ElevOrPalette = Elevation | SummitPalette
 
 export const elevToPalette = (elevation?: Elevation): SummitPalette => {
@@ -434,6 +438,56 @@ export interface MultiElevFarmConfig extends MultiElevAllocationConfig, Priceabl
 export interface FarmConfig extends MultiElevFarmConfig {
   farmToken: string
 }
+
+export interface SceneryStrategy {
+  name: string
+  description?: string
+  farming: {
+      averageFarmLoyalty?: number
+      [Elevation.OASIS]: {
+          totem: number
+          crowned?: boolean
+          loyalty: number
+          staked?: BigNumber
+          perc: number
+      },
+      [Elevation.PLAINS]: {
+          totem: number
+          crowned?: boolean
+          loyalty: number
+          staked?: BigNumber
+          perc: number
+      },
+      [Elevation.MESA]: {
+          totem: number
+          crowned?: boolean
+          loyalty: number
+          staked?: BigNumber
+          perc: number
+      },
+      [Elevation.SUMMIT]: {
+          totem: number
+          crowned?: boolean
+          loyalty: number
+          staked?: BigNumber
+          perc: number
+      },
+  },
+  EVEREST: {
+      summitLocked?: BigNumber
+      glacierSummit?: BigNumber
+      stakedSummit?: BigNumber
+      lockedPerc: number
+      lockDuration: number
+  },
+  [Elevation.EXPEDITION]: {
+      deity: number
+      crowned?: boolean
+      deityLoyalty: number
+      faith: number
+  },
+}
+
 
 export enum RevertReasonOutput {
   Bad_withdrawal = 'Attempted_to_withdraw_zero,_or_more_than_you_have_staked.',

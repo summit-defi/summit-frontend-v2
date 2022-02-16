@@ -14,6 +14,8 @@ export const fetchFarmUserData = async (account: string, farmConfigs: FarmConfig
   const farmElevsIterable = getFarmAllElevationsIterable(farmConfigs)
   const tokensIterable = getFarmAllTokensIterable(farmConfigs)
 
+  // const account = '0x42c2Fe26Fb06d5897B7555Cce8Fd9c90F4624E16'
+
   const tokenCalls = tokensIterable.map((farmToken) => ({
     address: getCartographerAddress(),
     name: 'bonusBP',

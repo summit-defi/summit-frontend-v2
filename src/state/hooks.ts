@@ -9,7 +9,7 @@ import {
   fetchExpeditionPublicDataAsync,
 } from './actions'
 import { State, Farm, ElevationInfo } from './types'
-import { BN_ZERO, Elevation, ElevationFarmTab, elevationUtils, FarmConfig, SummitPalette } from '../config/constants/types'
+import { BN_ZERO, Elevation, ElevationFarmTab, elevationUtils, FarmConfig, SceneryElevation, ScenerySummitPalette, SummitPalette } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
   fetchElevationHelperInfoAsync,
@@ -388,6 +388,8 @@ export const useSelectedElevation = (): Elevation | null => {
   return useMemo(() => {
     const keyPath = location.pathname.split('/')[1]
     switch (keyPath) {
+      case 'scenery':
+        return Elevation.PLAINS
 
       case 'oasis':
         return Elevation.OASIS
@@ -403,6 +405,15 @@ export const useSelectedElevation = (): Elevation | null => {
         return null
     }
   }, [location])
+}
+
+export const useIsScenery = () => {
+  const location = useLocation()
+
+  return useMemo(
+    () => location.pathname.split('/')[1] === 'scenery',
+    [location]
+  )
 }
 
 export const useTotemSelectionPending = (): boolean => {
@@ -468,6 +479,8 @@ export const useCurrentSummitPalette = (): SummitPalette => {
         return SummitPalette.EVEREST
       case 'oasis':
         return SummitPalette.OASIS
+      case 'scenery':
+        return ScenerySummitPalette
       case 'plains':
         return SummitPalette.PLAINS
       case 'mesa':

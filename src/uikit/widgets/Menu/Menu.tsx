@@ -13,6 +13,7 @@ import { HamburgerCloseIcon, HamburgerIcon } from "./icons";
 import { useCurrentSummitPalette } from "state/hooks";
 import DarkModeToggle from "./components/DarkModeToggle";
 import MenuPageSpecificHeader from "./components/MenuPageSpecificHeader";
+import { useSceneryScreenshot } from "state/hooksNew";
 
 const Wrapper = styled.div`
   position: relative;
@@ -49,16 +50,15 @@ const BodyWrapper = styled.div`
   display: flex;
 `;
 
-const Inner = styled.div<{ isPushed: boolean; showMenu: boolean }>`
+const Inner = styled.div<{ isPushed: boolean; showMenu: boolean, screenshot: boolean }>`
   flex-grow: 1;
-  margin-top: ${({ showMenu }) => (showMenu ? `${MENU_HEIGHT}px` : 0)};
-  transition: margin-top 0.2s;
+  margin-top: ${({ showMenu, screenshot }) => (screenshot ? '12px' : (showMenu ? `${MENU_HEIGHT}px` : 0))};
   transform: translate3d(0, 0, 0);
   max-width: 100%;
 
   ${({ theme }) => theme.mediaQueries.nav} {
-    margin-left: ${SIDEBAR_WIDTH_FULL}px;
-    max-width: ${({ isPushed }) => `calc(100% - ${isPushed ? SIDEBAR_WIDTH_FULL : SIDEBAR_WIDTH_REDUCED}px)`};
+    margin-left: ${({ screenshot }) => screenshot ? SIDEBAR_WIDTH_REDUCED : SIDEBAR_WIDTH_FULL}px;
+    max-width: ${({ isPushed, screenshot }) => `calc(100% - ${isPushed && !screenshot ? SIDEBAR_WIDTH_FULL : SIDEBAR_WIDTH_REDUCED}px)`};
   }
 `;
 
@@ -127,40 +127,48 @@ const Menu: React.FC<NavProps> = ({
   const isMobile = isXl === false;
   const [isPushed, setIsPushed] = useState(!isMobile);
   const summitPalette = useCurrentSummitPalette()
+  const sceneryScreenshot = useSceneryScreenshot()
+  console.log({
+    sceneryScreenshot
+  })
 
   return (
     <Wrapper>
-      <StyledNav showMenu>
-        <MobileHamburgerWrapper>
-          <MenuButton aria-label="Toggle menu" onClick={() => setIsPushed((prevState: boolean) => !prevState)} mr="6px">
-            {isPushed ? (
-              <HamburgerCloseIcon width="24px" color="textSubtle"/>
-            ) : (
-              <HamburgerIcon width="24px" color="textSubtle"/>
-            )}
-          </MenuButton>
-        </MobileHamburgerWrapper>
+      { !sceneryScreenshot &&
+        <StyledNav showMenu>
+          <MobileHamburgerWrapper>
+            <MenuButton aria-label="Toggle menu" onClick={() => setIsPushed((prevState: boolean) => !prevState)} mr="6px">
+              {isPushed ? (
+                <HamburgerCloseIcon width="24px" color="textSubtle"/>
+              ) : (
+                <HamburgerIcon width="24px" color="textSubtle"/>
+              )}
+            </MenuButton>
+          </MobileHamburgerWrapper>
 
-        <MenuPageSpecificHeader isDark={isDark} isPushed={isPushed}/>
+          <MenuPageSpecificHeader isDark={isDark} isPushed={isPushed}/>
 
-        <MobileExcludedHeaderElements>
-          <Flex justifyContent='flex-end' flex='1'>
-              <DarkModeToggle summitPalette={summitPalette} isDark={isDark} toggleTheme={toggleTheme}/>
-              <UserBlock account={account} login={login} logout={logout} isDark={isDark} />
-          </Flex>
-        </MobileExcludedHeaderElements>
-      </StyledNav>
+          <MobileExcludedHeaderElements>
+            <Flex justifyContent='flex-end' flex='1'>
+                <DarkModeToggle summitPalette={summitPalette} isDark={isDark} toggleTheme={toggleTheme}/>
+                <UserBlock account={account} login={login} logout={logout} isDark={isDark} />
+            </Flex>
+          </MobileExcludedHeaderElements>
+        </StyledNav>
+      }
       <BodyWrapper>
-        <Panel
-          isPushed={isPushed}
-          isMobile={isMobile}
-          currentLang={currentLang}
-          pushNav={setIsPushed}
-          links={links}
-          additionals={additionals}
-          summitPriceUsd={summitPriceUsd}
-        />
-        <Inner isPushed={isPushed} showMenu>
+        {!sceneryScreenshot &&
+          <Panel
+            isPushed={isPushed}
+            isMobile={isMobile}
+            currentLang={currentLang}
+            pushNav={setIsPushed}
+            links={links}
+            additionals={additionals}
+            summitPriceUsd={summitPriceUsd}
+          />
+        }
+        <Inner isPushed={isPushed} screenshot={sceneryScreenshot} showMenu>
           {children}
         </Inner>
         <MobileOnlyOverlay show={isPushed} onClick={() => setIsPushed(false)} role="presentation" />

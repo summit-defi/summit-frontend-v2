@@ -53,8 +53,8 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
 
       { maxTaxBP > 0 &&
         <BoundedProgressBar
-          tooltipType={TooltipModalType.FairnessTax}
-          title='FAIRNESS TAX'
+          tooltipType={TooltipModalType.DecayingWithdrawalFee}
+          title='DECAYING WITHDRAWAL FEE'
           marks={[
             {
               title: taxStartDate,

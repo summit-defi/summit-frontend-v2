@@ -64,7 +64,7 @@ export const RewardsWillBeClaimedModal: React.FC<Props> = ({
       break
   }
 
-  const earningsOrWinnings = elevation === Elevation.OASIS ? 'Earnings' : 'Winnings'
+  const earningsOrWinnings = elevation === Elevation.OASIS ? 'earnings' : 'winnings'
 
   return (
     <Modal title={`${earningsOrWinnings}|br|TO FREEZE`} onDismiss={onDismiss} headerless elevationCircleHeader={elevateInfo?.targetElevation || elevation}>
@@ -123,11 +123,17 @@ export const RewardsWillBeClaimedModal: React.FC<Props> = ({
       <Text bold monospace italic small textAlign='center' mt='16px'>
         This will NOT reset your
         <br/>
-        Fairness Tax or Loyalty Bonus
+        Decaying Withdrawal Fee or Loyalty Bonus
       </Text>
 
       <ModalActions>
-        <SummitButton summitPalette={elevation} secondary onClick={handleConfirm}>
+        <SummitButton
+          summitPalette={elevation}
+          secondary
+          onClick={handleConfirm}
+          freezeSummitButton
+          width='200px'
+        >
           CONFIRM
         </SummitButton>
       </ModalActions>

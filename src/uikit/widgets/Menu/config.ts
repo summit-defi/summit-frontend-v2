@@ -87,4 +87,4 @@ export const MENU_ENTRY_TEXT_ITEM = 28
 export const MENU_ENTRY_HEIGHT = 58
 export const MENU_GAP_HEIGHT = 20
 export const SIDEBAR_WIDTH_FULL = 200
-export const SIDEBAR_WIDTH_REDUCED = 70
+export const SIDEBAR_WIDTH_REDUCED = 18

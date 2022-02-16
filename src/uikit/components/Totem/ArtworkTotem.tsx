@@ -127,6 +127,7 @@ interface TotemProps {
   mobileSize?: string
   greyed?: boolean
   withName?: boolean
+  noCrown?: boolean
 }
 
 const ArtworkTotem: React.FC<TotemProps> = ({
@@ -138,6 +139,7 @@ const ArtworkTotem: React.FC<TotemProps> = ({
   mobileSize,
   greyed,
   withName,
+  noCrown
 }) => {
   if (elevation === Elevation.EXPEDITION) {
     return <DeityTotem totem={totem} />
@@ -156,7 +158,7 @@ const ArtworkTotem: React.FC<TotemProps> = ({
         totemName={elevationUtils.getElevationTotemName(elevation, totem)}
       />
       <ElevationForeground elevation={elevation} crowned={crowned} />
-      {crowned && <ArtworkCrown desktopSize={desktopSize} mobileSize={mobileSize} />}
+      {crowned && !noCrown && <ArtworkCrown desktopSize={desktopSize} mobileSize={mobileSize} />}
       {withName && totem != null && (
         <ArtworkName fontSize="16px" gold={crowned} header summitPalette={elevation}>
           {elevationUtils.getElevationTotemName(elevation, totem, false)}

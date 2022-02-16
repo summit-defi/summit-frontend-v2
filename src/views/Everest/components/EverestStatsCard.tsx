@@ -1,4 +1,5 @@
-import { SummitPalette } from "config/constants"
+import { BN_ZERO, SummitPalette } from "config/constants"
+import { useBurnedSummitBalance, useTotalSummitSupply } from "hooks/useTokenBalance"
 import React, { memo, useCallback } from "react"
 import { useSummitPrice, useEverestStatsInfo } from "state/hooksNew"
 import styled from "styled-components"
@@ -57,6 +58,9 @@ export const EverestStatsCard: React.FC = memo(() => {
         everestSupply,
         userEverestOwned,
     } = useEverestStatsInfo()
+    const totalSupply = useTotalSummitSupply()
+    const burnedSupply = useBurnedSummitBalance()
+    const summitLockedPerc = totalSupply != null ? totalSummitLocked.times(100).dividedBy(totalSupply.minus(burnedSupply || BN_ZERO)).toNumber() : 0
     const summitPrice = useSummitPrice()
 
     const rawUserEverestOwned = getBalanceNumber(userEverestOwned)
@@ -132,6 +136,10 @@ export const EverestStatsCard: React.FC = memo(() => {
             <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
                 <Text monospace small>Summit Value Locked:</Text>
                 <CardValue summitPalette={SummitPalette.EVEREST} prefix="$" value={rawSummitValueLocked} decimals={2} fontSize="22" />
+            </Flex>
+            <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
+                <Text monospace small>% of Summit Locked:</Text>
+                <CardValue summitPalette={SummitPalette.EVEREST} postfix="%" value={summitLockedPerc} decimals={2} fontSize="22" />
             </Flex>
             <Flex flexDirection='column' alignItems='center' justifyContent='center' width='100%'>
                 <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>

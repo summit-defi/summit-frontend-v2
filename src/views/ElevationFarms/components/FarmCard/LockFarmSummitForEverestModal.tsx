@@ -88,20 +88,18 @@ const LockFarmSummitForEverestModal: React.FC<LockFarmSummitForEverestProps> = (
     [setSelectedSourceElevation],
   )
 
-  useEffect(() => {
-    if (selectedSourceElevation === null) return
-    
-    const newFullBalance = getFullDisplayBalance(elevStaked[selectedSourceElevation])
-    setFullBalance(newFullBalance)
-    setVal(newFullBalance)
-    setValInvalid(!validElevateVal(newFullBalance, newFullBalance))
-  }, [
-    selectedSourceElevation,
-    setFullBalance,
-    setVal,
-    setValInvalid,
-    elevStaked,
-  ])
+  useEffect(
+    () => {
+      if (selectedSourceElevation === null) return
+      
+      const newFullBalance = getFullDisplayBalance(elevStaked[selectedSourceElevation])
+      setFullBalance(newFullBalance)
+      setVal(newFullBalance)
+      setValInvalid(!validElevateVal(newFullBalance, newFullBalance))
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [selectedSourceElevation]
+  )
 
   // CONFIRM ELEVATE
   const handleConfirmLock = useCallback(() => {
@@ -130,7 +128,7 @@ const LockFarmSummitForEverestModal: React.FC<LockFarmSummitForEverestProps> = (
         <Text textAlign="center" monospace small bold mt='-24px'>
           Directly lock your staked SUMMIT for
           <br/>
-          EVEREST and avoid the Fairness Tax.
+          EVEREST and avoid the Decaying Withdrawal Fee.
         </Text>
 
         { anyEverestOwned ?

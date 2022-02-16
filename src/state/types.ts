@@ -140,6 +140,7 @@ export interface SummitEcosystemState {
   pendingTotemSelection: boolean
   summitSwapMinimized: boolean
   expeditionAPR: number
+  sceneryScreenshot: boolean
 }
 
 // API Price State
@@ -163,6 +164,7 @@ export interface UserTokenData {
 }
 export interface TokensState {
   data: UserTokenData[]
+  avgStakingLoyaltyDuration?: number
 }
 
 // Glacier State

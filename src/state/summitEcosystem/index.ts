@@ -56,6 +56,7 @@ const initialState: SummitEcosystemState = {
   expeditionPotTotalValue: 0,
   pendingExpeditionTx: false,
   pendingTotemSelection: false,
+  sceneryScreenshot: false,
 }
 
 export const SummitEcosystemSlice = createSlice({
@@ -167,6 +168,9 @@ export const SummitEcosystemSlice = createSlice({
     setExpeditionApr: (state, action) => {
       state.expeditionAPR = action.payload
       localStorage.setItem('ExpeditionAPR', JSON.stringify(action.payload))
+    },
+    toggleSceneryScreenshot: (state) => {
+      state.sceneryScreenshot = !state.sceneryScreenshot
     }
   },
 })
@@ -193,6 +197,7 @@ export const {
   setSummitSwapMinimized,
   setPendingTotemSelection,
   setExpeditionApr,
+  toggleSceneryScreenshot,
 } = SummitEcosystemSlice.actions
 
 // Thunks
