@@ -82,6 +82,8 @@ export const darkColors: Colors = {
   SUMMIT: '#A6CBDC',
 }
 
+export const textGold = '#EE9F3D'
+
 export const elevationPalette = {
   BASE: ['#092E4E', '#0E3858', '#154463', '#3E80A2', '#609CB6', '#94BDCC'],
   DASH: ['#092E4E', '#0E3858', '#154463', '#3E80A2', '#609CB6', '#94BDCC'],

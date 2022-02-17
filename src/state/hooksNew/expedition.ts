@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { getFullDisplayBalance, groupByAndMap } from 'utils'
+import { getFullDisplayBalance, groupByAndMap, parseJSON } from 'utils'
 import useRefresh from 'hooks/useRefresh'
 import { createSelector } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import { stateToExpeditionUserDataLoaded, stateToExpeditionLoaded, stateToExpeditionSummitRoundEmission, stateToExpeditionUsdcRoundEmission, stateToExpeditionUserData, stateToEnteredExpedition, stateToExpeditionDeitiedSupply, stateToExpeditionDeitySupplies, stateToExpeditionSafeSupply, stateToExpeditionInfo, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToExpeditionFaith, stateToExpeditionDeity, stateToDeityDivider, stateToWinningDeity, stateToTotemSelectionPending, stateToExpeditionEverestOwned, stateToFarms, stateToExpeditionAPR } from './base'
+import { stateToExpeditionUserDataLoaded, stateToExpeditionLoaded, stateToExpeditionSummitRoundEmission, stateToExpeditionUsdcRoundEmission, stateToExpeditionUserData, stateToEnteredExpedition, stateToExpeditionDeitiedSupply, stateToExpeditionDeitySupplies, stateToExpeditionSafeSupply, stateToExpeditionInfo, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToExpeditionFaith, stateToExpeditionDeity, stateToDeityDivider, stateToWinningDeity, stateToTotemSelectionPending, stateToExpeditionEverestOwned, stateToFarms, stateToExpeditionAPR, stateToDebankExpeditionTreasury, stateToExpeditionSummitEmissionsRemaining, stateToExpeditionUsdcEmissionsRemaining, stateToPricesPerToken, stateToSummitPrice } from './base'
 import { BN_ZERO, getFarmConfigs } from 'config/constants'
+import BigNumber from 'bignumber.js'
 
 const selectExpeditionLoaded = createSelector(
     stateToExpeditionLoaded,
@@ -129,7 +130,7 @@ export const useFarmsTotalVolumes = () => useSelector(selectFarmsTotalVolumes)
 
 export const useFetchFarmBeefyAprs = () => {
     const farmConfigs = getFarmConfigs()
-    const initAprs = JSON.parse(localStorage.getItem('FarmAprs') || '{}')
+    const initAprs = parseJSON(localStorage.getItem('FarmAprs'), {})
     const [aprs, setAprs] = useState(initAprs)
     const { slowRefresh } = useRefresh()
 
@@ -152,3 +153,21 @@ export const useFetchFarmBeefyAprs = () => {
 }
 
 export const useExpeditionApr = () => useSelector(stateToExpeditionAPR)
+
+const selectExpeditionPotTotalValue = createSelector(
+    stateToDebankExpeditionTreasury,
+    stateToExpeditionSummitEmissionsRemaining,
+    stateToExpeditionUsdcEmissionsRemaining,
+    stateToSummitPrice,
+    (expeditionDeBankTreasury, summitEmissionsRemaining, usdcEmissionsRemaining, summitPrice) => {
+        console.log({
+            expeditionDeBankTreasury,
+            usdcEmissionsRemaining: usdcEmissionsRemaining.dividedBy(new BigNumber(10).pow(6)).toNumber(),
+        })
+        return expeditionDeBankTreasury +
+            summitEmissionsRemaining.times(summitPrice).dividedBy(new BigNumber(10).pow(18)).toNumber() +
+            usdcEmissionsRemaining.dividedBy(new BigNumber(10).pow(6)).toNumber()
+    }
+)
+
+export const useExpeditionPotTotalValue = () => useSelector(selectExpeditionPotTotalValue)

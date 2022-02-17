@@ -13,7 +13,7 @@ const FlexInfoItem = styled.div`
     align-items: center;
     justify-content: flex-start;
     flex: 1;
-    max-width: 78px;
+    max-width: 88px;
 `
 
 const InfoItemValue = styled.div`
@@ -43,20 +43,28 @@ export const FarmAPYBreakdown: React.FC<Props> = memo(({ summitPerYear, totalVal
 
     const dailyAPR = (apr && apr / 365)
     
-    const apyText = `${elevationTab === ElevationFarmTab.DASH ? 'Base' : capitalizeFirstLetter(elevationTab)} APY`
+    const apyText = `${elevationTab === ElevationFarmTab.DASH ? '' : `${capitalizeFirstLetter(elevationTab)} `}APY`
 
     const yearlyApyText = `${nFormatter(apy)}%`
-    const dailyApyText = `DAILY APR ${nFormatter(dailyAPR)}%`
+    const dailyApyText = `${nFormatter(dailyAPR)}%`
 
     
     return (
         <FlexInfoItem>
             <Text small>{apyText}</Text>
             <InfoItemValue>
-                <Text bold monospace small style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
+                { elevationTab === ElevationFarmTab.DASH &&
+                    <Text bold monospace fontSize='11px' mt='8px' style={{ display: 'flex', alignItems: 'center', lineHeight: '10px' }}>
+                            UP TO
+                    </Text>
+                }
+                <Text bold monospace style={{ display: 'flex', alignItems: 'center', lineHeight: '12px' }}>
                         {yearlyApyText || <Skeleton height={24} width={80} />}
                 </Text>
-                <Text bold monospace fontSize='11px' style={{ display: 'flex', alignItems: 'center', lineHeight: '16px' }}>
+                <Text bold monospace fontSize='11px' mt='8px' style={{ display: 'flex', alignItems: 'center', lineHeight: '10px' }}>
+                        DAILY APR
+                </Text>
+                <Text bold monospace small style={{ display: 'flex', alignItems: 'center', lineHeight: '11px' }}>
                         {dailyApyText || <Skeleton height={24} width={80} />}
                 </Text>
             </InfoItemValue>

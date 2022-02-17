@@ -79,7 +79,7 @@ const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): 
       $secondary={secondary}
       disabled={isDisabled || isLocked}
       onClick={handleClick}
-      freezeSummitButton={freezeSummitButton}
+      $freezeSummitButton={freezeSummitButton}
       {...internalProps}
       {...rest}
     >

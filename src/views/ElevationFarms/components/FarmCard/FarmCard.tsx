@@ -114,7 +114,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     comment: farmComment,
     warning: farmWarning,
     supply: lpSupply,
-    summitPerYear = farm.elevations[Elevation.OASIS].summitPerYear || BN_ZERO,
+    summitPerYear = farm.elevations[Elevation.SUMMIT].summitPerYear || BN_ZERO,
     live = true,
   } = farm.elevations[elevationTab] || {}
 
@@ -169,7 +169,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     () => {
       let supply = BN_ZERO
       if (elevationTab === ElevationFarmTab.DASH) {
-        supply = elevations[Elevation.OASIS].supply || BN_ZERO
+        supply = elevations[Elevation.SUMMIT].supply || BN_ZERO
       } else {
         supply = lpSupply
       }

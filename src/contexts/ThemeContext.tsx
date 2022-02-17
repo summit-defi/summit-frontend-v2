@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { ThemeProvider as SCThemeProvider } from 'styled-components'
 import { dark, light } from 'theme'
+import { parseJSON } from 'utils'
 
 const CACHE_KEY = 'IS_DARK'
 
@@ -12,10 +13,7 @@ const ThemeContext = React.createContext({
 
 const ThemeContextProvider = ({ children }) => {
   const [pageForcedDark, setForcedDark] = useState(false)
-  const [isDark, setIsDark] = useState(() => {
-    const isDarkUserSetting = localStorage.getItem(CACHE_KEY)
-    return isDarkUserSetting ? JSON.parse(isDarkUserSetting) : false
-  })
+  const [isDark, setIsDark] = useState(() => parseJSON(localStorage.getItem(CACHE_KEY), false))
 
   const toggleTheme = () => {
     setIsDark((prevState) => {

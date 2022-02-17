@@ -10,7 +10,7 @@ const SummitStyledButton = styled(StyledButton)<{
   $secondary: boolean
   $summitPalette?: ElevOrPalette
   $isLocked: boolean
-  freezeSummitButton?: boolean
+  $freezeSummitButton?: boolean
 }>`
   position: relative;
   height: ${({ height }) => height || 36}px;
@@ -34,7 +34,7 @@ const SummitStyledButton = styled(StyledButton)<{
     animation: ${SpinnerKeyframes} 1.4s infinite linear;
   }
 
-  ${({ freezeSummitButton }) => freezeSummitButton && css`
+  ${({ $freezeSummitButton }) => $freezeSummitButton && css`
     &::after {
         content: ' ';
         position: absolute;

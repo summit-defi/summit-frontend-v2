@@ -1,33 +1,35 @@
+import React from 'react'
 import { ElevOrPalette } from 'config/constants/types'
 import styled from 'styled-components'
-import { Text } from './Text'
+import getThemeValue from 'uikit/util/getThemeValue'
+import { Text, ThemedProps } from './Text'
+
+const getColor = ({ color, gold, theme }: ThemedProps) => {
+  if (gold) return theme.colors.textGold
+  // return theme.colors[color]
+  return getThemeValue(`colors.${color}`, color)(theme)
+}
 
 export const HighlightedText = styled(Text)<{
   summitPalette?: ElevOrPalette
   header?: boolean
   fontSize?: string
   gold?: boolean
-  vertical?: boolean
+  color?: string
 }>`
   display: flex;
-  flex-direction: ${({ vertical }) => vertical ? 'column' : 'row'};
   gap: 6px;
   align-items: center;
   justify-content: center;
   font-weight: bold;
   font-style: italic;
   text-align: center;
+  color: ${getColor};
   font-size: ${({ header, fontSize }) => fontSize || (header ? '22' : '16')}px !important;
-  color: ${({ theme, gold, color }) => color != null ? color : (gold ? theme.colors.textGold : theme.colors.text)};
-  text-shadow: 1px 1px 2px
-    ${({ theme, summitPalette: elevation }) => {
-      // eslint-disable-next-line no-nested-ternary
-      return theme.isDark
-        ? 'BLACK'
-        : elevation
-        ? theme.colors[elevation]
-        : theme.colors.text
-    }};
+  text-shadow: ${({ theme, summitPalette }) => {
+    if (theme.isDark) return 'none'
+    return `1px 1px 0px ${theme.colors[summitPalette || 'textShadow']}`
+  }}
 `
 
 HighlightedText.defaultProps = {

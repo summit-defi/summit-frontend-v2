@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useWeb3React } from '@web3-react/core'
-import { getSummitTokenAddress, getSummitTokenContract, getTokenApproved, getTokenBalance, getV1SummitTokenAddress } from 'utils'
+import { getSummitTokenAddress, getSummitTokenContract, getTokenApproved, getTokenBalance, getV1SummitTokenAddress, parseJSON } from 'utils'
 import useRefresh from './useRefresh'
 import { BN_ZERO } from 'config/constants'
 
@@ -57,7 +57,7 @@ const getSummitSwapUnlocked = async (): Promise<boolean> => {
 }
 
 export const useSummitTokenSwapUnlocked = () => {
-  const [swapUnlocked, setSwapUnlocked] = useState(JSON.parse(localStorage.getItem('SummitSwapEnabled') || 'false'))
+  const [swapUnlocked, setSwapUnlocked] = useState(parseJSON(localStorage.getItem('SummitSwapEnabled'), false))
   const summitAddress = getSummitTokenAddress()
   const { fastRefresh } = useRefresh()
 

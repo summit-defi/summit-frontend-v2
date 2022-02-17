@@ -1,48 +1,51 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
 import { BN_ZERO, Elevation, elevationUtils } from 'config/constants/types'
+import { parseJSON } from 'utils'
 import { FarmType, SummitEcosystemState } from '../types'
 import { fetchElevationsData, fetchDeityDivider } from './fetchElevationInfo'
 import { fetchUsersTotems } from './fetchUsersTotems'
 
 const getLocalStorageVariables = () => {
-  const activeAccount = JSON.parse(localStorage.getItem('ActiveAccount'))
+  const activeAccount = parseJSON(localStorage.getItem('ActiveAccount'), null)
   return {
     activeAccount,
-    summitEnabled: JSON.parse(localStorage.getItem('SummitEnabled')) || false,
+    summitEnabled: parseJSON(localStorage.getItem('SummitEnabled'), false),
     totems: elevationUtils.all.map((elevation): number =>
       elevation === Elevation.OASIS ?
         0 :
-        JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}_totem`) || 'null'),
+        parseJSON(localStorage.getItem(`${activeAccount}/${elevation}_totem`), null),
     ),
     winningTotems: elevationUtils.allWithExpedition.map((elevation): number =>
       elevation === Elevation.OASIS ?
         0 :
-        JSON.parse(localStorage.getItem(`${elevation}_winning_totem`) || 'null')
+        parseJSON(localStorage.getItem(`${elevation}_winning_totem`), null)
     ),
     winningNumbersDrawn: elevationUtils.allWithExpedition.map((elevation): number =>
       elevation === Elevation.OASIS ?
         0 :
-        JSON.parse(localStorage.getItem(`${elevation}_winning_number_drawn`) || 'null')
+        parseJSON(localStorage.getItem(`${elevation}_winning_number_drawn`), null)
     ),
     elevMarkedWinningRound: elevationUtils.allWithExpedition.map((elevation): number =>
       elevation === Elevation.OASIS ?
         0 :
-        JSON.parse(localStorage.getItem(`${elevation}_marked_winning_round`) || '0')
+        parseJSON(localStorage.getItem(`${elevation}_marked_winning_round`), 0)
     ),
     totemSelectionRounds: elevationUtils.all.map((elevation): number =>
       elevation === Elevation.OASIS ?
         0 :
-        JSON.parse(localStorage.getItem(`${activeAccount}/${elevation}_totem_selection_round`)),
+        parseJSON(localStorage.getItem(`${activeAccount}/${elevation}_totem_selection_round`), null),
     ),
-    chainId: JSON.parse(localStorage.getItem('ChainId')) || '97',
     farmType: (localStorage.getItem('FarmType') || FarmType.All) as FarmType,
     // elevationsInfo: [],
     elevationsInfo: elevationUtils.elevationExpedition.map((elev) => {
-      return JSON.parse(localStorage.getItem(`${elev}_ecosystem_info`) || 'null')
+      return parseJSON(localStorage.getItem(`${elev}_ecosystem_info`), null)
     }),
-    summitSwapMinimized: JSON.parse(localStorage.getItem('SummitSwapMinimized') || 'false'),
-    expeditionAPR: parseFloat(JSON.parse(localStorage.getItem('ExpeditionAPR') || '0')),
+    summitSwapMinimized: parseJSON(localStorage.getItem('SummitSwapMinimized'), false),
+    expeditionAPR: parseFloat(parseJSON(localStorage.getItem('ExpeditionAPR'), 0)),
+    userStrategyName: parseJSON(localStorage.getItem('UserStrategyName'), ''),
+    userStrategyOwner: parseJSON(localStorage.getItem('UserStrategyOwner'), ''),
+    userStrategyDescription: parseJSON(localStorage.getItem('UserStrategyDescription'), ''),
   }
 }
 
@@ -145,10 +148,6 @@ export const SummitEcosystemSlice = createSlice({
     clearElevationRolloversToShow: (state) => {
       state.elevationRolloversToShow = []
     },
-    setChainId: (state, action) => {
-      state.chainId = action.payload
-      localStorage.setItem('ChainId', action.payload)
-    },
     setRolloverRewardInNativeToken: (state, action) => {
       state.rolloverRewardInNativeToken = action.payload
     },
@@ -171,6 +170,18 @@ export const SummitEcosystemSlice = createSlice({
     },
     toggleSceneryScreenshot: (state) => {
       state.sceneryScreenshot = !state.sceneryScreenshot
+    },
+    updateStrategyName: (state, action) => {
+      state.userStrategyName = action.payload
+      localStorage.setItem('UserStrategyName', JSON.stringify(action.payload))
+    },
+    updateStrategyOwner: (state, action) => {
+      state.userStrategyOwner = action.payload
+      localStorage.setItem('UserStrategyOwner', JSON.stringify(action.payload))
+    },
+    updateStrategyDescription: (state, action) => {
+      state.userStrategyDescription = action.payload
+      localStorage.setItem('UserStrategyDescription', JSON.stringify(action.payload))
     }
   },
 })
@@ -181,7 +192,6 @@ export const {
   clearActiveAccount,
   setSummitEnabled,
   setDeityDivider,
-  setChainId,
   setElevationsData,
   setTotemsData,
   updateElevationInfo,
@@ -198,6 +208,9 @@ export const {
   setPendingTotemSelection,
   setExpeditionApr,
   toggleSceneryScreenshot,
+  updateStrategyName,
+  updateStrategyOwner,
+  updateStrategyDescription,
 } = SummitEcosystemSlice.actions
 
 // Thunks

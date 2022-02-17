@@ -128,9 +128,6 @@ const Menu: React.FC<NavProps> = ({
   const [isPushed, setIsPushed] = useState(!isMobile);
   const summitPalette = useCurrentSummitPalette()
   const sceneryScreenshot = useSceneryScreenshot()
-  console.log({
-    sceneryScreenshot
-  })
 
   return (
     <Wrapper>

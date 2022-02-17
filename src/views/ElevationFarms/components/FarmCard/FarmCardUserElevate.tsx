@@ -58,13 +58,15 @@ const FarmCardUserElevate: React.FC<Props> = ({ symbol, elevationLocked, disable
         disabled={disabled}
         selectElevation={handleSelectElevation}
       />
-      <CenteredInfoText fontSize="12px" bold monospace>
+      <CenteredInfoText fontSize='11px' bold monospace>
         { symbol === TokenSymbol.SUMMIT ? 
           <LockFarmingSummitForEverest disabled={disabled} isLocked={elevationLocked}/> :
           <>
-            * NO FEES ON
+            * NO FEE OR TAX
             <br />
-            ELEVATE
+            ON ELEVATE
+            <br/>
+            (EXCEPT GAS)
           </>
         }
       </CenteredInfoText>

@@ -3,12 +3,13 @@ import { createSlice } from '@reduxjs/toolkit'
 import { getFarmTokens } from 'config/constants'
 import { sum } from 'lodash'
 import { TokensState } from 'state/types'
+import { parseJSON } from 'utils'
 import { fetchTokensUserData } from './fetchTokensData'
 
 const getAvgStakingLoyaltyDuration = () => {
   const localStorageAvg = localStorage.getItem('AvgStakingLoyaltyDuration')
   if (localStorageAvg == null || isNaN(parseFloat(localStorageAvg))) return 0
-  return JSON.parse(localStorageAvg || '0')
+  return parseJSON(localStorageAvg, 0)
 }
 
 const initialState: TokensState = {

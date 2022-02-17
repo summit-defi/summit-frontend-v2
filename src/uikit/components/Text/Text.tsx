@@ -1,15 +1,16 @@
 import React from 'react';
 import styled, { DefaultTheme } from 'styled-components'
 import { space, typography } from 'styled-system'
-import getThemeValue from '../../util/getThemeValue'
+import getThemeValue from 'uikit/util/getThemeValue';
 import { TextProps } from './types'
 
-interface ThemedProps extends TextProps {
+export interface ThemedProps extends TextProps {
   theme: DefaultTheme
 }
 
 const getColor = ({ color, gold, theme }: ThemedProps) => {
   if (gold) return theme.colors.textGold
+  // return theme.colors[color]
   return getThemeValue(`colors.${color}`, color)(theme)
 }
 

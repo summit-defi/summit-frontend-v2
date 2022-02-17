@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js";
 import { BN_ZERO, Elevation, elevationUtils } from "config/constants";
 import { State } from "state/types";
 
@@ -9,6 +10,8 @@ export const stateToExpeditionUserData = (state: State) => state.expedition.user
 export const stateToEnteredExpedition = (state: State) => state.expedition.userData.entered
 export const stateToExpeditionSummitRoundEmission = (state: State) => state.expedition?.data?.summit?.roundEmission || BN_ZERO
 export const stateToExpeditionUsdcRoundEmission = (state: State) => state.expedition?.data?.usdc?.roundEmission || BN_ZERO
+export const stateToExpeditionSummitEmissionsRemaining = (state: State) => state.expedition?.data?.summit?.emissionsRemaining || BN_ZERO
+export const stateToExpeditionUsdcEmissionsRemaining = (state: State) => state.expedition?.data?.usdc?.emissionsRemaining || BN_ZERO
 export const stateToExpeditionSafeSupply = (state: State) => state.expedition?.data?.safeEverest || BN_ZERO
 export const stateToExpeditionDeitiedSupply = (state: State) => state.expedition?.data?.deitiedEverest || BN_ZERO
 export const stateToExpeditionDeitySupplies = (state: State) => state.expedition?.data?.deityEverest || [BN_ZERO, BN_ZERO]
@@ -41,7 +44,11 @@ export const stateToSummitSwapMinimized = (state: State) => state.summitEcosyste
 export const stateToElevationRolloversToShow = (state: State) => state.summitEcosystem.elevationRolloversToShow
 export const stateToExpeditionAPR = (state: State) => state.summitEcosystem.expeditionAPR
 export const stateToTotemSelectionRounds = (state: State) => state.summitEcosystem.totemSelectionRounds
+export const stateToDebankExpeditionTreasury = (state: State) => state.summitEcosystem.expeditionPotTotalValue
 export const stateToSceneryScreenshot = (state: State) => state.summitEcosystem.sceneryScreenshot
+export const stateToUserStrategyName = (state: State) => state.summitEcosystem.userStrategyName
+export const stateToUserStrategyOwner = (state: State) => state.summitEcosystem.userStrategyOwner
+export const stateToUserStrategyDescription = (state: State) => state.summitEcosystem.userStrategyDescription
 
 // FARMS
 export const stateToFarmsElevationsData = (state: State) => state.farms.elevationData
@@ -62,6 +69,7 @@ export const stateToUserEverestOwned = (state: State) => state.everest.userData?
 
 // PRICES
 export const stateToPricesPerToken = (state: State) => state.prices.pricesPerToken
+export const stateToSummitPrice = (state: State) => state.prices.pricesPerToken?.SUMMIT || new BigNumber(15)
 
 // TOKENS
 export const stateToAvgStakingLoyaltyDuration = (state: State) => state.tokens.avgStakingLoyaltyDuration

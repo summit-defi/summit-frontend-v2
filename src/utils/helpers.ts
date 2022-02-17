@@ -1,3 +1,5 @@
+import { chunk } from "lodash"
+
 export const chunkArray = <T>(chunkSize: number, array: T[]): T[][] => {
   const groups: T[][] = []
   let i = 0
@@ -89,4 +91,40 @@ export const nFormatter = (num: number, digits = 2): string => {
 
 export const capitalizeFirstLetter = (str: string) => {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+export const parseJSON = (inputString, fallback) => {
+  if (inputString) {
+    try {
+      return JSON.parse(inputString);
+    } catch (e) {
+      return fallback;
+    }
+  }
+  return null
+}
+
+
+export const promiseSequenceMap = async <T, R>(inputArray: T[], transformer: (element: T, index: number, array: T[]) => Promise<R>): Promise<R[]> => {
+  const newArray: R[] = []
+  for (let i = 0; i < inputArray.length; i++) {
+      newArray[i] = await transformer(inputArray[i], i, inputArray)
+  }
+  return newArray
+}
+
+export const variableChunk = (chunkable: any, variableChunkSizes: number[], baseChunkSize = 1) => {
+  const baseChunked = baseChunkSize > 1 ? 
+    chunk(chunkable, baseChunkSize) :
+    chunkable
+
+  const finalChunked = []
+
+  let chunkStart = 0
+  for (let i = 0; i < variableChunkSizes.length; i++) {
+    finalChunked.push(baseChunked.slice(chunkStart,chunkStart + variableChunkSizes[i]))
+    chunkStart += variableChunkSizes[i]
+  }
+
+  return finalChunked
 }

@@ -78,7 +78,7 @@ const FarmStakingContribution: React.FC<Props> = ({ symbol, userDataLoaded, elev
                         value={stakedUSD.toNumber()}
                         prefix='$'
                         decimals={2}
-                        summitPalette={Elevation.OASIS}
+                        summitPalette={elevation}
                         fontSize="18"
                     />
                 </Flex>

@@ -9,13 +9,12 @@ import { getPaletteGradientStops } from 'utils'
 
 const BarHeight = 64
 
-const ContributionWrapper = styled.div<{ perc: number, index: number }>`
-    position: relative;
+const ContributionWrapper = styled.div<{ perc: number, maxPerc?: number, index: number }>`
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    width: ${({ perc }) => perc}%;
+    width: ${({ perc, maxPerc }) => 50 * (perc / (maxPerc||100))}%;
     height: ${BarHeight}px;
     z-index: ${({ index }) => 10 - index};
 `
@@ -31,25 +30,6 @@ const TitleWrapper = styled(Flex)`
     /* overflow: hidden; */
 `
 
-const ValueText = styled(Text)<{ perc: number, index: number, isTotem?: boolean, isBonusVal?: boolean }>`
-    position: absolute;
-    font-size: 14px;
-    line-height: 18px;
-    height: 18px;
-    width: ${({ isTotem }) => isTotem ? '40px': 'auto'};
-    flex-wrap: wrap;
-    overflow: hidden;
-    bottom: ${({ isBonusVal }) => isBonusVal ? -14 : 0}px;
-    display: ${({ isBonusVal, perc }) => isBonusVal && perc < 20 ? 'none' : 'block'};
-    text-align: center;
-    transform: ${({ perc }) => perc < 20 ? 'rotate(70deg) translateX(35%)' : 'none'};
-    
-    ${({ theme }) => theme.mediaQueries.nav} {
-        display: ${({ isBonusVal, perc }) => isBonusVal && perc < 10 ? 'none' : 'block'};
-        transform: ${({ perc }) => perc < 11 ? 'rotate(70deg) translateX(25%)' : 'none'};
-    }
-`
-
 const LowPercHideText = styled(Text)<{ perc: number }>`
     display: ${({ perc }) => perc < 20 ? 'none' : 'flex'};
 
@@ -59,9 +39,9 @@ const LowPercHideText = styled(Text)<{ perc: number }>`
 `
 
 const HorizontalBar = styled.div<{ noContributions?: boolean, elevation?: string }>`
-    position: absolute;
-    width: calc(100% - 4px);
-    height: 20px;
+    width: 100%;
+    height: 24px;
+    border-radius: 12px 0px 12px 0px;
     background: ${({ theme, elevation }) => elevation == null ? theme.colors.text : linearGradient({
         colorStops: getPaletteGradientStops(elevation as Elevation, true),
         toDirection: '120deg',
@@ -78,12 +58,13 @@ const Wrapper = styled(Flex)`
 `
 
 const BarWrapper = styled(Flex)`
-    flex-direction: row;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     justify-content: center;
     position: relative;
     width: 100%;
     height: 95px;
+    gap: 6px;
 `
 
 const NoBreakdownText = styled(Text)`
@@ -110,14 +91,11 @@ interface Contribution {
     index?: number
 }
 
-const ContributionComponent: React.FC<Contribution & { screenshot: boolean }> = ({title, screenshot, val, perc, index}) => {
-    return <ContributionWrapper perc={perc} index={index}>
-        <TitleWrapper>
-            <ElevationImage elevation={title} width={36} height={36} />
-            <LowPercHideText monospace bold fontSize='14px' perc={perc} lineHeight='14px' ml='4px' mr='4px' small textAlign='center'>{title}</LowPercHideText>
-        </TitleWrapper>
+const ContributionComponent: React.FC<Contribution & { screenshot: boolean, maxPerc?: number }> = ({title, screenshot, val, perc, index, maxPerc}) => {
+    return <ContributionWrapper perc={perc} maxPerc={maxPerc} index={index}>
+        <ElevationImage elevation={title} width={36} height={36} />
         <HorizontalBar elevation={title}/>
-        <ValueText monospace bold perc={perc} index={index}>{(val != null && !screenshot) ? val : `${perc.toFixed(1)}%`}</ValueText>
+        <Text monospace bold>{(val != null && !screenshot) ? val : `${perc.toFixed(1)}%`}</Text>
     </ContributionWrapper>
 }
 
@@ -129,6 +107,10 @@ interface Props {
 const StakingBreakdown: React.FC<Props> = ({loaded, contributions}) => {
     const noContributions = contributions.length === 0
     const screenshot = useSceneryScreenshot()
+    const maxPerc = contributions.reduce((max, contrib) => Math.max(max, contrib.perc), 0)
+    console.log({
+        maxPerc
+    })
 
     return (
         <Wrapper>
@@ -144,7 +126,7 @@ const StakingBreakdown: React.FC<Props> = ({loaded, contributions}) => {
                                 <NoBreakdownText monospace>NO STAKING STRATEGY</NoBreakdownText>
                             </> :
                             contributions.map((contribution, index) => 
-                                <ContributionComponent key={contribution.key} screenshot={screenshot} index={index} {...contribution} />
+                                <ContributionComponent key={contribution.key} maxPerc={maxPerc} screenshot={screenshot} index={index} {...contribution} />
                             )
                         }
                     </>

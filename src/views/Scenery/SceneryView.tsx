@@ -24,7 +24,7 @@ const SceneryWrapper = styled.div<{ screenshot: boolean }>`
     align-items: center;
     justify-content: space-between;
     position: relative;
-    padding-top: ${({ screenshot }) => screenshot ? 24 : 164}px;
+    padding-top: ${({ screenshot }) => screenshot ? 0 : 164}px;
 
     ${({ theme }) => theme.mediaQueries.nav} {
         padding-bottom: 64px;

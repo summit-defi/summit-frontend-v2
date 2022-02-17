@@ -133,7 +133,6 @@ export interface SummitEcosystemState {
   liveFarms: boolean
   pendingTxs: PendingTx[]
   elevationRolloversToShow: Elevation[]
-  chainId: string
   rolloverRewardInNativeToken: BigNumber
   expeditionPotTotalValue: number
   pendingExpeditionTx: boolean
@@ -141,6 +140,9 @@ export interface SummitEcosystemState {
   summitSwapMinimized: boolean
   expeditionAPR: number
   sceneryScreenshot: boolean
+  userStrategyName: string
+  userStrategyOwner: string
+  userStrategyDescription: string
 }
 
 // API Price State

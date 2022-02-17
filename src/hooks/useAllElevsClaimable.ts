@@ -3,14 +3,13 @@ import { useWeb3React } from '@web3-react/core'
 import { abi, getSubCartographerAddress, groupByAndMap, retryableMulticall } from 'utils/'
 import useRefresh from './useRefresh'
 import BigNumber from 'bignumber.js'
-import { useFarmConfigs } from 'state/hooks'
-import { elevationUtils } from 'config/constants'
+import { elevationUtils, getFarmConfigs } from 'config/constants'
 
 export const useAllElevsClaimable = () => {
   const [earnedAndVesting, setEarnedAndVesting] = useState<Map<string | number, BigNumber>>(null)
   const { account } = useWeb3React()
   const { fastRefresh } = useRefresh()
-  const farmConfigs = useFarmConfigs()
+  const farmConfigs = getFarmConfigs()
 
   useEffect(() => {
     const fetchAllElevsClaimable = async () => {

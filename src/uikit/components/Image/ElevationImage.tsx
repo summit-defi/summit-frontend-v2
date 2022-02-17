@@ -10,7 +10,7 @@ const LpSymbolWrapper = styled.div<{ width: number; height: number }>`
 const BaseSymbolIcon = styled.div<{ elevation: string; width: number; height: number }>`
   position: absolute;
   background-image: ${({ elevation }) => `url("/images/summit/elevationArtwork${elevation}.jpg")`};
-  border-radius: 50px;
+  border-radius: 50%;
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

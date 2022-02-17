@@ -2,12 +2,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 import BigNumber from 'bignumber.js'
 import { PriceState } from 'state/types'
-import { mapValues } from 'utils'
+import { mapValues, parseJSON } from 'utils'
 import { fetchPricesV2 } from './fetchPricesV2'
 
 const getLocalStoragePrices = () => {
+  const localStoragePrices = localStorage.getItem('PricesPerToken')
+  if (localStoragePrices == null || localStoragePrices === 'null' || localStoragePrices === 'undefined' || localStoragePrices === '{}') return { pricesPerToken: {} }
   const pricesPerToken = mapValues<string, BigNumber, boolean>(
-    JSON.parse(localStorage.getItem('PricesPerToken') || '{}'),
+    parseJSON(localStorage.getItem('PricesPerToken'), {}),
     (price) => new BigNumber(price),
   ) as unknown as { [key: string]: BigNumber }
   return { pricesPerToken }

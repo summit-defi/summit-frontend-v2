@@ -54,7 +54,7 @@ const ValueText = styled(Text)<{ perc: number, index: number, isTotem?: boolean,
     
     ${({ theme }) => theme.mediaQueries.nav} {
         display: ${({ isBonusVal, perc }) => isBonusVal && perc < 10 ? 'none' : 'block'};
-        transform: ${({ perc }) => perc < 11 ? 'rotate(70deg) translateX(35%)' : 'none'};
+        transform: ${({ perc }) => perc < 11 ? 'rotate(70deg) translateX(25%)' : 'none'};
     }
 `
 

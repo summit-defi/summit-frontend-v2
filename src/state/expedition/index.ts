@@ -8,13 +8,14 @@ import {
 } from './fetchExpeditionUserInfo'
 import { ExpeditionState } from '../types'
 import BigNumber from 'bignumber.js'
+import { parseJSON } from 'utils'
 
 const getUserLocalStorageVariables = () => {
-  const activeAccount = JSON.parse(localStorage.getItem('ActiveAccount'))
+  const activeAccount = parseJSON(localStorage.getItem('ActiveAccount'), null)
   return {
-    deity: JSON.parse(localStorage.getItem(`${activeAccount}/EXPEDITION_deity`)),
-    faith: JSON.parse(localStorage.getItem(`${activeAccount}/EXPEDITION_faith`)),
-    entered: JSON.parse(localStorage.getItem(`${activeAccount}/EXPEDITION_entered`)),
+    deity: parseJSON(localStorage.getItem(`${activeAccount}/EXPEDITION_deity`), null),
+    faith: parseJSON(localStorage.getItem(`${activeAccount}/EXPEDITION_faith`), null),
+    entered: parseJSON(localStorage.getItem(`${activeAccount}/EXPEDITION_entered`), false),
   }
 }
 
@@ -80,10 +81,12 @@ export const ExpeditionSlice = createSlice({
         ...action.payload,
       }
       state.userDataLoaded = true
-      const activeAccount = JSON.parse(localStorage.getItem('ActiveAccount'))
-      localStorage.setItem(`${activeAccount}/EXPEDITION_deity`, action.payload.deity)
-      localStorage.setItem(`${activeAccount}/EXPEDITION_faith`, action.payload.faith)
-      localStorage.setItem(`${activeAccount}/EXPEDITION_entered`, action.payload.entered)
+      const activeAccount = parseJSON(localStorage.getItem('ActiveAccount'), null)
+      if (activeAccount != null) {
+        localStorage.setItem(`${activeAccount}/EXPEDITION_deity`, action.payload.deity)
+        localStorage.setItem(`${activeAccount}/EXPEDITION_faith`, action.payload.faith)
+        localStorage.setItem(`${activeAccount}/EXPEDITION_entered`, action.payload.entered)
+      }
     },
     updateExpeditionUserWinnings: (state, action) => {
       const { summitWinnings, usdcWinnings } = action.payload

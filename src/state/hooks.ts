@@ -41,18 +41,6 @@ export const useMediaQuery = (query) => {
   return matches
 }
 
-export const useChainId = () => {
-  return useSelector((state: State) => state.summitEcosystem.chainId)
-}
-export const useFarmConfigs = () => {
-  const chainId = useChainId()
-  const [farmConfigs, setFarmConfigs] = useState<FarmConfig[]>(getFarmConfigs())
-  useEffect(() => {
-    setFarmConfigs(getFarmConfigs())
-  }, [chainId, setFarmConfigs])
-  return farmConfigs
-}
-
 export const useFetchPublicData = () => {
   const dispatch = useDispatch()
   const { slowRefresh } = useRefresh()
@@ -309,10 +297,6 @@ export const useUserTVLs = () => {
   )
 }
 
-export const useExpeditionPotTotalValue = (): number => {
-  return useSelector((state: State) => state.summitEcosystem.expeditionPotTotalValue)
-}
-
 export const useExpeditionDisbursedValue = (): number => {
   return 0
   // const { account } = useWeb3React()
@@ -345,7 +329,7 @@ export const useElevationInfo = (elevation: Elevation): ElevationInfo | null => 
 
 export const useSingleFarmSelected = (): string | null => {
   const location = useLocation()
-  const farmConfigs = useFarmConfigs()
+  const farmConfigs = getFarmConfigs()
 
   return useMemo(() => {
     const pathSplit = location.pathname.split('/')
@@ -388,8 +372,8 @@ export const useSelectedElevation = (): Elevation | null => {
   return useMemo(() => {
     const keyPath = location.pathname.split('/')[1]
     switch (keyPath) {
-      case 'scenery':
-        return Elevation.PLAINS
+      // case 'scenery':
+      //   return Elevation.PLAINS
 
       case 'oasis':
         return Elevation.OASIS
@@ -508,6 +492,7 @@ export const useFetchExpeditionApr = () => {
 
   useEffect(
       () => {
+        if (farmsAprs == null) return
         const totalUsd = Object.entries(farmsAprs).reduce((runningUsd, [symbol, apr]) => {
             return runningUsd + (farmsVolumes[symbol] != null ?
                 farmsVolumes[symbol].times(apr).dividedBy(new BigNumber(10).pow(18)) :

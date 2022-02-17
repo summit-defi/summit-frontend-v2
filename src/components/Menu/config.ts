@@ -44,7 +44,7 @@ export const getMenuItems = (
   },
   {
     label: 'OBELISK AUDIT',
-    href: 'https://github.com/Tibereum/obelisk-audits/blob/main/Summit.pdf',
+    href: 'https://github.com/Tibereum/obelisk-audits/blob/main/Summitv2.pdf',
     external: true,
   },
 

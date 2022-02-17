@@ -1,6 +1,7 @@
 import { ElevOrPalette } from 'config/constants/types'
 import React, { useEffect, useRef } from 'react'
 import { useCountUp } from 'react-countup'
+import { textGold } from 'theme/colors'
 import { HighlightedText } from 'uikit'
 
 interface CardValueProps {
@@ -45,12 +46,12 @@ const CardValue: React.FC<CardValueProps> = ({
   }, [value, updateValue])
 
   return (
-    <HighlightedText color={color} bold monospace fontSize={fontSize} summitPalette={summitPalette} header gold={gold}>
+    <HighlightedText color={gold ? textGold : color} bold monospace fontSize={fontSize} summitPalette={summitPalette} header>
       {prefix}
       {countUp}
       {isMultiplier && 'X'}
       {postfix != null && (
-        <HighlightedText color={color} bold summitPalette={summitPalette} fontSize={postfixFontSize || fontSize} header ml="6px" mt='2px' gold={gold}>
+        <HighlightedText color={gold ? textGold : color} bold summitPalette={summitPalette} fontSize={postfixFontSize || fontSize} header ml="6px" mt='2px'>
           {postfix}
         </HighlightedText>
       )}
