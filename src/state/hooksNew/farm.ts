@@ -32,7 +32,7 @@ const selectStakedUnstakedFarmSymbols = createSelector(
                 unstaked.push(farm.symbol)
             }
         })
-        
+
         return [staked, unstaked]
     }
 )
@@ -61,11 +61,11 @@ const selectFarmAndUserTokenInteractionSectionInfo = createSelector(
             taxBP: farm.taxBP,
             passthroughStrategy: farm.passthroughStrategy,
             getUrl: farm.getUrl,
-        
+
             // FARM ELEVATION INFO
             elevStaked: farm.elevations[elevation]?.stakedBalance || BN_ZERO,
             elevClaimable: farm.elevations[elevation]?.claimable || BN_ZERO,
-        
+
             // TOKEN INFO
             farmAllowance: tokenInfo.farmAllowance,
             walletBalance: tokenInfo.walletBalance,
@@ -174,9 +174,9 @@ const selectElevationWinningsContributions = createSelector(
             (farmWithClaimable) => farmWithClaimable.claimable.toNumber(),
             'desc'
         )
-        
+
         const contributionSum = sortedClaimables.reduce((acc, sortedClaimable) => acc.plus(sortedClaimable.claimable), BN_ZERO)
-        
+
         const winningsContributions = sortedClaimables.map((sortedClaimable, index) => ({
             token: true,
             title: sortedClaimable.symbol,
@@ -210,6 +210,89 @@ const selectUserElevationClaimable = createSelector(
 export const useUserElevationClaimable = (elevation: Elevation) => useSelector((state) => selectUserElevationClaimable(state, elevation))
 
 
+const selectMultiElevWinningsContributions = createSelector(
+    stateToFarmsElevationsData,
+    (farmsElevData) => {
+        const elevationsClaimable = elevationUtils.all
+            .map((elevation) => ({
+                elevation,
+                claimable: (farmsElevData[elevationUtils.toInt(elevation)]?.claimable || BN_ZERO) as BigNumber,
+                claimableBonus: (farmsElevData[elevationUtils.toInt(elevation)]?.claimableBonus || BN_ZERO) as BigNumber
+            }))
+            .filter((rawClaimable) => rawClaimable.claimable.isGreaterThan(0))
+
+        const totalClaimable = elevationsClaimable
+            .reduce((acc, elevClaimable) => acc.plus(elevClaimable.claimable), BN_ZERO)
+        const totalClaimableBonus = elevationsClaimable
+            .reduce((acc, elevClaimable) => acc.plus(elevClaimable.claimableBonus), BN_ZERO)
+
+        const claimableBreakdown = elevationsClaimable.map((rawClaimable, index) => ({
+            title: rawClaimable.elevation,
+            elevation: true,
+            key: elevationUtils.toInt(rawClaimable.elevation),
+            perc: elevationsClaimable[index].claimable.times(100).div(totalClaimable).toNumber(),
+            val: `${getFormattedBigNumber(elevationsClaimable[index].claimable)} SUMMIT`,
+            bonusVal: elevationsClaimable[index].claimableBonus.isGreaterThan(0) ? `+${getFormattedBigNumber(elevationsClaimable[index].claimableBonus)} BONUS` : null,
+        }))
+
+        return {
+            elevationsClaimable,
+            totalClaimable,
+            totalClaimableBonus,
+            claimableBreakdown,
+        }
+    }
+)
+
+
+const selectElevationOrMultiElevWinningsContributions = createSelector(
+    (_, elevations: Elevation[]) => elevations.length > 1,
+    selectMultiElevWinningsContributions,
+    (state, elevations: Elevation[]) => selectFarmsWithClaimable(state, elevations[0]),
+    (multiElev, multiElevWinningsContributions, farmsWithClaimable) => {
+        if (multiElev) {
+            return ({
+                contributions: multiElevWinningsContributions.claimableBreakdown,
+                claimable: multiElevWinningsContributions.totalClaimable,
+                claimableBonus: multiElevWinningsContributions.totalClaimableBonus,
+            })
+        }
+
+        const sortedClaimables = orderBy(
+            farmsWithClaimable,
+            (farmWithClaimable) => farmWithClaimable.claimable.toNumber(),
+            'desc'
+        )
+
+        const contributionSum = sortedClaimables.reduce((acc, sortedClaimable) => acc.plus(sortedClaimable.claimable), BN_ZERO)
+
+        const contributions = sortedClaimables.map((sortedClaimable, index) => ({
+            token: true,
+            title: sortedClaimable.symbol,
+            key: index,
+            perc: sortedClaimable.claimable.times(100).div(contributionSum).toNumber(),
+            val: `${getFormattedBigNumber(sortedClaimable.claimable)} SUMMIT`,
+            bonusVal: sortedClaimable.claimableBonus.isGreaterThan(0) ? `+${getFormattedBigNumber(sortedClaimable.claimableBonus)} BONUS` : null,
+        }))
+
+        const {
+            claimable,
+            claimableBonus
+        } = sortedClaimables.reduce((acc, sortedClaimable) => ({
+            claimable: acc.claimable.plus(sortedClaimable.claimable),
+            claimableBonus: acc.claimableBonus.plus(sortedClaimable.claimableBonus),
+        }), { claimable: BN_ZERO, claimableBonus: BN_ZERO })
+
+        return {
+            contributions,
+            claimable,
+            claimableBonus,
+        }
+    }
+)
+export const useElevationOrMultiElevWinningsContributions = (elevations: Elevation[]) => useSelector((state) => selectElevationOrMultiElevWinningsContributions(state, elevations))
+
+
 const selectLifetimeSummitWinningsAndBonus = createSelector(
     stateToLifetimeSummitWinnings,
     stateToLifetimeSummitBonuses,
@@ -239,9 +322,9 @@ const selectElevationYieldBetContributions = createSelector(
             (farmWithYield) => farmWithYield.yieldContributed.toNumber(),
             'desc'
         )
-        
+
         const yieldSum = sortedYields.reduce((acc, sortedYield) => acc.plus(sortedYield.yieldContributed), BN_ZERO)
-        
+
         return sortedYields.map((sortedYield, index) => ({
             token: true,
             title: sortedYield.symbol,

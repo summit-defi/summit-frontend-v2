@@ -39,7 +39,7 @@ const ElevationWinnings: React.FC = () => {
 
   const [onPresentFreezeElev] = useModal(
     <FreezeWithBonusesModal
-      elevation={elevation}
+      elevations={[elevation]}
       onFreezeWinnings={onClaimElevation}
     />
   )

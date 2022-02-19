@@ -9,19 +9,25 @@ const StyledDoughnut = styled(Doughnut)`
 
 interface Props {
   circSupply: number
+  lockedSupply: number
   burnedSupply: number
 }
 
-const SummitSupplyDoughnut: React.FC<Props> = ({ circSupply, burnedSupply }) => {
+const SummitSupplyDoughnut: React.FC<Props> = ({ circSupply, lockedSupply, burnedSupply }) => {
+  const totalSupply = circSupply + lockedSupply + burnedSupply
   const summitBalancesChartData = {
-    labels: ['Circulating', 'Burned'],
+    labels: [
+      `Circulating (${(circSupply * 100 / totalSupply).toFixed(1)}%)`,
+      `In EVEREST (${(lockedSupply * 100 / totalSupply).toFixed(1)}%)`,
+      `Burned (${(burnedSupply * 100 / totalSupply).toFixed(1)}%)`
+    ],
     datasets: [
       {
-        data: [circSupply, burnedSupply],
-        backgroundColor: ['#154463', '#3E80A2'],
-        hoverBackgroundColor: ['#255a7e', '#609CB6'],
-        hoverOffset: [5, 7],
-        borderColor: ['transparent', 'transparent'],
+        data: [circSupply, lockedSupply, burnedSupply],
+        backgroundColor: ['#154463', '#90B7B4', '#3E80A2'],
+        hoverBackgroundColor: ['#255a7e', '#AECEBF', '#609CB6'],
+        hoverOffset: [5, 7, 5],
+        borderColor: ['transparent', 'transparent', 'transparent'],
         borderWidth: 2,
         rotation: 90,
         // offset: [20, 10],

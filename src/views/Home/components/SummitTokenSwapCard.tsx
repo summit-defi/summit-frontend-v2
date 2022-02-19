@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { Flex, Text, Card, CardBody, HighlightedText, Token3DFloating, ChevronRightIcon, Lock } from 'uikit'
+import { Flex, Text, Card, CardBody, Token3DFloating, ChevronRightIcon, Lock } from 'uikit'
 import { useWeb3React } from '@web3-react/core'
 import UnlockButton from 'components/UnlockButton'
 import SummitButton from 'uikit/components/Button/SummitButton'
@@ -30,13 +30,6 @@ const Actions = styled(Flex)`
 const StyledLock = styled(Lock)`
   transform: rotate(20deg);
   fill: red;
-`
-
-const StyledHighlightedText = styled(HighlightedText)<{ fontSize: string; letterSpacing: string }>`
-  letter-spacing: ${({ letterSpacing }) => letterSpacing};
-  font-weight: 900;
-  font-size: ${({ fontSize }) => fontSize};
-  text-shadow: none;
 `
 
 const GreyToken3DFloating = styled(Token3DFloating)`

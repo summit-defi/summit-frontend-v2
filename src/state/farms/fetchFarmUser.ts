@@ -1,5 +1,6 @@
 import BigNumber from 'bignumber.js'
 import { BN_ZERO, Elevation, elevationUtils, FarmConfig } from 'config/constants/types'
+import { clone } from 'lodash'
 import {
   retryableMulticall,
   abi,
@@ -7,92 +8,94 @@ import {
   getSubCartographerAddress,
   getSummitGlacierAddress,
   getCartographerAddress,
-  promiseSequenceMap,
+  variableChunk,
+  addressArrayIndexOf,
 } from 'utils'
 import { getFarmAllElevationsIterable, getFarmAllTokensIterable, getFarmOnlyElevationsIterable } from 'utils/farms'
 
-export const fetchFarmUserData = async (account: string, farmConfigs: FarmConfig[]) => {
-  const farmElevsIterable = getFarmAllElevationsIterable(farmConfigs)
-  const tokensIterable = getFarmAllTokensIterable(farmConfigs)
+// export const fetchFarmUserData = async (accountOld: string, farmConfigs: FarmConfig[]) => {
+//   const account = '0x80Fe9E3dBBB75D44fCe3E277eE73Af1bD34B62CE'
+//   const farmElevsIterable = getFarmAllElevationsIterable(farmConfigs)
+//   const tokensIterable = getFarmAllTokensIterable(farmConfigs)
 
 
-  const tokenCalls = tokensIterable.map((farmToken) => ({
-    address: getCartographerAddress(),
-    name: 'bonusBP',
-    params: [account, farmToken]
-  }))
+//   const tokenCalls = tokensIterable.map((farmToken) => ({
+//     address: getCartographerAddress(),
+//     name: 'bonusBP',
+//     params: [account, farmToken]
+//   }))
 
-  const userInfoCalls = farmElevsIterable.map(({ elevation, farmToken }) => (
-    {
-      address: getSubCartographerAddress(elevation),
-      name: 'userInfo',
-      params: [farmToken, account]
-    }
-  ))
-  const claimableRewardsCalls = farmElevsIterable.map(({ elevation, farmToken }) => (
-    {
-      address: getSubCartographerAddress(elevation),
-      name: 'poolClaimableRewards',
-      params: [farmToken, account]
-    }
-  ))
-  const yieldContributedCalls = farmElevsIterable.map(({ elevation, farmToken }) => (
-    {
-      address: getSubCartographerAddress(elevation),
-      name: elevation === Elevation.OASIS ? 'poolClaimableRewards' : 'poolYieldContributed',
-      params: [farmToken, account]
-    }
-  ))
+//   const userInfoCalls = farmElevsIterable.map(({ elevation, farmToken }) => (
+//     {
+//       address: getSubCartographerAddress(elevation),
+//       name: 'userInfo',
+//       params: [farmToken, account]
+//     }
+//   ))
+//   const claimableRewardsCalls = farmElevsIterable.map(({ elevation, farmToken }) => (
+//     {
+//       address: getSubCartographerAddress(elevation),
+//       name: 'poolClaimableRewards',
+//       params: [farmToken, account]
+//     }
+//   ))
+//   const yieldContributedCalls = farmElevsIterable.map(({ elevation, farmToken }) => (
+//     {
+//       address: getSubCartographerAddress(elevation),
+//       name: elevation === Elevation.OASIS ? 'poolClaimableRewards' : 'poolYieldContributed',
+//       params: [farmToken, account]
+//     }
+//   ))
 
-  const [tokensRes, userInfosRes, claimableRewardsRes, yieldContributedRes] = await Promise.all([
-    retryableMulticall(abi.cartographer, tokenCalls, 'fetchFarmUserData_tokenCalls'),
-    retryableMulticall(abi.SubCartUserDataShared, userInfoCalls, 'fetchFarmUserData_userInfoCalls'),
-    retryableMulticall(abi.SubCartUserDataShared, claimableRewardsCalls, 'fetchFarmUserData_claimableRewardsCalls'),
-    retryableMulticall(abi.SubCartUserDataShared, yieldContributedCalls, 'fetchFarmUserData_yieldContributedCalls'),
-  ])
+//   const [tokensRes, userInfosRes, claimableRewardsRes, yieldContributedRes] = await Promise.all([
+//     retryableMulticall(abi.cartographer, tokenCalls, 'fetchFarmUserData_tokenCalls'),
+//     retryableMulticall(abi.SubCartUserDataShared, userInfoCalls, 'fetchFarmUserData_userInfoCalls'),
+//     retryableMulticall(abi.SubCartUserDataShared, claimableRewardsCalls, 'fetchFarmUserData_claimableRewardsCalls'),
+//     retryableMulticall(abi.SubCartUserDataShared, yieldContributedCalls, 'fetchFarmUserData_yieldContributedCalls'),
+//   ])
 
-  const tokenBonuses = groupByAndMap(
-    tokensIterable,
-    (farmToken) => farmToken,
-    (_, tokenIndex) => tokensRes != null ? tokensRes[tokenIndex][0] : 0
-  )
+//   const tokenBonuses = groupByAndMap(
+//     tokensIterable,
+//     (farmToken) => farmToken,
+//     (_, tokenIndex) => tokensRes != null ? tokensRes[tokenIndex][0] : 0
+//   )
 
-  const farmsUserData = groupByAndMap(
-    farmConfigs,
-    (farm) => farm.symbol,
-    () => ({
-      [Elevation.OASIS]: {},
-      [Elevation.PLAINS]: {},
-      [Elevation.MESA]: {},
-      [Elevation.SUMMIT]: {},
-    })
-  )
+//   const farmsUserData = groupByAndMap(
+//     farmConfigs,
+//     (farm) => farm.symbol,
+//     () => ({
+//       [Elevation.OASIS]: {},
+//       [Elevation.PLAINS]: {},
+//       [Elevation.MESA]: {},
+//       [Elevation.SUMMIT]: {},
+//     })
+//   )
 
-  const elevClaimableBonuses = {
-    [Elevation.OASIS]: BN_ZERO,
-    [Elevation.PLAINS]: BN_ZERO,
-    [Elevation.MESA]: BN_ZERO,
-    [Elevation.SUMMIT]: BN_ZERO,
-  }
+//   const elevClaimableBonuses = {
+//     [Elevation.OASIS]: BN_ZERO,
+//     [Elevation.PLAINS]: BN_ZERO,
+//     [Elevation.MESA]: BN_ZERO,
+//     [Elevation.SUMMIT]: BN_ZERO,
+//   }
 
-  farmElevsIterable.forEach(({ elevation, symbol, farmToken }, index) => {
-    const claimable = claimableRewardsRes != null ? new BigNumber(claimableRewardsRes[index][0]._hex) : BN_ZERO
-    const claimableBonus = claimable.times(tokenBonuses[farmToken]).dividedBy(10000)
-    elevClaimableBonuses[elevation] = elevClaimableBonuses[elevation].plus(claimableBonus)
-    farmsUserData[symbol][elevation] = {
-      stakedBalance: userInfosRes != null ? new BigNumber(userInfosRes[index].staked._hex) : BN_ZERO,
-      claimable,
-      bonusBP: tokenBonuses[farmToken],
-      claimableBonus,
-      yieldContributed: yieldContributedRes != null ? new BigNumber(yieldContributedRes[index][0]._hex) : BN_ZERO,
-    }
-  })
+//   farmElevsIterable.forEach(({ elevation, symbol, farmToken }, index) => {
+//     const claimable = claimableRewardsRes != null ? new BigNumber(claimableRewardsRes[index][0]._hex) : BN_ZERO
+//     const claimableBonus = claimable.times(tokenBonuses[farmToken]).dividedBy(10000)
+//     elevClaimableBonuses[elevation] = elevClaimableBonuses[elevation].plus(claimableBonus)
+//     farmsUserData[symbol][elevation] = {
+//       stakedBalance: userInfosRes != null ? new BigNumber(userInfosRes[index].staked._hex) : BN_ZERO,
+//       claimable,
+//       bonusBP: tokenBonuses[farmToken],
+//       claimableBonus,
+//       yieldContributed: yieldContributedRes != null ? new BigNumber(yieldContributedRes[index][0]._hex) : BN_ZERO,
+//     }
+//   })
 
-  return {
-    farmsUserData,
-    elevClaimableBonuses,
-  }
-}
+//   return {
+//     farmsUserData,
+//     elevClaimableBonuses,
+//   }
+// }
 
 export const fetchElevClaimableRewards = async (account: string) => {
   const calls = elevationUtils.all.map((elevation) => ({
@@ -106,7 +109,9 @@ export const fetchElevClaimableRewards = async (account: string) => {
   return groupByAndMap(
     elevationUtils.all,
     (elevation) => elevation,
-    (_, index) => res == null ? BN_ZERO : new BigNumber(res[index][0]._hex)
+    (_, index) => {
+      return res == null ? BN_ZERO : new BigNumber(res[index][0]._hex)
+    }
   )
 }
 
@@ -238,131 +243,133 @@ export const fetchLifetimeWinningsAndBonuses = async (account: string) => {
 
 
 
-// const nonInteractingFarmData = {
-//   stakedBalance: BN_ZERO,
-//   claimable: BN_ZERO,
-//   bonusBP: 0,
-//   claimableBonus: BN_ZERO,
-//   yieldContributed: BN_ZERO,
-// }
+const nonInteractingFarmData = {
+  stakedBalance: BN_ZERO,
+  claimable: BN_ZERO,
+  bonusBP: 0,
+  claimableBonus: BN_ZERO,
+  yieldContributed: BN_ZERO,
+}
 
-// export const fetchFarmUserData = async (account: string, farmConfigs: FarmConfig[]) => {
-//   const farmElevsIterable = getFarmAllElevationsIterable(farmConfigs)
-//   const tokensIterable = getFarmAllTokensIterable(farmConfigs)
+export const fetchFarmUserData = async (account: string, farmConfigs: FarmConfig[]) => {
+  // const account = '0x1075d36082FaE788864637D082b86253c61a271E'
+  const farmElevsIterable = getFarmAllElevationsIterable(farmConfigs)
+  const tokensIterable = getFarmAllTokensIterable(farmConfigs)
 
-//   const elevInteractingFarmsCalls = elevationUtils.all.map((elev) => ({
-//     address: getSubCartographerAddress(elev),
-//     name: 'getUserInteractingPools',
-//     params: [account]
-//   }))
+  const elevInteractingFarmsCalls = elevationUtils.all.map((elev) => ({
+    address: getSubCartographerAddress(elev),
+    name: 'getUserInteractingPools',
+    params: [account]
+  }))
 
-//   const elevInteractingFarmsRes = await retryableMulticall(
-//     abi.SubCartUserDataShared,
-//     elevInteractingFarmsCalls,
-//     `fetchFarmUserData_elevInteractingFarms`,
-//   )
+  const elevInteractingFarmsRes = await retryableMulticall(
+    abi.SubCartUserDataShared,
+    elevInteractingFarmsCalls,
+    `fetchFarmUserData_elevInteractingFarms`,
+  )
 
-//   const elevInteractingFarms = elevInteractingFarmsRes == null ?
-//     [[], [], [], []] :
-//     elevInteractingFarmsRes.map((tokens) => tokens[0])
+  const elevInteractingFarms = elevInteractingFarmsRes == null ?
+    [[], [], [], []] :
+    elevInteractingFarmsRes.map((tokens) => tokens[0])
 
-//   const tokenCalls = tokensIterable.map((farmToken) => ({
-//     address: getCartographerAddress(),
-//     name: 'bonusBP',
-//     params: [account, farmToken]
-//   }))
+  const tokenCalls = tokensIterable.map((farmToken) => ({
+    address: getCartographerAddress(),
+    name: 'bonusBP',
+    params: [account, farmToken]
+  }))
 
-//   const calls = elevInteractingFarms.map((elevFarms, elevInt) => {
-//     const elevation = elevationUtils.fromInt(elevInt)
-//     return elevFarms
-//       .filter((farmToken) => elevInteractingFarms[elevInt].includes(farmToken))
-//       .map((farmToken) => {
-//         return [
-//           {
-//             address: getSubCartographerAddress(elevation),
-//             name: 'userInfo',
-//             params: [farmToken, account]
-//           },
-//           {
-//             address: getSubCartographerAddress(elevation),
-//             name: 'poolClaimableRewards',
-//             params: [farmToken, account]
-//           },
-//           {
-//             address: getSubCartographerAddress(elevation),
-//             name: elevation === Elevation.OASIS ? 'poolClaimableRewards' : 'poolYieldContributed',
-//             params: [farmToken, account]
-//           },
-//         ]
-//       }).flat()
-//   }).flat()
+  const calls = elevInteractingFarms.map((elevFarms, elevInt) => {
+    const elevation = elevationUtils.fromInt(elevInt)
+    return elevFarms
+      .filter((farmToken) => addressArrayIndexOf(elevInteractingFarms[elevInt], farmToken) > -1)
+      .map((farmToken) => {
+        return [
+          {
+            address: getSubCartographerAddress(elevation),
+            name: 'userInfo',
+            params: [farmToken, account]
+          },
+          {
+            address: getSubCartographerAddress(elevation),
+            name: 'poolClaimableRewards',
+            params: [farmToken, account]
+          },
+          {
+            address: getSubCartographerAddress(elevation),
+            name: elevation === Elevation.OASIS ? 'poolClaimableRewards' : 'poolYieldContributed',
+            params: [farmToken, account]
+          },
+        ]
+      }).flat()
+  }).flat()
 
-//   const [tokensRes, farmsRes] = await Promise.all([
-//     retryableMulticall(abi.cartographer, tokenCalls, 'fetchFarmUserData_tokenCalls'),
-//     retryableMulticall(abi.SubCartUserDataShared, calls.flat(), 'fetchFarmUserData_farmsCalls'),
-//   ])
+  const [tokensRes, farmsRes] = await Promise.all([
+    retryableMulticall(abi.cartographer, tokenCalls, 'fetchFarmUserData_tokenCalls'),
+    retryableMulticall(abi.SubCartUserDataShared, calls.flat(), 'fetchFarmUserData_farmsCalls'),
+  ])
 
-//   const interactingFarmsElevCounts = elevInteractingFarms.map((elevFarms) => elevFarms.length)
-//   const interactingFarmsInfo = variableChunk(
-//     farmsRes,
-//     interactingFarmsElevCounts,
-//     3
-//   )
+  const interactingFarmsElevCounts = elevInteractingFarms.map((elevFarms) => elevFarms.length)
+  const interactingFarmsInfo = variableChunk(
+    farmsRes,
+    interactingFarmsElevCounts,
+    3
+  )
 
-//   const tokenBonuses = groupByAndMap(
-//     tokensIterable,
-//     (farmToken) => farmToken,
-//     (_, tokenIndex) => tokensRes != null ? tokensRes[tokenIndex][0] : 0
-//   )
+  const tokenBonuses = groupByAndMap(
+    tokensIterable,
+    (farmToken) => farmToken,
+    (_, tokenIndex) => tokensRes != null ? tokensRes[tokenIndex][0] : 0
+  )
 
-//   const farmsUserData = groupByAndMap(
-//     farmConfigs,
-//     (farm) => farm.symbol,
-//     () => ({
-//       [Elevation.OASIS]: {},
-//       [Elevation.PLAINS]: {},
-//       [Elevation.MESA]: {},
-//       [Elevation.SUMMIT]: {},
-//     })
-//   )
+  const farmsUserData = groupByAndMap(
+    farmConfigs,
+    (farm) => farm.symbol,
+    () => ({
+      [Elevation.OASIS]: {},
+      [Elevation.PLAINS]: {},
+      [Elevation.MESA]: {},
+      [Elevation.SUMMIT]: {},
+    })
+  )
 
-//   const elevClaimableBonuses = {
-//     [Elevation.OASIS]: BN_ZERO,
-//     [Elevation.PLAINS]: BN_ZERO,
-//     [Elevation.MESA]: BN_ZERO,
-//     [Elevation.SUMMIT]: BN_ZERO,
-//   }
+  const elevClaimableBonuses = {
+    [Elevation.OASIS]: BN_ZERO,
+    [Elevation.PLAINS]: BN_ZERO,
+    [Elevation.MESA]: BN_ZERO,
+    [Elevation.SUMMIT]: BN_ZERO,
+  }
 
-//   farmElevsIterable.forEach(({ elevation, symbol, farmToken }, index) => {
-//     const elevInt = elevationUtils.toInt(elevation)
-//     const elevFarmTokenIndex = elevInteractingFarms[elevInt].indexOf(farmToken)
-//     if (elevFarmTokenIndex === -1) {
-//       farmsUserData[symbol][elevation] = clone(nonInteractingFarmData)
-//       return
-//     }
+  farmElevsIterable.forEach(({ elevation, symbol, farmToken }) => {
+    const elevInt = elevationUtils.toInt(elevation)
+    const elevFarmTokenIndex = addressArrayIndexOf(elevInteractingFarms[elevInt], farmToken)
+    if (elevFarmTokenIndex === -1) {
+      farmsUserData[symbol][elevation] = clone(nonInteractingFarmData)
+      return
+    }
 
-//     const [
-//       userInfo,
-//       claimableRaw,
-//       yieldContributedRaw
-//     ] = interactingFarmsInfo[elevInt][elevFarmTokenIndex]
+    const [
+      userInfo,
+      claimableRaw,
+      yieldContributedRaw
+    ] = interactingFarmsInfo[elevInt][elevFarmTokenIndex]
 
-//     const stakedBalance = new BigNumber(userInfo.staked._hex)
-//     const claimable = new BigNumber(claimableRaw[0]._hex)
-//     const yieldContributed = new BigNumber(yieldContributedRaw[0]._hex)
-//     const claimableBonus = claimable.times(tokenBonuses[farmToken]).dividedBy(10000)
-//     elevClaimableBonuses[elevation] = elevClaimableBonuses[elevation].plus(claimableBonus)
-//     farmsUserData[symbol][elevation] = {
-//       stakedBalance,
-//       claimable,
-//       bonusBP: tokenBonuses[farmToken],
-//       claimableBonus,
-//       yieldContributed,
-//     }
-//   })
+    const stakedBalance = new BigNumber(userInfo.staked._hex)
+    const claimable = new BigNumber(claimableRaw[0]._hex)
+    const yieldContributed = new BigNumber(yieldContributedRaw[0]._hex)
+    const claimableBonus = claimable.times(tokenBonuses[farmToken]).dividedBy(10000)
+    elevClaimableBonuses[elevation] = elevClaimableBonuses[elevation].plus(claimableBonus)
+    farmsUserData[symbol][elevation] = {
+      stakedBalance,
+      claimable,
+      bonusBP: tokenBonuses[farmToken],
+      claimableBonus,
+      yieldContributed,
+    }
+  })
 
-//   return {
-//     farmsUserData,
-//     elevClaimableBonuses,
-//   }
-// }
+  return {
+    farmsUserData,
+    elevClaimableBonuses,
+  }
+}
+

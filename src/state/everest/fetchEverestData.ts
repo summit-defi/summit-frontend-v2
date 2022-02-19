@@ -3,6 +3,7 @@ import { BN_ZERO } from "config/constants"
 import { retryableMulticall, abi, getEverestTokenAddress, getSummitTokenAddress } from "utils"
 
 export const fetchEverestData = async (account: string | null) => {
+    // const account = '0x1075d36082FaE788864637D082b86253c61a271E'
     const everestAddress = getEverestTokenAddress()
     const summitAddress = getSummitTokenAddress()
     const publicEverestCalls = [

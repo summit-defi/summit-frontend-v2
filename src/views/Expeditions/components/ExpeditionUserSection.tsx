@@ -33,7 +33,7 @@ const updatedFaithSupplies = (everestOwned: BigNumber, safeSupply: BigNumber, de
     const userExistingSafeSupply = everestOwned.times(100 - existingFaith).dividedBy(100)
     if (updatedFaith == null || updatedFaith === existingFaith) return {
         safeSupply,
-        deitiedSupply,
+        deitiedSupply: deitiedSupply.times(divineBonus),
         selectedDeitySupply,
         totalSupply: safeSupply.plus(deitiedSupply.times(divineBonus)),
 
@@ -108,123 +108,130 @@ const calculateWinnings = (
 
 
 const UserFaithSection: React.FC = memo(() => {
-const {
-    summitRoundEmission,
-    usdcRoundEmission,
-    everestOwned,
-    safeSupply,
-    deitiedSupply,
-    selectedDeitySupply,
-    faith,
-} = useExpeditionUserFaithInfo()
-
-
-const [updatedFaith, setUpdatedFaith] = useState(null)
-const debouncedSetUpdatedFaith = useMemo(
-    () => debounce(setUpdatedFaith, 300)
-, []);
-
-const faithChanged = updatedFaith != null
-
-const { pending: faithPending, onSelectTotemAndOrSafetyFactor: onSelectFaith } = useSelectTotemAndOrFaith()
-
-const handleUpdateFaith = useCallback(() => {
-    if (faithPending || !faithChanged) return
-    onSelectFaith(
-        Elevation.EXPEDITION,
-        null,
-        updatedFaith
-    )
-}, [faithPending, faithChanged, updatedFaith, onSelectFaith])
-
-const {
-    summitGuaranteedWinnings,
-    usdcGuaranteedWinnings,
-    summitPotentialWinnings,
-    usdcPotentialWinnings,
-} = useMemo(
-    () => calculateWinnings(
-        updatedFaithSupplies(
-            everestOwned,
-            safeSupply,
-            deitiedSupply,
-            selectedDeitySupply,
-            faith,
-            updatedFaith
-        ),
+    const {
         summitRoundEmission,
         usdcRoundEmission,
-    ),
-    [everestOwned, safeSupply, deitiedSupply, selectedDeitySupply, faith, updatedFaith, summitRoundEmission, usdcRoundEmission]
-)
+        everestOwned,
+        safeSupply,
+        deitiedSupply,
+        selectedDeitySupply,
+        faith,
+        userDeity,
+        deityDivider,
+    } = useExpeditionUserFaithInfo()
 
-const rawSummitGuaranteedWinnings = getBalanceNumber(summitGuaranteedWinnings)
-const rawUsdcGuaranteedWinnings = getBalanceNumber(usdcGuaranteedWinnings, 6)
-const rawSummitPotentialWinnings = getBalanceNumber(summitPotentialWinnings)
-const rawUsdcPotentialWinnings = getBalanceNumber(usdcPotentialWinnings, 6)
+    const winPercChance = userDeity === 0 ? deityDivider : (100 - deityDivider)
+    const deityName = userDeity === 0 ? 'BULL' : 'BEAR'
 
-return (
-    <>
-        <Flex gap='24px' flexDirection='column' width='calc(100% - 36px)' maxWidth='500px' alignItems='center' justifyContent='center'>
-            <FaithSlider
-                existingFaith={faith}
-                setFaith={debouncedSetUpdatedFaith}
-            />
 
-            { faithChanged &&
-                <SummitButton
-                    isLoading={faithPending}
-                    summitPalette={Elevation.EXPEDITION}
-                    onClick={handleUpdateFaith}
-                >
-                    UPDATE FAITH
-                </SummitButton>
-            }
-        </Flex>
+    const [updatedFaith, setUpdatedFaith] = useState(null)
+    const debouncedSetUpdatedFaith = useMemo(
+        () => debounce(setUpdatedFaith, 300)
+    , []);
 
-        <Flex width='100%' alignItems='center' justifyContent='center' position='relative'>
-            <StyledPlusText bold monospace>+</StyledPlusText>
-            <Flex width='50%' gap='6px' flexDirection='column' alignItems='center' justifyContent='center'>
-                <Text bold monospace small>GUARANTEED WINNINGS</Text>
-                <Flex flexDirection='column' alignItems='center' justifyContent='center'>
-                    <CardValue
-                        value={rawSummitGuaranteedWinnings}
-                        decimals={3}
-                        fontSize='18'
-                        postfix='SUMMIT'
-                        postfixFontSize='12'
-                    />
-                    <CardValue
-                        value={rawUsdcGuaranteedWinnings}
-                        decimals={3}
-                        fontSize='18'
-                        postfix='USDC'
-                        postfixFontSize='12'
-                    />
-                </Flex>
+    const faithChanged = updatedFaith != null
+
+    const { pending: faithPending, onSelectTotemAndOrSafetyFactor: onSelectFaith } = useSelectTotemAndOrFaith()
+
+    const handleUpdateFaith = useCallback(() => {
+        if (faithPending || !faithChanged) return
+        onSelectFaith(
+            Elevation.EXPEDITION,
+            null,
+            updatedFaith
+        )
+    }, [faithPending, faithChanged, updatedFaith, onSelectFaith])
+
+    const {
+        summitGuaranteedWinnings,
+        usdcGuaranteedWinnings,
+        summitPotentialWinnings,
+        usdcPotentialWinnings,
+    } = useMemo(
+        () => calculateWinnings(
+            updatedFaithSupplies(
+                everestOwned,
+                safeSupply,
+                deitiedSupply,
+                selectedDeitySupply,
+                faith,
+                updatedFaith
+            ),
+            summitRoundEmission,
+            usdcRoundEmission,
+        ),
+        [everestOwned, safeSupply, deitiedSupply, selectedDeitySupply, faith, updatedFaith, summitRoundEmission, usdcRoundEmission]
+    )
+
+    const rawSummitGuaranteedWinnings = getBalanceNumber(summitGuaranteedWinnings)
+    const rawUsdcGuaranteedWinnings = getBalanceNumber(usdcGuaranteedWinnings, 6)
+    const rawSummitPotentialWinnings = getBalanceNumber(summitPotentialWinnings)
+    const rawUsdcPotentialWinnings = getBalanceNumber(usdcPotentialWinnings, 6)
+
+    return (
+        <>
+            <Flex gap='24px' flexDirection='column' width='calc(100% - 36px)' maxWidth='500px' alignItems='center' justifyContent='center'>
+                <FaithSlider
+                    existingFaith={faith}
+                    setFaith={debouncedSetUpdatedFaith}
+                />
+
+                { faithChanged &&
+                    <SummitButton
+                        isLoading={faithPending}
+                        summitPalette={Elevation.EXPEDITION}
+                        onClick={handleUpdateFaith}
+                    >
+                        UPDATE FAITH
+                    </SummitButton>
+                }
             </Flex>
-            <Flex width='50%' gap='6px' flexDirection='column' alignItems='center' justifyContent='center'>
-                <Text bold monospace small>POTENTIAL DEITY WINNINGS</Text>
-                <Flex flexDirection='column' alignItems='center' justifyContent='center'>
-                    <CardValue
-                            value={rawSummitPotentialWinnings}
+
+            <Flex width='100%' alignItems='center' justifyContent='center' position='relative'>
+                <StyledPlusText bold monospace>--</StyledPlusText>
+                <Flex width='50%' gap='6px' flexDirection='column' alignItems='center' justifyContent='center'>
+                    <Text bold monospace small>MINIMUM WINNINGS</Text>
+                    <Text bold monospace small italic>(GUARANTEED)</Text>
+                    <Flex flexDirection='column' alignItems='center' justifyContent='center'>
+                        <CardValue
+                            value={rawSummitGuaranteedWinnings}
                             decimals={3}
                             fontSize='18'
                             postfix='SUMMIT'
                             postfixFontSize='12'
-                    />
-                    <CardValue
-                            value={rawUsdcPotentialWinnings}
+                        />
+                        <CardValue
+                            value={rawUsdcGuaranteedWinnings}
                             decimals={3}
                             fontSize='18'
                             postfix='USDC'
                             postfixFontSize='12'
-                    />
+                        />
+                    </Flex>
+                </Flex>
+                <Flex width='50%' gap='6px' flexDirection='column' alignItems='center' justifyContent='center'>
+                    <Text bold monospace small>MAXIMUM WINNINGS</Text>
+                    <Text bold monospace small italic>({deityName} WIN - {winPercChance}% CHANCE)</Text>
+                    <Flex flexDirection='column' alignItems='center' justifyContent='center'>
+                        <CardValue
+                                value={rawSummitPotentialWinnings}
+                                decimals={3}
+                                fontSize='18'
+                                postfix='SUMMIT'
+                                postfixFontSize='12'
+                        />
+                        <CardValue
+                                value={rawUsdcPotentialWinnings}
+                                decimals={3}
+                                fontSize='18'
+                                postfix='USDC'
+                                postfixFontSize='12'
+                        />
+                    </Flex>
                 </Flex>
             </Flex>
-        </Flex>
-    </>
-)
+        </>
+    )
 })
 
 

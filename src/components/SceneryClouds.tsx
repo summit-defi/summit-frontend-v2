@@ -1,5 +1,5 @@
 import React from 'react'
-import { useIsScenery } from 'state/hooks'
+import { useIsRoadmap } from 'state/hooks'
 import styled, { keyframes } from 'styled-components'
 
 const SummitCloudsMovement = keyframes`
@@ -33,17 +33,17 @@ const SummitCloudsImage = styled.div`
   pointer-events: none;
 `
 
-const OnlyScenery = styled.div<{ isScenery: boolean }>`
-  opacity: ${({ isScenery }) => isScenery ? 1 : 0};
+const OnlyRoadmap = styled.div<{ isRoadmap: boolean }>`
+  opacity: ${({ isRoadmap }) => isRoadmap ? 1 : 0};
 `
 
 const ElevationBackground: React.FC = () => {
-  const isScenery = useIsScenery()
+  const isRoadmap = useIsRoadmap()
 
   return (
-    <OnlyScenery isScenery={isScenery}>
+    <OnlyRoadmap isRoadmap={isRoadmap}>
       <SummitCloudsImage />
-    </OnlyScenery>
+    </OnlyRoadmap>
   )
 
 }

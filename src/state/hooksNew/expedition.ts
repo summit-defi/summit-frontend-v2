@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { getFullDisplayBalance, groupByAndMap, parseJSON } from 'utils'
+import { groupByAndMap, parseJSON } from 'utils'
 import useRefresh from 'hooks/useRefresh'
 import { createSelector } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
-import { stateToExpeditionUserDataLoaded, stateToExpeditionLoaded, stateToExpeditionSummitRoundEmission, stateToExpeditionUsdcRoundEmission, stateToExpeditionUserData, stateToEnteredExpedition, stateToExpeditionDeitiedSupply, stateToExpeditionDeitySupplies, stateToExpeditionSafeSupply, stateToExpeditionInfo, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToExpeditionFaith, stateToExpeditionDeity, stateToDeityDivider, stateToWinningDeity, stateToTotemSelectionPending, stateToExpeditionEverestOwned, stateToFarms, stateToExpeditionAPR, stateToDebankExpeditionTreasury, stateToExpeditionSummitEmissionsRemaining, stateToExpeditionUsdcEmissionsRemaining, stateToPricesPerToken, stateToSummitPrice } from './base'
+import { stateToExpeditionUserDataLoaded, stateToExpeditionLoaded, stateToExpeditionSummitRoundEmission, stateToExpeditionUsdcRoundEmission, stateToExpeditionUserData, stateToEnteredExpedition, stateToExpeditionDeitiedSupply, stateToExpeditionDeitySupplies, stateToExpeditionSafeSupply, stateToExpeditionInfo, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToExpeditionFaith, stateToExpeditionDeity, stateToDeityDivider, stateToWinningDeity, stateToTotemSelectionPending, stateToExpeditionEverestOwned, stateToFarms, stateToExpeditionAPR, stateToDebankExpeditionTreasury, stateToExpeditionSummitEmissionsRemaining, stateToExpeditionUsdcEmissionsRemaining, stateToSummitPrice, stateToExpeditionSummitDisbursed, stateToExpeditionUsdcDisbursed } from './base'
 import { BN_ZERO, getFarmConfigs } from 'config/constants'
 import BigNumber from 'bignumber.js'
 
@@ -48,7 +48,9 @@ const selectUserFaithInfo = createSelector(
     stateToExpeditionSafeSupply,
     stateToExpeditionDeitiedSupply,
     stateToExpeditionDeitySupplies,
-    (summitRoundEmission, usdcRoundEmission, userData, safeSupply, deitiedSupply, deitySupplies) => ({
+    stateToExpeditionDeity,
+    stateToDeityDivider,
+    (summitRoundEmission, usdcRoundEmission, userData, safeSupply, deitiedSupply, deitySupplies, userDeity, deityDivider) => ({
         summitRoundEmission,
         usdcRoundEmission,
         everestOwned: userData.everestOwned,
@@ -56,6 +58,8 @@ const selectUserFaithInfo = createSelector(
         deitiedSupply,
         selectedDeitySupply: deitySupplies[userData.deity],
         faith: userData.faith,
+        userDeity,
+        deityDivider,
     })
 )
 export const useExpeditionUserFaithInfo = () => useSelector(selectUserFaithInfo)
@@ -111,7 +115,6 @@ export const useExpeditionTotemHeaderInfo = () => useSelector(selectExpeditionTo
 
 
 
-
 // EXPED APR
 const selectFarmsTotalVolumes = createSelector(
     stateToFarms,
@@ -160,10 +163,6 @@ const selectExpeditionPotTotalValue = createSelector(
     stateToExpeditionUsdcEmissionsRemaining,
     stateToSummitPrice,
     (expeditionDeBankTreasury, summitEmissionsRemaining, usdcEmissionsRemaining, summitPrice) => {
-        console.log({
-            expeditionDeBankTreasury,
-            usdcEmissionsRemaining: usdcEmissionsRemaining.dividedBy(new BigNumber(10).pow(6)).toNumber(),
-        })
         return expeditionDeBankTreasury +
             summitEmissionsRemaining.times(summitPrice).dividedBy(new BigNumber(10).pow(18)).toNumber() +
             usdcEmissionsRemaining.dividedBy(new BigNumber(10).pow(6)).toNumber()
@@ -171,3 +170,15 @@ const selectExpeditionPotTotalValue = createSelector(
 )
 
 export const useExpeditionPotTotalValue = () => useSelector(selectExpeditionPotTotalValue)
+
+
+const selectExpeditionDisbursedValue = createSelector(
+    stateToExpeditionSummitDisbursed,
+    stateToExpeditionUsdcDisbursed,
+    stateToSummitPrice,
+    (summitDisbursed, usdcDisbursed, summitPrice) => {
+        return summitDisbursed.times(summitPrice).dividedBy(new BigNumber(10).pow(18)).toNumber() +
+            usdcDisbursed.dividedBy(new BigNumber(10).pow(6)).toNumber()
+    }
+)
+export const useExpeditionDisbursedValue = () => useSelector(selectExpeditionDisbursedValue)

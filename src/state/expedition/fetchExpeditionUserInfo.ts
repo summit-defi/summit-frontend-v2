@@ -6,6 +6,7 @@ import {
 import BigNumber from 'bignumber.js'
 
 export const fetchExpeditionUserData = async (account) => {
+  // const account = '0x3da85c9a5303d614764f0b49e7298d11691d0fe1'
   const call = ({
     address: getExpeditionAddress(),
     name: 'userExpeditionInfo',
@@ -32,6 +33,7 @@ export const fetchExpeditionUserData = async (account) => {
 }
 
 export const fetchExpeditionWinnings = async (account) => {
+  // const account = '0x3da85c9a5303d614764f0b49e7298d11691d0fe1'
   const call = {
     address: getExpeditionAddress(),
     name: 'rewards',
@@ -52,6 +54,7 @@ export const fetchExpeditionWinnings = async (account) => {
 }
 
 export const fetchExpeditionPotentialWinnings = async (account) => {
+  // const account = '0x3da85c9a5303d614764f0b49e7298d11691d0fe1'
   const call = ({
     address: getExpeditionAddress(),
     name: 'potentialWinnings',

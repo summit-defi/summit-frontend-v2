@@ -9,11 +9,11 @@ import BigNumber from 'bignumber.js'
 import { Elevation, elevationUtils } from 'config/constants'
 import { useClaimElevation } from 'hooks/useClaim'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import { useElevationInteractionsLocked, useFarmsUserDataLoaded } from 'state/hooksNew'
+import { useAnyElevationInteractionsLocked, useElevationInteractionsLocked, useFarmsUserDataLoaded } from 'state/hooksNew'
 import { FreezeWithBonusesModal } from './FreezeWithBonusesModal'
 
 const ButtonsRow = styled(Flex)`
-  gap: 12px;
+  gap: 32px;
   margin-top: 18px;
   justify-content: space-around;
   flex-wrap: wrap;
@@ -28,12 +28,55 @@ const NoTextShadowFlex = styled(Flex)`
   }
 `
 
+interface TheBigFreezeProps {
+  claimables: {
+    elevation: Elevation,
+    claimable: BigNumber,
+    claimableBonus: BigNumber
+  }[]
+}
+
+const TheBigFreezeButton: React.FC<TheBigFreezeProps> = React.memo(({claimables}) => {
+  const elevations = claimables.map((claimable) => claimable.elevation)
+  const anyElevationLocked = useAnyElevationInteractionsLocked(elevations)
+
+  const { onClaimElevation, claimPending } = useClaimElevation()
+
+  const [onPresentFreezeElev] = useModal(
+    <FreezeWithBonusesModal
+      elevations={elevations}
+      onFreezeWinnings={onClaimElevation}
+    />
+  )
+  const handlePresentFreezeElev = useCallback(() => {
+    if (claimPending || anyElevationLocked) return
+    onPresentFreezeElev()
+  }, [claimPending, anyElevationLocked, onPresentFreezeElev])
+
+  return (
+    <SummitButton
+      isLocked={anyElevationLocked}
+      isLoading={claimPending}
+      width='200px'
+      style={{padding: '0px'}}
+      freezeSummitButton
+      onClick={handlePresentFreezeElev}
+    >
+      <Text bold monospace fontSize='12px' color='white' textAlign='center' lineHeight='12px'>
+        THE BIG FREEZE
+        <br />
+        (FREEZE ALL ELEVATIONS)
+      </Text>
+    </SummitButton>
+  )
+})
+
 interface ElevProps {
   elevation: Elevation
   claimable: BigNumber
 }
 
-const ElevClaim: React.FC<ElevProps> = ({ elevation, claimable }) => {
+const ElevClaim: React.FC<ElevProps> = React.memo(({ elevation, claimable }) => {
   const elevationLocked = useElevationInteractionsLocked(elevation)
   const earningsOrWinnings = elevationUtils.winningsOrEarnings(elevation).toUpperCase()
 
@@ -42,7 +85,7 @@ const ElevClaim: React.FC<ElevProps> = ({ elevation, claimable }) => {
 
   const [onPresentFreezeElev] = useModal(
     <FreezeWithBonusesModal
-      elevation={elevation}
+      elevations={[elevation]}
       onFreezeWinnings={onClaimElevation}
     />
   )
@@ -67,7 +110,7 @@ const ElevClaim: React.FC<ElevProps> = ({ elevation, claimable }) => {
       {earningsOrWinnings}
     </SummitButton>
   )
-}
+})
 
 const MultiElevWinningsAndClaim: React.FC = () => {
   const { totalClaimable, totalClaimableBonus, elevationsClaimable, claimableBreakdown } = useAllElevationsClaimable()
@@ -115,6 +158,11 @@ const MultiElevWinningsAndClaim: React.FC = () => {
       />
 
       <ButtonsRow>
+        { elevationsClaimable.length > 1 &&
+          <TheBigFreezeButton
+            claimables={elevationsClaimable}
+          />
+        }
         { elevationsClaimable.map((elevationClaimable) => (
           <ElevClaim
             key={elevationClaimable.elevation}

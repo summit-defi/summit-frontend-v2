@@ -84,6 +84,16 @@ export const getMenuItems = (
     keyPaths: ['expedition'],
   },
 
+
+  {
+    label: 'TRAVELERS|br|ROADMAP',
+    icon: 'summit/ROADMAPicon.png',
+    href: '/travelers-roadmap',
+    palette: 'ROADMAP',
+    external: false,
+    keyPaths: ['travelers-roadmap'],
+  },
+  
   (ChainIncludesBetaTokens() || true) ? {
     label: 'ROLLOVER',
     href: '/rollover',

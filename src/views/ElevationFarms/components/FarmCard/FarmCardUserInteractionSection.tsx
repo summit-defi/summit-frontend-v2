@@ -40,7 +40,7 @@ interface Props {
 
 const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
   const elevation = useSelectedElevation()
-  const isMobile = useMediaQuery('(max-width: 986px)')
+  const isMobile = useMediaQuery('(max-width: 968px)')
   const {
     roundStatus,
     farmInteractionsLocked,

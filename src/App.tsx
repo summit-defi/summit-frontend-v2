@@ -23,7 +23,6 @@ import { fetchEverestDataAsync } from 'state/everest'
 import RoundRolloversTracker from 'RoundRolloversTracker'
 import { updateExpeditionUserWinningsAsync } from 'state/expedition'
 import useEagerConnect from 'hooks/useEagerConnect'
-import SceneryClouds from 'components/SceneryClouds'
 
 const Home = lazy(() => import('./views/Home'))
 const ElevationFarms = lazy(() => import('./views/ElevationFarms'))
@@ -32,7 +31,7 @@ const Everest = lazy(() => import('./views/Everest'))
 const ExpeditionFarms = lazy(() => import('./views/Expeditions'))
 const NotFound = lazy(() => import('./views/NotFound'))
 const BetaTokens = lazy(() => import('./views/Beta'))
-const Scenery = lazy(() => import('./views/Scenery'))
+const Roadmap = lazy(() => import('./views/TravelersRoadmap'))
 
 const StyledRouter = styled(Router)`
   position: relative;
@@ -75,7 +74,7 @@ const App: React.FC = () => {
       <GlobalStyle />
       <GlobalHooks />
       <ElevationBackground />
-      {/* <SceneryClouds/> */}
+      {/* <RoadmapClouds/> */}
       <ExpeditionBackground />
       <PageForcedDarkComponent />
       <RoundRolloversTracker />
@@ -90,8 +89,8 @@ const App: React.FC = () => {
               <BetaTokens />
             </Route>
             {/* } */}
-            <Route path='/scenery' exact>
-              <Scenery />
+            <Route path='/travelers-roadmap' exact>
+              <Roadmap />
             </Route>
             <Route path={['/elevations', '/oasis', '/plains', '/mesa', '/summit']}>
               <ElevationFarms />

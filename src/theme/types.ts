@@ -71,6 +71,7 @@ export type Colors = {
   SUMMIT: string
   EXPEDITION: string
   GLACIER: string
+  ROADMAP: string
 
   AUDIT: string
   ROLLOVER: string

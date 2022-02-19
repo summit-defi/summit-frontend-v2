@@ -5,6 +5,7 @@ import { Epoch } from "state/types"
 import { retryableMulticall, abi, getSummitGlacierAddress } from "utils"
 
 export const fetchUserEpochs = async (account: string) => {
+    // const account = '0x1075d36082FaE788864637D082b86253c61a271E'
     const summitGlacierAddress = getSummitGlacierAddress()
     const interactingEpochsRes = await retryableMulticall(abi.summitGlacier, [{
         address: summitGlacierAddress,

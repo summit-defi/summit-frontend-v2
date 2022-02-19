@@ -2,14 +2,14 @@ import BigNumber from 'bignumber.js'
 import { useEffect, useMemo, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import useRefresh from 'hooks/useRefresh'
-import { getFormattedBigNumber, epochEndTimestamp, epochThawTimestamp, getFullDisplayBalance, groupByAndMap } from 'utils'
+import { getFormattedBigNumber, epochEndTimestamp, epochThawTimestamp } from 'utils'
 import {
   fetchFarmsPublicDataAsync,
   fetchExpeditionUserDataAsync,
   fetchExpeditionPublicDataAsync,
 } from './actions'
 import { State, Farm, ElevationInfo } from './types'
-import { BN_ZERO, Elevation, ElevationFarmTab, elevationUtils, FarmConfig, SceneryElevation, ScenerySummitPalette, SummitPalette } from '../config/constants/types'
+import { BN_ZERO, Elevation, ElevationFarmTab, elevationUtils, RoadmapSummitPalette, SummitPalette } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
   fetchElevationHelperInfoAsync,
@@ -297,25 +297,6 @@ export const useUserTVLs = () => {
   )
 }
 
-export const useExpeditionDisbursedValue = (): number => {
-  return 0
-  // const { account } = useWeb3React()
-  // const { expeditions } = useExpeditions(account)
-  // const pricesPerToken = usePricesPerToken()
-
-  // return useMemo(
-  //   () => {
-  //     const expeditionsRewards = expeditions.reduce((acc, expedition) => {
-  //       const expeditionTokenPrice = (pricesPerToken != null && pricesPerToken[expedition.rewardToken.symbol] ? pricesPerToken[expedition.rewardToken.symbol].toNumber() : 1)
-  //       const emissionsDisbursed = getBalanceNumber((expedition.totalEmission || new BigNumber(0)).minus(expedition.rewardsRemaining || new BigNumber(0)), expedition.rewardToken.decimals)
-  //       return acc + ((expedition.disbursedOffset + emissionsDisbursed) * expeditionTokenPrice)
-  //     }, 0)
-  //     return expeditionsRewards
-  //   },
-  //   [expeditions, pricesPerToken]
-  // )
-}
-
 // Prices
 
 export const useSummitEnabled = () => useSelector((state: State) => state.summitEcosystem.summitEnabled)
@@ -372,9 +353,6 @@ export const useSelectedElevation = (): Elevation | null => {
   return useMemo(() => {
     const keyPath = location.pathname.split('/')[1]
     switch (keyPath) {
-      // case 'scenery':
-      //   return Elevation.PLAINS
-
       case 'oasis':
         return Elevation.OASIS
       case 'plains':
@@ -391,11 +369,11 @@ export const useSelectedElevation = (): Elevation | null => {
   }, [location])
 }
 
-export const useIsScenery = () => {
+export const useIsRoadmap = () => {
   const location = useLocation()
 
   return useMemo(
-    () => location.pathname.split('/')[1] === 'scenery',
+    () => location.pathname.split('/')[1] === 'roadmap',
     [location]
   )
 }
@@ -463,8 +441,6 @@ export const useCurrentSummitPalette = (): SummitPalette => {
         return SummitPalette.EVEREST
       case 'oasis':
         return SummitPalette.OASIS
-      case 'scenery':
-        return ScenerySummitPalette
       case 'plains':
         return SummitPalette.PLAINS
       case 'mesa':

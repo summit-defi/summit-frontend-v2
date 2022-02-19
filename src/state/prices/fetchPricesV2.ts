@@ -9,6 +9,56 @@ import {
   ChainUsesPricingData,
 } from 'utils'
 
+
+
+
+/*
+
+
+Example structure of a BalancerMultiPool token type
+
+[TokenSymbol.BATTLE_OF_THE_BANDS]: {
+    assetType: TokenAssetType.BalancerMultiPool,
+    symbol: TokenSymbol.BATTLE_OF_THE_BANDS,
+    tokenAddress: '0x9af1f0e9ac9c844a4a4439d446c1437807183075',
+    decimals: 18,
+    balancerMultiPoolInfo: {
+      poolId: '0x9af1f0e9ac9c844a4a4439d446c14378071830750001000000000000000000da',
+      pricingTokens: [{
+        token: TokenSymbol.wFTM,
+        weight: 20,
+      }, {
+        token: TokenSymbol.fBNB,
+        weight: 16,
+      }, {
+        token: TokenSymbol.fMATIC,
+        weight: 16,
+      }]
+    }
+  },
+
+
+
+  
+
+  Here is a single asset that is contained in the MultiPool above
+  This is fetched so that the price of its containing multipool can be fetched in turn
+
+  [TokenSymbol.fBNB]: {
+    assetType: TokenAssetType.SingleAsset,
+    symbol: TokenSymbol.fBNB,
+    tokenAddress: '0xD67de0e0a0Fd7b15dC8348Bb9BE742F3c5850454',
+    decimals: 18,
+  },
+
+
+
+  */
+
+
+
+
+
 export const fetchPricesV2 = async () => {
   const priceableTokensMap = getPriceableTokens()
   const priceableTokens = Object.values(priceableTokensMap)
@@ -21,9 +71,15 @@ export const fetchPricesV2 = async () => {
     )
   }
 
+  // Balancer Price Oracle here: 0x33365E1B22BbeF5766419e19f77c15fD3E0a8Ae5
   const balancer2PoolPriceOracleAddress = getBalancer2PoolPriceOracleAddress()
+
+  // Balancer Multi Pool Oracle (kinda): 0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce
   const balancerMultiPoolPriceOracleAddress = getBalancerMultiPoolPriceOracleAddress()
 
+
+  // We have broken down the tokens into these asset types. The balancer price oracle actually
+  // Does a great job with everything (including balancer 2 pools and uniswap LPs) except for the multi pools.
   const {
     [TokenAssetType.Summit]: summitPriceable,
     [TokenAssetType.Everest]: everestPriceable,
@@ -47,6 +103,7 @@ export const fetchPricesV2 = async () => {
     [TokenAssetType.BalancerMultiPool]: [] as PriceableToken[],
   })
 
+  // These are tokens / LPS that can be priced directly by the balancer oracle
   const balancerDirectPriceables = [
     ...singleAssetPriceables,
     ...lpPriceables,
@@ -54,12 +111,15 @@ export const fetchPricesV2 = async () => {
     ...wrappedNativePriceables,
     ...balancer2PoolPriceables,
   ]
+
+  // This is kinda dirty, but these are all the tokens that are used to price the multi pools
   const balancerMultiPoolContainedPriceableOptions = [
     ...singleAssetPriceables,
     ...stablecoinPriceables,
     ...wrappedNativePriceables
   ]
 
+  // This gets the prices that can be fetched directly from the balancer oracle
   const balancerDirectCalls = balancerDirectPriceables.map((priceable) => ({
     address: balancer2PoolPriceOracleAddress,
     name: 'calculateAssetPrice',
@@ -77,6 +137,10 @@ export const fetchPricesV2 = async () => {
 
 
   // BALANCER MULTI POOL
+
+  // This fetches info about the pool from the balancer multi pool oracle
+  // This includes the token address of all the containing tokens
+  // As well as the balances of these tokens in the pool
   const balancerMultiPoolPriceOracleCalls = [...balancerMultiPoolPriceables, ...summitPriceable].map((balancerMultiPoolToken) => [
     {
       address: balancerMultiPoolPriceOracleAddress,
@@ -87,6 +151,9 @@ export const fetchPricesV2 = async () => {
 
   const balancerMultiPoolPriceablesRes = await retryableMulticall(abi.BalancerMultiPoolPriceOracle, balancerMultiPoolPriceOracleCalls.flat(), 'fetchPricesV2BalancerMultiPoolTokens')
 
+  // You also need to know the total supply of the balancer multi pool token
+  // We effectively calculate the price of the whole pool, then divide it by the number
+  // Of BPT receipt tokens that exist
   const balancerMultiPoolTokenSuppliesCalls = [...balancerMultiPoolPriceables, ...summitPriceable].map((balancerMultiPoolToken) => [
     {
       address: balancerMultiPoolToken.tokenAddress,
@@ -99,6 +166,18 @@ export const fetchPricesV2 = async () => {
     [...balancerMultiPoolPriceables, ...summitPriceable],
     (_, index) => [...balancerMultiPoolPriceables, ...summitPriceable][index].symbol,
     (priceable, index) => {
+
+
+      // This is UGLY because its been worked into a system that it wasn't designed for
+      // But essentially, SUMMIT is 60% of the pool, USDC 20%, and FTM 40%
+
+      // SUMMIT is priced by determining the amount of USDC + FTM in the pool, then dividing that
+      // by 0.4 to get the full price of the pool.
+
+      // Then that can be multiplied by 0.6 to determine the value of the SUMMIT in the pool
+      // Which can finally be divided by the total amount of SUMMIt in the pool
+
+      // I think this can be improved if it is done in a standalone way
 
       // SUMMIT TOKEN
       if (priceable.symbol === 'SUMMIT') {
@@ -118,6 +197,11 @@ export const fetchPricesV2 = async () => {
           .times(new BigNumber(10).pow(18)).dividedBy(0.4).times(0.6)
         return containingTokenValue.dividedBy(summitBalanceInPool)
       }
+
+
+      // This is effectively doing the same as above, but its a bit simpler as we are just
+      // Dividing by the amount of BPT receipt tokens that exist instead of the SUMMIT token balance in the pool
+
 
       // MULTI POOL LP TOKENS
       let combinedWeight = 0
@@ -146,10 +230,13 @@ export const fetchPricesV2 = async () => {
     },
   )
 
+  // EVEREST price = SUMMIT price
   const everestPricePerToken = {
     [everestPriceable[0].symbol]: balancerMultiPoolPricesPerToken[TokenSymbol.SUMMIT]
   }
 
+
+  // Combine and return
   return {
     ...balancerDirectPricesPerToken,
     ...balancerMultiPoolPricesPerToken,

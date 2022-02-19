@@ -26,8 +26,8 @@ export enum SummitPalette {
   EVEREST = 'EVEREST',
 }
 
-export const SceneryElevation = Elevation.PLAINS
-export const ScenerySummitPalette = SummitPalette.PLAINS
+export const RoadmapElevation = Elevation.PLAINS
+export const RoadmapSummitPalette = SummitPalette.PLAINS
 
 
 export type ElevOrPalette = Elevation | SummitPalette
@@ -439,7 +439,7 @@ export interface FarmConfig extends MultiElevFarmConfig {
   farmToken: string
 }
 
-export interface SceneryStrategy {
+export interface RoadmapStrategy {
   name: string
   description?: string
   farming: {

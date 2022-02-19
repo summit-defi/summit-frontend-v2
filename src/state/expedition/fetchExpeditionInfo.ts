@@ -10,6 +10,7 @@ export const fetchExpeditionInfo = async () => {
     },
   ]
 
+
   const res = await retryableMulticall(abi.expedition, calls, 'fetchExpeditionInfo')
   if (res == null) return null
   const expeditionInfo = res[0]

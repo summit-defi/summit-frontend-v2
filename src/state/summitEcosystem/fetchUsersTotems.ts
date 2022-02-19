@@ -3,6 +3,8 @@ import { Elevation, elevationUtils } from 'config/constants/types'
 import BigNumber from 'bignumber.js'
 
 export const fetchUsersTotems = async (account) => {
+  // const account = '0x1075d36082FaE788864637D082b86253c61a271E'
+
   const elevCalls = elevationUtils.elevationOnly.map((elevation) => ({
     address: getSubCartographerAddress(elevation),
     name: 'userElevationInfo',

@@ -5,7 +5,6 @@ import { getFormattedBigNumber, getFullDisplayBalance } from '../../../utils/for
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { isNumber } from 'lodash'
 import { Epoch } from 'state/types'
-import HarvestLockForEverestSelector from './HarvestLockForEverestSelector'
 import { SummitPalette } from 'config/constants'
 import { useEverestUserInfo } from 'state/hooksNew'
 import styled from 'styled-components'

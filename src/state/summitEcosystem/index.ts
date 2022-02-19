@@ -43,7 +43,7 @@ const getLocalStorageVariables = () => {
     }),
     summitSwapMinimized: parseJSON(localStorage.getItem('SummitSwapMinimized'), false),
     expeditionAPR: parseFloat(parseJSON(localStorage.getItem('ExpeditionAPR'), 0)),
-    userStrategyName: parseJSON(localStorage.getItem('UserStrategyName'), ''),
+    userStrategyTitle: parseJSON(localStorage.getItem('UserStrategyTitle'), ''),
     userStrategyOwner: parseJSON(localStorage.getItem('UserStrategyOwner'), ''),
     userStrategyDescription: parseJSON(localStorage.getItem('UserStrategyDescription'), ''),
   }
@@ -59,7 +59,8 @@ const initialState: SummitEcosystemState = {
   expeditionPotTotalValue: 0,
   pendingExpeditionTx: false,
   pendingTotemSelection: false,
-  sceneryScreenshot: false,
+  roadmapScreenshot: false,
+  selectedPresetStrategy: null,
 }
 
 export const SummitEcosystemSlice = createSlice({
@@ -168,12 +169,12 @@ export const SummitEcosystemSlice = createSlice({
       state.expeditionAPR = action.payload
       localStorage.setItem('ExpeditionAPR', JSON.stringify(action.payload))
     },
-    toggleSceneryScreenshot: (state) => {
-      state.sceneryScreenshot = !state.sceneryScreenshot
+    toggleRoadmapScreenshot: (state) => {
+      state.roadmapScreenshot = !state.roadmapScreenshot
     },
-    updateStrategyName: (state, action) => {
-      state.userStrategyName = action.payload
-      localStorage.setItem('UserStrategyName', JSON.stringify(action.payload))
+    updateStrategyTitle: (state, action) => {
+      state.userStrategyTitle = action.payload
+      localStorage.setItem('UserStrategyTitle', JSON.stringify(action.payload))
     },
     updateStrategyOwner: (state, action) => {
       state.userStrategyOwner = action.payload
@@ -182,6 +183,9 @@ export const SummitEcosystemSlice = createSlice({
     updateStrategyDescription: (state, action) => {
       state.userStrategyDescription = action.payload
       localStorage.setItem('UserStrategyDescription', JSON.stringify(action.payload))
+    },
+    selectPresetStrategy: (state, action) => {
+      state.selectedPresetStrategy = action.payload
     }
   },
 })
@@ -207,10 +211,11 @@ export const {
   setSummitSwapMinimized,
   setPendingTotemSelection,
   setExpeditionApr,
-  toggleSceneryScreenshot,
-  updateStrategyName,
+  toggleRoadmapScreenshot,
+  updateStrategyTitle,
   updateStrategyOwner,
   updateStrategyDescription,
+  selectPresetStrategy,
 } = SummitEcosystemSlice.actions
 
 // Thunks

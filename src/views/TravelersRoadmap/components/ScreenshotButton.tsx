@@ -1,8 +1,8 @@
 import { SummitPalette } from "config/constants"
 import React, { useCallback } from "react"
 import { useDispatch } from "react-redux"
-import { useSceneryScreenshot } from "state/hooksNew"
-import { toggleSceneryScreenshot } from "state/summitEcosystem"
+import { useRoadmapScreenshot } from "state/hooksNew"
+import { toggleRoadmapScreenshot } from "state/summitEcosystem"
 import styled from "styled-components"
 import { CameraIcon, CloseIcon, SummitButton } from "uikit"
 import { SelectorWrapperBase } from "uikit/widgets/Selector/styles"
@@ -18,8 +18,8 @@ const ScreenshotInset = styled(SelectorWrapperBase)`
 `
 
 const StyledCloseIcon = styled(CloseIcon)`
-    fill: ${({ theme }) => theme.colors.PLAINS};
-    stroke: ${({ theme }) => theme.colors.PLAINS};
+    fill: ${({ theme }) => theme.colors.BASE};
+    stroke: ${({ theme }) => theme.colors.BASE};
     stroke-width: 0.5px;
 `
 
@@ -29,20 +29,20 @@ const StyledCameraIcon = styled(CameraIcon)`
 
 
 const ScreenshotButton: React.FC = () => {
-    const screenshot = useSceneryScreenshot()
+    const screenshot = useRoadmapScreenshot()
     const dispatch = useDispatch()
     const handleToggleScreenshot = useCallback(
-        () => dispatch(toggleSceneryScreenshot()),
+        () => dispatch(toggleRoadmapScreenshot()),
         [dispatch]
     )
     return (
         <SummitButton
             onClick={handleToggleScreenshot}
-            summitPalette={SummitPalette.PLAINS}
             width='80px'
             height={screenshot ? '38px' : '112px'}
             padding='0px'
             secondary={screenshot}
+            summitPalette={SummitPalette.BASE}
             style={{borderRadius: screenshot ? '50px' : '14px', marginTop: '4px'}}
             InsetComponent={<ScreenshotInset/>}
         >

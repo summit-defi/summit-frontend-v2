@@ -90,8 +90,8 @@ const Home: React.FC = () => {
         <StyledHighlightedText italic fontSize="16px" mt="8px" letterSpacing="1.5px">
           Risk the Milk, not the Cow.
         </StyledHighlightedText>
-        <StyledHighlightedText fontSize="14px" mt="8px" letterSpacing="1.5px">
-          First generation Yield Multiplying on FTM.
+        <StyledHighlightedText fontSize="16px" mt="8px" letterSpacing="1.5px">
+          Built by Degens, for Degens.
         </StyledHighlightedText>
       </Hero>
 

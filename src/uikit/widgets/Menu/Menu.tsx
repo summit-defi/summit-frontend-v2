@@ -13,7 +13,7 @@ import { HamburgerCloseIcon, HamburgerIcon } from "./icons";
 import { useCurrentSummitPalette } from "state/hooks";
 import DarkModeToggle from "./components/DarkModeToggle";
 import MenuPageSpecificHeader from "./components/MenuPageSpecificHeader";
-import { useSceneryScreenshot } from "state/hooksNew";
+import { useRoadmapScreenshot } from "state/hooksNew";
 
 const Wrapper = styled.div`
   position: relative;
@@ -127,11 +127,11 @@ const Menu: React.FC<NavProps> = ({
   const isMobile = isXl === false;
   const [isPushed, setIsPushed] = useState(!isMobile);
   const summitPalette = useCurrentSummitPalette()
-  const sceneryScreenshot = useSceneryScreenshot()
+  const roadmapScreenshot = useRoadmapScreenshot()
 
   return (
     <Wrapper>
-      { !sceneryScreenshot &&
+      { !roadmapScreenshot &&
         <StyledNav showMenu>
           <MobileHamburgerWrapper>
             <MenuButton aria-label="Toggle menu" onClick={() => setIsPushed((prevState: boolean) => !prevState)} mr="6px">
@@ -154,7 +154,7 @@ const Menu: React.FC<NavProps> = ({
         </StyledNav>
       }
       <BodyWrapper>
-        {!sceneryScreenshot &&
+        {!roadmapScreenshot &&
           <Panel
             isPushed={isPushed}
             isMobile={isMobile}
@@ -165,7 +165,7 @@ const Menu: React.FC<NavProps> = ({
             summitPriceUsd={summitPriceUsd}
           />
         }
-        <Inner isPushed={isPushed} screenshot={sceneryScreenshot} showMenu>
+        <Inner isPushed={isPushed} screenshot={roadmapScreenshot} showMenu>
           {children}
         </Inner>
         <MobileOnlyOverlay show={isPushed} onClick={() => setIsPushed(false)} role="presentation" />

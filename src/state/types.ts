@@ -1,4 +1,5 @@
 import BigNumber from 'bignumber.js'
+import { PresetStrategyName } from 'config/constants/presetStrategy'
 import { FarmConfig, Elevation, FarmElevationConfig } from 'config/constants/types'
 /* eslint-disable camelcase */
 
@@ -119,6 +120,7 @@ export interface PendingTx {
   hash: string
   title: string
 }
+
 export interface SummitEcosystemState {
   activeAccount: string
   summitEnabled: boolean
@@ -139,8 +141,9 @@ export interface SummitEcosystemState {
   pendingTotemSelection: boolean
   summitSwapMinimized: boolean
   expeditionAPR: number
-  sceneryScreenshot: boolean
-  userStrategyName: string
+  roadmapScreenshot: boolean
+  selectedPresetStrategy: PresetStrategyName | null
+  userStrategyTitle: string
   userStrategyOwner: string
   userStrategyDescription: string
 }

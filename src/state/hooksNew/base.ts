@@ -12,6 +12,8 @@ export const stateToExpeditionSummitRoundEmission = (state: State) => state.expe
 export const stateToExpeditionUsdcRoundEmission = (state: State) => state.expedition?.data?.usdc?.roundEmission || BN_ZERO
 export const stateToExpeditionSummitEmissionsRemaining = (state: State) => state.expedition?.data?.summit?.emissionsRemaining || BN_ZERO
 export const stateToExpeditionUsdcEmissionsRemaining = (state: State) => state.expedition?.data?.usdc?.emissionsRemaining || BN_ZERO
+export const stateToExpeditionSummitDisbursed = (state: State) => state.expedition?.data?.summit?.distributed || BN_ZERO
+export const stateToExpeditionUsdcDisbursed = (state: State) => state.expedition?.data?.usdc?.distributed || BN_ZERO
 export const stateToExpeditionSafeSupply = (state: State) => state.expedition?.data?.safeEverest || BN_ZERO
 export const stateToExpeditionDeitiedSupply = (state: State) => state.expedition?.data?.deitiedEverest || BN_ZERO
 export const stateToExpeditionDeitySupplies = (state: State) => state.expedition?.data?.deityEverest || [BN_ZERO, BN_ZERO]
@@ -44,11 +46,13 @@ export const stateToSummitSwapMinimized = (state: State) => state.summitEcosyste
 export const stateToElevationRolloversToShow = (state: State) => state.summitEcosystem.elevationRolloversToShow
 export const stateToExpeditionAPR = (state: State) => state.summitEcosystem.expeditionAPR
 export const stateToTotemSelectionRounds = (state: State) => state.summitEcosystem.totemSelectionRounds
+export const stateToDeitySelectionRound = (state: State) => state.summitEcosystem.totemSelectionRounds[elevationUtils.toInt(Elevation.EXPEDITION)] || null
 export const stateToDebankExpeditionTreasury = (state: State) => state.summitEcosystem.expeditionPotTotalValue
-export const stateToSceneryScreenshot = (state: State) => state.summitEcosystem.sceneryScreenshot
-export const stateToUserStrategyName = (state: State) => state.summitEcosystem.userStrategyName
+export const stateToRoadmapScreenshot = (state: State) => state.summitEcosystem.roadmapScreenshot
+export const stateToUserStrategyTitle = (state: State) => state.summitEcosystem.userStrategyTitle
 export const stateToUserStrategyOwner = (state: State) => state.summitEcosystem.userStrategyOwner
 export const stateToUserStrategyDescription = (state: State) => state.summitEcosystem.userStrategyDescription
+export const stateToSelectedPresetStrategy = (state: State) => state.summitEcosystem.selectedPresetStrategy
 
 // FARMS
 export const stateToFarmsElevationsData = (state: State) => state.farms.elevationData

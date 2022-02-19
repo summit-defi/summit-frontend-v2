@@ -1,7 +1,7 @@
 import { Elevation } from 'config/constants/types'
 import React from 'react'
 import { useSelectedElevation } from 'state/hooks'
-import styled, { keyframes } from 'styled-components'
+import styled from 'styled-components'
 
 const BackgroundImage = styled.div<{ elevation: Elevation | null }>`
   background-image: ${({ theme, elevation }) => `url("/images/summit/background${elevation || 'BASE'}${theme.isDark ? '_DARK' : '_LIGHT'}.jpg")`};

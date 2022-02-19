@@ -54,6 +54,8 @@
     "chart.js": "3.2.1",
     "chroma-js": "^2.1.2",
     "fast-memoize": "^2.5.2",
+    "firebase-tools": "^10.2.1",
+    "global": "^4.4.0",
     "iframe-resizer-react": "^1.1.0",
     "lodash": "^4.17.20",
     "polished": "^4.1.3",

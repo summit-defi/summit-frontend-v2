@@ -147,7 +147,7 @@ const ContributionComponent: React.FC<Contribution> = ({token = false, elevation
         { goldHighlight && <ContributionGoldHighlight perc={perc}/>}
         {title != null && <TitleWrapper>
             { token && <TokenSymbolImage symbol={title} width={36} height={36} />}
-            { elevation && <ElevationImage elevation={title} width={36} height={36} />}
+            { elevation && <ElevationImage elevation={title} size={36} />}
             { totem && <TotemImage info={title}/> }
             { !totem && <LowPercHideText monospace perc={perc} lineHeight='14px' ml='4px' mr='4px' small textAlign='center'>{title}</LowPercHideText> }
         </TitleWrapper>}

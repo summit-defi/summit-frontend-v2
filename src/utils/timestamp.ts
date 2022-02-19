@@ -28,6 +28,11 @@ export const lockDurationText = (lockDur: number): string => {
 export const lockDurationTextLong = (lockDur: number): string => {
   return lockDur === 365 ? '1 YEAR' : lockDur > 30 ? `${Math.floor(lockDur / 30)} MONTHS` : `${lockDur} DAYS`
 }
+export const stakeDurationToText = (dur: number): string => {
+  const days = Math.floor(dur / (3600 * 24))
+  const hours = Math.floor(Math.floor(dur % (3600 * 24)) / 3600)
+  return `${days > 0 ? `${days}D ` : ''}${hours}H`
+}
 export const getTimeDenom = (index: number): string => {
   switch (index) {
     case 0: return 'D'

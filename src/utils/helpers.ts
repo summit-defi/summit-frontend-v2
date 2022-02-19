@@ -128,3 +128,13 @@ export const variableChunk = (chunkable: any, variableChunkSizes: number[], base
 
   return finalChunked
 }
+
+export const lowerCaseEqual = (a: string, b: string): boolean => {
+  return a.toLowerCase() === b.toLowerCase()
+}
+export const addressArrayIndexOf = (arr: string[], add: string): number => {
+  for (let i = 0; i < arr.length; i++) {
+    if (lowerCaseEqual(arr[i], add)) return i
+  }
+  return -1
+}

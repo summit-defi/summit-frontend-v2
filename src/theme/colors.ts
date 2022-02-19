@@ -47,6 +47,7 @@ export const lightColors: Colors = {
   textSubtle: '#46557d',
   borderColor: '#98a3ac',
   card: '#FFFFFF',
+  ROADMAP: '#575757',
   selectorBackground: 'rgba(87, 87, 87, 0.2)',
   gradients: {
     bubblegum: 'linear-gradient(139.73deg, #E6FDFF 0%, #F3EFFF 100%)',
@@ -72,6 +73,7 @@ export const darkColors: Colors = {
   textSubtle: '#FFFFFF',
   borderColor: '#ebf2fd',
   card: '#0F152A',
+  ROADMAP: '#E5E5E5',
   selectorBackground: 'rgba(205, 231, 255, 0.2)',
   DASH: '#3e7fa2',
   gradients: {

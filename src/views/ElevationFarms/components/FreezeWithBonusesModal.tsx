@@ -1,10 +1,10 @@
 /* eslint-disable react/no-array-index-key */
-import { Elevation, elevationUtils } from 'config/constants/types'
+import { Elevation, elevationUtils, SummitPalette } from 'config/constants/types'
 import React, { useCallback } from 'react'
 import { getFormattedBigNumber } from 'utils'
 import styled from 'styled-components'
 import { Flex, Modal, ModalActions, HighlightedText, Text, SummitButton, TokenSymbolImage } from 'uikit'
-import { useElevationWinningsContributions } from 'state/hooksNew'
+import { useElevationOrMultiElevWinningsContributions } from 'state/hooksNew'
 
 const NoTextShadowFlex = styled(Flex)`
     gap: 12px;
@@ -19,8 +19,8 @@ const NoTextShadowFlex = styled(Flex)`
 `
 
 interface Props {
-    elevation: Elevation
-    onFreezeWinnings: (elevation: Elevation) => void
+    elevations: Elevation[]
+    onFreezeWinnings: (elevations: Elevation[]) => void
     onDismiss?: () => void
 }
 
@@ -43,62 +43,83 @@ export const FarmBonusWinningsRow: React.FC<BonusRowProps> = React.memo(({ title
 })
 
 export const FreezeWithBonusesModal: React.FC<Props> = ({
-    elevation,
+    elevations,
     onFreezeWinnings,
     onDismiss,
 }) => {
 
-    const earningsOrWinnings = elevationUtils.winningsOrEarnings(elevation).toUpperCase()
+    const earningsOrWinnings = elevationUtils.winningsOrEarnings(elevations[0]).toUpperCase()
 
     const {
-        winningsContributions,
-        elevClaimable,
-        elevClaimableBonus,
-    } = useElevationWinningsContributions(elevation)
+        contributions,
+        claimable,
+        claimableBonus,
+    } = useElevationOrMultiElevWinningsContributions(elevations)
 
 
     const handleFreezeWinnings = useCallback(() => {
-        onFreezeWinnings(elevation)
+        onFreezeWinnings(elevations)
         onDismiss()
-    }, [onFreezeWinnings, elevation, onDismiss])
+    }, [onFreezeWinnings, elevations, onDismiss])
+
+    const titleText = elevations.length === 1 ?
+        `FREEZE YOUR ${elevations[0]} ${earningsOrWinnings}` :
+        `THE BIG FREEZE - FREEZE ALL ELEVATIONS`
+    const summitPalette = elevations.length === 1 ?
+        elevations[0] as unknown as SummitPalette :
+        SummitPalette.BASE
+    const buttonText = elevations.length === 1 ?
+        `FREEZE ${earningsOrWinnings}` :
+        'FREEZE ALL ELEVATIONS'
+
+
 
     return (
-        <Modal title="FREEzE|br|WINNINGS" onDismiss={onDismiss} headerless elevationCircleHeader={elevation}>
+        <Modal title="FREEzE|br|WINNINGS" onDismiss={onDismiss} headerless elevationCircleHeader={summitPalette}>
             <Flex width='100%' flexDirection='column' alignItems='center' justifyContent='center' gap='18px' mb='18px'>
-                <Text bold monospace textAlign='center'>FREEZE YOUR {elevation} {earningsOrWinnings}:</Text>
-                <Flex gap='12px' width='100%' alignItems='center' justifyContent='center'>
-                    <HighlightedText summitPalette={elevation} fontSize='24px'>{getFormattedBigNumber(elevClaimable)}</HighlightedText>
-                    <HighlightedText summitPalette={elevation} fontSize='16px'>SUMMIT</HighlightedText>
-                </Flex>
-                <NoTextShadowFlex>
-                    <HighlightedText gold fontSize='18px'>+ {getFormattedBigNumber(elevClaimableBonus)}</HighlightedText>
-                    <HighlightedText gold fontSize='14px'>BONUS</HighlightedText>
-                </NoTextShadowFlex>
+                <Text bold monospace textAlign='center'>{titleText}:</Text>
+                { elevations.map((elevation) => (
+                    <>
+                        <Flex key={elevation} gap='12px' width='100%' alignItems='center' justifyContent='center'>
+                            { elevations.length > 1 && <HighlightedText summitPalette={elevation} small>{elevation}:</HighlightedText> }
+                            <HighlightedText summitPalette={elevation} fontSize='24px'>{getFormattedBigNumber(claimable)}</HighlightedText>
+                            <HighlightedText summitPalette={elevation} fontSize='16px'>SUMMIT</HighlightedText>
+                        </Flex>
+                        <NoTextShadowFlex>
+                            <HighlightedText gold fontSize='18px'>+ {getFormattedBigNumber(claimableBonus)}</HighlightedText>
+                            <HighlightedText gold fontSize='14px'>BONUS</HighlightedText>
+                        </NoTextShadowFlex>
+                    </>
+                ))}
 
-                <Text bold monospace textAlign='center'>LOYALTY BONUS BREAKDOWN:</Text>
 
-                <Flex width='100%' flexDirection='column' alignItems='center' justifyContent='center' pl='24px' pr='24px'>
-                    {winningsContributions.map((contrib) =>
-                        <FarmBonusWinningsRow
-                            key={contrib.key}
-                            title={contrib.title}
-                            bonusVal={contrib.bonusVal}
-                        />
-                    )}
-                </Flex>
+                { elevations.length === 1 &&
+                    <>
+                        <Text bold monospace textAlign='center'>LOYALTY BONUS BREAKDOWN:</Text>
+                        <Flex width='100%' flexDirection='column' alignItems='center' justifyContent='center' pl='24px' pr='24px'>
+                            {contributions.map((contrib) =>
+                                <FarmBonusWinningsRow
+                                    key={contrib.key}
+                                    title={contrib.title}
+                                    bonusVal={contrib.bonusVal}
+                                />
+                            )}
+                        </Flex>
+                    </>
+                }
                 
                 <ModalActions>
                     <SummitButton secondary onClick={onDismiss}>
                         CANCEL
                     </SummitButton>
                     <SummitButton
-                        summitPalette={elevation}
+                        summitPalette={summitPalette}
                         onClick={handleFreezeWinnings}
                         width='200px'
                         padding='0px'
                         freezeSummitButton
                     >
-                        FREEZE WINNINGS
+                        {buttonText}
                     </SummitButton>
                 </ModalActions>
             </Flex>

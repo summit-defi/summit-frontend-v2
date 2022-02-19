@@ -50,15 +50,24 @@ export const useClaimElevation = () => {
   const { toastSuccess, toastError } = useTransactionToasts()
 
   const handleClaimElevation = useCallback(
-    async (elevation: Elevation) => {
+    async (elevations: Elevation[]) => {
+      const elevOrMultiElevText = elevations.length === 1 ?
+        capitalizeFirstLetter(elevations[0]) :
+        'All Elevations'
+      const successToast = `${elevOrMultiElevText} Winnings Frozen`
+      const errorToast = `Error Freezing ${elevOrMultiElevText} Winnings`
       try {
+
         setClaimPending(true)
 
-        await claimElevation(cartographer, elevation)
+        await Promise.all(
+          elevations.map((elev) => claimElevation(cartographer, elev))
+        )
 
-        toastSuccess(`${capitalizeFirstLetter(elevation)} Claimed`)
+        toastSuccess(successToast)
+
       } catch (error) {
-        toastError(`Error Claiming ${capitalizeFirstLetter(elevation)}`, (error as Error).message)
+        toastError(errorToast, (error as Error).message)
       } finally {
         dispatch(fetchFarmUserDataAsync(account))
         dispatch(fetchTokensUserDataAsync(account))

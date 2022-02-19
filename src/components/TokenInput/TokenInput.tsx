@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js/bignumber'
-import Input, { InputProps } from '../Input'
+import TextInput, { InputProps } from '../Input'
 import { ElevOrPalette, SummitPalette } from 'config/constants/types'
 import { Text, SummitButton } from 'uikit'
 
@@ -43,7 +43,7 @@ const TokenInput: React.FC<TokenInputProps> = ({
       <StyledMaxText bold monospace>
         {balanceText}: {parseFloat(max.toLocaleString()).toFixed(4)} {symbol}
       </StyledMaxText>
-      <Input
+      <TextInput
         disabled={disabled}
         summitPalette={summitPalette}
         tokenSymbol={symbol}

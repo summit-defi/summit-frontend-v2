@@ -5,11 +5,11 @@ import styled from 'styled-components'
 import { getBalanceNumber } from 'utils/formatBalance'
 import { useTotalSummitSupply, useBurnedSummitBalance } from 'hooks/useTokenBalance'
 import CardValue from './CardValue'
-import { Elevation } from 'config/constants/types'
+import { BN_ZERO, Elevation } from 'config/constants/types'
 import { useSummitPerSecond } from 'utils'
 import SummitSupplyDoughnut from './SummitSupplyDoughnut'
 import SummitEmissionDoughnut from './SummitEmissionDoughnut'
-import { useSummitPrice } from 'state/hooksNew'
+import { useEverestSummitLocked, useSummitPrice } from 'state/hooksNew'
 
 const StyledSummitStats = styled(Card)`
   margin-left: auto;
@@ -27,13 +27,16 @@ const Row = styled.div`
 const SummitStats: React.FC = () => {
   const totalSupply = useTotalSummitSupply()
   const burnedBalance = useBurnedSummitBalance()
+  const everestSummitLocked = useEverestSummitLocked()
   const summitPrice = useSummitPrice()
   const farm = useSummitPerSecond()
   const totalSummitPerSecond = farm
-  const circSupply = totalSupply ? totalSupply.minus(burnedBalance) : new BigNumber(0)
-  const summitSupply = getBalanceNumber(circSupply)
+  const circSupply = totalSupply ? totalSupply.minus(burnedBalance || BN_ZERO).minus(everestSummitLocked || BN_ZERO) : BN_ZERO
+  const rawCircSupply = getBalanceNumber(circSupply)
+  const summitSupply = getBalanceNumber(totalSupply ? totalSupply.minus(burnedBalance || BN_ZERO) : BN_ZERO)
+  const rawEverestSummitLocked = getBalanceNumber(everestSummitLocked)
   const burnedSupply = getBalanceNumber(burnedBalance)
-  const marketCap = (summitPrice || new BigNumber(0)).times(circSupply)
+  const marketCap = (summitPrice || BN_ZERO).times(totalSupply ? totalSupply.minus(burnedBalance || BN_ZERO) : BN_ZERO)
 
   return (
     <StyledSummitStats>
@@ -42,11 +45,7 @@ const SummitStats: React.FC = () => {
           SUMMIT STATS
         </HighlightedText>
         <Row>
-          <Text fontSize="14px">Circulating SUMMIT Supply</Text>
-          {summitSupply && <CardValue fontSize="14" value={summitSupply} decimals={0} summitPalette={Elevation.OASIS} />}
-        </Row>
-        <Row>
-          <Text fontSize="14px">Market Cap</Text>
+          <Text fontSize="14px" bold>Market Cap</Text>
           <CardValue
             fontSize="14"
             value={getBalanceNumber(marketCap)}
@@ -56,7 +55,19 @@ const SummitStats: React.FC = () => {
           />
         </Row>
         <Row>
-          <Text fontSize="14px">Total SUMMIT Burned</Text>
+          <Text fontSize="14px">Total SUMMIT Supply</Text>
+          {summitSupply && <CardValue fontSize="14" value={summitSupply} decimals={0} summitPalette={Elevation.OASIS} />}
+        </Row>
+        <Row>
+          <Text fontSize="14px">SUMMIT Circulating</Text>
+          <CardValue fontSize="14" value={rawCircSupply} decimals={0} summitPalette={Elevation.OASIS} />
+        </Row>
+        <Row>
+          <Text fontSize="14px">SUMMIT Locked for EVEREST</Text>
+          {everestSummitLocked && <CardValue fontSize="14" value={rawEverestSummitLocked} decimals={0} summitPalette={Elevation.OASIS} />}
+        </Row>
+        <Row>
+          <Text fontSize="14px">SUMMIT Burned</Text>
           <CardValue fontSize="14" value={getBalanceNumber(burnedBalance)} decimals={0} summitPalette={Elevation.OASIS} />
         </Row>
         <Row>
@@ -84,7 +95,11 @@ const SummitStats: React.FC = () => {
               <br />
               Breakdown
             </Text>
-            <SummitSupplyDoughnut circSupply={summitSupply} burnedSupply={burnedSupply} />
+            <SummitSupplyDoughnut
+              circSupply={rawCircSupply}
+              lockedSupply={rawEverestSummitLocked}
+              burnedSupply={burnedSupply}
+            />
           </Flex>
         </Flex>
       </CardBody>

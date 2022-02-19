@@ -5,10 +5,9 @@ import SummitButton from 'uikit/components/Button/SummitButton'
 import { Elevation, SummitPalette } from 'config/constants'
 import { InverseDeity } from 'views/ElevationFarms/components/InverseDeity'
 import CardValue from './CardValue'
-import { useExpeditionDisbursedValue } from 'state/hooks'
 import { Link } from 'react-router-dom'
 import { ExpeditionAPRIndicator } from 'views/Everest/components/ExpeditionAPRIndicator'
-import { useExpeditionPotTotalValue } from 'state/hooksNew'
+import { useExpeditionPotTotalValue, useExpeditionDisbursedValue } from 'state/hooksNew'
 
 const StyledFarmStakingCard = styled(Card)`
     min-height: 376px;

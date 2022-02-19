@@ -1,13 +1,18 @@
 import React from 'react'
 import styled from 'styled-components'
 
-const LpSymbolWrapper = styled.div<{ width: number; height: number }>`
+const LpSymbolWrapper = styled.div<{ size: number; mobileSize: number }>`
   position: relative;
-  width: ${({ width }) => width}px;
-  height: ${({ height }) => height}px;
+  width: ${({ mobileSize }) => mobileSize}px;
+  height: ${({ mobileSize }) => mobileSize}px;
+  
+  ${({ theme }) => theme.mediaQueries.nav} {
+    width: ${({ size }) => size}px;
+    height: ${({ size }) => size}px;
+  }
 `
 
-const BaseSymbolIcon = styled.div<{ elevation: string; width: number; height: number }>`
+const BaseSymbolIcon = styled.div<{ elevation: string; size: number; mobileSize: number }>`
   position: absolute;
   background-image: ${({ elevation }) => `url("/images/summit/elevationArtwork${elevation}.jpg")`};
   border-radius: 50%;
@@ -15,28 +20,39 @@ const BaseSymbolIcon = styled.div<{ elevation: string; width: number; height: nu
   background-repeat: no-repeat;
   background-position: center;
   box-shadow: 1px 1px 2px ${({ theme }) => theme.colors.textShadow};
-  width: ${({ width }) => width}px;
-  height: ${({ height }) => height}px;
+  width: ${({ mobileSize }) => mobileSize}px;
+  height: ${({ mobileSize }) => mobileSize}px;
+
+  ${({ theme }) => theme.mediaQueries.nav} {
+    width: ${({ size }) => size}px;
+    height: ${({ size }) => size}px;
+  }
 `
 
 const SingleSymbolIcon = styled(BaseSymbolIcon)`
-  width: ${({ width }) => width * 0.85}px;
-  height: ${({ height }) => height * 0.85}px;
+  width: ${({ mobileSize }) => mobileSize * 0.85}px;
+  height: ${({ mobileSize }) => mobileSize * 0.85}px;
   left: 50%;
   top: 50%;
   transform: translateX(-50%) translateY(-50%);
+  
+  
+  ${({ theme }) => theme.mediaQueries.nav} {
+    width: ${({ size }) => size * 0.85}px;
+    height: ${({ size }) => size * 0.85}px;
+  }
 `
 
 interface Props {
   elevation: string
-  width: number
-  height: number
+  size: number
+  mobileSize?: number
 }
 
-const ElevationImage: React.FC<Props> = ({ elevation, width, height }) => {
+const ElevationImage: React.FC<Props> = ({ elevation, size, mobileSize }) => {
   return (
-    <LpSymbolWrapper width={width} height={height}>
-      <SingleSymbolIcon elevation={elevation} width={width} height={height} />
+    <LpSymbolWrapper size={size} mobileSize={mobileSize || size}>
+      <SingleSymbolIcon elevation={elevation} size={size} mobileSize={mobileSize || size} />
     </LpSymbolWrapper>
   )
 }

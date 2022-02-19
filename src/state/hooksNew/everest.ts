@@ -23,3 +23,5 @@ const selectEverestUserDataLoaded = createSelector(
     (userData) => userData != null
 )
 export const useEverestDataLoaded = () => useSelector(selectEverestUserDataLoaded)
+
+export const useEverestSummitLocked = () => useSelector(stateToEverestTotalSummitLocked)
