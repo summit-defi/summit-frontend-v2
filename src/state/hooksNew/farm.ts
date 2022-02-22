@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToTokenInfos, stateToFarmsElevationData, stateToLifetimeSummitBonuses, stateToLifetimeSummitWinnings, stateToFarmsUserDataLoaded, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToFarmsElevationsData } from "./base";
-import { getFarmInteracting, getFormattedBigNumber } from "utils"
+import { getFarmInteracting, getFormattedBigNumber, sumBigNumbersByKey } from "utils"
 import { BN_ZERO, Elevation, elevationUtils } from "config/constants";
 import { useSelector } from "./utils";
 import BigNumber from "bignumber.js";
@@ -292,14 +292,16 @@ const selectElevationOrMultiElevWinningsContributions = createSelector(
 )
 export const useElevationOrMultiElevWinningsContributions = (elevations: Elevation[]) => useSelector((state) => selectElevationOrMultiElevWinningsContributions(state, elevations))
 
-
 const selectLifetimeSummitWinningsAndBonus = createSelector(
     stateToLifetimeSummitWinnings,
     stateToLifetimeSummitBonuses,
-    (lifetimeSummitWinnings, lifetimeSummitBonuses) => ({
-        lifetimeSummitWinnings,
-        lifetimeSummitBonuses,
-    })
+    selectMultiElevWinningsContributions,
+    (lifetimeSummitWinnings, lifetimeSummitBonuses, { totalClaimable, totalClaimableBonus }) => {
+        return {
+            lifetimeSummitWinnings: (lifetimeSummitWinnings || BN_ZERO).plus(totalClaimable || BN_ZERO),
+            lifetimeSummitBonuses: (lifetimeSummitBonuses || BN_ZERO).plus(totalClaimableBonus || BN_ZERO),
+        }
+    }
 )
 export const useLifetimeSummitWinningsAndBonus = () => useSelector(selectLifetimeSummitWinningsAndBonus)
 

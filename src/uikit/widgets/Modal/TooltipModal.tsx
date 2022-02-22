@@ -26,7 +26,7 @@ const modalContent = (type: TooltipModalType): any => {
                 Farms have a 7 day Decaying Withdrawal Fee that decreases from 7% to 1% (0% for the SUMMIT farm).
                 <br/>
                 <br/>
-                The Decaying Withdrawal Fes ensures that users dont hit and run without contributing to the SUMMIT ecosystem.
+                The Decaying Withdrawal Fees ensures that users dont hit and run without contributing to the SUMMIT ecosystem.
                 <br/>
                 <br/>
                 Each Farms' Decaying Withdrawal Fee is shared across all Elevations, and resets on a deposit of {'>='} 5% of current deposited value.

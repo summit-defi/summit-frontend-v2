@@ -87,7 +87,7 @@ const StyledModal = styled.div<{ elevationGlow?: ElevOrPalette }>`
 `
 
 const ScrollableContent = styled(Flex)<{ elevationCircleHeader: string }>`
-  overflow: scroll;
+  overflow: auto;
   height: 100%;
   width: 100%;
   padding-top: ${({ elevationCircleHeader }) => (elevationCircleHeader != null ? 130 : 24)}px;

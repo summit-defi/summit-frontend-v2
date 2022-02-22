@@ -34,23 +34,26 @@ export const ElevationsRolledOverModal: React.FC<Props> = ({ elevations = [], on
 
   return (
     <Modal
-      title="WINNER!"
+      title={`WINNING|br|TOTEM${elevations.length > 1 ? 'S' : ''}`}
       onDismiss={handleDismiss}
       headerless
       elevationGlow={SummitPalette.GOLD}
-      elevationCircleHeader={elevations.length > 1 ? 'Summit DeFi' : elevations[0]}
+      elevationCircleHeader={elevations.length > 1 ? 'BLUE' : elevations[0]}
     >
       <Flex alignItems="center" flexDirection="column">
         <WinnersWrapper>
-          {elevations.map((elevation) => (
-            <RolledOverElevation
-              key={elevation}
-              elevation={elevation}
-              totem={userTotems[elevationUtils.toInt(elevation)]}
-              {...elevationsWinnings[elevationUtils.toInt(elevation)]}
-              multiWin={elevations.length > 1}
-            />
-          ))}
+          {elevationUtils.elevationExpedition
+            .filter((elev) => elevations.includes(elev))
+            .map((elev) => (
+              <RolledOverElevation
+                key={elev}
+                elevation={elev}
+                totem={userTotems[elevationUtils.toInt(elev)]}
+                {...elevationsWinnings[elevationUtils.toInt(elev)]}
+                multiWin={elevations.length > 1}
+              />
+            ))
+          }
         </WinnersWrapper>
 
         <ModalActions>

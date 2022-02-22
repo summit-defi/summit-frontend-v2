@@ -66,19 +66,22 @@ export const useExpeditionUserFaithInfo = () => useSelector(selectUserFaithInfo)
 
 const selectExpeditionStatsInfo = createSelector(
     stateToExpeditionInfo,
-    (expedInfo) => ({
-        everestStaked: expedInfo.safeEverest.plus(expedInfo.deitiedEverest),
+    (expedInfo) => {
+        const totalEverest = expedInfo.safeEverest.plus(expedInfo.deitiedEverest)
+        return {
+            everestStaked: totalEverest,
 
-        summitRoundEmission: expedInfo.summit.roundEmission,
-        summitEmissionsRemaining: expedInfo.summit.emissionsRemaining,
-        summitDistributed: expedInfo.summit.distributed,
+            summitRoundEmission: expedInfo.summit.roundEmission,
+            summitEmissionsRemaining: expedInfo.summit.emissionsRemaining,
+            summitDistributed: expedInfo.summit.distributed,
 
-        usdcRoundEmission: expedInfo.usdc.roundEmission,
-        usdcEmissionsRemaining: expedInfo.usdc.emissionsRemaining,
-        usdcDistributed: expedInfo.usdc.distributed,
+            usdcRoundEmission: expedInfo.usdc.roundEmission,
+            usdcEmissionsRemaining: expedInfo.usdc.emissionsRemaining,
+            usdcDistributed: expedInfo.usdc.distributed,
 
-        roundsRemaining: expedInfo.roundsRemaining,
-    })
+            averageFaith: `${expedInfo.deitiedEverest.times(100).dividedBy(totalEverest).toNumber().toFixed(1)}%`,
+        }
+    }
 )
 export const useExpeditionStatsInfo = () => useSelector(selectExpeditionStatsInfo)
 

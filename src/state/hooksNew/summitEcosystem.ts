@@ -1,14 +1,26 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { getPresetStrategy } from "config/constants";
-import { stateToSummitSwapMinimized, stateToElevationRolloversToShow, stateToFarmsUserDataLoaded, stateToRoadmapScreenshot, stateToUserStrategyTitle, stateToUserStrategyDescription, stateToUserStrategyOwner, stateToSelectedPresetStrategy } from "./base";
+import { BN_ZERO, elevationUtils, getPresetStrategy } from "config/constants";
+import { stateToSummitSwapMinimized, stateToElevationRolloversToShow, stateToFarmsUserDataLoaded, stateToRoadmapScreenshot, stateToUserStrategyTitle, stateToUserStrategyDescription, stateToUserStrategyOwner, stateToSelectedPresetStrategy, stateToFarmsElevationsData } from "./base";
 import { useSelector } from "./utils";
 
 export const useSummitSwapMinimized = () => useSelector(stateToSummitSwapMinimized)
 
+const selectClaimableElevations = createSelector(
+    stateToFarmsElevationsData,
+    (elevationsData) => {
+        return elevationsData
+            .map((data, elevIndex) => (data.claimable || BN_ZERO).isGreaterThan(0) ? elevationUtils.fromInt(elevIndex) : null)
+            .filter((elev) => elev != null)
+    }
+)
 const selectElevationRolloversToShow = createSelector(
     stateToElevationRolloversToShow,
     stateToFarmsUserDataLoaded,
-    (elevationRolloversToShow, userDataLoaded) => userDataLoaded ? elevationRolloversToShow : []
+    selectClaimableElevations,
+    (elevationRolloversToShow, userDataLoaded, claimableElevations) => {
+        if (!userDataLoaded) return []
+        return elevationRolloversToShow.filter((elev) => claimableElevations.includes(elev))
+    }
 )
 export const useElevationRolloversToShow = () => useSelector(selectElevationRolloversToShow)
 

@@ -1,3 +1,4 @@
+import { BN_ZERO } from "config/constants"
 import { chunk } from "lodash"
 
 export const chunkArray = <T>(chunkSize: number, array: T[]): T[][] => {
@@ -137,4 +138,8 @@ export const addressArrayIndexOf = (arr: string[], add: string): number => {
     if (lowerCaseEqual(arr[i], add)) return i
   }
   return -1
+}
+
+export const sumBigNumbersByKey = (objs: any[], key: string) => {
+  return objs.reduce((acc, obj) => acc.plus(obj[key] || BN_ZERO), BN_ZERO)
 }

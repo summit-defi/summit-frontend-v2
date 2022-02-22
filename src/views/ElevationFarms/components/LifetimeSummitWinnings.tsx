@@ -82,7 +82,7 @@ const DashboardLifetimeSummitWinnings: React.FC = memo(() => {
             <Spacer/>
             <ItemFlex>
                 <Text textAlign='center' bold gold monospace small>
-                    LIFETIME LOYALTY BONUS
+                    LIFETIME BONUSES
                 </Text>
                 { userDataLoaded ?
                     <ValueText>

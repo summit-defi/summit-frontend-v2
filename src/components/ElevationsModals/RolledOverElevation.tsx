@@ -73,6 +73,8 @@ export const RolledOverElevation: React.FC<Props> = ({ elevation, totem, summitW
       )}
 
       <HighlightedText summitPalette={Elevation.EXPEDITION} header fontSize="14" gold>
+        MULTI-ROUND
+        <br/>
         WINNINGS:
       </HighlightedText>
       <CardValue

@@ -28,7 +28,7 @@ export const ExpeditionStats: React.FC = memo(() => {
         usdcEmissionsRemaining,
         usdcDistributed,
     
-        roundsRemaining,
+        averageFaith,
     } = useExpeditionStatsInfo()
 
     const rawEverestStaked = getFormattedBigNumber(everestStaked, 3)
@@ -56,9 +56,9 @@ export const ExpeditionStats: React.FC = memo(() => {
                     </Flex>
                 </Flex>
                 <Flex width='50%' gap='6px' flexDirection='column' alignItems='center' justifyContent='center'>
-                    <Text monospace small>ROUNDS REMAINING</Text>
+                    <Text monospace small>AVERAGE FAITH</Text>
                     <Text bold monospace fontSize='16px'>
-                            {roundsRemaining || '-'}
+                            {averageFaith || '-'}
                     </Text>
                 </Flex>
             </Flex>

@@ -1,4 +1,5 @@
 import { ElevationsRolledOverModal } from 'components/ElevationsModals/ElevationsRolledOverModal'
+import { Elevation } from 'config/constants'
 import React, { useEffect } from 'react'
 import { useElevationRolloversToShow } from 'state/hooksNew'
 import { useModal } from 'uikit'

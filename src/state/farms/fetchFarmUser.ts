@@ -234,8 +234,8 @@ export const fetchLifetimeWinningsAndBonuses = async (account: string) => {
   }
 
   return {
-    lifetimeSummitWinnings: new BigNumber(res[0][0]._hex).toNumber(),
-    lifetimeSummitBonuses: new BigNumber(res[1][0]._hex).toNumber(),
+    lifetimeSummitWinnings: new BigNumber(res[0][0]._hex),
+    lifetimeSummitBonuses: new BigNumber(res[1][0]._hex),
   }
 }
 
