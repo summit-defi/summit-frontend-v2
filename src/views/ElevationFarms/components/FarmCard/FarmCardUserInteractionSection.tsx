@@ -75,10 +75,9 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
   const [withdrawPending, setWithdrawPending] = useState<boolean>(false)
 
   // DISABLED
-  const disabled = useMemo(() => approveDepositPending || withdrawPending || !isApproved, [
+  const disabled = useMemo(() => approveDepositPending || withdrawPending, [
     approveDepositPending,
     withdrawPending,
-    isApproved,
   ])
 
   return (
@@ -108,7 +107,7 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
             decimals={decimals}
             depositFeeBP={depositFeeBP}
             elevation={elevation}
-            disabled={disabled}
+            disabled={disabled || !isApproved}
             claimable={elevClaimable}
             setPending={setApproveDepositPending}
           /> :

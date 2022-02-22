@@ -2,7 +2,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { fetchExpeditionInfo } from './fetchExpeditionInfo'
 import {
-  fetchExpeditionPotentialWinnings,
   fetchExpeditionWinnings,
   fetchExpeditionUserData,
 } from './fetchExpeditionUserInfo'
@@ -32,11 +31,6 @@ const emptyUserData = {
 
   summitWinnings: BN_ZERO,
   usdcWinnings: BN_ZERO,
-
-  guaranteedSummit: BN_ZERO,
-  guaranteedUsdc: BN_ZERO,
-  potentialSummitWinnings: BN_ZERO,
-  potentialUsdcWinnings: BN_ZERO,
 }
 
 const emptyExpeditionTokenInfo = {
@@ -93,13 +87,6 @@ export const ExpeditionSlice = createSlice({
       state.userData.summitWinnings = summitWinnings
       state.userData.usdcWinnings = usdcWinnings
     },
-    updateExpeditionUserPotentialWinnings: (state, action) => {
-      const { guaranteedSummit, guaranteedUsdc, potentialSummitWinnings, potentialUsdcWinnings } = action.payload
-      state.userData.guaranteedSummit = guaranteedSummit
-      state.userData.guaranteedUsdc = guaranteedUsdc
-      state.userData.potentialSummitWinnings = potentialSummitWinnings
-      state.userData.potentialUsdcWinnings = potentialUsdcWinnings
-    },
   },
 })
 
@@ -108,7 +95,6 @@ export const {
   setExpeditionPublicData,
   setExpeditionUserData,
   updateExpeditionUserWinnings,
-  updateExpeditionUserPotentialWinnings,
 } = ExpeditionSlice.actions
 
 // Thunks
@@ -128,12 +114,6 @@ export const updateExpeditionUserWinningsAsync = (account: string) => async (dis
   const winnings = await fetchExpeditionWinnings(account)
   if (winnings == null) return
   dispatch(updateExpeditionUserWinnings(winnings))
-}
-
-export const updateExpeditionUserPotentialWinningsAsync = (account: string) => async (dispatch) => {
-  const potentialWinnings = await fetchExpeditionPotentialWinnings(account)
-  if (potentialWinnings == null) return
-  dispatch(updateExpeditionUserPotentialWinnings(potentialWinnings))
 }
 
 export default ExpeditionSlice.reducer

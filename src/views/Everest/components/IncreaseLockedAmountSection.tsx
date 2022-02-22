@@ -19,8 +19,10 @@ export const IncreaseLockedAmountSection: React.FC<Props> = ({ userEverestInfo }
         summitBalance,
         summitLocked,
         lockRelease,
-        lockDuration
+        lockDuration,
+        summitAllowance,
     } = userEverestInfo
+    const summitApproved = summitAllowance.isGreaterThan(0)
 
     const [lockAmount, setLockAmount] = useState<BigNumber | null>(null)
     const everestAward = getExpectedEverestAward(lockAmount, lockDuration)
@@ -73,7 +75,7 @@ export const IncreaseLockedAmountSection: React.FC<Props> = ({ userEverestInfo }
             />
 
             <LockSummitInfoAndButton
-                approved
+                approved={summitApproved}
                 disabled={invalidVal}
                 type={LockSummitButtonType.IncreaseLockedSummit}
                 amount={lockAmount}

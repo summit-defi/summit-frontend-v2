@@ -52,28 +52,3 @@ export const fetchExpeditionWinnings = async (account) => {
     usdcWinnings: new BigNumber(res[0][1]._hex),
   }
 }
-
-export const fetchExpeditionPotentialWinnings = async (account) => {
-  // const account = '0x3da85c9a5303d614764f0b49e7298d11691d0fe1'
-  const call = ({
-    address: getExpeditionAddress(),
-    name: 'potentialWinnings',
-    params: [account],
-  })
-
-  const res = await retryableMulticall(abi.expedition, [call], 'fetchExpeditionPotentialWinnings')
-
-  if (res == null) return {
-    guaranteedSummit: new BigNumber(0),
-    guaranteedUsdc: new BigNumber(0),
-    potentialSummitWinnings: new BigNumber(0),
-    potentialUsdcWinnings: new BigNumber(0),
-  }
-
-  return {
-    guaranteedSummit: new BigNumber(res[0][0]._hex),
-    guaranteedUsdc: new BigNumber(res[0][1]._hex),
-    potentialSummitWinnings: new BigNumber(res[0][2]._hex),
-    potentialUsdcWinnings: new BigNumber(res[0][3]._hex),
-  }
-}

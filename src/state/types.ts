@@ -45,11 +45,6 @@ export interface ExpeditionUserData {
 
   summitWinnings: BigNumber
   usdcWinnings: BigNumber
-
-  guaranteedSummit: BigNumber
-  guaranteedUsdc: BigNumber
-  potentialSummitWinnings: BigNumber
-  potentialUsdcWinnings: BigNumber
 }
 
 export interface ExpeditionTokenInfo {

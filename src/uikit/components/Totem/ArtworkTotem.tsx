@@ -120,7 +120,7 @@ const DeityTotem: React.FC<DeityTotemProps> = ({ totem }) => {
 
 interface TotemProps {
   elevation: Elevation
-  totem: number
+  totem: number | null
   crowned?: boolean
   crownedGlowOnly?: boolean
   desktopSize?: string

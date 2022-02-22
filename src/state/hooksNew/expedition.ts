@@ -56,7 +56,7 @@ const selectUserFaithInfo = createSelector(
         everestOwned: userData.everestOwned,
         safeSupply,
         deitiedSupply,
-        selectedDeitySupply: deitySupplies[userData.deity],
+        deitySupplies,
         faith: userData.faith,
         userDeity,
         deityDivider,

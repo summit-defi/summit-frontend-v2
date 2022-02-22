@@ -45,6 +45,7 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
   setPending,
 }) => {
   const userFairnessTaxBP = useFarmUserTokenFairnessTaxBP(symbol)
+  const nothingToWithdraw = stakedBalance == null || stakedBalance.isEqualTo(0)
 
   // WITHDRAW ACTION
   const { onWithdraw, pending: withdrawPending } = useWithdraw(farmToken, elevation)
@@ -99,7 +100,7 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
         summitPalette={elevation}
         value={withdrawVal}
         balanceText="Deposited"
-        disabled={disabled}
+        disabled={disabled || nothingToWithdraw}
         isLocked={elevationLocked}
         onSelectMax={handleSelectMaxWithdraw}
         onChange={handleChangeWithdraw}
@@ -112,7 +113,7 @@ const FarmCardUserWithdraw: React.FC<Props> = ({
         summitPalette={elevation}
         isLocked={elevationLocked}
         isLoading={withdrawPending}
-        disabled={invalidWithdraw || disabled}
+        disabled={nothingToWithdraw || invalidWithdraw || disabled}
         onClick={handleWithdraw}
       >
         WITHDRAW

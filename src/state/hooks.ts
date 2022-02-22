@@ -19,7 +19,7 @@ import {
 import { useLocation } from 'react-router-dom'
 import { getFarmConfigs } from 'config/constants/farms'
 import useTheme from 'hooks/useTheme'
-import { updateExpeditionUserPotentialWinningsAsync, updateExpeditionUserWinningsAsync } from './expedition'
+import { updateExpeditionUserWinningsAsync } from './expedition'
 import { useWeb3React } from '@web3-react/core'
 import { useEverestStatsInfo, useFarmsTotalVolumes, useFetchFarmBeefyAprs } from './hooksNew'
 
@@ -211,7 +211,6 @@ export const useExpeditionFetching = () => {
       dispatch(fetchExpeditionPublicDataAsync())
       dispatch(fetchExpeditionUserDataAsync(account))
       dispatch(updateExpeditionUserWinningsAsync(account))
-      dispatch(updateExpeditionUserPotentialWinningsAsync(account))
     }
   }, [account, dispatch, slowRefresh])
 }

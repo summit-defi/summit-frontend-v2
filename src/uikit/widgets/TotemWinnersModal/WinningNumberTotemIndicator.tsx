@@ -4,15 +4,15 @@ import ContributionBreakdown from 'views/ElevationFarms/components/ContributionB
 
 interface Props {
     elevation: Elevation
-    winningNumberDrawn: number
+    winningNumberDrawn: number | null
 }
 const WinningNumberTotemIndicator: React.FC<Props> = ({ elevation, winningNumberDrawn }) => {
     const elevTotems = elevationUtils.totemsArray(elevation)
     const totemRangeSize = 100 / elevTotems.length
-    const winningTotem = Math.floor(winningNumberDrawn / totemRangeSize)
+    const winningTotem = winningNumberDrawn == null ? null : Math.floor(winningNumberDrawn / totemRangeSize)
     const totemWinningRanges = elevTotems.map((totem, index) => ({
         totem: true,
-        title: `${elevation}_${totem}_${totem === winningTotem ? 1 : 0}`,
+        title: `${elevation}_${totem}_${(winningTotem != null && totem === winningTotem) ? 1 : 0}`,
         key: index,
         perc: totemRangeSize,
         val: `${index * totemRangeSize}-${((index + 1) * totemRangeSize) - 1}`,

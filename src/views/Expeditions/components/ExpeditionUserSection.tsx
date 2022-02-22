@@ -27,14 +27,18 @@ interface UpdatedEverestSupplies {
     userDeitiedSupply: BigNumber
 }
 
-const updatedFaithSupplies = (everestOwned: BigNumber, safeSupply: BigNumber, deitiedSupply: BigNumber, selectedDeitySupply: BigNumber, existingFaith: number, updatedFaith: number | null): UpdatedEverestSupplies => {
+const updatedFaithSupplies = (everestOwned: BigNumber, safeSupply: BigNumber, deitiedSupply: BigNumber, deitySupplies: BigNumber[], existingFaith: number, updatedFaithRaw: number | null, userDeity: number | null, observingDeityRaw: number | null): UpdatedEverestSupplies => {
     const divineBonus = 1.2
     const userExistingDeitiedSupply = everestOwned.times(existingFaith).dividedBy(100)
     const userExistingSafeSupply = everestOwned.times(100 - existingFaith).dividedBy(100)
-    if (updatedFaith == null || updatedFaith === existingFaith) return {
+
+    const updatedFaith = updatedFaithRaw ?? existingFaith
+    const observingDeity = observingDeityRaw ?? userDeity
+    
+    if (updatedFaith === existingFaith && observingDeity === userDeity) return {
         safeSupply,
         deitiedSupply: deitiedSupply.times(divineBonus),
-        selectedDeitySupply,
+        selectedDeitySupply: deitySupplies[userDeity],
         totalSupply: safeSupply.plus(deitiedSupply.times(divineBonus)),
 
         userSafeSupply: userExistingSafeSupply,
@@ -44,9 +48,17 @@ const updatedFaithSupplies = (everestOwned: BigNumber, safeSupply: BigNumber, de
     const userUpdatedSafeSupply = everestOwned.times(100 - updatedFaith).dividedBy(100)
 
     const baseDeitiedSupplyWithBonus = deitiedSupply.minus(userExistingDeitiedSupply).plus(userUpdatedDeitiedSupply).times(divineBonus)
-    const baseSelectedDeitySupply = selectedDeitySupply.minus(userExistingDeitiedSupply).plus(userUpdatedDeitiedSupply)
     const baseSafeSupply = safeSupply.minus(userExistingSafeSupply).plus(userUpdatedSafeSupply)
     const totalSupply = baseSafeSupply.plus(baseDeitiedSupplyWithBonus)
+
+    // Selected Deity Supply
+    const baseSelectedDeitySupply = observingDeity === userDeity ?
+
+        // Subtract user's existing deity supply, and add updated deity supply
+        deitySupplies[userDeity].minus(userExistingDeitiedSupply).plus(userUpdatedDeitiedSupply) :
+
+        // User isn't in this deity, so the users deity supply can simply be added
+        deitySupplies[observingDeity].plus(userUpdatedDeitiedSupply)
 
     return {
         safeSupply: baseSafeSupply,
@@ -114,14 +126,24 @@ const UserFaithSection: React.FC = memo(() => {
         everestOwned,
         safeSupply,
         deitiedSupply,
-        selectedDeitySupply,
+        deitySupplies,
         faith,
         userDeity,
         deityDivider,
     } = useExpeditionUserFaithInfo()
 
-    const winPercChance = userDeity === 0 ? deityDivider : (100 - deityDivider)
-    const deityName = userDeity === 0 ? 'BULL' : 'BEAR'
+    const [observingDeity, setObservingDeity] = useState(userDeity)
+    const deityName = observingDeity === 0 ? 'BULL' : 'BEAR'
+    const winPercChance = observingDeity === 0 ? deityDivider : (100 - deityDivider)
+
+
+
+    const handleToggleObservingDeity = useCallback(
+        () => {
+            setObservingDeity((curr) => curr === 0 ? 1 : 0)
+        },
+        [setObservingDeity]
+    )
 
 
     const [updatedFaith, setUpdatedFaith] = useState(null)
@@ -129,7 +151,7 @@ const UserFaithSection: React.FC = memo(() => {
         () => debounce(setUpdatedFaith, 300)
     , []);
 
-    const faithChanged = updatedFaith != null
+    const faithChanged = updatedFaith !== faith
 
     const { pending: faithPending, onSelectTotemAndOrSafetyFactor: onSelectFaith } = useSelectTotemAndOrFaith()
 
@@ -153,14 +175,16 @@ const UserFaithSection: React.FC = memo(() => {
                 everestOwned,
                 safeSupply,
                 deitiedSupply,
-                selectedDeitySupply,
+                deitySupplies,
                 faith,
-                updatedFaith
+                updatedFaith,
+                userDeity,
+                observingDeity
             ),
             summitRoundEmission,
             usdcRoundEmission,
         ),
-        [everestOwned, safeSupply, deitiedSupply, selectedDeitySupply, faith, updatedFaith, summitRoundEmission, usdcRoundEmission]
+        [everestOwned, safeSupply, deitiedSupply, deitySupplies, faith, updatedFaith, summitRoundEmission, usdcRoundEmission, userDeity, observingDeity]
     )
 
     const rawSummitGuaranteedWinnings = getBalanceNumber(summitGuaranteedWinnings)
@@ -176,15 +200,22 @@ const UserFaithSection: React.FC = memo(() => {
                     setFaith={debouncedSetUpdatedFaith}
                 />
 
-                { faithChanged &&
+                <Flex gap='18px' alignItems='center' justifyContent='center'>
+                    <SummitButton
+                        summitPalette={Elevation.EXPEDITION}
+                        onClick={handleToggleObservingDeity}
+                    >
+                        TRY THE {observingDeity === 0 ? 'BEAR' : 'BULL'}
+                    </SummitButton>
                     <SummitButton
                         isLoading={faithPending}
+                        disabled={!faithChanged}
                         summitPalette={Elevation.EXPEDITION}
                         onClick={handleUpdateFaith}
                     >
                         UPDATE FAITH
                     </SummitButton>
-                }
+                </Flex>
             </Flex>
 
             <Flex width='100%' alignItems='center' justifyContent='center' position='relative'>

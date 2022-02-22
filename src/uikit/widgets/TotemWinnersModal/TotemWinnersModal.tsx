@@ -9,9 +9,10 @@ import { chunkArray, getPaletteGradientFarmCardBackground } from 'utils'
 import ArtworkTotem from 'uikit/components/Totem/ArtworkTotem'
 import Totem from 'views/ElevationFarms/components/Totem'
 import { Modal } from '../Modal'
-import { elevationPalette } from 'theme/colors'
+import { elevationPalette, textGold } from 'theme/colors'
 import chroma from 'chroma-js'
 import WinningNumberTotemIndicator from './WinningNumberTotemIndicator'
+import { RoundStatus } from 'state/hooksNew'
 
 interface Props {
   elevation: Elevation
@@ -20,6 +21,7 @@ interface Props {
   winsAccum: number[]
   userTotem: number | null
   winningNumberDrawn: number | null
+  roundStatus: RoundStatus
   onDismiss?: () => void
 }
 
@@ -88,6 +90,16 @@ const StyledCardAccent = styled.div<{ elevationBackground: string }>`
   bottom: 3px;
   left: 3px;
   z-index: -1;
+`
+
+const SkewedGoldBlock = styled.div`
+  background-color: ${textGold};
+  transform: skew(-15deg);
+  height: 22px;
+  width: 42px; 
+  border-radius: 4px;
+  box-shadow: 1px 1px 2px ${({ theme }) => theme.colors.textShadow};
+
 `
 const TotemLabel = styled(Text)<{ elevation: Elevation; header?: boolean; color?: string }>`
   font-weight: bold;
@@ -233,8 +245,9 @@ const MobileCardContentBiggestWinners: React.FC<BiggestWinnerAndLoserProps> = Re
 
 interface HeaderPuckRowProps extends BiggestWinnerAndLoserProps {
   winningTotem: number
+  lockedOrFinalizing: boolean
 }
-const HeaderPuckRow: React.FC<HeaderPuckRowProps> = React.memo(({ elevation, winningTotem, biggestWinner, biggestWinnerWinPerc, biggestLoser, biggestLoserWinPerc }) => {
+const HeaderPuckRow: React.FC<HeaderPuckRowProps> = React.memo(({ elevation, lockedOrFinalizing, winningTotem, biggestWinner, biggestWinnerWinPerc, biggestLoser, biggestLoserWinPerc }) => {
   const elevationBackground = getPaletteGradientFarmCardBackground(elevation)
   const biggestWinnerName = elevationUtils.getElevationTotemName(elevation, biggestWinner, false)
   const biggestLoserName = elevationUtils.getElevationTotemName(elevation, biggestLoser, false)
@@ -245,7 +258,7 @@ const HeaderPuckRow: React.FC<HeaderPuckRowProps> = React.memo(({ elevation, win
       <HeaderRecentWinners>
         <TotemPadding>
           <StyledCardAccent elevationBackground={elevationBackground}/>
-          <ArtworkTotem crowned elevation={elevation} totem={winningTotem} desktopSize="200" mobileSize="200" />
+          <ArtworkTotem crowned elevation={elevation} totem={lockedOrFinalizing ? null : winningTotem} desktopSize="200" mobileSize="200" />
         </TotemPadding>
       </HeaderRecentWinners>
       <HeaderRecentWinners mobileOnly>
@@ -295,6 +308,7 @@ const TotemWinnersModal: React.FC<Props> = ({
   winsAccum,
   userTotem,
   winningNumberDrawn,
+  roundStatus,
   onDismiss = () => null,
 }) => {
   if (recentWinners.length === 0) {
@@ -310,6 +324,8 @@ const TotemWinnersModal: React.FC<Props> = ({
       </Modal>
     )
   }
+
+  const lockedOrFinalizing = [RoundStatus.RolloverLockout, RoundStatus.RolloverAvailable].includes(roundStatus)
 
   const recentWinnerName = elevationUtils.getElevationTotemName(elevation, recentWinners[0], false)
   const recentWinnerStreak = getRecentWinnerStreak(recentWinners)
@@ -334,24 +350,27 @@ const TotemWinnersModal: React.FC<Props> = ({
         biggestLoser={biggestLoser}
         biggestWinnerWinPerc={winsPerc[biggestWinner]}
         biggestLoserWinPerc={winsPerc[biggestLoser]}
+        lockedOrFinalizing={lockedOrFinalizing}
       />}
     >
       <ModalLayoutFlex>
         <ContentColumn>
           
 
-          <TotemLabel elevation={elevation} mt='48px'>WINNING TOTEM:</TotemLabel>
-          <TotemLabel header mb={recentWinnerStreak === 1 ? '32px' : '0px'} elevation={elevation}>
-            {recentWinnerName}
+          <TotemLabel elevation={elevation} mt='48px'>
+            { lockedOrFinalizing ? 'ROUND ENDING' : 'WINNING TOTEM:'}
           </TotemLabel>
-          {recentWinnerStreak > 1 && (
+          <TotemLabel header mb={lockedOrFinalizing || recentWinnerStreak === 1 ? '32px' : '0px'} elevation={elevation}>
+            { lockedOrFinalizing ? 'WINNER TBD' : recentWinnerName}
+          </TotemLabel>
+          {(!lockedOrFinalizing && recentWinnerStreak > 1) &&
             <TotemLabel mb="40px" elevation={elevation} header={false}>
               {recentWinnerStreak} WIN STREAK
             </TotemLabel>
-          )}
+          }
 
           <WinMultiplierLabel summitPalette={elevation} header gold>
-            {recentWinningsMultipliers[0].toFixed(1)}X
+            {lockedOrFinalizing ? '??' : recentWinningsMultipliers[0].toFixed(1)}X
           </WinMultiplierLabel>
           <Text gold bold monospace fontSize="16px" mb="6px">
             WIN MULTIPLIER
@@ -359,16 +378,25 @@ const TotemWinnersModal: React.FC<Props> = ({
 
           {/* Winning Number */}
           <Flex gap='12px' align-items='center' justifyContent='center' mt="46px" mb='24px' >
-            <Text monospace small lineHeight='12px' textAlign='center' mt='1px'>
-              PREV ROUND
-              <br/>
-              WINNING NUMBER DRAWN:
-            </Text>
-            <Text fontSize='18px' bold gold monospace>
-              {winningNumberDrawn}
-            </Text>
+            { lockedOrFinalizing ?
+              <Text monospace small lineHeight='12px' textAlign='center' mt='1px'>
+                NEXT ROUND WINNER
+                <br/>
+                WILL BE REVEALED SOON
+              </Text> :
+              <>
+                <Text monospace small lineHeight='12px' textAlign='center' mt='1px'>
+                  PREV ROUND
+                  <br/>
+                  WINNING NUMBER DRAWN:
+                </Text>
+                <Text fontSize='18px' bold gold monospace>
+                  {winningNumberDrawn}
+                </Text>
+              </>
+            }
           </Flex>
-          <WinningNumberTotemIndicator elevation={elevation} winningNumberDrawn={winningNumberDrawn}/>
+          <WinningNumberTotemIndicator elevation={elevation} winningNumberDrawn={lockedOrFinalizing ? null : winningNumberDrawn}/>
 
 
           
