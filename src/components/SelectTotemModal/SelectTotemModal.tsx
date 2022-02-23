@@ -121,9 +121,9 @@ const SelectTotemModal: React.FC<Props> = ({
           { alsoSelectFaith &&
             <>
               <Text bold monospace small italic mt='-36px' textAlign='center' lineHeight='14px'>
-                Update your FAITH
+                Set your FAITH in
                 <br/>
-                in {totemToConfirmName} (Optional)
+                the {totemToConfirmName} (Optional)
                 </Text>
               <FaithSliderWrapper>
                 <FaithSlider

@@ -11,6 +11,7 @@ import { Flex, Text, SummitButton, TokenSymbolImage } from "uikit"
 import { getBalanceNumber } from "utils"
 import CardValue from "views/Home/components/CardValue"
 import Divider from "./Divider"
+import ObservingDeitySelector from "./ObservingDeitySelector"
 
 
 const StyledPlusText = styled(Text)`
@@ -134,6 +135,7 @@ const UserFaithSection: React.FC = memo(() => {
 
     const [observingDeity, setObservingDeity] = useState(userDeity)
     const deityName = observingDeity === 0 ? 'BULL' : 'BEAR'
+    const deityChanged = userDeity !== observingDeity
     const winPercChance = observingDeity === 0 ? deityDivider : (100 - deityDivider)
 
 
@@ -146,7 +148,7 @@ const UserFaithSection: React.FC = memo(() => {
     )
 
 
-    const [updatedFaith, setUpdatedFaith] = useState(null)
+    const [updatedFaith, setUpdatedFaith] = useState(faith)
     const debouncedSetUpdatedFaith = useMemo(
         () => debounce(setUpdatedFaith, 300)
     , []);
@@ -201,19 +203,22 @@ const UserFaithSection: React.FC = memo(() => {
                 />
 
                 <Flex gap='18px' alignItems='center' justifyContent='center'>
-                    <SummitButton
-                        summitPalette={Elevation.EXPEDITION}
-                        onClick={handleToggleObservingDeity}
-                    >
-                        TRY THE {observingDeity === 0 ? 'BEAR' : 'BULL'}
-                    </SummitButton>
+                    <ObservingDeitySelector
+                        observingDeity={observingDeity}
+                        toggleObservingDeity={handleToggleObservingDeity}
+                    />
                     <SummitButton
                         isLoading={faithPending}
-                        disabled={!faithChanged}
+                        disabled={!faithChanged && !deityChanged}
+                        width='200px'
                         summitPalette={Elevation.EXPEDITION}
                         onClick={handleUpdateFaith}
                     >
-                        UPDATE FAITH
+                        UPDATE
+                        { (faithChanged || deityChanged) && <br/>}
+                        { faithChanged && 'FAITH'}
+                        { faithChanged && deityChanged && ' & '}
+                        { deityChanged && 'DEITY'}
                     </SummitButton>
                 </Flex>
             </Flex>
