@@ -3,7 +3,7 @@ import React from "react"
 import { useMultiElevStaked } from "state/hooks"
 import { useAvgStakingLoyaltyDuration, useFarmsUserDataLoaded, usePresetStrategyTVLContributions, useRoadmapScreenshot } from "state/hooksNew"
 import styled from "styled-components"
-import { Flex, Text } from "uikit"
+import { Text } from "uikit"
 import { stakeDurationToText } from "utils"
 import StakingBreakdown from "./StakingBreakdown"
 

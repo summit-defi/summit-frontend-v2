@@ -15,6 +15,7 @@ import Balancer2PoolPriceOracle from '../config/abi/Balancer2PoolPriceOracle.jso
 import BalancerMultiPoolPriceOracle from '../config/abi/BalancerMultiPoolPriceOracle.json'
 import PancakeFactory from '../config/abi/PCS/PancakeFactory.json'
 import SubCartUserDataShared from '../config/abi/SubCartUserDataShared.json'
+import SolidlyLP from '../config/abi/SolidlyLP.json'
 import { Elevation } from 'config/constants/types'
 
 export const abi = {
@@ -34,6 +35,7 @@ export const abi = {
   BalancerMultiPoolPriceOracle,
   PancakeFactory,
   SubCartUserDataShared,
+  SolidlyLP,
 }
 export const abiItem = {
   cartographer: (abi.cartographer as unknown) as AbiItem,

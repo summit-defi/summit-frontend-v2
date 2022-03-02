@@ -18,6 +18,7 @@ export const fetchTokensUserData = async (account: string) => {
             params: [account],
         }
     ]).flat()
+
     const erc20Res = await retryableMulticall(abi.ERC20, erc20Calls, 'fetchTokensUserData_ERC20')
 
     const cartCalls = farmTokens.map((token) => [

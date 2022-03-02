@@ -11,10 +11,16 @@ const getAvgStakingLoyaltyDuration = () => {
   if (localStorageAvg == null || isNaN(parseFloat(localStorageAvg))) return 0
   return parseJSON(localStorageAvg, 0)
 }
+const getSymbolAprs = () => {
+  const localStorageSymbolAprs = localStorage.getItem('SymbolAPRs')
+  if (localStorageSymbolAprs == null) return {}
+  return parseJSON(localStorageSymbolAprs, {})
+}
 
 const initialState: TokensState = {
   data: getFarmTokens(),
   avgStakingLoyaltyDuration: getAvgStakingLoyaltyDuration(),
+  aprs: getSymbolAprs(),
 }
 
 export const TokensSlice = createSlice({
@@ -30,11 +36,16 @@ export const TokensSlice = createSlice({
       state.avgStakingLoyaltyDuration = avgStakingLoyaltyDuration
       localStorage.setItem('AvgStakingLoyaltyDuration', avgStakingLoyaltyDuration)
     },
+    setSymbolAPRs: (state, action) => {
+      const symbolAprs = action.payload
+      state.aprs = symbolAprs
+      localStorage.setItem('SymbolAPRs', JSON.stringify(symbolAprs))
+    }
   },
 })
 
 // Actions
-export const { setTokensUserData } = TokensSlice.actions
+export const { setTokensUserData, setSymbolAPRs } = TokensSlice.actions
 
 // Thunks
 export const fetchTokensUserDataAsync = (account) => async (dispatch) => {

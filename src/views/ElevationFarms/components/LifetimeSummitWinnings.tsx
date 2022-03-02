@@ -39,7 +39,6 @@ const Spacer = styled.div`
 `
 
 const ValueText = styled(MobileColumnFlex)`
-    margin-top: 8px;
     ${({ theme }) => theme.mediaQueries.nav} {
         gap: 6px;
     }
@@ -53,6 +52,8 @@ const DashboardLifetimeSummitWinnings: React.FC = memo(() => {
     const {
         lifetimeSummitWinnings,
         lifetimeSummitBonuses,
+        lifetimeSummitWinningsUsd,
+        lifetimeSummitBonusesUsd,
     } = useLifetimeSummitWinningsAndBonus()
     const userDataLoaded = useFarmsUserDataLoaded()
     const rawLifetimeSummitWinnings = getFormattedBigNumber(lifetimeSummitWinnings)
@@ -68,7 +69,7 @@ const DashboardLifetimeSummitWinnings: React.FC = memo(() => {
                     LIFETIME WINNINGS
                 </Text>
                 { userDataLoaded ?
-                    <ValueText>
+                    <ValueText marginTop='8px'>
                         <NoShadowHighlightedText bold monospace fontSize='22' lineHeight='22px'>
                             {rawLifetimeSummitWinnings}
                         </NoShadowHighlightedText>
@@ -78,11 +79,22 @@ const DashboardLifetimeSummitWinnings: React.FC = memo(() => {
                     </ValueText> :
                     <Skeleton height={24} width={180}/>
                 }
+                { userDataLoaded ?
+                    <ValueText>
+                        <NoShadowHighlightedText bold monospace fontSize='16' lineHeight='16px'>
+                            {'$'}{lifetimeSummitWinningsUsd}
+                        </NoShadowHighlightedText>
+                        <NoShadowHighlightedText monospace fontSize='14' lineHeight='14px'>
+                            USD
+                        </NoShadowHighlightedText>
+                    </ValueText> :
+                    <Skeleton height={24} width={180}/>
+                }
             </ItemFlex>
             <Spacer/>
             <ItemFlex>
                 <Text textAlign='center' bold gold monospace small>
-                    LIFETIME BONUSES
+                    LIFETIME BONUS
                 </Text>
                 { userDataLoaded ?
                     <ValueText>
@@ -91,6 +103,17 @@ const DashboardLifetimeSummitWinnings: React.FC = memo(() => {
                         </NoShadowHighlightedText>
                         <NoShadowHighlightedText monospace gold fontSize='14' lineHeight='14px'>
                             SUMMIT
+                        </NoShadowHighlightedText>
+                    </ValueText> :
+                    <Skeleton height={24} width={180}/>
+                }
+                { userDataLoaded ?
+                    <ValueText>
+                        <NoShadowHighlightedText bold gold monospace fontSize='16' lineHeight='16px'>
+                            {'$'}{lifetimeSummitBonusesUsd}
+                        </NoShadowHighlightedText>
+                        <NoShadowHighlightedText monospace gold fontSize='14' lineHeight='14px'>
+                            USD
                         </NoShadowHighlightedText>
                     </ValueText> :
                     <Skeleton height={24} width={180}/>

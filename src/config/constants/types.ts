@@ -26,9 +26,6 @@ export enum SummitPalette {
   EVEREST = 'EVEREST',
 }
 
-export const RoadmapElevation = Elevation.PLAINS
-export const RoadmapSummitPalette = SummitPalette.PLAINS
-
 
 export type ElevOrPalette = Elevation | SummitPalette
 
@@ -187,10 +184,10 @@ export const ElevationInt: { [key in keyof typeof Elevation]: number } = {
   [Elevation.EXPEDITION]: 4,
 }
 export const ElevationRoundDuration: { [key in keyof typeof Elevation]: number } = {
-  [Elevation.OASIS]: 3600 * 2,
-  [Elevation.PLAINS]: 3600 * 2,
-  [Elevation.MESA]: 3600 * 2,
-  [Elevation.SUMMIT]: 3600 * 2,
+  [Elevation.OASIS]: 3600 * 4,
+  [Elevation.PLAINS]: 3600 * 4,
+  [Elevation.MESA]: 3600 * 8,
+  [Elevation.SUMMIT]: 3600 * 8,
   [Elevation.EXPEDITION]: 3600 * 24,
 }
 export const ElevationUnlockDuration: { [key in keyof typeof Elevation]: number } = {
@@ -377,9 +374,11 @@ export interface TokenWithWeight {
 export interface PriceableToken {
   symbol: string
   assetType: TokenAssetType
+  lpSource?: TokenLpSource
   decimals: number
   tokenAddress?: string
   lpAddress?: string
+  solidlyLpContainingTokens?: string[]
   balancerMultiPoolInfo?: {
     poolId: string,
     pricingTokens: TokenWithWeight[]
@@ -397,6 +396,14 @@ export enum TokenAssetType {
   WrappedNative = 'WrappedNative',
   Balancer2Pool = 'Balancer2Pool',
   BalancerMultiPool = 'BalancerMultiPool',
+  SolidlyLP = 'SolidlyLP',
+}
+
+export enum TokenLpSource {
+  BeethovenX = 'BeethovenX',
+  SpookySwap = 'SpookySwap',
+  SolidlyStable = 'Solidly (Stable)',
+  SolidlyVolatile = 'Solidly (Volatile)'
 }
 
 export interface Token {
@@ -425,6 +432,8 @@ export interface MultiElevAllocationConfig {
   depositFeeBP: number
   taxBP: number
   native: boolean
+  comment?: string
+  warning?: string
   elevations: FarmElevationsConfigs
 }
 

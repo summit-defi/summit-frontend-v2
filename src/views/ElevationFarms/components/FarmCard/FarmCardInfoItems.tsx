@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js'
-import { ElevationFarmTab } from 'config/constants'
+import { ElevationFarmTab, TokenSymbol } from 'config/constants'
 import React, { memo, useMemo } from 'react'
 import { useElevationFarmsTab } from 'state/hooks'
 import { useSummitPrice } from 'state/hooksNew'
@@ -72,11 +72,13 @@ export const FarmAPYBreakdown: React.FC<Props> = memo(({ summitPerYear, totalVal
     )
 })
 
-export const FarmTotalValue: React.FC<{ totalValue: BigNumber }> = memo(({ totalValue }) => {
+export const FarmTotalValue: React.FC<{ symbol: string, totalStaked: BigNumber, pricePerToken: BigNumber, decimals: number }> = memo(({ symbol, totalStaked, pricePerToken, decimals }) => {
     const elevationTab = useElevationFarmsTab()
+    const isEverest = symbol === TokenSymbol.EVEREST
+    const totalValue = totalStaked.div(new BigNumber(10).pow(decimals)).times(isEverest ? 1 : pricePerToken)
 
     const totalValueFormatted = totalValue
-        ? `$${Number(totalValue).toLocaleString(undefined, { maximumFractionDigits: 0 })}`
+        ? `${isEverest ? '' : '$'}${Number(totalValue).toLocaleString(undefined, { maximumFractionDigits: 0 })}`
         : '-'
 
     const tvlText = `${elevationTab === ElevationFarmTab.DASH ? '' : `${capitalizeFirstLetter(elevationTab)} `}TVL`
@@ -85,8 +87,10 @@ export const FarmTotalValue: React.FC<{ totalValue: BigNumber }> = memo(({ total
         <FlexInfoItem>
             <Text small>{tvlText}</Text>
             <InfoItemValue>
-                <Text bold monospace style={{ display: 'flex', alignItems: 'center', lineHeight: '28px' }}>
+                <Text bold monospace style={{ display: 'flex', alignItems: 'center', lineHeight: '14px' }}>
                     {totalValueFormatted}
+                    {isEverest && <br/>}
+                    {isEverest && 'EVEREST'}
                 </Text>
             </InfoItemValue>
         </FlexInfoItem>

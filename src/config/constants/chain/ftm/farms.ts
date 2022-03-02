@@ -21,6 +21,39 @@ const everestFarm: MultiElevFarmConfig = {
   getUrl: 'https://ftm.summitdefi.com/everest',
 }
 
+
+
+const booXBooFarm: MultiElevFarmConfig = {
+  symbol: TokenSymbol.BOO_XBOO,
+  ...farmConfigs[TokenSymbol.BOO_XBOO],
+  ...ftmTokens[TokenSymbol.BOO_XBOO],
+  getUrl: 'https://solidly.exchange/liquidity/create',
+}
+
+const usdcMimFarm: MultiElevFarmConfig = {
+  symbol: TokenSymbol.USDC_MIM,
+  ...farmConfigs[TokenSymbol.USDC_MIM],
+  ...ftmTokens[TokenSymbol.USDC_MIM],
+  getUrl: 'https://solidly.exchange/liquidity/create',
+}
+
+
+const paeFtmFarm: MultiElevFarmConfig = {
+  symbol: TokenSymbol.PAE_FTM,
+  ...farmConfigs[TokenSymbol.PAE_FTM],
+  ...ftmTokens[TokenSymbol.PAE_FTM],
+  getUrl: 'https://spookyswap.finance/add/0x8a41f13a4FaE75ca88B1ee726ee9D52B148b0498/FTM',
+  beefyVaultApiName: 'ripae-pae-ftm'
+}
+
+const pFtmFtmFarm: MultiElevFarmConfig = {
+  symbol: TokenSymbol.pFTM_FTM,
+  ...farmConfigs[TokenSymbol.pFTM_FTM],
+  ...ftmTokens[TokenSymbol.pFTM_FTM],
+  getUrl: 'https://spookyswap.finance/add/0x112dF7E3b4B7Ab424F07319D4E92F41e6608c48B/FTM',
+  beefyVaultApiName: 'ripae-pftm-ftm'
+}
+
 const tombFtmFarm: MultiElevFarmConfig = {
   symbol: TokenSymbol.TOMB_FTM,
   ...farmConfigs[TokenSymbol.TOMB_FTM],
@@ -108,6 +141,10 @@ const twOmbFtmFarm: MultiElevFarmConfig = {
 const farms = [
   summitFarm,
   everestFarm,
+  booXBooFarm,
+  usdcMimFarm,
+  paeFtmFarm,
+  pFtmFtmFarm,
   tombFtmFarm,
   tshareFtmFarm,
   ftmBooFarm,

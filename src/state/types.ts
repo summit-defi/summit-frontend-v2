@@ -162,8 +162,14 @@ export interface UserTokenData {
   farmAllowance?: BigNumber
   walletBalance?: BigNumber
 }
+
+export interface TokenDailyPassthroughApr {
+  symbol: string
+  passthroughDailyApr: string
+}
 export interface TokensState {
   data: UserTokenData[]
+  aprs: TokenDailyPassthroughApr[]
   avgStakingLoyaltyDuration?: number
 }
 

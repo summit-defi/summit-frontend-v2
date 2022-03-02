@@ -32,6 +32,9 @@ export enum TokenSymbol {
     GRAND_ORCH = 'GRAND-ORCH',
     BATTLE_OF_THE_BANDS = 'BATTLE-OF-THE-BANDS',
     FANTOM_OF_THE_OPERA = 'FANTOM-OF-THE-OPERA',
+    PAE_FTM = 'PAE-FTM',
+    /* eslint camelcase: 0 */
+    pFTM_FTM = 'pFTM-FTM',
     wETH = 'ETH',
     wBTC = 'BTC',
     fMATIC = 'MATIC',
@@ -39,6 +42,10 @@ export enum TokenSymbol {
     fBNB = 'BNB',
     fLUNA = 'LUNA',
     fSOL = 'SOL',
+    BOO_XBOO = 'BOO-xBOO',
+    USDC_MIM = 'USDC-MIM',
+    MIM = 'MIM',
+    xBOO = 'xBOO',
 }
 
 export const TokensWithCustomArtwork = {
@@ -82,4 +89,8 @@ export const TokensWithCustomArtwork = {
     [TokenSymbol.fBNB]: false,
     [TokenSymbol.fLUNA]: false,
     [TokenSymbol.fSOL]: false,
+    [TokenSymbol.BOO_XBOO]: false,
+    [TokenSymbol.USDC_MIM]: false,
+    [TokenSymbol.MIM]: false,
+    [TokenSymbol.xBOO]: false,
 }

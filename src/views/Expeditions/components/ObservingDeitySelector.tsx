@@ -1,11 +1,11 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { Flex } from 'uikit'
+import { Flex, Spinner, SpinnerKeyframes } from 'uikit'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { pressableMixin } from 'uikit/util/styledMixins'
 import { SelectorWrapperBase } from 'uikit/widgets/Selector/styles'
-import { BaseDeity } from 'uikit/components/Totem/BaseDeity'
-import { elevationUtils, Elevation, SummitPalette } from 'config/constants'
+import { elevationUtils, Elevation } from 'config/constants'
+import { useTotemSelectionPending } from 'state/hooks'
 
 const buttonWidth = 100
 const buttonHeight = 38
@@ -16,9 +16,18 @@ const SelectorFlex = styled(Flex)`
     justify-content: center;
     margin-left: 6px;
     margin-right: 6px;
+    position: relative;
+
+
+
+    .spinner {
+        fill: white;
+        animation: ${SpinnerKeyframes} 1.4s infinite linear;
+        z-index: 5;
+    }
 `
 
-const SelectorWrapper = styled(SelectorWrapperBase)`
+const SelectorWrapper = styled(SelectorWrapperBase)<{ isLoading }>`
     display: flex;
     justify-content: center;
     margin: 4px 0px;
@@ -27,6 +36,7 @@ const SelectorWrapper = styled(SelectorWrapperBase)`
     border-radius: 22px;
     background-color: ${({ theme }) => theme.colors.selectorBackground};
     position: relative;
+    opacity: ${({ isLoading }) => isLoading ? 0.5 : 1};
     ${pressableMixin}
 `
 
@@ -72,14 +82,21 @@ const DeityButton = styled.div<{ deity: number, selected: boolean }>`
     transform: translate(${({ deity }) => deity === 0 ? -20 : 5}%, 20%);
 `
 
+const StyledSpinner = styled(Spinner)`
+    position: absolute;
+    align-self: center;
+    filter: drop-shadow(0px 0px 4px black);
+`
+
 interface Props {
     observingDeity: number
     toggleObservingDeity: () => void
 }
 const ObservingDeitySelector: React.FC<Props> = ({ observingDeity, toggleObservingDeity }) => {
+    const totemSelectionPending = useTotemSelectionPending()
     return (
         <SelectorFlex onClick={toggleObservingDeity}>
-            <SelectorWrapper>
+            <SelectorWrapper isLoading={totemSelectionPending} disabled={totemSelectionPending}>
                 <SelectedSummitButton
                     selectedIndex={observingDeity}
                     padding="0px"
@@ -95,6 +112,7 @@ const ObservingDeitySelector: React.FC<Props> = ({ observingDeity, toggleObservi
                     <DeityButton deity={1} selected={false}/>
                 </DeityWrapper>
             </SelectorWrapper>
+            {totemSelectionPending && <StyledSpinner className="spinner" />}
         </SelectorFlex>
     )
 }

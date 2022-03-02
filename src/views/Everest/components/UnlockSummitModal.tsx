@@ -2,11 +2,13 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Flex, Text, Modal, ModalActions, SummitButton } from 'uikit'
 import { BN_ZERO, SummitPalette } from 'config/constants/types'
 import { isNumber } from 'lodash'
-import { getFormattedBigNumber, getFullDisplayBalance } from 'utils'
+import { getEverestTokenAddress, getFormattedBigNumber, getFullDisplayBalance } from 'utils'
 import TokenInput from 'components/TokenInput'
 import { useEverestUserInfo } from 'state/hooksNew'
 import styled from 'styled-components'
 import BigNumber from 'bignumber.js'
+import { useApproveAddress } from 'hooks/useApprove'
+import { TokenSymbol } from 'config/constants'
 
 
 const InfoText = styled(Text)`
@@ -30,6 +32,7 @@ const UnlockSummitModal: React.FC<UnlockSummitProps> = ({
 }) => {
   const {
     everestBalance,
+    everestAllowance,
     summitLocked,
     everestLockMult
   } = useEverestUserInfo()
@@ -51,14 +54,12 @@ const UnlockSummitModal: React.FC<UnlockSummitProps> = ({
     () => {
       const newFullBalance = getFullDisplayBalance(summitLocked)
       setFullBalance(newFullBalance)
-      setVal(newFullBalance)
-      setValInvalid(false)
 
-      const requiredEverestBurn = summitLocked.times(10000).dividedBy(everestLockMult)
+      const requiredEverestBurn = summitLocked.times(everestLockMult).dividedBy(10000)
       setEverestToBurn(requiredEverestBurn)
       setNotEnoughEverest(everestBalance.isLessThan(requiredEverestBurn))
     },
-    [summitLocked, everestLockMult, everestBalance, setFullBalance, setVal, setValInvalid, setEverestToBurn, setNotEnoughEverest]
+    [summitLocked, everestLockMult, everestBalance, setFullBalance, setEverestToBurn, setNotEnoughEverest]
   )
 
   const handleChange = useCallback(
@@ -67,7 +68,7 @@ const UnlockSummitModal: React.FC<UnlockSummitProps> = ({
       setValInvalid(!validElevateVal(e.currentTarget.value, fullBalance))
 
       const summitToUnlock = new BigNumber(e.currentTarget.value).times(new BigNumber(10).pow(18))
-      const requiredEverestBurn = summitToUnlock.times(10000).dividedBy(everestLockMult)
+      const requiredEverestBurn = summitToUnlock.times(everestLockMult).dividedBy(10000)
       setEverestToBurn(requiredEverestBurn)
       setNotEnoughEverest(everestBalance.isLessThan(requiredEverestBurn))
     },
@@ -79,7 +80,7 @@ const UnlockSummitModal: React.FC<UnlockSummitProps> = ({
     setValInvalid(!validElevateVal(fullBalance, fullBalance))
       
     const summitToUnlock = new BigNumber(fullBalance).times(new BigNumber(10).pow(18))
-    const requiredEverestBurn = summitToUnlock.times(10000).dividedBy(everestLockMult)
+    const requiredEverestBurn = summitToUnlock.times(everestLockMult).dividedBy(10000)
     setEverestToBurn(requiredEverestBurn)
     setNotEnoughEverest(everestBalance.isLessThan(requiredEverestBurn))
   }, [fullBalance, setVal, setValInvalid, setEverestToBurn, setNotEnoughEverest, everestLockMult, everestBalance])
@@ -87,10 +88,20 @@ const UnlockSummitModal: React.FC<UnlockSummitProps> = ({
   // CONFIRM ELEVATE
   const handleUnlockSummit = useCallback(() => {
     onDismiss()
-    onUnlockSummit(val)
-  }, [onDismiss, onUnlockSummit, val])
+    onUnlockSummit(getFullDisplayBalance(everestToBurn))
+  }, [onDismiss, onUnlockSummit, everestToBurn])
 
   const infoTextColor = notEnoughEverest ? 'red' : ''
+
+
+
+  // APPROVAL
+  const everestApproved = (everestAllowance || BN_ZERO).isGreaterThan(0)
+  const everestTokenAddress = getEverestTokenAddress()
+  const { onApprove: onApproveEverest, pending: everestApprovalPending } = useApproveAddress(everestTokenAddress, everestTokenAddress, TokenSymbol.EVEREST)
+  const handleApproveEverest = useCallback(() => {
+    onApproveEverest()
+  }, [onApproveEverest])
 
 
   return (
@@ -104,6 +115,21 @@ const UnlockSummitModal: React.FC<UnlockSummitProps> = ({
         <Text textAlign="center" monospace small bold mt='-24px'>
           Unlock your SUMMIT and burn the EVEREST you received at the time of Locking 
         </Text>
+
+        {!everestApproved &&
+          <>
+            <Text bold monospace small mb='-18px'>
+              APPROVE EVEREST:
+            </Text>
+            <SummitButton
+              summitPalette={SummitPalette.EVEREST}
+              isLoading={everestApprovalPending}
+              onClick={handleApproveEverest}
+            >
+              APPROVE EVEREST
+            </SummitButton>
+          </>
+        }
 
         <Text bold monospace small mb='-18px'>
           AMOUNT TO UNLOCK:
@@ -140,6 +166,7 @@ const UnlockSummitModal: React.FC<UnlockSummitProps> = ({
         <SummitButton
           summitPalette={SummitPalette.EVEREST}
           disabled={invalidVal || notEnoughEverest}
+          isLocked={!everestApproved}
           onClick={handleUnlockSummit}
         >
           UNLOCK SUMMIT

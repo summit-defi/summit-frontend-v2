@@ -39,9 +39,10 @@ export const farmConfigs: { [key: string]: MultiElevAllocationConfig } = {
   },
   [TokenSymbol.FTM_BOO]: {
     allocation: 100,
-    taxBP: 700,
+    taxBP: 50,
     depositFeeBP: 0,
     native: false,
+    comment: 'TO BE RETIRED MAR 3 9PM. Withdrawal fees reduced to 0.5%',
     elevations: baseElevations,
   },
   [TokenSymbol.BPT_BEETS_FTM]: {
@@ -67,9 +68,10 @@ export const farmConfigs: { [key: string]: MultiElevAllocationConfig } = {
   },
   [TokenSymbol.BOO]: {
     allocation: 300,
-    taxBP: 700,
+    taxBP: 50,
     depositFeeBP: 0,
     native: false,
+    comment: 'TO BE RETIRED MAR 3 9PM. Withdrawal fees reduced to 0.5%',
     elevations: baseElevations,
   },
   [TokenSymbol.BATTLE_OF_THE_BANDS]: {
@@ -92,5 +94,33 @@ export const farmConfigs: { [key: string]: MultiElevAllocationConfig } = {
     depositFeeBP: 0,
     native: false,
     elevations: baseElevations,
+  },
+  [TokenSymbol.PAE_FTM]: {
+    allocation: 800,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations,
+  },
+  [TokenSymbol.pFTM_FTM]: {
+    allocation: 800,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations,
+  },
+  [TokenSymbol.BOO_XBOO]: {
+    allocation: 500,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations
+  },
+  [TokenSymbol.USDC_MIM]: {
+    allocation: 100,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations
   },
 }

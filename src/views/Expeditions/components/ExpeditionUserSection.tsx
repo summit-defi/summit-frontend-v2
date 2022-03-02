@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback, useMemo } from "react"
+import React, { memo, useState, useCallback, useMemo, useEffect } from "react"
 import BigNumber from "bignumber.js"
 import { FaithSlider } from "components/SelectTotemModal"
 import { BN_ZERO, Elevation } from "config/constants"
@@ -138,7 +138,7 @@ const UserFaithSection: React.FC = memo(() => {
     const deityChanged = userDeity !== observingDeity
     const winPercChance = observingDeity === 0 ? deityDivider : (100 - deityDivider)
 
-
+    useEffect(() => setObservingDeity(userDeity), [setObservingDeity, userDeity])
 
     const handleToggleObservingDeity = useCallback(
         () => {
@@ -155,16 +155,16 @@ const UserFaithSection: React.FC = memo(() => {
 
     const faithChanged = updatedFaith !== faith
 
-    const { pending: faithPending, onSelectTotemAndOrSafetyFactor: onSelectFaith } = useSelectTotemAndOrFaith()
+    const { pending: faithAndDeityPending, onSelectTotemAndOrSafetyFactor: onSelectFaith } = useSelectTotemAndOrFaith()
 
-    const handleUpdateFaith = useCallback(() => {
-        if (faithPending || !faithChanged) return
+    const handleUpdateFaithAndDeity = useCallback(() => {
+        if (faithAndDeityPending || (!faithChanged && !deityChanged)) return
         onSelectFaith(
             Elevation.EXPEDITION,
-            null,
-            updatedFaith
+            observingDeity === userDeity ? null : observingDeity,
+            updatedFaith === faith ? null : updatedFaith,
         )
-    }, [faithPending, faithChanged, updatedFaith, onSelectFaith])
+    }, [faithAndDeityPending, faithChanged, updatedFaith, observingDeity, deityChanged, userDeity, faith, onSelectFaith])
 
     const {
         summitGuaranteedWinnings,
@@ -208,11 +208,11 @@ const UserFaithSection: React.FC = memo(() => {
                         toggleObservingDeity={handleToggleObservingDeity}
                     />
                     <SummitButton
-                        isLoading={faithPending}
+                        isLoading={faithAndDeityPending}
                         disabled={!faithChanged && !deityChanged}
                         width='200px'
                         summitPalette={Elevation.EXPEDITION}
-                        onClick={handleUpdateFaith}
+                        onClick={handleUpdateFaithAndDeity}
                     >
                         UPDATE
                         { (faithChanged || deityChanged) && <br/>}

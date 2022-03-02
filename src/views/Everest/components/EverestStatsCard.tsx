@@ -100,7 +100,7 @@ export const EverestStatsCard: React.FC = memo(() => {
         }, [everestAddress])
 
     return (
-        <EverestCard gap='24px' alignItems='center' justifyContent='center'>
+        <EverestCard gap='32px' alignItems='center' justifyContent='center'>
             <HeaderHighlightedText bold monospace textAlign='center'>
                 THE EVEREST TOKEN
             </HeaderHighlightedText>
@@ -147,14 +147,6 @@ export const EverestStatsCard: React.FC = memo(() => {
                     <CardValue summitPalette={SummitPalette.EVEREST} value={averageLockDuration} postfix="DAYS" decimals={0} fontSize="22" postfixFontSize="16" />
                 </Flex>
                 <EverestLockDurationIndicator avgLockDuration={averageLockDuration}/>
-            </Flex>
-
-            <Flex gap='12px' flexDirection='column' alignItems='center' justifyContent='center' width='100%'>
-                <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
-                    <Text monospace small>Everest Value (est):</Text>
-                    <Text monospace small bold>TBD</Text>
-                </Flex>
-                <Text monospace small fontSize='10px' textAlign='center'>Everest Value is calculated based on SUMMIT lock duration and Expedition earnings.</Text>
             </Flex>
 
 

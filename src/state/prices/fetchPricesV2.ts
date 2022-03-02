@@ -89,6 +89,7 @@ export const fetchPricesV2 = async () => {
     [TokenAssetType.WrappedNative]: wrappedNativePriceables,
     [TokenAssetType.Balancer2Pool]: balancer2PoolPriceables,
     [TokenAssetType.BalancerMultiPool]: balancerMultiPoolPriceables,
+    [TokenAssetType.SolidlyLP]: solidlyLpPriceables,
   } = priceableTokens.reduce((acc, priceableToken) => {
     acc[priceableToken.assetType].push(priceableToken)
     return acc
@@ -101,6 +102,7 @@ export const fetchPricesV2 = async () => {
     [TokenAssetType.WrappedNative]: [] as PriceableToken[],
     [TokenAssetType.Balancer2Pool]: [] as PriceableToken[],
     [TokenAssetType.BalancerMultiPool]: [] as PriceableToken[],
+    [TokenAssetType.SolidlyLP]: [] as PriceableToken[],
   })
 
   // These are tokens / LPS that can be priced directly by the balancer oracle
@@ -230,9 +232,42 @@ export const fetchPricesV2 = async () => {
     },
   )
 
+
+
+  // SOLIDLY PRICES PER TOKEN
+  const solidlyLpsMetadataCalls = solidlyLpPriceables.map((solidlyLpPriceable) => [{
+    address: solidlyLpPriceable.lpAddress,
+    name: 'totalSupply',
+  }, {
+    address: solidlyLpPriceable.lpAddress,
+    name: 'metadata',
+  }])
+  const solidlyLpsMetadataRes = await retryableMulticall(abi.SolidlyLP, solidlyLpsMetadataCalls.flat(), 'fetchPricesV2_SolidlyLpMetadata')
+
+
+  const solidlyLpPricesPerToken = groupByAndMap(
+    solidlyLpPriceables,
+    (solidlyLpPriceable) => solidlyLpPriceable.symbol,
+    (priceable, index) => {
+
+      if (solidlyLpsMetadataRes == null) return BN_ZERO
+
+      const totalSupply = new BigNumber(solidlyLpsMetadataRes[index * 2 + 0][0]._hex)
+      const r0 = new BigNumber(solidlyLpsMetadataRes[index * 2 + 1].r0._hex)
+      const r1 = new BigNumber(solidlyLpsMetadataRes[index * 2 + 1].r1._hex)
+      const volume0 = r0.times(balancerDirectPricesPerToken[priceable.solidlyLpContainingTokens![0]])
+      const volume1 = r1.times(balancerDirectPricesPerToken[priceable.solidlyLpContainingTokens![1]])
+
+      return volume0.plus(volume1).div(totalSupply).toNumber()
+    }
+  )
+
+
+
+
   // EVEREST price = SUMMIT price
   const everestPricePerToken = {
-    [everestPriceable[0].symbol]: balancerMultiPoolPricesPerToken[TokenSymbol.SUMMIT]
+    [everestPriceable[0].symbol]: balancerMultiPoolPricesPerToken[TokenSymbol.SUMMIT].dividedBy(2)
   }
 
 
@@ -240,6 +275,7 @@ export const fetchPricesV2 = async () => {
   return {
     ...balancerDirectPricesPerToken,
     ...balancerMultiPoolPricesPerToken,
+    ...solidlyLpPricesPerToken,
     ...everestPricePerToken,
   }
 }

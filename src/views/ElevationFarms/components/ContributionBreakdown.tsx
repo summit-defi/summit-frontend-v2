@@ -150,7 +150,7 @@ const ContributionComponent: React.FC<Contribution> = ({token = false, elevation
             { !totem && <LowPercHideText monospace perc={perc} lineHeight='14px' ml='4px' mr='4px' small textAlign='center'>{title}</LowPercHideText> }
         </TitleWrapper>}
         <VerticalBar perc={100}/>
-        <ValueText monospace bold perc={perc} gold={bonusVal != null || totemWin} isTotem={totem} index={index}>{val != null ? val : `${perc.toFixed(1)}%`}</ValueText>
+        <ValueText monospace bold perc={perc} gold={totemWin} isTotem={totem} index={index}>{val != null ? val : `${perc.toFixed(1)}%`}</ValueText>
         { bonusVal != null && <ValueText monospace bold gold isBonusVal perc={perc} index={index}>{bonusVal}</ValueText> }
     </ContributionWrapper>
 }

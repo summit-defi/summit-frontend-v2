@@ -18,7 +18,7 @@ const SummitSupplyDoughnut: React.FC<Props> = ({ circSupply, lockedSupply, burne
   const summitBalancesChartData = {
     labels: [
       `Circulating (${(circSupply * 100 / totalSupply).toFixed(1)}%)`,
-      `In EVEREST (${(lockedSupply * 100 / totalSupply).toFixed(1)}%)`,
+      `In EVEREST (${(lockedSupply * 100 / (circSupply + lockedSupply)).toFixed(1)}%)`,
       `Burned (${(burnedSupply * 100 / totalSupply).toFixed(1)}%)`
     ],
     datasets: [

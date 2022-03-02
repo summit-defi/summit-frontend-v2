@@ -3,10 +3,11 @@ import axios from 'axios'
 import { groupByAndMap, parseJSON } from 'utils'
 import useRefresh from 'hooks/useRefresh'
 import { createSelector } from '@reduxjs/toolkit'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { stateToExpeditionUserDataLoaded, stateToExpeditionLoaded, stateToExpeditionSummitRoundEmission, stateToExpeditionUsdcRoundEmission, stateToExpeditionUserData, stateToEnteredExpedition, stateToExpeditionDeitiedSupply, stateToExpeditionDeitySupplies, stateToExpeditionSafeSupply, stateToExpeditionInfo, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToExpeditionFaith, stateToExpeditionDeity, stateToDeityDivider, stateToWinningDeity, stateToTotemSelectionPending, stateToExpeditionEverestOwned, stateToFarms, stateToExpeditionAPR, stateToDebankExpeditionTreasury, stateToExpeditionSummitEmissionsRemaining, stateToExpeditionUsdcEmissionsRemaining, stateToSummitPrice, stateToExpeditionSummitDisbursed, stateToExpeditionUsdcDisbursed } from './base'
 import { BN_ZERO, getFarmConfigs } from 'config/constants'
 import BigNumber from 'bignumber.js'
+import { setSymbolAPRs } from 'state/tokens'
 
 const selectExpeditionLoaded = createSelector(
     stateToExpeditionLoaded,
@@ -31,9 +32,11 @@ export const useExpeditionEntryFlow = () => useSelector(selectExpeditionEntryFlo
 const selectExpeditionRoundEmission = createSelector(
     stateToExpeditionSummitRoundEmission,
     stateToExpeditionUsdcRoundEmission,
-    (summitRoundEmission, usdcRoundEmission) => ({
+    stateToSummitPrice,
+    (summitRoundEmission, usdcRoundEmission, summitPrice) => ({
         summitRoundEmission,
-        usdcRoundEmission
+        usdcRoundEmission,
+        totalUsdDaily: usdcRoundEmission.dividedBy(new BigNumber(10).pow(6)).plus(summitRoundEmission.dividedBy(new BigNumber(10).pow(18)).times(summitPrice || new BigNumber(15)))
     })
 )
 export const useExpeditionRoundEmission = () => useSelector(selectExpeditionRoundEmission)
@@ -72,11 +75,9 @@ const selectExpeditionStatsInfo = createSelector(
             everestStaked: totalEverest,
 
             summitRoundEmission: expedInfo.summit.roundEmission,
-            summitEmissionsRemaining: expedInfo.summit.emissionsRemaining,
             summitDistributed: expedInfo.summit.distributed,
 
             usdcRoundEmission: expedInfo.usdc.roundEmission,
-            usdcEmissionsRemaining: expedInfo.usdc.emissionsRemaining,
             usdcDistributed: expedInfo.usdc.distributed,
 
             averageFaith: `${expedInfo.deitiedEverest.times(100).dividedBy(totalEverest).toNumber().toFixed(1)}%`,
@@ -137,6 +138,7 @@ export const useFarmsTotalVolumes = () => useSelector(selectFarmsTotalVolumes)
 export const useFetchFarmBeefyAprs = () => {
     const farmConfigs = getFarmConfigs()
     const initAprs = parseJSON(localStorage.getItem('FarmAprs'), {})
+    const dispatch = useDispatch()
     const [aprs, setAprs] = useState(initAprs)
     const { slowRefresh } = useRefresh()
 
@@ -150,9 +152,10 @@ export const useFetchFarmBeefyAprs = () => {
                         (farm) => (res.data[farm.beefyVaultApiName]?.tradingApr || 0) + (res.data[farm.beefyVaultApiName]?.vaultApr || 0)
                     )
                     setAprs(farmAprs)
+                    dispatch(setSymbolAPRs(farmAprs))
                 })
         },
-        [slowRefresh, farmConfigs, setAprs]
+        [slowRefresh, farmConfigs, dispatch, setAprs]
     )
 
     return aprs

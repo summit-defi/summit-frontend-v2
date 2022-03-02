@@ -29,7 +29,7 @@ export const fetchElevationsData = async (elevation?: Elevation) => {
       address: elevationHelperAddress,
       name: 'roundNumber',
       params: [elevationUtils.toInt(elev)],
-    }
+    },
   ])
 
   const res = await retryableMulticall(abi.elevationHelper, calls.flat(), 'fetchElevationsData_elevHelper')

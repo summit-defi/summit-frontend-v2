@@ -143,3 +143,6 @@ export const addressArrayIndexOf = (arr: string[], add: string): number => {
 export const sumBigNumbersByKey = (objs: any[], key: string) => {
   return objs.reduce((acc, obj) => acc.plus(obj[key] || BN_ZERO), BN_ZERO)
 }
+export const maxBigNumberByKey = (objs: any[], key: string) => {
+  return objs.reduce((acc, obj) => acc.isGreaterThan((obj[key] || BN_ZERO)) ? acc : (obj[key] || BN_ZERO), BN_ZERO)
+}

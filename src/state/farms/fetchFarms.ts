@@ -10,7 +10,7 @@ import {
 } from 'utils/'
 import { Elevation, elevationUtils } from '../../config/constants/types'
 import { SECONDS_PER_YEAR } from 'config'
-import { getFarmConfigs } from 'config/constants'
+import { getFarmConfigs, TokenSymbol } from 'config/constants'
 import { Farm } from 'state/types'
 import { merge } from 'lodash'
 
@@ -152,8 +152,8 @@ export const fetchFarms = async () => {
       ...farmConfig,
       allocation: new BigNumber(alloc[0]._hex).toNumber(),
       elevations: merge({}, farmConfig.elevations, elevationsInfo),
-      depositFeeBP: new BigNumber(tokenDepositFee),
-      taxBP: new BigNumber(tokenWithdrawalTax),
+      depositFeeBP: new BigNumber(tokenDepositFee).toNumber(),
+      taxBP: new BigNumber(tokenWithdrawalTax).toNumber(),
     }
   }
 

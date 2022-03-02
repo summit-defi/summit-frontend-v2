@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToTokenInfos, stateToFarmsElevationData, stateToLifetimeSummitBonuses, stateToLifetimeSummitWinnings, stateToFarmsUserDataLoaded, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToFarmsElevationsData } from "./base";
-import { getFarmInteracting, getFormattedBigNumber, sumBigNumbersByKey } from "utils"
+import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToTokenInfos, stateToFarmsElevationData, stateToLifetimeSummitBonuses, stateToLifetimeSummitWinnings, stateToFarmsUserDataLoaded, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToFarmsElevationsData, stateToSummitPrice } from "./base";
+import { getFarmInteracting, getFormattedBigNumber } from "utils"
 import { BN_ZERO, Elevation, elevationUtils } from "config/constants";
 import { useSelector } from "./utils";
 import BigNumber from "bignumber.js";
@@ -86,7 +86,7 @@ const selectFarmUserTokenSectionInfo = createSelector(
             depositFeeBP: farm.depositFeeBP,
 
             maxTaxBP: farm.taxBP,
-            minTaxBP: farm.native ? 0 : 100,
+            minTaxBP: Math.min(farm.taxBP, farm.native ? 0 : 100),
             currentTaxBP: tokenInfo.taxBP,
             taxResetTimestamp: tokenInfo.taxResetTimestamp,
 
@@ -296,10 +296,18 @@ const selectLifetimeSummitWinningsAndBonus = createSelector(
     stateToLifetimeSummitWinnings,
     stateToLifetimeSummitBonuses,
     selectMultiElevWinningsContributions,
-    (lifetimeSummitWinnings, lifetimeSummitBonuses, { totalClaimable, totalClaimableBonus }) => {
+    stateToSummitPrice,
+    (lifetimeSummitWinnings, lifetimeSummitBonuses, { totalClaimable, totalClaimableBonus }, summitPrice) => {
+        const winnings = (lifetimeSummitWinnings || BN_ZERO).plus(totalClaimable || BN_ZERO)
+        const bonuses = (lifetimeSummitBonuses || BN_ZERO).plus(totalClaimableBonus || BN_ZERO)
+        const winningsUsd = winnings.div(new BigNumber(10).pow(18)).times(summitPrice).toFixed(2)
+        const bonusesUsd = bonuses.div(new BigNumber(10).pow(18)).times(summitPrice).toFixed(2)
+        
         return {
-            lifetimeSummitWinnings: (lifetimeSummitWinnings || BN_ZERO).plus(totalClaimable || BN_ZERO),
-            lifetimeSummitBonuses: (lifetimeSummitBonuses || BN_ZERO).plus(totalClaimableBonus || BN_ZERO),
+            lifetimeSummitWinnings: winnings,
+            lifetimeSummitBonuses: bonuses,
+            lifetimeSummitWinningsUsd: winningsUsd,
+            lifetimeSummitBonusesUsd: bonusesUsd,
         }
     }
 )

@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react'
-import { BN_ZERO, Elevation, elevationUtils } from 'config/constants'
+import { BN_ZERO, Elevation, elevationUtils, TokenSymbol } from 'config/constants'
 import styled from 'styled-components'
 import { Flex, Text } from 'uikit'
 import { capitalizeFirstLetter, getFarmTotalStakedBalance } from 'utils'
@@ -46,6 +46,7 @@ interface Props {
 const FarmStakingContribution: React.FC<Props> = ({ symbol, userDataLoaded, elevationsStaked, pricePerToken, decimals }) => {
     const elevation = useSelectedElevation()
     const { account } = useWeb3React()
+    const isEverest = symbol === TokenSymbol.EVEREST
 
     const [stakedUSD, stakingContributions] = useMemo(
         () => {
@@ -76,10 +77,12 @@ const FarmStakingContribution: React.FC<Props> = ({ symbol, userDataLoaded, elev
                 <Flex mb='2px'>
                     <CardValue
                         value={stakedUSD.toNumber()}
-                        prefix='$'
+                        prefix={isEverest ? undefined : '$'}
+                        postfix={isEverest ? 'EVEREST' : undefined}
                         decimals={2}
                         summitPalette={elevation}
                         fontSize="18"
+                        postfixFontSize='14'
                     />
                 </Flex>
             </Flex>

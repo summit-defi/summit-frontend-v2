@@ -9,7 +9,7 @@ import { chunkArray, getPaletteGradientFarmCardBackground } from 'utils'
 import ArtworkTotem from 'uikit/components/Totem/ArtworkTotem'
 import Totem from 'views/ElevationFarms/components/Totem'
 import { Modal } from '../Modal'
-import { elevationPalette, textGold } from 'theme/colors'
+import { elevationPalette } from 'theme/colors'
 import chroma from 'chroma-js'
 import WinningNumberTotemIndicator from './WinningNumberTotemIndicator'
 import { RoundStatus } from 'state/hooksNew'
@@ -92,15 +92,6 @@ const StyledCardAccent = styled.div<{ elevationBackground: string }>`
   z-index: -1;
 `
 
-const SkewedGoldBlock = styled.div`
-  background-color: ${textGold};
-  transform: skew(-15deg);
-  height: 22px;
-  width: 42px; 
-  border-radius: 4px;
-  box-shadow: 1px 1px 2px ${({ theme }) => theme.colors.textShadow};
-
-`
 const TotemLabel = styled(Text)<{ elevation: Elevation; header?: boolean; color?: string }>`
   font-weight: bold;
   font-style: italic;

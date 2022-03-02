@@ -9,7 +9,7 @@ import {
   fetchExpeditionPublicDataAsync,
 } from './actions'
 import { State, Farm, ElevationInfo } from './types'
-import { BN_ZERO, Elevation, ElevationFarmTab, elevationUtils, RoadmapSummitPalette, SummitPalette } from '../config/constants/types'
+import { BN_ZERO, Elevation, ElevationFarmTab, elevationUtils, SummitPalette } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
   fetchElevationHelperInfoAsync,

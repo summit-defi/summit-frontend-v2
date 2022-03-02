@@ -40,6 +40,9 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
   const bonusEndDate = timestampToDate(bonusStartTimestamp + week + week)
   const bonusPositionPerc = clamp(100 * ((currentTimestamp - sanitizedBonusResetTimestamp) / (week * 2)), 0, 100)
 
+  const withdrawalFeeTitle = maxTaxBP === minTaxBP ? 'WITHDRAWAL FEE' : 'DECAYING WITHDRAWAL FEE'
+  const withdrawalFeePositionPerc = maxTaxBP === minTaxBP ? 100 : taxPositionPerc
+
   return (
     <Flex flexWrap='wrap' justifyContent='center' flexDirection='row' width='100%' mb='18px' mt='6px' style={{gap: '24px'}}>
       { depositFeeBP > 0 && false &&
@@ -54,7 +57,7 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
       { maxTaxBP > 0 &&
         <BoundedProgressBar
           tooltipType={TooltipModalType.DecayingWithdrawalFee}
-          title='DECAYING WITHDRAWAL FEE'
+          title={withdrawalFeeTitle}
           marks={[
             {
               title: taxStartDate,
@@ -67,8 +70,8 @@ const FarmCardTokenSection: React.FC<Props> = ({ symbol }) => {
               positionPerc: 100
             }
           ]}
-          currDisplayPerc={(taxResetTimestamp === 0 ? 700 : currentTaxBP) / 100}
-          currPositionPerc={taxPositionPerc}
+          currDisplayPerc={(taxResetTimestamp === 0 ? maxTaxBP : currentTaxBP) / 100}
+          currPositionPerc={withdrawalFeePositionPerc}
         />
       }
 

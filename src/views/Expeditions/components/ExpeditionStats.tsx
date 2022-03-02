@@ -21,11 +21,9 @@ export const ExpeditionStats: React.FC = memo(() => {
         everestStaked,
     
         summitRoundEmission,
-        summitEmissionsRemaining,
         summitDistributed,
     
         usdcRoundEmission,
-        usdcEmissionsRemaining,
         usdcDistributed,
     
         averageFaith,
@@ -34,11 +32,9 @@ export const ExpeditionStats: React.FC = memo(() => {
     const rawEverestStaked = getFormattedBigNumber(everestStaked, 3)
 
     const rawSummitRoundEmission = getFormattedBigNumber(summitRoundEmission, 2)
-    const rawSummitEmissionsRemaining = getFormattedBigNumber(summitEmissionsRemaining, 2)
     const rawSummitDistributed = getFormattedBigNumber(summitDistributed, 2)
 
     const rawUsdcRoundEmission = getFormattedBigNumber(usdcRoundEmission, 2, 6)
-    const rawUsdcEmissionsRemaining = getFormattedBigNumber(usdcEmissionsRemaining, 2, 6)
     const rawUsdcDistributed = getFormattedBigNumber(usdcDistributed, 2, 6)
 
     return (
@@ -77,14 +73,6 @@ export const ExpeditionStats: React.FC = memo(() => {
                         </ValueText>
                         <ValueText>
                             <Text bold monospace small>
-                                EMISSION REMAINING:
-                            </Text>
-                            <Text bold monospace fontSize='16px'>
-                                {rawSummitEmissionsRemaining}
-                            </Text>
-                        </ValueText>
-                        <ValueText>
-                            <Text bold monospace small>
                                 DISBURSED TO DATE:
                             </Text>
                             <Text bold monospace fontSize='16px'>
@@ -102,14 +90,6 @@ export const ExpeditionStats: React.FC = memo(() => {
                             </Text>
                             <Text bold monospace fontSize='16px'>
                                 {rawUsdcRoundEmission}
-                            </Text>
-                        </ValueText>
-                        <ValueText>
-                            <Text bold monospace small>
-                                EMISSION REMAINING:
-                            </Text>
-                            <Text bold monospace fontSize='16px'>
-                            {rawUsdcEmissionsRemaining}
                             </Text>
                         </ValueText>
                         <ValueText>

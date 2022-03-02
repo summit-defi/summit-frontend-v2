@@ -11,7 +11,7 @@ import FarmStakingContribution, { ElevationsStaked } from './FarmStakingContribu
 import { makeSelectFarmBySymbol, useSelector, useFarmsUserDataLoaded, useFarmFilters } from 'state/hooksNew'
 import { FarmAPYBreakdown, FarmTotalValue } from './FarmCardInfoItems'
 import { FarmRetiredSash } from './FarmRetiredSash'
-import { getFarmInteracting, getFarmType } from 'utils'
+import { getFarmInteracting, getFarmType, maxBigNumberByKey } from 'utils'
 import { FarmType } from 'state/types'
 
 const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
@@ -105,16 +105,18 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
 
   const {
     name,
+    lpSource,
     allocation,
     decimals,
     elevations,
+    comment: farmComment,
+    warning: farmWarning,
   } = farm
 
   const {
-    comment: farmComment,
-    warning: farmWarning,
+    // comment: farmComment,
+    // warning: farmWarning,
     supply: lpSupply,
-    summitPerYear = farm.elevations[Elevation.SUMMIT].summitPerYear || BN_ZERO,
     live = true,
   } = farm.elevations[elevationTab] || {}
 
@@ -149,7 +151,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     [elevations]
   )
 
-  const totalValue: BigNumber = useMemo(
+  const totalStaked: BigNumber = useMemo(
     () => {
       let supply = BN_ZERO
       if (elevationTab === ElevationFarmTab.DASH) {
@@ -159,24 +161,37 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
       } else {
         supply = lpSupply
       }
-      if (supply == null) return new BigNumber(0)
-      return supply.div(new BigNumber(10).pow(decimals)).times(pricePerToken)
+      return supply
     },
-    [lpSupply, elevationTab, elevations, pricePerToken, decimals]
+    [lpSupply, elevationTab, elevations]
   )
 
-  const aprTotalValue: BigNumber = useMemo(
+  const [aprTotalValue, summitPerYear]: [BigNumber, BigNumber] = useMemo(
     () => {
       let supply = BN_ZERO
+      let sumPerYear = BN_ZERO
       if (elevationTab === ElevationFarmTab.DASH) {
-        supply = elevations[Elevation.SUMMIT].supply || BN_ZERO
+        // Highest elevation with non-zero staked & non-zero summitPerYear
+        const [highestElev] = Object.entries(elevations)
+          .reverse()
+          .find(([_, info]) => (info.supply || BN_ZERO).isGreaterThan(0) && (info.summitPerYear || BN_ZERO).isGreaterThan(0))
+
+        if (highestElev != null) {
+          supply = elevations[highestElev].supply || BN_ZERO
+          sumPerYear = elevations[highestElev].summitPerYear || BN_ZERO
+        }
+        
       } else {
-        supply = lpSupply
+        supply = elevations[elevationTab].supply
+        sumPerYear = elevations[elevationTab].summitPerYear
       }
-      if (supply == null) return new BigNumber(0)
-      return supply.div(new BigNumber(10).pow(decimals)).times(pricePerToken)
+
+      return [
+        supply.div(new BigNumber(10).pow(decimals)).times(pricePerToken),
+        sumPerYear,
+      ]
     },
-    [lpSupply, elevationTab, elevations, pricePerToken, decimals]
+    [elevationTab, elevations, pricePerToken, decimals]
   )
 
   const targetUrl = `/${(elevationFarmTabToUrl[elevationTab] || 'elevations').toLowerCase()}${expanded ? '' : `/${symbol.toLowerCase()}`}`
@@ -196,10 +211,10 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
         { farmComment != null && <Text monospace bold italic fontSize='13px' mb='14px' textAlign='center'>* {farmComment}</Text> }
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }
         <FarmNumericalInfoFlex>
-          <FarmIconAndAllocation symbol={symbol} name={name} allocation={allocation} live={live}/>
+          <FarmIconAndAllocation symbol={symbol} lpSource={lpSource} name={name} allocation={allocation} live={live}/>
           <FarmStakingContribution symbol={symbol} userDataLoaded={userDataLoaded} elevationsStaked={farmElevationsStaked} pricePerToken={pricePerToken} decimals={decimals}/>
           <FarmAPYBreakdown summitPerYear={summitPerYear} totalValue={aprTotalValue}/>
-          <FarmTotalValue totalValue={totalValue}/>
+          <FarmTotalValue symbol={symbol} totalStaked={totalStaked} pricePerToken={pricePerToken} decimals={decimals}/>
         </FarmNumericalInfoFlex>
       </PressableFlex>
 

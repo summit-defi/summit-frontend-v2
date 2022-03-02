@@ -1,5 +1,5 @@
 import { TokenSymbol } from "config/constants/tokenSymbols"
-import { TokenAssetType, PriceableToken } from "config/constants/types"
+import { TokenAssetType, PriceableToken, TokenLpSource } from "config/constants/types"
 
 export const ftmPeggedTokens = {
   [TokenSymbol.USDC]: true,
@@ -47,30 +47,35 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
   [TokenSymbol.TOMB_FTM]: {
     assetType: TokenAssetType.LP,
     symbol: TokenSymbol.TOMB_FTM,
+    lpSource: TokenLpSource.SpookySwap,
     lpAddress: '0x2a651563c9d3af67ae0388a5c8f89b867038089e',
     decimals: 18,
   },
   [TokenSymbol.TSHARE_FTM]: {
     assetType: TokenAssetType.LP,
     symbol: TokenSymbol.TSHARE_FTM,
+    lpSource: TokenLpSource.SpookySwap,
     lpAddress: '0x4733bc45ef91cf7ccecaeedb794727075fb209f2',
     decimals: 18,
   },
   [TokenSymbol.FTM_BOO]: {
     assetType: TokenAssetType.LP,
     symbol: TokenSymbol.FTM_BOO,
+    lpSource: TokenLpSource.SpookySwap,
     lpAddress: '0xEc7178F4C41f346b2721907F5cF7628E388A7a58',
     decimals: 18,
   },
   [TokenSymbol.BPT_BEETS_FTM]: {
     assetType: TokenAssetType.Balancer2Pool,
     symbol: TokenSymbol.BPT_BEETS_FTM,
+    lpSource: TokenLpSource.BeethovenX,
     tokenAddress: '0xcde5a11a4acb4ee4c805352cec57e236bdbc3837',
     decimals: 18,
   },
   [TokenSymbol.BATTLE_OF_THE_BANDS]: {
     assetType: TokenAssetType.BalancerMultiPool,
     symbol: TokenSymbol.BATTLE_OF_THE_BANDS,
+    lpSource: TokenLpSource.BeethovenX,
     tokenAddress: '0x9af1f0e9ac9c844a4a4439d446c1437807183075',
     decimals: 18,
     balancerMultiPoolInfo: {
@@ -90,6 +95,7 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
   [TokenSymbol.GRAND_ORCH]: {
     assetType: TokenAssetType.BalancerMultiPool,
     symbol: TokenSymbol.GRAND_ORCH,
+    lpSource: TokenLpSource.BeethovenX,
     tokenAddress: '0xd47d2791d3b46f9452709fa41855a045304d6f9d',
     decimals: 18,
     balancerMultiPoolInfo: {
@@ -106,6 +112,7 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
   [TokenSymbol.FANTOM_OF_THE_OPERA]: {
     assetType: TokenAssetType.BalancerMultiPool,
     symbol: TokenSymbol.FANTOM_OF_THE_OPERA,
+    lpSource: TokenLpSource.BeethovenX,
     tokenAddress: '0xcdF68a4d525Ba2E90Fe959c74330430A5a6b8226',
     decimals: 18,
     balancerMultiPoolInfo: {
@@ -126,15 +133,49 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
   [TokenSymbol["2SHARES_FTM"]]: {
     assetType: TokenAssetType.LP,
     symbol: TokenSymbol["2SHARES_FTM"],
+    lpSource: TokenLpSource.SpookySwap,
     lpAddress: '0x6398ACBBAB2561553a9e458Ab67dCFbD58944e52',
     decimals: 18,
   },
   [TokenSymbol["2OMB_FTM"]]: {
     assetType: TokenAssetType.LP,
     symbol: TokenSymbol["2OMB_FTM"],
+    lpSource: TokenLpSource.SpookySwap,
     lpAddress: '0xbdC7DFb7B88183e87f003ca6B5a2F81202343478',
     decimals: 18,
   },
+  [TokenSymbol.PAE_FTM]: {
+    assetType: TokenAssetType.LP,
+    symbol: TokenSymbol.PAE_FTM,
+    lpSource: TokenLpSource.SpookySwap,
+    lpAddress: '0x2DC234DbfC085DdbC36a6EACC061D7333Cd397b0',
+    decimals: 18,
+  },
+  [TokenSymbol.pFTM_FTM]: {
+    assetType: TokenAssetType.LP,
+    symbol: TokenSymbol.pFTM_FTM,
+    lpSource: TokenLpSource.SpookySwap,
+    lpAddress: '0x9ce8e9b090e8AF873e793e0b78C484076F8CEECE',
+    decimals: 18,
+  },
+  [TokenSymbol.BOO_XBOO]: {
+    assetType: TokenAssetType.SolidlyLP,
+    symbol: TokenSymbol.BOO_XBOO,
+    lpSource: TokenLpSource.SolidlyVolatile,
+    lpAddress: '0x5804F6C40f44cF7593F73cf3aa16F7037213A623',
+    decimals: 18,
+    solidlyLpContainingTokens: [TokenSymbol.BOO, TokenSymbol.xBOO],
+
+  },
+  [TokenSymbol.USDC_MIM]: {
+    assetType: TokenAssetType.SolidlyLP,
+    symbol: TokenSymbol.USDC_MIM,
+    lpSource: TokenLpSource.SolidlyStable,
+    lpAddress: '0xbcab7d083Cf6a01e0DdA9ed7F8a02b47d125e682',
+    decimals: 18,
+    solidlyLpContainingTokens: [TokenSymbol.USDC, TokenSymbol.MIM],
+  },
+  
 
 
 
@@ -180,5 +221,17 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
     symbol: TokenSymbol.fLUNA,
     tokenAddress: '0x95dD59343a893637BE1c3228060EE6afBf6F0730',
     decimals: 6,
+  },
+  [TokenSymbol.MIM]: {
+    assetType: TokenAssetType.Stablecoin,
+    symbol: TokenSymbol.MIM,
+    tokenAddress: '0x82f0b8b456c1a451378467398982d4834b6829c1',
+    decimals: 18,
+  },
+  [TokenSymbol.xBOO]: {
+    assetType: TokenAssetType.SingleAsset,
+    symbol: TokenSymbol.xBOO,
+    tokenAddress: '0xa48d959AE2E88f1dAA7D5F611E01908106dE7598',
+    decimals: 18,
   },
 }
