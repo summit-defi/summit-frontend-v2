@@ -55,7 +55,7 @@ const FarmStakingContribution: React.FC<Props> = ({ symbol, userDataLoaded, elev
             const totalStaked: BigNumber = elevation == null ?
                 tokenTotalStaked :
                 elevationsStaked[elevation]
-            const stakedDollarValue = totalStaked.div(new BigNumber(10).pow(decimals)).times(pricePerToken)
+            const stakedDollarValue = totalStaked.div(new BigNumber(10).pow(decimals)).times(isEverest ? 1 : pricePerToken)
 
             const contributions = tokenTotalStaked.isEqualTo(0) ? [] : elevationUtils.all
                 .map((elev, index) => ({
@@ -67,7 +67,7 @@ const FarmStakingContribution: React.FC<Props> = ({ symbol, userDataLoaded, elev
 
             return [stakedDollarValue, contributions]
         },
-        [elevation, elevationsStaked, pricePerToken, decimals]
+        [isEverest, elevation, elevationsStaked, pricePerToken, decimals]
     )
 
     return (

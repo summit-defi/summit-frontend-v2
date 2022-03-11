@@ -62,7 +62,7 @@ const StyledModal = styled.div<{ elevationGlow?: ElevOrPalette }>`
 
         background-size: 200% 200%;
         animation: ${RainbowLight} 2s linear infinite;
-        border-radius: 6px;
+        border-radius: 4px;
         filter: blur(3px);
         position: absolute;
         top: -5px;
@@ -75,7 +75,7 @@ const StyledModal = styled.div<{ elevationGlow?: ElevOrPalette }>`
       &:after {
         content: ' ';
         background: ${theme.colors.background};
-        border-radius: 6px;
+        border-radius: 4px;
         position: absolute;
         top: 0;
         right: 0;

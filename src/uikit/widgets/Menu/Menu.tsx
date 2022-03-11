@@ -1,19 +1,15 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Overlay from "../../components/Overlay/Overlay";
 import Flex from "../../components/Box/Flex";
 import { useMatchBreakpoints } from "../../hooks";
-import Panel from "./components/Panel";
 import UserBlock from "./components/UserBlock";
 import { NavProps } from "./types";
-import { MENU_HEIGHT, SIDEBAR_WIDTH_REDUCED, SIDEBAR_WIDTH_FULL } from "./config";
+import { MENU_HEIGHT } from "./config";
 import SummitPrice from "./components/SummitPrice";
-import MenuButton from "./components/MenuButton";
-import { HamburgerCloseIcon, HamburgerIcon } from "./icons";
 import { useCurrentSummitPalette } from "state/hooks";
-import DarkModeToggle from "./components/DarkModeToggle";
-import MenuPageSpecificHeader from "./components/MenuPageSpecificHeader";
 import { useRoadmapScreenshot } from "state/hooksNew";
+import Logo from "./components/Logo";
+import NavLinks from "./components/NavLinks";
 
 const Wrapper = styled.div`
   position: relative;
@@ -26,7 +22,7 @@ const StyledNav = styled.nav<{ showMenu: boolean }>`
   left: 0;
   transition: top 0.2s;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding-left: 16px;
   padding-right: 16px;
@@ -39,10 +35,7 @@ const StyledNav = styled.nav<{ showMenu: boolean }>`
   background-color: ${({ theme }) => theme.colors.background};
   flex-direction: row;
   gap: 14px;
-
-  ${({ theme }) => theme.mediaQueries.nav} {
-    justify-content: space-between;
-  }
+  box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
 `;
 
 const BodyWrapper = styled.div`
@@ -55,20 +48,6 @@ const Inner = styled.div<{ isPushed: boolean; showMenu: boolean, screenshot: boo
   margin-top: ${({ showMenu, screenshot }) => (screenshot ? '12px' : (showMenu ? `${MENU_HEIGHT}px` : 0))};
   transform: translate3d(0, 0, 0);
   max-width: 100%;
-
-  ${({ theme }) => theme.mediaQueries.nav} {
-    margin-left: ${({ screenshot }) => screenshot ? SIDEBAR_WIDTH_REDUCED : SIDEBAR_WIDTH_FULL}px;
-    max-width: ${({ isPushed, screenshot }) => `calc(100% - ${isPushed && !screenshot ? SIDEBAR_WIDTH_FULL : SIDEBAR_WIDTH_REDUCED}px)`};
-  }
-`;
-
-const MobileOnlyOverlay = styled(Overlay)`
-  position: fixed;
-  height: 100%;
-
-  ${({ theme }) => theme.mediaQueries.nav} {
-    display: none;
-  }
 `;
 
 const MobileOnlyFooter = styled.div`
@@ -80,9 +59,8 @@ const MobileOnlyFooter = styled.div`
   display: flex;
   align-items: center;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
   height: 65px;
-  padding-right: 16px;
   background-color: ${({ theme }) => theme.colors.background};
   box-shadow: 0px 0px 4px ${({ theme }) => theme.colors.textShadow};
 
@@ -91,25 +69,6 @@ const MobileOnlyFooter = styled.div`
     display: none;
   }
 `
-
-const MobileExcludedHeaderElements = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  justify-content: space-between;
-
-  ${({ theme }) => theme.mediaQueries.invNav} {
-    display: none;
-  }
-`;
-const MobileHamburgerWrapper = styled.div`
-  position: absolute;
-  z-index: 5;
-  left: 8px;
-  ${({ theme }) => theme.mediaQueries.nav} {
-    display: none;
-  }
-`;
 
 const Menu: React.FC<NavProps> = ({
   account,
@@ -132,8 +91,8 @@ const Menu: React.FC<NavProps> = ({
   return (
     <Wrapper>
       { !roadmapScreenshot &&
-        <StyledNav showMenu>
-          <MobileHamburgerWrapper>
+        <StyledNav showMenu id='popup-root'>
+          {/* <MobileHamburgerWrapper>
             <MenuButton aria-label="Toggle menu" onClick={() => setIsPushed((prevState: boolean) => !prevState)} mr="6px">
               {isPushed ? (
                 <HamburgerCloseIcon width="24px" color="textSubtle"/>
@@ -141,20 +100,27 @@ const Menu: React.FC<NavProps> = ({
                 <HamburgerIcon width="24px" color="textSubtle"/>
               )}
             </MenuButton>
-          </MobileHamburgerWrapper>
+          </MobileHamburgerWrapper> */}
+          <Flex alignItems='center' justifyContent='center' gap='10px'>
+            <Logo isDark={isDark} href="/" summitPalette={summitPalette}/>
+            <NavLinks links={links} mobileNav={false}/>
+          </Flex>
+          <Flex alignItems='center' justifyContent='center' gap='10px'>
+            <SummitPrice summitPriceUsd={summitPriceUsd} />
+            <UserBlock account={account} login={login} logout={logout} isDark={isDark} toggleTheme={toggleTheme} />
+          </Flex>
 
-          <MenuPageSpecificHeader isDark={isDark} isPushed={isPushed}/>
+          {/* <MenuPageSpecificHeader isDark={isDark} isPushed={isPushed}/> */}
 
-          <MobileExcludedHeaderElements>
+          {/* <MobileExcludedHeaderElements>
             <Flex justifyContent='flex-end' flex='1'>
                 <DarkModeToggle summitPalette={summitPalette} isDark={isDark} toggleTheme={toggleTheme}/>
-                <UserBlock account={account} login={login} logout={logout} isDark={isDark} />
             </Flex>
-          </MobileExcludedHeaderElements>
+          </MobileExcludedHeaderElements> */}
         </StyledNav>
       }
       <BodyWrapper>
-        {!roadmapScreenshot &&
+        {/* {!roadmapScreenshot &&
           <Panel
             isPushed={isPushed}
             isMobile={isMobile}
@@ -164,16 +130,16 @@ const Menu: React.FC<NavProps> = ({
             additionals={additionals}
             summitPriceUsd={summitPriceUsd}
           />
-        }
+        } */}
         <Inner isPushed={isPushed} screenshot={roadmapScreenshot} showMenu>
           {children}
         </Inner>
-        <MobileOnlyOverlay show={isPushed} onClick={() => setIsPushed(false)} role="presentation" />
+        {/* <MobileOnlyOverlay show={isPushed} onClick={() => setIsPushed(false)} role="presentation" /> */}
         <MobileOnlyFooter>
-          <SummitPrice summitPriceUsd={summitPriceUsd} />
           <Flex>
-            <DarkModeToggle summitPalette={summitPalette} isDark={isDark} toggleTheme={toggleTheme}/>
-            <UserBlock account={account} login={login} logout={logout} isDark={isDark} />
+            <NavLinks links={links} mobileNav/>
+            {/* <DarkModeToggle summitPalette={summitPalette} isDark={isDark} toggleTheme={toggleTheme}/> */}
+            {/* <UserBlock account={account} login={login} logout={logout} isDark={isDark} /> */}
           </Flex>
         </MobileOnlyFooter>
       </BodyWrapper>

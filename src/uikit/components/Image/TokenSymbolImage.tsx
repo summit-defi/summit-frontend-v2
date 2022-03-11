@@ -48,6 +48,10 @@ interface Props {
 const symbolSortPrio = (symbol): number => {
   switch (symbol) {
     case 'SUMMIT':
+    case 'BSHARE':
+    case 'BASED':
+    case 'xBOO':
+    case 'MIM':
       return 1
     case 'FTM':
       return -1

@@ -11,6 +11,9 @@ const StyledLink = styled(Text)<LinkProps>`
   &:hover {
     text-decoration: underline;
   }
+  &:focus-visible {
+    outline: none;
+  }
 `
 
 const Link: React.FC<LinkProps> = ({ external, ...props }) => {

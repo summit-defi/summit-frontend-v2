@@ -9,6 +9,7 @@ import { useWeb3React } from '@web3-react/core'
 import { roundStatusLockReason, useElevationInteractionsLockedBreakdown, useFarmAndUserTokenInteractionSectionInfo } from 'state/hooksNew'
 import FarmCardUserApprove from './FarmCardUserApprove'
 import FarmCardUserDeposit from './FarmCardUserDeposit'
+import { TokenSymbol } from 'config/constants'
 
 const MobileVerticalFlex = styled(Flex)`
   flex-direction: column;

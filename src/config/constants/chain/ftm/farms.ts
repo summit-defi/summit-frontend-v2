@@ -38,6 +38,22 @@ const usdcMimFarm: MultiElevFarmConfig = {
 }
 
 
+
+const ftmBshareFarm: MultiElevFarmConfig = {
+  symbol: TokenSymbol.FTM_BSHARE,
+  ...farmConfigs[TokenSymbol.FTM_BSHARE],
+  ...ftmTokens[TokenSymbol.FTM_BSHARE],
+  getUrl: 'https://spookyswap.finance/add/0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83/0x49C290Ff692149A4E16611c694fdED42C954ab7a',
+}
+const tombBasedFarm: MultiElevFarmConfig = {
+  symbol: TokenSymbol.TOMB_BASED,
+  ...farmConfigs[TokenSymbol.TOMB_BASED],
+  ...ftmTokens[TokenSymbol.TOMB_BASED],
+  getUrl: 'https://spookyswap.finance/add/0x6c021Ae822BEa943b2E66552bDe1D2696a53fbB7/0x8D7d3409881b51466B483B11Ea1B8A03cdEd89ae',
+}
+
+
+
 const paeFtmFarm: MultiElevFarmConfig = {
   symbol: TokenSymbol.PAE_FTM,
   ...farmConfigs[TokenSymbol.PAE_FTM],
@@ -141,6 +157,8 @@ const twOmbFtmFarm: MultiElevFarmConfig = {
 const farms = [
   summitFarm,
   everestFarm,
+  ftmBshareFarm,
+  tombBasedFarm,
   booXBooFarm,
   usdcMimFarm,
   paeFtmFarm,

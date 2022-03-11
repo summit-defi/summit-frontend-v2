@@ -16,6 +16,7 @@ export * from './components/Link'
 export * from './components/Skeleton'
 export * from './components/Table'
 export * from './components/Totem'
+export * from './components/Divider'
 
 // Hooks
 export * from './hooks'

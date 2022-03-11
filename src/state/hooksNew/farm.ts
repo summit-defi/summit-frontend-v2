@@ -86,7 +86,7 @@ const selectFarmUserTokenSectionInfo = createSelector(
             depositFeeBP: farm.depositFeeBP,
 
             maxTaxBP: farm.taxBP,
-            minTaxBP: Math.min(farm.taxBP, farm.native ? 0 : 100),
+            minTaxBP: Math.min(farm.taxBP, farm.native ? 0 : 50),
             currentTaxBP: tokenInfo.taxBP,
             taxResetTimestamp: tokenInfo.taxResetTimestamp,
 

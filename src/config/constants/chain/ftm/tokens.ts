@@ -175,6 +175,21 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
     decimals: 18,
     solidlyLpContainingTokens: [TokenSymbol.USDC, TokenSymbol.MIM],
   },
+  [TokenSymbol.FTM_BSHARE]: {
+    assetType: TokenAssetType.LP,
+    symbol: TokenSymbol.FTM_BSHARE,
+    lpSource: TokenLpSource.SpookySwap,
+    lpAddress: '0x6F607443DC307DCBe570D0ecFf79d65838630B56',
+    decimals: 18,
+
+  },
+  [TokenSymbol.TOMB_BASED]: {
+    assetType: TokenAssetType.LP,
+    symbol: TokenSymbol.TOMB_BASED,
+    lpSource: TokenLpSource.SpookySwap,
+    lpAddress: '0xaB2ddCBB346327bBDF97120b0dD5eE172a9c8f9E',
+    decimals: 18,
+  },
   
 
 
@@ -232,6 +247,18 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
     assetType: TokenAssetType.SingleAsset,
     symbol: TokenSymbol.xBOO,
     tokenAddress: '0xa48d959AE2E88f1dAA7D5F611E01908106dE7598',
+    decimals: 18,
+  },
+  [TokenSymbol.BSHARE]: {
+    assetType: TokenAssetType.SingleAsset,
+    symbol: TokenSymbol.BSHARE,
+    tokenAddress: '0x49C290Ff692149A4E16611c694fdED42C954ab7a',
+    decimals: 18,
+  },
+  [TokenSymbol.BASED]: {
+    assetType: TokenAssetType.SingleAsset,
+    symbol: TokenSymbol.BASED,
+    tokenAddress: '0x8D7d3409881b51466B483B11Ea1B8A03cdEd89ae',
     decimals: 18,
   },
 }

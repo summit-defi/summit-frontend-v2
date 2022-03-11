@@ -46,6 +46,10 @@ export enum TokenSymbol {
     USDC_MIM = 'USDC-MIM',
     MIM = 'MIM',
     xBOO = 'xBOO',
+    FTM_BSHARE = 'FTM-BSHARE',
+    TOMB_BASED = 'TOMB-BASED',
+    BSHARE = 'BSHARE',
+    BASED = 'BASED',
 }
 
 export const TokensWithCustomArtwork = {
@@ -93,4 +97,8 @@ export const TokensWithCustomArtwork = {
     [TokenSymbol.USDC_MIM]: false,
     [TokenSymbol.MIM]: false,
     [TokenSymbol.xBOO]: false,
+    [TokenSymbol.FTM_BSHARE]: false,
+    [TokenSymbol.TOMB_BASED]: false,
+    [TokenSymbol.BSHARE]: false,
+    [TokenSymbol.BASED]: false,
 }

@@ -1658,6 +1658,18 @@
     "@ethersproject/properties" "^5.0.7"
     "@ethersproject/strings" "^5.0.8"
 
+"@floating-ui/core@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-0.6.0.tgz#bbefe8eaeaa0608509eb863189e37eef930c4204"
+  integrity sha512-chJj27Tj4q6EUgRaR5m5Va+h+N5yFMP/s3CagVMS9Ug3482jsjZMvS2kuwQQAdLV+/1zCf5uZiN1mksaLerQoA==
+
+"@floating-ui/dom@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-0.4.0.tgz#9f81632b7c0cc7ae3a12b2b9990de14752083a36"
+  integrity sha512-sfbZCY30r2u9f6h2wBtFtvhlSLP2nUuwsj7feTvZLtxhbrVd+/43jrW1d2OHWfeqx8oUTbCQdO5Z7td9DffOkg==
+  dependencies:
+    "@floating-ui/core" "^0.6.0"
+
 "@gar/promisify@^1.0.1":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.3.tgz#555193ab2e3bb3b6adc3d551c9c030d9e860daf6"
@@ -15258,6 +15270,11 @@ react@^17.0.1:
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
+
+reactjs-popup@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/reactjs-popup/-/reactjs-popup-2.0.5.tgz#588a74966bb126699429d739948e3448d7771eac"
+  integrity sha512-b5hv9a6aGsHEHXFAgPO5s1Jw1eSkopueyUVxQewGdLgqk2eW0IVXZrPRpHR629YcgIpC2oxtX8OOZ8a7bQJbxA==
 
 read-pkg-up@^2.0.0:
   version "2.0.0"

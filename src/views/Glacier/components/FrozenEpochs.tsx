@@ -18,7 +18,7 @@ export const FrozenEpochCard = styled(Flex)`
     position: relative;
     flex-direction: column;
     background: ${({ theme }) => theme.colors.background};
-    border-radius: 6px;
+    border-radius: 4px;
     padding: 18px;
     flex: 1;
     box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};

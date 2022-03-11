@@ -12,7 +12,7 @@ const EverestCard = styled(Flex)`
     flex-direction: column;
     justify-content: flex-start;
     background: ${({ theme }) => theme.colors.background};
-    border-radius: 6px;
+    border-radius: 4px;
     padding: 18px;
     flex: 1;
     padding-top: 112px;

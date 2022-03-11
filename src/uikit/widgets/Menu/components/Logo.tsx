@@ -15,18 +15,11 @@ const StyledLink = styled(Link)`
   display: flex;
   align-items: center;
   padding: 6px 0px;
-  flex-grow: 1;
-  flex-shrink: 2;
-  max-width: 408px;
   .desktop-icon {
     width: 177px;
     display: block;
   }
   justify-content: center;
-
-  ${({ theme }) => theme.mediaQueries.nav} {
-    justify-content: flex-start;
-  }
 
   ${pressableMixin}
 `

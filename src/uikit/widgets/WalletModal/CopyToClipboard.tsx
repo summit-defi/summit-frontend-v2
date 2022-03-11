@@ -11,12 +11,14 @@ interface Props {
 
 const StyledCopyIcon = styled(CopyIcon)`
   fill: ${({ theme }) => darken(0.2, theme.colors.OASIS)};
-  filter: drop-shadow(1px 1px 2px ${({ theme }) => theme.colors.OASIS});
+  width: 16px;
+  height: 16px;
 `
 
 const StyleButton = styled(Text).attrs({ role: 'button' })`
   position: relative;
   display: flex;
+  gap: 8px;
   align-items: center;
   color: ${({ theme }) => darken(0.2, theme.colors.OASIS)};
 
@@ -55,7 +57,7 @@ const CopyToClipboard: React.FC<Props> = ({ toCopy, children, ...props }) => {
       {...props}
     >
       {children}
-      <StyledCopyIcon width="20px" color="primary" ml="8px" />
+      <StyledCopyIcon width="20px" color="primary" />
       <Tooltip isTooltipDisplayed={isTooltipDisplayed}>Copied</Tooltip>
     </StyleButton>
   )

@@ -8,7 +8,7 @@ import {
   getSubCartographerAddress,
   groupByAndMap,
 } from 'utils/'
-import { Elevation, elevationUtils } from '../../config/constants/types'
+import { BN_ZERO, Elevation, elevationUtils } from '../../config/constants/types'
 import { SECONDS_PER_YEAR } from 'config'
 import { getFarmConfigs, TokenSymbol } from 'config/constants'
 import { Farm } from 'state/types'
@@ -126,25 +126,25 @@ export const fetchFarms = async () => {
         live: oasisPoolInfo.live,
         launched: true,
         supply: new BigNumber(oasisPoolInfo.supply._hex),
-        summitPerYear: elevSummitPerYear[Elevation.OASIS],
+        summitPerYear: oasisPoolInfo.live ? elevSummitPerYear[Elevation.OASIS] : BN_ZERO,
       },
       [Elevation.PLAINS]: {
         live: plainsPoolInfo.live,
         launched: plainsPoolInfo.launched,
         supply: new BigNumber(plainsPoolInfo.supply._hex),
-        summitPerYear: elevSummitPerYear[Elevation.PLAINS],
+        summitPerYear: plainsPoolInfo.live ? elevSummitPerYear[Elevation.PLAINS] : BN_ZERO,
       },
       [Elevation.MESA]: {
         live: mesaPoolInfo.live,
         launched: mesaPoolInfo.launched,
         supply: new BigNumber(mesaPoolInfo.supply._hex),
-        summitPerYear: elevSummitPerYear[Elevation.MESA],
+        summitPerYear: mesaPoolInfo.live ? elevSummitPerYear[Elevation.MESA] : BN_ZERO,
       },
       [Elevation.SUMMIT]: {
         live: summitPoolInfo.live,
         launched: summitPoolInfo.launched,
         supply: new BigNumber(summitPoolInfo.supply._hex),
-        summitPerYear: elevSummitPerYear[Elevation.SUMMIT],
+        summitPerYear: summitPoolInfo.live ? elevSummitPerYear[Elevation.SUMMIT] : BN_ZERO,
       }
     }
 

@@ -7,6 +7,7 @@ import {
   getBalancer2PoolPriceOracleAddress,
   getBalancerMultiPoolPriceOracleAddress,
   ChainUsesPricingData,
+  getFullDisplayBalance,
 } from 'utils'
 
 
@@ -253,12 +254,14 @@ export const fetchPricesV2 = async () => {
       if (solidlyLpsMetadataRes == null) return BN_ZERO
 
       const totalSupply = new BigNumber(solidlyLpsMetadataRes[index * 2 + 0][0]._hex)
-      const r0 = new BigNumber(solidlyLpsMetadataRes[index * 2 + 1].r0._hex)
-      const r1 = new BigNumber(solidlyLpsMetadataRes[index * 2 + 1].r1._hex)
+      const dec0 = new BigNumber(solidlyLpsMetadataRes[index * 2 + 1].dec0._hex)
+      const dec1 = new BigNumber(solidlyLpsMetadataRes[index * 2 + 1].dec1._hex)
+      const r0 = new BigNumber(solidlyLpsMetadataRes[index * 2 + 1].r0._hex).div(dec0)
+      const r1 = new BigNumber(solidlyLpsMetadataRes[index * 2 + 1].r1._hex).div(dec1)
       const volume0 = r0.times(balancerDirectPricesPerToken[priceable.solidlyLpContainingTokens![0]])
       const volume1 = r1.times(balancerDirectPricesPerToken[priceable.solidlyLpContainingTokens![1]])
 
-      return volume0.plus(volume1).div(totalSupply).toNumber()
+      return volume0.plus(volume1).div(totalSupply.div(new BigNumber(10).pow(18))).toNumber()
     }
   )
 

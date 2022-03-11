@@ -32,13 +32,13 @@ export const getFarmType = ({
 }) => {
     switch (assetType) {
         case TokenAssetType.SolidlyLP:
+        case TokenAssetType.Balancer2Pool:
+        case TokenAssetType.BalancerMultiPool:
         case TokenAssetType.LP: return FarmType.LP
         case TokenAssetType.Summit:
         case TokenAssetType.Stablecoin:
         case TokenAssetType.SingleAsset:
         case TokenAssetType.WrappedNative:
-        case TokenAssetType.Balancer2Pool:
-        case TokenAssetType.BalancerMultiPool:
         default: return FarmType.Token
     }
 }

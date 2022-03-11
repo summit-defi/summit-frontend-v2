@@ -17,48 +17,48 @@ export const getMenuItems = (
   liqLink,
   userDeity,
 ): MenuEntry[] => [
-  {
-    label: 'HOME',
-    href: '/',
-    keyPaths: [''],
-  },
-  {
-    label: 'V1 DAPP',
-    href: 'https://app.summitdefi.com',
-    external: true,
-  },
-  {
-    label: 'EXCHANGE',
-    href: populateLinkSummitAddress(exchangeLink),
-    external: true,
-  },
-  {
-    label: 'LIQUIDITY',
-    href: populateLinkSummitAddress(liqLink),
-    external: true,
-  },
-  {
-    label: 'DOCS',
-    href: 'https://docs.summitdefi.com',
-    external: true,
-  },
-  {
-    label: 'OBELISK AUDIT',
-    href: 'https://github.com/Tibereum/obelisk-audits/blob/main/Summitv2.pdf',
-    external: true,
-  },
+  // {
+  //   label: 'HOME',
+  //   href: '/',
+  //   keyPaths: [''],
+  // },
+  // {
+  //   label: 'V1 DAPP',
+  //   href: 'https://app.summitdefi.com',
+  //   external: true,
+  // },
+  // {
+  //   label: 'EXCHANGE',
+  //   href: populateLinkSummitAddress(exchangeLink),
+  //   external: true,
+  // },
+  // {
+  //   label: 'LIQUIDITY',
+  //   href: populateLinkSummitAddress(liqLink),
+  //   external: true,
+  // },
+  // {
+  //   label: 'DOCS',
+  //   href: 'https://docs.summitdefi.com',
+  //   external: true,
+  // },
+  // {
+  //   label: 'OBELISK AUDIT',
+  //   href: 'https://github.com/Tibereum/obelisk-audits/blob/main/Summitv2.pdf',
+  //   external: true,
+  // },
 
   {
-    label: 'ELEVATION|br|FARMS',
-    icon: 'totemOtter',
+    label: 'FARM',
+    // icon: 'totemOtter',
     href: `/elevations`,
     external: false,
     elevation: Elevation.OASIS,
     keyPaths: ['elevations', 'oasis', 'plains', 'mesa', 'summit']
   },
   {
-    label: 'THE GLACIER',
-    icon: 'tokens/ThawedSUMMIT.png',
+    label: 'GLACIER',
+    // icon: 'tokens/ThawedSUMMIT.png',
     href: '/glacier',
     palette: 'GLACIER',
     external: false,
@@ -66,38 +66,44 @@ export const getMenuItems = (
   },
   {
     label: 'EVEREST',
-    icon: 'summit/EVERESTicon.png',
+    // icon: 'summit/EVERESTicon.png',
     href: '/everest',
     external: false,
     keyPaths: ['everest'],
   },
   {
-    label: Elevation.EXPEDITION,
-    icon: getTotemIcon(
-      Elevation.EXPEDITION,
-      false,
-      userDeity,
-    ),
+    label: 'EXPEDITION',
+    // icon: getTotemIcon(
+    //   Elevation.EXPEDITION,
+    //   false,
+    //   userDeity,
+    // ),
     href: `/expedition`,
     external: false,
     elevation: Elevation.EXPEDITION,
     keyPaths: ['expedition'],
   },
-
-
   {
-    label: 'TRAVELERS|br|ROADMAP',
-    icon: 'summit/ROADMAPicon.png',
-    href: '/travelers-roadmap',
-    palette: 'ROADMAP',
+    label: 'HELP',
+    href: '/help',
     external: false,
-    keyPaths: ['travelers-roadmap'],
-  },
+    keyPaths: ['help'],
+  }
+
+
+  // {
+  //   label: 'TRAVELERS|br|ROADMAP',
+  //   // icon: 'summit/ROADMAPicon.png',
+  //   href: '/travelers-roadmap',
+  //   palette: 'ROADMAP',
+  //   external: false,
+  //   keyPaths: ['travelers-roadmap'],
+  // },
   
-  (ChainIncludesBetaTokens() || true) ? {
-    label: 'ROLLOVER',
-    href: '/rollover',
-    icon: 'totemIcons/BETA.png',
-    keyPaths: ['rollover']
-  } : null
+  // (ChainIncludesBetaTokens() || true) ? {
+  //   label: 'ROLLOVER',
+  //   href: '/rollover',
+  //   // icon: 'totemIcons/BETA.png',
+  //   keyPaths: ['rollover']
+  // } : null
 ].filter((entry) => entry != null)

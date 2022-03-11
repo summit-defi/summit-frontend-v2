@@ -84,7 +84,7 @@ export const nFormatter = (num: number, digits = 2): string => {
   ]
   for (let i = 0; i < si.length; i++) {
     if (num >= si[i].value) {
-      return (num / si[i].value).toFixed(digits).replace(/\.0+$|(\.[0-9]*[1-9])0+$/, '$1') + si[i].symbol
+      return (num / si[i].value).toExponential(digits).split('e')[0] + si[i].symbol
     }
   }
   return num.toFixed(digits)

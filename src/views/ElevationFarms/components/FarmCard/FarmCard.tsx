@@ -11,8 +11,9 @@ import FarmStakingContribution, { ElevationsStaked } from './FarmStakingContribu
 import { makeSelectFarmBySymbol, useSelector, useFarmsUserDataLoaded, useFarmFilters } from 'state/hooksNew'
 import { FarmAPYBreakdown, FarmTotalValue } from './FarmCardInfoItems'
 import { FarmRetiredSash } from './FarmRetiredSash'
-import { getFarmInteracting, getFarmType, maxBigNumberByKey } from 'utils'
+import { getFarmInteracting, getFarmType, getFullDisplayBalance } from 'utils'
 import { FarmType } from 'state/types'
+import { TokenSymbol } from 'config/constants'
 
 const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
   align-self: baseline;
@@ -172,9 +173,9 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
       let sumPerYear = BN_ZERO
       if (elevationTab === ElevationFarmTab.DASH) {
         // Highest elevation with non-zero staked & non-zero summitPerYear
-        const [highestElev] = Object.entries(elevations)
+        const [highestElev] = (Object.entries(elevations)
           .reverse()
-          .find(([_, info]) => (info.supply || BN_ZERO).isGreaterThan(0) && (info.summitPerYear || BN_ZERO).isGreaterThan(0))
+          .find(([_, info]) => (info.supply || BN_ZERO).isGreaterThan(0) && (info.summitPerYear || BN_ZERO).isGreaterThan(0))) || [Elevation.PLAINS]
 
         if (highestElev != null) {
           supply = elevations[highestElev].supply || BN_ZERO
@@ -196,7 +197,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
 
   const targetUrl = `/${(elevationFarmTabToUrl[elevationTab] || 'elevations').toLowerCase()}${expanded ? '' : `/${symbol.toLowerCase()}`}`
 
-  const retired = (!live || allocation === 0)
+  const retired = (!live || allocation === 0 || symbol === 'BOO') // TODO: remove this
   const liveFilterShow = (isInteracting && liveFarms) || (liveFarms !== retired)
   if (!liveFilterShow) return null
 

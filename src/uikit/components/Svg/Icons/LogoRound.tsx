@@ -3,8 +3,14 @@ import styled from 'styled-components'
 import { SvgProps } from '../types'
 
 const ShadowSvg = styled.svg`
-  box-shadow: 1px 1px 2px ${({ theme }) => theme.colors.textShadow};
   border-radius: 50px;
+  width: 38px;
+  height: 38px;
+
+  ${({ theme }) => theme.mediaQueries.nav} {
+    width: 32px;
+    height: 32px;
+  }
 `
 
 const LogoRound: React.FC<SvgProps> = (props) => {
