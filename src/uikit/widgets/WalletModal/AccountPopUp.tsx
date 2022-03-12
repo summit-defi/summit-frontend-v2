@@ -48,6 +48,7 @@ const AccountPopUp: React.FC<Props> = ({ account, isDark, toggleTheme, logout, o
           height='28px'
           width='120px'
           summitPalette={SummitPalette.BASE}
+          insetColor='background'
           onClick={() => {
             logout()
             window.localStorage.removeItem(connectorLocalStorageKey)

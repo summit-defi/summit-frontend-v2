@@ -1,17 +1,19 @@
 import React, { useCallback } from 'react'
 import { Elevation, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import styled from 'styled-components'
-import { Text, Flex, Spinner, Lock, ElevationPuck, ArtworkTotem } from 'uikit'
+import { Text, Flex, Spinner, Lock, ElevationPuck, ArtworkTotem, HighlightedText } from 'uikit'
 import { useTotemSelectionPending, useElevationFarmsTab } from 'state/hooks'
 import { useSelectTotemModal } from 'components/SelectTotemModal'
 import SummitIconButton from 'uikit/components/Button/SummitIconButton'
 import { SpinnerKeyframes } from 'uikit/components/Svg/Icons/Spinner'
 import useTotemWinnersModal from 'uikit/widgets/TotemWinnersModal/useTotemWinnersModal'
-import { RoundStatus, useElevationInteractionsLockedBreakdown, useElevationUserTotemAndCrowned } from 'state/hooksNew'
+import { RoundStatus, useElevationInteractionsLockedBreakdown, useElevationUserTotemAndCrowned, useUserTotemsAndCrowns } from 'state/hooksNew'
+import { pressableMixin } from 'uikit/util/styledMixins'
 
 const HeaderButtonsRow = styled(Flex)`
   position: absolute;
-  top: -96px;
+  top: -76px;
+  gap: 12px;
 `
 
 const HeaderTotemWrapper = styled.div<{ isLoading: boolean }>`
@@ -28,6 +30,26 @@ const HeaderTotemWrapper = styled.div<{ isLoading: boolean }>`
     fill: white;
     animation: ${SpinnerKeyframes} 1.4s infinite linear;
   }
+`
+
+const TotemWrapper = styled.div<{ isLoading: boolean }>`
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  opacity: ${({ isLoading}) => isLoading ? 0.75 : 1};
+
+  .spinner {
+    fill: white;
+    animation: ${SpinnerKeyframes} 1.4s infinite linear;
+  }
+
+  ${pressableMixin}
+`
+
+const OasisYieldWarsGap = styled.div`
+  width: 36px;
+  height: 36px;
 `
 
 const CrownHistoryIcon = styled.div`
@@ -79,6 +101,15 @@ const TotemIcon = styled.div<{ totemName: string }>`
   z-index: 3;
 `
 
+const ElevationName = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 16px;
+`
+
 const StyledSpinner = styled(Spinner)`
   position: absolute;
   align-self: center;
@@ -93,13 +124,12 @@ const StyledLock = styled(Lock)`
 const TotemHeaderButtonsRow: React.FC = () => {
   const elevationTab = useElevationFarmsTab()
   const elevation = elevationTabToElevation[elevationTab]
-  const { userTotem, crowned } = useElevationUserTotemAndCrowned(elevation)
+  const userTotemsAndCrowns = useUserTotemsAndCrowns()
   const { roundStatus } = useElevationInteractionsLockedBreakdown(elevation)
   const totemSwitchDisabled = roundStatus === RoundStatus.RolloverLockout || roundStatus === RoundStatus.RolloverAvailable
   const totemSelectionPending = useTotemSelectionPending()
 
-  const isElevationFarm = elevation !== null && elevation !== Elevation.OASIS
-  const { onPresentTotemWinnersModal } = useTotemWinnersModal(elevation)
+  const { onPresentTotemWinnersModal } = useTotemWinnersModal()
   const { onPresentSelectTotemModal } = useSelectTotemModal(elevation)
 
   const handlePresentSelectTotemModal = useCallback(() => {
@@ -110,7 +140,7 @@ const TotemHeaderButtonsRow: React.FC = () => {
 
   return (
     <HeaderButtonsRow flexDirection="row" justifyContent="center" alignItems="center">
-      {userTotem != null && isElevationFarm && (
+      {/* {userTotem != null && isElevationFarm && (
         <SummitIconButton
           isLocked={totemSwitchDisabled}
           isLoading={totemSelectionPending}
@@ -123,32 +153,80 @@ const TotemHeaderButtonsRow: React.FC = () => {
           {totemSelectionPending && <StyledSpinner className="spinner" />}
           {totemSwitchDisabled && <StyledLock width="28px" />}
         </SummitIconButton>
-      )}
-      { elevation != null ?
-        <HeaderTotemWrapper isLoading={totemSelectionPending}>
+      )} */}
+
+
+      <HeaderTotemWrapper isLoading={totemSelectionPending}>
+        <TotemWrapper isLoading={totemSelectionPending} onClick={() => onPresentTotemWinnersModal({elevation: Elevation.OASIS})}>
           <ArtworkTotem
-            elevation={elevation}
-            totem={userTotem}
-            crowned={crowned}
-            desktopSize="180"
-            mobileSize="180"
+            elevation={Elevation.OASIS}
+            totem={userTotemsAndCrowns[0].userTotem}
+            desktopSize="140"
+            mobileSize="90"
           />
           {totemSelectionPending && <StyledSpinner className="spinner" />}
-        </HeaderTotemWrapper> :
-        <ElevationPuck elevation='BLUE' top={0}>
-          <Text bold fontSize='20px' color='white'>
-            FARMING
-            <br/>
-            DASHBOARD
-          </Text>
-        </ElevationPuck>
-      }
-      {isElevationFarm && userTotem != null && (
+          <ElevationName className='elevation-name'>
+            <HighlightedText bold color='white' italic fontSize='14px' lineHeight='14px'>THE</HighlightedText>
+            <HighlightedText bold color='white' italic fontSize='20px' lineHeight='20px'>{Elevation.OASIS}</HighlightedText>
+          </ElevationName>
+        </TotemWrapper>
+      </HeaderTotemWrapper>
+
+
+
+      <OasisYieldWarsGap/>
+
+
+      <HeaderTotemWrapper isLoading={totemSelectionPending}>
+        <TotemWrapper isLoading={totemSelectionPending} onClick={() => onPresentTotemWinnersModal({elevation: Elevation.PLAINS})}>
+          <ArtworkTotem
+            elevation={Elevation.PLAINS}
+            totem={userTotemsAndCrowns[1].userTotem}
+            crowned={userTotemsAndCrowns[1].crowned}
+            desktopSize="140"
+            mobileSize="90"
+          />
+          {totemSelectionPending && <StyledSpinner className="spinner" />}
+          <ElevationName className='elevation-name'>
+            <HighlightedText bold color='white' italic fontSize='14px' lineHeight='14px'>THE</HighlightedText>
+            <HighlightedText bold color='white' italic fontSize='20px' lineHeight='20px'>{Elevation.PLAINS}</HighlightedText>
+          </ElevationName>
+        </TotemWrapper>
+        <TotemWrapper isLoading={totemSelectionPending} onClick={() => onPresentTotemWinnersModal({elevation: Elevation.MESA})}>
+          <ArtworkTotem
+            elevation={Elevation.MESA}
+            totem={userTotemsAndCrowns[2].userTotem}
+            crowned={userTotemsAndCrowns[2].crowned}
+            desktopSize="140"
+            mobileSize="90"
+          />
+          {totemSelectionPending && <StyledSpinner className="spinner" />}
+          <ElevationName className='elevation-name'>
+            <HighlightedText bold color='white' italic fontSize='14px' lineHeight='14px'>THE</HighlightedText>
+            <HighlightedText bold color='white' italic fontSize='20px' lineHeight='20px'>{Elevation.MESA}</HighlightedText>
+          </ElevationName>
+        </TotemWrapper>
+        <TotemWrapper isLoading={totemSelectionPending} onClick={() => onPresentTotemWinnersModal({elevation: Elevation.SUMMIT})}>
+          <ArtworkTotem
+            elevation={Elevation.SUMMIT}
+            totem={userTotemsAndCrowns[3].userTotem}
+            crowned={userTotemsAndCrowns[3].crowned}
+            desktopSize="140"
+            mobileSize="90"
+          />
+          {totemSelectionPending && <StyledSpinner className="spinner" />}
+          <ElevationName className='elevation-name'>
+            <HighlightedText bold color='white' italic fontSize='14px' lineHeight='14px'>THE</HighlightedText>
+            <HighlightedText bold color='white' italic fontSize='20px' lineHeight='20px'>{Elevation.SUMMIT}</HighlightedText>
+          </ElevationName>
+        </TotemWrapper>
+      </HeaderTotemWrapper>
+      {/* {isElevationFarm && userTotem != null && (
         <SummitIconButton elevation={elevation} onClick={onPresentTotemWinnersModal}>
           <CrownHistoryIcon />
           <IconButtonText bold monospace>PREV<br/>WINNERS</IconButtonText>
         </SummitIconButton>
-      )}
+      )} */}
     </HeaderButtonsRow>
   )
 }

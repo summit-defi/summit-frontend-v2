@@ -18,14 +18,14 @@ const StyledSpinner = styled(Spinner)`
   filter: drop-shadow(0px 0px 4px black);
 `
 
-const SecondaryInset = styled.div`
+const SecondaryInset = styled.div<{ insetColor?: string }>`
   position: absolute;
   top: 2px;
   right: 2px;
   left: 2px;
   bottom: 2px;
   border-radius: 50px;
-  background-color: ${({ theme }) => theme.colors.cardHover};
+  background-color: ${({ theme, insetColor }) => theme.colors[insetColor || 'cardHover']};
 `
 
 const ChildWrapper = styled.div`
@@ -50,6 +50,7 @@ const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): 
     summitPalette,
     onClick,
     freezeSummitButton,
+    insetColor,
     InsetComponent = null,
     ...rest
   } = props
@@ -84,7 +85,7 @@ const SummitButton = <E extends ElementType = 'button'>(props: ButtonProps<E>): 
       {...rest}
     >
       <>
-        { secondary && (InsetComponent != null ? InsetComponent : <SecondaryInset/>) }
+        { secondary && (InsetComponent != null ? InsetComponent : <SecondaryInset className='secondary-inset' insetColor={insetColor}/>) }
         {isValidElement(startIcon) &&
           cloneElement(startIcon, {
             mr: '0.5rem',

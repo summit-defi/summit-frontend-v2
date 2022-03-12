@@ -1,12 +1,13 @@
 import { Elevation } from 'config/constants'
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { ElevationImage, Flex, Skeleton, Text, TokenSymbolImage } from 'uikit'
+import { pressableMixin } from 'uikit/util/styledMixins'
 import Totem from './Totem'
 
 const BarHeight = 50
 
-const ContributionWrapper = styled.div<{ perc: number, index: number }>`
+const ContributionWrapper = styled.div<{ perc: number, index: number, selectable: boolean }>`
     position: relative;
     display: flex;
     flex-direction: row;
@@ -15,17 +16,64 @@ const ContributionWrapper = styled.div<{ perc: number, index: number }>`
     width: ${({ perc }) => perc}%;
     height: ${BarHeight}px;
     z-index: ${({ index }) => 10 - index};
+    ${({ theme, selectable }) => selectable && pressableMixin({
+        theme,
+        hoverStyles: css`
+            .elev-highlight {
+                transform: translateY(2px);
+            }
+        `,
+    })}
 `
 
-const ContributionGoldHighlight = styled.div<{ perc: number }>`
+const ContributionBaseHighlight = styled.div`
     position: absolute;
-    background-color: #FCC965;
     opacity: 0.4;
-    border-radius: 4px;
     top: -22px;
     left: 0px;
     right: -1px;
+    bottom: 0px;
+    z-index: -1;
+`
+const ContributionGoldHighlight = styled(ContributionBaseHighlight)<{ perc: number }>`
+    background-color: #FCC965;
+    border-radius: 4px;
     bottom: ${({ perc }) => perc < 11 ? '-30' : '-10'}px;
+`
+const ContributionElevSelectedHighlight = styled(ContributionBaseHighlight)<{ elevation: string, first: boolean, last: boolean }>`
+    background-color: ${({ theme, elevation }) => theme.colors[elevation]};
+    border-radius: 0px;
+    bottom: -50px;
+    top: 25px;
+    left: ${({ first }) => first ? 0 : -20}px;
+    right: ${({ last }) => last ? 0 : -20}px;
+    opacity: 0.15;
+    ${({ first }) => !first && css`
+        &:after {
+            content: ' ';
+            border: 0;
+            position: absolute;
+            left: 0px;
+            width: 20px;
+            bottom: 20px;
+            top: 0px;
+            border-radius: 0 0 20px 0;
+            background: ${({ theme }) => theme.colors.background};
+        }
+    `}
+    ${({ last }) => !last && css`
+        &:before {
+            content:' ';
+            border: 0;
+            position:absolute;
+            right: 0px;
+            width: 20px;
+            bottom: 20px;
+            top: 0px;
+            border-radius: 0 0 0 20px;
+            background: ${({ theme }) => theme.colors.background};
+        }
+    `}
 `
 
 const TitleWrapper = styled(Flex)`
@@ -36,7 +84,6 @@ const TitleWrapper = styled(Flex)`
     bottom: 32px;
     width: 100%;
     flex-wrap: wrap;
-    /* overflow: hidden; */
 `
 
 const ValueText = styled(Text)<{ perc: number, index: number, isTotem?: boolean, isBonusVal?: boolean }>`
@@ -50,11 +97,11 @@ const ValueText = styled(Text)<{ perc: number, index: number, isTotem?: boolean,
     bottom: ${({ isBonusVal }) => isBonusVal ? -14 : 0}px;
     display: ${({ isBonusVal, perc }) => isBonusVal && perc < 20 ? 'none' : 'block'};
     text-align: center;
-    transform: ${({ perc }) => perc < 20 ? 'rotate(70deg) translateX(35%)' : 'none'};
+    transform: ${({ perc }) => perc < 20 ? 'rotate(70deg) translateX(25%)' : 'none'};
     
     ${({ theme }) => theme.mediaQueries.nav} {
-        display: ${({ isBonusVal, perc }) => isBonusVal && perc < 10 ? 'none' : 'block'};
-        transform: ${({ perc }) => perc < 11 ? 'rotate(70deg) translateX(25%)' : 'none'};
+        display: ${({ isBonusVal, perc }) => isBonusVal && perc < 11 ? 'none' : 'block'};
+        transform: ${({ perc }) => perc < 11 ? 'rotate(70deg) translateX(20%)' : 'none'};
     }
 `
 
@@ -72,12 +119,16 @@ const VerticalBar = styled.div<{ perc: number, noContributions?: boolean }>`
     height: 20px;
     left: ${({ perc }) => perc}%;
     border-left: ${({ theme, noContributions }) => `1px ${noContributions === true ? 'dashed' : 'solid'} ${theme.colors.text}`};
+    z-index: 11;
+    pointer-events: none;
 `
 const HorizontalBar = styled.div<{ noContributions?: boolean }>`
     position: absolute;
     width: 100%;
     height: 1px;
     border-top: ${({ theme, noContributions }) => `1px ${noContributions === true ? 'dashed' : 'solid'} ${theme.colors.text}`};
+    z-index: 11;
+    pointer-events: none;
 `
 
 const Wrapper = styled(Flex)`
@@ -123,6 +174,10 @@ interface Contribution {
     key: number
     perc: number
     index?: number
+    count?: number
+    selectable?: boolean
+    selectedIndex?: string
+    onSelect?: (string?) => void
 }
 
 const TotemImage: React.FC<{ info: string }> = ({ info }) => {
@@ -139,10 +194,12 @@ const TotemImage: React.FC<{ info: string }> = ({ info }) => {
     )
 }
 
-const ContributionComponent: React.FC<Contribution> = ({token = false, elevation = false, totem=false, title, val, bonusVal, perc, index}) => {
+const ContributionComponent: React.FC<Contribution> = ({token = false, elevation = false, totem=false, title, val, bonusVal, perc, index, count, selectable, selectedIndex, onSelect}) => {
     const totemWin = totem && !!parseInt(title.split('_')[2])
-    return <ContributionWrapper perc={perc} index={index}>
+    const clickable = selectable ? { onClick: () => onSelect(title === selectedIndex ? undefined : title) } : null
+    return <ContributionWrapper perc={perc} index={index} selectable={selectable} {...clickable} >
         { totemWin && <ContributionGoldHighlight perc={perc}/>}
+        { title === selectedIndex && <ContributionElevSelectedHighlight elevation={title} first={index === 0} last={index === count - 1} className='elev-highlight'/>}
         {title != null && <TitleWrapper>
             { token && <TokenSymbolImage symbol={title} width={36} height={36} />}
             { elevation && <ElevationImage elevation={title} size={36} />}
@@ -157,17 +214,20 @@ const ContributionComponent: React.FC<Contribution> = ({token = false, elevation
 
 interface Props {
     loaded: boolean
-    breakingDownTitle: string
+    breakingDownTitle?: string
     breakdownType?: 'ELEVATION' | 'FARM' | 'TOTEM'
     contributions: Contribution[]
+    selectable?: boolean
+    selectedIndex?: string
+    onSelect?: (string?) => void
 }
 
-const ContributionBreakdown: React.FC<Props> = ({loaded, breakingDownTitle, breakdownType = 'ELEVATION', contributions}) => {
+const ContributionBreakdown: React.FC<Props> = ({loaded, breakingDownTitle, breakdownType = 'ELEVATION', contributions, selectable=false, selectedIndex, onSelect}) => {
     const noContributions = contributions.length === 0
 
     return (
         <Wrapper>
-            { breakdownType !== 'TOTEM' && <Text bold monospace>{breakingDownTitle} BY {breakdownType}:</Text> }
+            { breakingDownTitle != null && breakdownType !== 'TOTEM' && <Text bold monospace>{breakingDownTitle} BY {breakdownType}:</Text> }
             <BarWrapper>
                 { !loaded ?
                     <>
@@ -182,7 +242,7 @@ const ContributionBreakdown: React.FC<Props> = ({loaded, breakingDownTitle, brea
                                 <VerticalBar perc={100} noContributions/>
                             </> :
                             contributions.map((contribution, index) => 
-                                <ContributionComponent key={contribution.key} index={index} {...contribution} />
+                                <ContributionComponent key={contribution.key} index={index} count={contributions.length} {...contribution} selectable={selectable} selectedIndex={selectedIndex} onSelect={onSelect} />
                             )
                         }
                     </>

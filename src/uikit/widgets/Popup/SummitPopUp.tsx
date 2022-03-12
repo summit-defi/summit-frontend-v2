@@ -12,7 +12,7 @@ interface Props {
 
 const StyledPopup = styled(Popup)`
     &-content {
-        top: 65px !important;
+        top: 55px !important;
     }
 `;
 
@@ -40,7 +40,7 @@ const SummitPopUp: React.FC<Props> = ({ button, position, contentPadding, popUpC
             closeOnDocumentClick
             closeOnEscape
             ref={ref}
-            offsetY={22}
+            offsetY={0}
             offsetX={10}
             arrow={false}
         >

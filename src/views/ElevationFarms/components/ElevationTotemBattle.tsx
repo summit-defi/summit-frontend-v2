@@ -1,5 +1,5 @@
 import React from 'react'
-import { ElevationFarmTab, elevationTabToElevation, elevationUtils } from 'config/constants/types'
+import { Elevation, ElevationFarmTab, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import { Flex, Text } from 'uikit'
 import { useElevationFarmsTab } from 'state/hooks'
 import TotemBattleBreakdown from './TotemBattleBreakdown'
@@ -7,7 +7,6 @@ import styled from 'styled-components'
 import { useDashboardTotemBattleInfo, useElevationTotemBattleInfo } from 'state/hooksNew'
 
 const GappedFlex = styled(Flex)`
-  gap: 18px;
   justify-content: center;
   align-items: center;
 `
@@ -65,8 +64,7 @@ const AllElevationsTotemBattles: React.FC = () => {
   )
 }
 
-const SingleElevationTotemBattle: React.FC<{ elevationTab: ElevationFarmTab }> = ({ elevationTab }) => {
-  const elevation = elevationTabToElevation[elevationTab]
+const SingleElevationTotemBattle: React.FC<{ elevation: Elevation }> = ({ elevation }) => {
   const { userTotem, totemInfos } = useElevationTotemBattleInfo(elevation)
 
   return (
@@ -78,17 +76,15 @@ const SingleElevationTotemBattle: React.FC<{ elevationTab: ElevationFarmTab }> =
   )
 }
 
-const ElevationTotemBattle: React.FC = () => {
-  const elevationTab = useElevationFarmsTab()
-
-  if (elevationTab === ElevationFarmTab.DASH) return (
+const ElevationTotemBattle: React.FC<{ elevation?: Elevation }> = ({ elevation }) => {
+  if (elevation == null) return (
     <AllElevationsTotemBattles/>
   )
 
-  if (elevationTab === ElevationFarmTab.OASIS) return null
+  if (elevation === Elevation.OASIS) return null
 
   return (
-    <SingleElevationTotemBattle elevationTab={elevationTab}/>
+    <SingleElevationTotemBattle elevation={elevation}/>
   )
   
 }

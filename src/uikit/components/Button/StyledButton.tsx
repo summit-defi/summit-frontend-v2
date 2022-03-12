@@ -11,7 +11,7 @@ interface ThemedButtonProps extends BaseButtonProps {
 
 const getDisabledStyles = ({ isLoading, isLocked = false }: ThemedButtonProps) => {
   if (isLocked) {
-    return `
+    return css`
       &:disabled,
       &.summit-button--disabled {
         cursor: not-allowed;
@@ -20,11 +20,14 @@ const getDisabledStyles = ({ isLoading, isLocked = false }: ThemedButtonProps) =
       opacity: 0.5;
       box-shadow: none;
       cursor: not-allowed;
+      .secondary-inset {
+        box-shadow: none;
+      }
     `
   }
 
   if (isLoading === true) {
-    return `
+    return css`
       &:disabled,
       &.summit-button--disabled {
         cursor: not-allowed;
@@ -33,11 +36,14 @@ const getDisabledStyles = ({ isLoading, isLocked = false }: ThemedButtonProps) =
     `
   }
 
-  return `
+  return css`
     &:disabled,
     &.summit-button--disabled {
       box-shadow: none;
       cursor: not-allowed;
+      .secondary-inset {
+        box-shadow: none;
+      }
     }
   `
 }
@@ -61,6 +67,9 @@ const StyledButton = styled.button<BaseButtonProps>`
     disabled,
     hoverStyles: css`
       box-shadow: 2px 2px 4px ${theme.colors.textShadow};
+      .secondary-inset {
+        box-shadow: 2px 2px 4px inset ${theme.colors.textShadow};
+      }
     `
   })}
 
@@ -71,8 +80,10 @@ const StyledButton = styled.button<BaseButtonProps>`
 
   &:active:not(:disabled):not(.summit-button--disabled):not(.summit-button--disabled) {
     /* opacity: 0.85; */
-    transform: translateY(2px);
     box-shadow: none;
+    .secondary-inset {
+      box-shadow: none;
+    }
   }
 
   ${getDisabledStyles}

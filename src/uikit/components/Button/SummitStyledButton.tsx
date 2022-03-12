@@ -34,6 +34,10 @@ const SummitStyledButton = styled(StyledButton)<{
     animation: ${SpinnerKeyframes} 1.4s infinite linear;
   }
 
+  .secondary-inset {
+    box-shadow: ${({ theme, disabled, $isLocked }) => disabled || $isLocked ? 'none' : `1px 1px 2px inset ${theme.colors.textShadow}`};
+  }
+
   ${({ $freezeSummitButton }) => $freezeSummitButton && css`
     &::after {
         content: ' ';

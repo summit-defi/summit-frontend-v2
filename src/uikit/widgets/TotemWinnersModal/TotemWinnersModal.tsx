@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import { Elevation, elevationUtils } from 'config/constants/types'
 import { darken } from 'polished'
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { Flex } from 'uikit'
 import { HighlightedText, Text } from 'uikit/components/Text'
@@ -12,16 +12,13 @@ import { Modal } from '../Modal'
 import { elevationPalette } from 'theme/colors'
 import chroma from 'chroma-js'
 import WinningNumberTotemIndicator from './WinningNumberTotemIndicator'
-import { RoundStatus } from 'state/hooksNew'
+import { RoundStatus, useElevationRoundStatus, useElevationUserTotem } from 'state/hooksNew'
+import { useTotemHistoricalData } from 'state/hooks'
+import { SummitButton } from 'uikit/components/Button'
+import { useSelectTotemModal } from 'components/SelectTotemModal'
 
 interface Props {
-  elevation: Elevation
-  recentWinners: number[]
-  recentWinningsMultipliers: number[]
-  winsAccum: number[]
-  userTotem: number | null
-  winningNumberDrawn: number | null
-  roundStatus: RoundStatus
+  elevation?: Elevation
   onDismiss?: () => void
 }
 
@@ -150,8 +147,7 @@ const getWinsPerc = (winsAccum: number[]): string[] => {
   return winsAccum.map((wins) => `${Math.round((wins * 10000) / rounds) / 100}%`)
 }
 
-const HeaderRowFlex = styled.div`
-  display: flex;
+const HeaderRowFlex = styled(Flex)`
   position: absolute;
   flex-direction: row;
   align-items: center;
@@ -183,7 +179,7 @@ const HeaderRecentWinners = styled.div<{ mobileOnly?: boolean }>`
 `
 
 interface BiggestWinnerAndLoserProps {
-  elevation: Elevation
+  elevation?: Elevation
   biggestWinner: number
   biggestWinnerWinPerc: string
   biggestLoser: number
@@ -294,22 +290,71 @@ const HeaderPuckRow: React.FC<HeaderPuckRowProps> = React.memo(({ elevation, loc
 
 const TotemWinnersModal: React.FC<Props> = ({
   elevation,
-  recentWinners,
-  recentWinningsMultipliers,
-  winsAccum,
-  userTotem,
-  winningNumberDrawn,
-  roundStatus,
   onDismiss = () => null,
 }) => {
+  const { recentWinners, recentWinningsMultipliers, winsAccum, winningNumberDrawn } = useTotemHistoricalData(elevation)
+  const roundStatus = useElevationRoundStatus(elevation)
+  const userTotem = useElevationUserTotem(elevation)
+  const { onPresentSelectTotemModal } = useSelectTotemModal(elevation)
+  const totemSwitchDisabled = roundStatus === RoundStatus.RolloverLockout || roundStatus === RoundStatus.RolloverAvailable
+
+  const handlePresentSelectTotemModal = useCallback(() => {
+    if (totemSwitchDisabled) return
+    onPresentSelectTotemModal()
+  }, [totemSwitchDisabled, onPresentSelectTotemModal])
+
+  if (elevation == null) return null
+
+  if (elevation === Elevation.OASIS) {
+    return (
+      <Modal
+        title={`${elevation} TOTEM WINNERS`}
+        onDismiss={onDismiss}
+        headerless
+        HeaderComponent={
+          <HeaderRowFlex justifyContent='center'>
+            <ArtworkTotem elevation={elevation} totem={0} desktopSize="180" mobileSize="180" />
+          </HeaderRowFlex>
+        }
+      >
+        <Flex alignItems="center" flexDirection="column" p="18px" mt='78px' gap='24px'>
+          <Text bold monospace textAlign='center'>
+            THE OTTER IS THE ONLY OASIS TOTEM,
+            <br/>
+            HE DOES NOT COMPETE IN YIELD WARS,
+            <br />
+            AND GUARANTEES YOUR SUMMIT.
+          </Text>
+        </Flex>
+      </Modal>
+    )
+  }
+
+  
   if (recentWinners.length === 0) {
     return (
-      <Modal title={`${elevation} TOTEM WINNERS`} onDismiss={onDismiss} headerless>
-        <Flex alignItems="center" flexDirection="column" p="18px">
-          <Text>
-            WAIT FOR THE FIRST ROUND TO END
+      <Modal
+        title={`${elevation} TOTEM WINNERS`}
+        onDismiss={onDismiss}
+        headerless
+        HeaderComponent={
+          <HeaderRowFlex justifyContent='center'>
+            <ArtworkTotem elevation={elevation} totem={userTotem} desktopSize="180" mobileSize="180" />
+          </HeaderRowFlex>
+        }
+      >
+        <Flex alignItems="center" flexDirection="column" p="18px" mt='78px' gap='24px'>
+          <SummitButton
+            summitPalette={elevation}
+            isLocked={totemSwitchDisabled}
+            onClick={handlePresentSelectTotemModal}
+          >
+            SWITCH TOTEM
+          </SummitButton>
+          <Text bold monospace textAlign='center'>
+            TOTEM WINNERS STATISTICS WILL BECOME
             <br />
-            TO SEE HISTORICAL DATA
+            AVAILABLE AFTER THE FIRST ROUND ENDS
           </Text>
         </Flex>
       </Modal>
@@ -346,6 +391,15 @@ const TotemWinnersModal: React.FC<Props> = ({
     >
       <ModalLayoutFlex>
         <ContentColumn>
+
+          <SummitButton
+            summitPalette={elevation}
+            isLocked={totemSwitchDisabled}
+            onClick={handlePresentSelectTotemModal}
+            marginTop='24px'
+          >
+            SWITCH TOTEM
+          </SummitButton>
           
 
           <TotemLabel elevation={elevation} mt='48px'>

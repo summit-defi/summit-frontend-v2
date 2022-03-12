@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToTokenInfos, stateToFarmsElevationData, stateToLifetimeSummitBonuses, stateToLifetimeSummitWinnings, stateToFarmsUserDataLoaded, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToFarmsElevationsData, stateToSummitPrice } from "./base";
+import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToGlacierTotalFrozenSummit, stateToTokenInfos, stateToFarmsElevationData, stateToLifetimeSummitBonuses, stateToLifetimeSummitWinnings, stateToFarmsUserDataLoaded, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToFarmsElevationsData, stateToSummitPrice, stateToPricesPerToken } from "./base";
 import { getFarmInteracting, getFormattedBigNumber } from "utils"
 import { BN_ZERO, Elevation, elevationUtils } from "config/constants";
 import { useSelector } from "./utils";
@@ -296,8 +296,9 @@ const selectLifetimeSummitWinningsAndBonus = createSelector(
     stateToLifetimeSummitWinnings,
     stateToLifetimeSummitBonuses,
     selectMultiElevWinningsContributions,
+    stateToGlacierTotalFrozenSummit,
     stateToSummitPrice,
-    (lifetimeSummitWinnings, lifetimeSummitBonuses, { totalClaimable, totalClaimableBonus }, summitPrice) => {
+    (lifetimeSummitWinnings, lifetimeSummitBonuses, { totalClaimable, totalClaimableBonus }, totalFrozen, summitPrice) => {
         const winnings = (lifetimeSummitWinnings || BN_ZERO).plus(totalClaimable || BN_ZERO)
         const bonuses = (lifetimeSummitBonuses || BN_ZERO).plus(totalClaimableBonus || BN_ZERO)
         const winningsUsd = winnings.div(new BigNumber(10).pow(18)).times(summitPrice).toFixed(2)
@@ -308,6 +309,8 @@ const selectLifetimeSummitWinningsAndBonus = createSelector(
             lifetimeSummitBonuses: bonuses,
             lifetimeSummitWinningsUsd: winningsUsd,
             lifetimeSummitBonusesUsd: bonusesUsd,
+            pendingSummitWinnings: totalClaimable || BN_ZERO,
+            frozenSummit: totalFrozen || BN_ZERO,
         }
     }
 )
@@ -383,3 +386,47 @@ const selectElevationsRolledOverInfo = createSelector(
     }
 )
 export const useElevationsRolledOverInfo = () => useSelector(selectElevationsRolledOverInfo)
+
+
+
+
+const selectFarmsWithStaked = createSelector(
+    stateToFarms,
+    stateToPricesPerToken,
+    (_, elevation: Elevation) => elevation,
+    (farms, pricesPerToken, elevation) => farms
+        .map((farm) => {
+            const tokenPrice = pricesPerToken != null && pricesPerToken[farm.symbol] ? pricesPerToken[farm.symbol] : new BigNumber(1)
+            const stakedBalance = farm.elevations[elevation]?.stakedBalance
+            if (stakedBalance == null || stakedBalance.isEqualTo(0)) return null
+            return {
+                symbol: farm.symbol,
+                stakedUsd: parseFloat(stakedBalance.div(new BigNumber(10).pow(farm.decimals)).times(tokenPrice).toFixed(2)),
+            }
+        })
+        .filter((farm) => farm != null)
+)
+const selectElevationStakedContributions = createSelector(
+    selectFarmsWithStaked,
+    (farmsWithStaked) => {
+        const sortedStakeds = orderBy(
+            farmsWithStaked,
+            (farmWithStaked) => farmWithStaked.stakedUsd,
+            'desc'
+        )
+
+        const stakedSum = sortedStakeds.reduce((acc, sortedYield) => acc + sortedYield.stakedUsd, 0)
+
+        return sortedStakeds.map((sortedYield, index) => {
+            return {
+                token: true,
+                title: sortedYield.symbol,
+                key: index,
+                perc: sortedYield.stakedUsd * 100 / stakedSum,
+                val: `$${sortedYield.stakedUsd} (${(sortedYield.stakedUsd * 100 / stakedSum).toFixed(1)}%)`,
+            }
+        })
+    }
+)
+export const useElevationStakedContributions = (elevation: Elevation) => useSelector((state) => selectElevationStakedContributions(state, elevation))
+

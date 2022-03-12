@@ -33,13 +33,13 @@ const HeaderWrapper = styled(Flex)`
   padding: 16px;
   padding-top: 112px;
   padding-bottom: 24px;
-  margin-top: 124px;
+  margin-top: 64px;
   background-color: ${({ theme }) => theme.colors.background};
   border-radius: 4px;
   box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
   width: 100%;
   height: 100%;
-  gap: 24px;
+  gap: 36px;
 `
 
 
@@ -53,8 +53,8 @@ const ElevSpecificSection = memo(() => {
 
   return (
     <>
-      { elevationTab !== ElevationFarmTab.OASIS && <ElevationYieldBet/> }
-      <ElevationWinnings/>
+      {/* { elevationTab !== ElevationFarmTab.OASIS && <ElevationYieldBet/> } */}
+      {/* <ElevationWinnings/> */}
     </>
   )
 })
@@ -88,7 +88,6 @@ const TotemHeader: React.FC = () => {
     <HeaderCardsWrapper>
       <HeaderWrapper flexDirection="column" alignItems="center" justifyContent="center">
         <TotemHeaderButtonsRow/>
-        <LifetimeSummitWinnings/>
         <ElevationIntroduction/>
         { account == null ?
           <StyledUnlockButton summitPalette={elevationTab} /> :

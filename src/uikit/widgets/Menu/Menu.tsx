@@ -4,12 +4,17 @@ import Flex from "../../components/Box/Flex";
 import { useMatchBreakpoints } from "../../hooks";
 import UserBlock from "./components/UserBlock";
 import { NavProps } from "./types";
-import { MENU_HEIGHT } from "./config";
+import { MENU_HEIGHT, SUB_MENU_HEIGHT } from "./config";
 import SummitPrice from "./components/SummitPrice";
 import { useCurrentSummitPalette } from "state/hooks";
 import { useRoadmapScreenshot } from "state/hooksNew";
 import Logo from "./components/Logo";
 import NavLinks from "./components/NavLinks";
+import { Text } from "uikit/components/Text";
+import { darken } from "polished";
+import { SummitPalette } from "config/constants/types";
+import SummitButton from "uikit/components/Button/SummitButton";
+import SummitWinnings from "./components/SummitWinnings";
 
 const Wrapper = styled.div`
   position: relative;
@@ -28,15 +33,53 @@ const StyledNav = styled.nav<{ showMenu: boolean }>`
   padding-right: 16px;
   width: 100vw;
   max-width: 100vw;
-  height: ${MENU_HEIGHT - 6}px;
-  padding-bottom: 0px;
+  height: ${MENU_HEIGHT}px;
   z-index: 20;
   transform: translate3d(0, 0, 0);
   background-color: ${({ theme }) => theme.colors.background};
   flex-direction: row;
+`;
+
+// const UpperNav = styled.div`
+//   display: flex;
+//   justify-content: space-between;
+//   align-items: center;
+//   padding-left: 16px;
+//   padding-right: 16px;
+//   width: 100vw;
+//   max-width: 100vw;
+//   height: ${MENU_HEIGHT}px;
+//   background-color: ${({ theme }) => theme.colors.background};
+//   flex-direction: row;
+//   gap: 14px;
+// `
+
+const LowerNav = styled.div`
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  width: 100vw;
+  max-width: 100vw;
+  height: ${SUB_MENU_HEIGHT}px;
+  background-color: ${({ theme }) => theme.colors.cardHover};
+  flex-direction: row;
   gap: 14px;
   box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
-`;
+
+  /* &:before {
+    content: ' ';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: ${({ theme }) => theme.colors.background};
+    z-index: -1;
+  } */
+`
 
 const BodyWrapper = styled.div`
   position: relative;
@@ -45,7 +88,7 @@ const BodyWrapper = styled.div`
 
 const Inner = styled.div<{ isPushed: boolean; showMenu: boolean, screenshot: boolean }>`
   flex-grow: 1;
-  margin-top: ${({ showMenu, screenshot }) => (screenshot ? '12px' : (showMenu ? `${MENU_HEIGHT}px` : 0))};
+  margin-top: ${MENU_HEIGHT}px;
   transform: translate3d(0, 0, 0);
   max-width: 100%;
 `;
@@ -92,6 +135,7 @@ const Menu: React.FC<NavProps> = ({
     <Wrapper>
       { !roadmapScreenshot &&
         <StyledNav showMenu id='popup-root'>
+          {/* <UpperNav> */}
           {/* <MobileHamburgerWrapper>
             <MenuButton aria-label="Toggle menu" onClick={() => setIsPushed((prevState: boolean) => !prevState)} mr="6px">
               {isPushed ? (
@@ -101,14 +145,16 @@ const Menu: React.FC<NavProps> = ({
               )}
             </MenuButton>
           </MobileHamburgerWrapper> */}
-          <Flex alignItems='center' justifyContent='center' gap='10px'>
-            <Logo isDark={isDark} href="/" summitPalette={summitPalette}/>
-            <NavLinks links={links} mobileNav={false}/>
-          </Flex>
-          <Flex alignItems='center' justifyContent='center' gap='10px'>
-            <SummitPrice summitPriceUsd={summitPriceUsd} />
-            <UserBlock account={account} login={login} logout={logout} isDark={isDark} toggleTheme={toggleTheme} />
-          </Flex>
+            <Flex alignItems='center' justifyContent='center' gap='10px'>
+              <Logo isDark={isDark} href="/" summitPalette={summitPalette}/>
+              <NavLinks links={links} mobileNav={false}/>
+            </Flex>
+            <Flex alignItems='center' justifyContent='center' gap='10px'>
+              <SummitWinnings/>
+              <SummitPrice summitPriceUsd={summitPriceUsd} />
+              <UserBlock account={account} login={login} logout={logout} isDark={isDark} toggleTheme={toggleTheme} />
+            </Flex>
+          {/* </UpperNav> */}
 
           {/* <MenuPageSpecificHeader isDark={isDark} isPushed={isPushed}/> */}
 
@@ -132,6 +178,17 @@ const Menu: React.FC<NavProps> = ({
           />
         } */}
         <Inner isPushed={isPushed} screenshot={roadmapScreenshot} showMenu>
+          <LowerNav>
+            <Text>Test</Text>
+            <SummitButton
+              secondary
+              height='28px'
+              summitPalette={SummitPalette.BASE}
+              onClick={() => null}
+            >
+              <Text monospace small bold>MY PORTFOLIO</Text>
+            </SummitButton>
+          </LowerNav>
           {children}
         </Inner>
         {/* <MobileOnlyOverlay show={isPushed} onClick={() => setIsPushed(false)} role="presentation" /> */}

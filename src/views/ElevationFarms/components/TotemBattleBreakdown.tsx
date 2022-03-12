@@ -41,6 +41,7 @@ const BattleText = styled.svg<{ elevation: Elevation }>`
 `
 
 const TotemMultText = styled(Text)`
+  pointer-events: none;
   border-radius: 4px;
   position: absolute;
   font-size: 12px;
@@ -203,7 +204,7 @@ const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, seco
   const expectedMultiplier = elevationUtils.totemCount(elevation)
   return (
     <TotemBattleAreaWrapper fullWidth={fullWidth} secondRow={secondRow} className='totem-arena'>
-      <ExpectedMultText invis={secondRow} bold monospace>{expectedMultiplier}x</ExpectedMultText>
+      { !multiElev && <ExpectedMultText invis={secondRow} bold monospace>{expectedMultiplier}x</ExpectedMultText> }
       <TotemResultsWrapper elevation={elevation} multiElev={multiElev}>
         <RulerLine i={0}/>
         <RulerLine i={1}/>

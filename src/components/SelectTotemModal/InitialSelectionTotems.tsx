@@ -14,10 +14,6 @@ const PaddedFlex = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  flex-wrap: wrap;
-  & > * {
-    padding: 6px;
-  }
 `
 
 const PaddedFlexDesktopOnly = styled(PaddedFlex)`

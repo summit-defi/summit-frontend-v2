@@ -1,106 +1,45 @@
 import React from 'react'
-import { elevationUtils } from 'config/constants/types'
-import { getBalanceNumber } from 'utils'
-import { Text, Flex, HighlightedText, Skeleton, useModal, SummitButton } from 'uikit'
-import { useClaimElevation } from 'hooks/useClaim'
-import { useSelectedElevation } from 'state/hooks'
-import CardValue from 'views/Home/components/CardValue'
+import { Elevation } from 'config/constants/types'
 import ContributionBreakdown from './ContributionBreakdown'
-import { useElevationWinningsContributions, useElevationInteractionsLocked, useFarmsUserDataLoaded } from 'state/hooksNew'
+import { useElevationWinningsContributions, useFarmsUserDataLoaded } from 'state/hooksNew'
 import styled from 'styled-components'
-import { FreezeWithBonusesModal } from './FreezeWithBonusesModal'
+import { mix } from 'polished'
 
-const NoTextShadowFlex = styled(Flex)`
-  gap: 4px;
-  margin-top: -4px;
-  > * {
-    text-shadow: none !important;
-  }
+const ElevBreakdownWrapper = styled.div`
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: row; 
+  margin-top: 17px;
+  position: relative;
+  padding: 12px 0px;
+  z-index: 12;
 `
 
-const ElevationWinnings: React.FC = () => {
-  const elevation = useSelectedElevation()
-  const elevationLocked = useElevationInteractionsLocked(elevation)
-  const {
-    winningsContributions,
-    elevClaimable,
-    elevClaimableBonus,
-  } = useElevationWinningsContributions(elevation)
+const BackgroundColor = styled.div<{ elevation: Elevation }>`
+  position: absolute;
+  top: 0px;
+  height: 50px;
+  right: -1px;
+  left: 0px;
+  background-color: ${({ theme, elevation }) => mix(0.85, theme.colors.background, theme.colors[elevation])};
+  border-radius: 20px 20px 0 0;
+`
 
+const ElevationWinnings: React.FC<{ elevation: string }> = ({ elevation: elevString }) => {
+  const elevation = elevString as Elevation
+  const { winningsContributions } = useElevationWinningsContributions(elevation)
   const userDataLoaded = useFarmsUserDataLoaded()
 
-  const rawElevClaimable = getBalanceNumber(elevClaimable)
-  const rawElevClaimableBonus = getBalanceNumber(elevClaimableBonus)
-  const earningsOrWinnings = elevationUtils.winningsOrEarnings(elevation).toUpperCase()
-
-  // FREEZING ELEVATION
-  const { onClaimElevation, claimPending } = useClaimElevation()
-  const nothingToClaim = !elevClaimable || elevClaimable.isEqualTo(0)
-
-  const [onPresentFreezeElev] = useModal(
-    <FreezeWithBonusesModal
-      elevations={[elevation]}
-      onFreezeWinnings={onClaimElevation}
-    />
-  )
-
-
   return (
-    <Flex width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
-      <Flex alignItems='center' mb='12px' justifyContent='space-around' width='100%' maxWidth='400px'>
-        <Flex flexDirection='column' justifyContent='center' alignItems='center'>
-          <Text bold monospace>{elevation} {earningsOrWinnings}:</Text>
-          { userDataLoaded ?
-            <>
-              <CardValue
-                value={rawElevClaimable}
-                decimals={3}
-                summitPalette={elevation}
-                fontSize="18"
-                postfix='SUMMIT'
-                postfixFontSize='14'
-              />
-              { elevClaimableBonus.isGreaterThan(0) &&
-                <NoTextShadowFlex>
-                  <HighlightedText bold monospace gold fontSize='14px'>+</HighlightedText>
-                  <CardValue
-                    value={rawElevClaimableBonus}
-                    decimals={3}
-                    fontSize="14"
-                    gold
-                  />
-                  <HighlightedText bold monospace gold fontSize='14px' ml='8px'>BONUS</HighlightedText>
-                </NoTextShadowFlex>
-              }
-            </> :
-            <Skeleton height={24} width={180}/>
-          }
-        </Flex>
-        <SummitButton
-          summitPalette={elevation}
-          isLocked={elevationLocked}
-          isLoading={claimPending}
-          disabled={nothingToClaim}
-          width='200px'
-          freezeSummitButton
-          onClick={onPresentFreezeElev}
-        >
-          FREEZE {elevation}
-          <br />
-          {earningsOrWinnings}
-        </SummitButton>
-      </Flex>
-
+    <ElevBreakdownWrapper>
+      <BackgroundColor elevation={elevation}/>
       <ContributionBreakdown
         loaded={userDataLoaded}
-        breakingDownTitle={earningsOrWinnings}
-        breakdownType='FARM'
         contributions={winningsContributions}
       />
-      
-      
-
-    </Flex>
+    </ElevBreakdownWrapper>
   )
 }
 

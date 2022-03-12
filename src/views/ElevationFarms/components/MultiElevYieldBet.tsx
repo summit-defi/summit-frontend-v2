@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { getBalanceNumber } from 'utils'
 import { Text, Flex, Skeleton } from 'uikit'
 import { useMultiElevYieldBetInfo } from 'state/hooks'
 import CardValue from 'views/Home/components/CardValue'
 import ContributionBreakdown from './ContributionBreakdown'
 import { useFarmsUserDataLoaded } from 'state/hooksNew'
+import ElevationYieldBet from './ElevationYieldBet'
 
 const MultiElevYieldBet: React.FC = () => {
   const { elevYieldsBreakdown, totalYieldContributed, totalPotentialWinnings } = useMultiElevYieldBetInfo()
@@ -12,12 +13,14 @@ const MultiElevYieldBet: React.FC = () => {
 
   const rawYieldContributed = getBalanceNumber(totalYieldContributed)
   const rawPotentialWinnings = getBalanceNumber(totalPotentialWinnings)
+  const [elevToBreakdown, setElevToBreakdown] = useState<string | undefined>(undefined)
+
 
   return (
     <Flex width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
-      <Flex alignItems='center' mb='12px' justifyContent='space-around' width='100%' maxWidth='400px'>
-        <Flex flexDirection='column' justifyContent='center' alignItems='center'>
-          <Text bold monospace>ROUND YIELD BET:</Text>
+      <Flex flexDirection='column' alignItems='flex-start' mb='18px' justifyContent='flex-start' width='100%'>
+        <Flex justifyContent='center' alignItems='center' height='20px' gap='4px'>
+          <Text bold monospace>ROUND CONTRIBUTION:</Text>
           { userDataLoaded ?
             <CardValue
               value={rawYieldContributed}
@@ -29,7 +32,7 @@ const MultiElevYieldBet: React.FC = () => {
             <Skeleton height={24} width={180}/>
           }
         </Flex>
-        <Flex flexDirection='column' justifyContent='center' alignItems='center'>
+        <Flex justifyContent='center' alignItems='center' height='20px' gap='4px'>
           <Text bold monospace>POTENTIAL WINNINGS:</Text>
           { userDataLoaded ?
             <CardValue
@@ -46,9 +49,15 @@ const MultiElevYieldBet: React.FC = () => {
 
       <ContributionBreakdown
         loaded={userDataLoaded}
-        breakingDownTitle='YIELD BET'
         contributions={elevYieldsBreakdown}
+        selectable
+        selectedIndex={elevToBreakdown}
+        onSelect={setElevToBreakdown}
       />
+
+      {elevToBreakdown != null &&
+        <ElevationYieldBet elevation={elevToBreakdown}/>
+      }
     </Flex>
   )
 }

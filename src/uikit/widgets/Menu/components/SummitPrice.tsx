@@ -21,6 +21,13 @@ const PriceLink = styled.div`
   ${pressableMixin}
 `
 
+const DesktopOnlyText = styled(Text)`
+  display: none;
+  ${({ theme }) => theme.mediaQueries.nav} {
+    display: flex;
+  }
+`
+
 const SummitPrice: React.FC<Props> = ({ summitPriceUsd }) => {
   return (
     <SummitPopUp
@@ -28,9 +35,9 @@ const SummitPrice: React.FC<Props> = ({ summitPriceUsd }) => {
       button={
         <PriceLink>
           <LogoRoundIcon width="32px" />
-          <Text monospace bold>{`$${
+          <DesktopOnlyText monospace bold>{`$${
             summitPriceUsd ? summitPriceUsd.toFixed(3) : 'XX.XX'
-          }`}</Text>
+          }`}</DesktopOnlyText>
         </PriceLink>
       }
       contentPadding='12px'

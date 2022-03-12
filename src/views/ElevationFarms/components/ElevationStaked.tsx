@@ -1,6 +1,6 @@
 import React from 'react'
 import ContributionBreakdown from './ContributionBreakdown'
-import { useElevationYieldBetContributions, useFarmsUserDataLoaded } from 'state/hooksNew'
+import { useElevationStakedContributions, useFarmsUserDataLoaded } from 'state/hooksNew'
 import { Elevation } from 'config/constants'
 import { mix } from 'polished'
 import styled from 'styled-components'
@@ -27,20 +27,20 @@ const BackgroundColor = styled.div<{ elevation: Elevation }>`
   border-radius: 20px 20px 0 0;
 `
 
-const ElevationYieldBet: React.FC<{ elevation: string }> = ({ elevation: elevString }) => {
+const ElevationStaked: React.FC<{ elevation: string }> = ({ elevation: elevString }) => {
   const elevation = elevString as Elevation
   const userDataLoaded = useFarmsUserDataLoaded()
-  const yieldBetContributions = useElevationYieldBetContributions(elevation)
+  const stakedContributions = useElevationStakedContributions(elevation)
 
   return (
     <ElevBreakdownWrapper>
       <BackgroundColor elevation={elevation}/>
       <ContributionBreakdown
         loaded={userDataLoaded}
-        contributions={yieldBetContributions}
+        contributions={stakedContributions}
       />
     </ElevBreakdownWrapper>
   )
 }
 
-export default React.memo(ElevationYieldBet)
+export default React.memo(ElevationStaked)

@@ -35,9 +35,12 @@ export const pressableMixin = ({
       }
     }
 
-    &:active {
-      transform: translateY(0px);
-      opacity: 0.5;
+
+    ${theme.mediaQueries.nav} {
+      &:active {
+        transform: translateY(0px);
+        opacity: 0.5;
+      }
     }
 
     ${enabledStyles}
