@@ -60,38 +60,39 @@ const TextButton = styled.div<{ disabled: boolean }>`
     })}
 `
 
+
+
+export enum FarmInteractionType {
+  Deposit = 'Deposit',
+  Withdraw = 'Withdraw',
+  Elevate = 'Elevate',
+}
+
 interface Props {
   isApproved: boolean
   elevation: Elevation
-  setMobileDepositWithdraw: (number) => void
+  farmInteractionType: FarmInteractionType
+  setFarmInteractionType: (FarmInteractionType) => void
 }
 
-const FarmCardMobileDepositWithdrawSelector: React.FC<Props> = ({
+const FarmInteractionTypeSelector: React.FC<Props> = ({
   isApproved,
   elevation,
-  setMobileDepositWithdraw,
+  farmInteractionType,
+  setFarmInteractionType,
 }) => {
-  const [selected, setSelected] = useState(0)
-  useEffect(() => {
-    setMobileDepositWithdraw(0)
-  }, [setMobileDepositWithdraw])
-
   const approveOrDeposit = isApproved ? 'DEPOSIT' : 'APPROVE'
-
-  const handleSelect = (newSelected) => {
-    if (newSelected === selected || (newSelected !== 0 && !isApproved)) return
-    setSelected(newSelected)
-    setMobileDepositWithdraw(newSelected)
-  }
+  const selectedIndex = farmInteractionType === FarmInteractionType.Deposit ? 0 :
+    farmInteractionType === FarmInteractionType.Withdraw ? 1 : 2
 
   const summitButtonText = () => {
-    switch (selected) {
-      case 1:
+    switch (farmInteractionType) {
+      case FarmInteractionType.Withdraw:
         return 'WITHDRAW'
-      case 2:
+      case FarmInteractionType.Elevate:
         return 'ELEVATE'
       default:
-      case 0:
+      case FarmInteractionType.Deposit:
         return approveOrDeposit
     }
   }
@@ -99,16 +100,16 @@ const FarmCardMobileDepositWithdrawSelector: React.FC<Props> = ({
   return (
     <MobileOnlyFlex>
       <SelectorWrapper>
-        <SelectedSummitButton elevation={elevation} selectedIndex={selected}>
+        <SelectedSummitButton elevation={elevation} selectedIndex={selectedIndex}>
           {summitButtonText()}
         </SelectedSummitButton>
-        <TextButton onClick={() => handleSelect(0)} disabled={false}>
+        <TextButton onClick={() => setFarmInteractionType(FarmInteractionType.Deposit)} disabled={false}>
           {approveOrDeposit}
         </TextButton>
-        <TextButton onClick={() => handleSelect(1)} disabled={!isApproved}>
+        <TextButton onClick={() => setFarmInteractionType(FarmInteractionType.Withdraw)} disabled={!isApproved}>
           WITHDRAW
         </TextButton>
-        <TextButton onClick={() => handleSelect(2)} disabled={!isApproved}>
+        <TextButton onClick={() => setFarmInteractionType(FarmInteractionType.Elevate)} disabled={!isApproved}>
           ELEVATE
         </TextButton>
       </SelectorWrapper>
@@ -116,4 +117,4 @@ const FarmCardMobileDepositWithdrawSelector: React.FC<Props> = ({
   )
 }
 
-export default FarmCardMobileDepositWithdrawSelector
+export default FarmInteractionTypeSelector

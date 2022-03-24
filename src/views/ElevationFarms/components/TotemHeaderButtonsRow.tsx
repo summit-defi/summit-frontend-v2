@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Elevation, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import styled from 'styled-components'
 import { Text, Flex, Spinner, Lock, ElevationPuck, ArtworkTotem, HighlightedText } from 'uikit'
@@ -9,10 +9,12 @@ import { SpinnerKeyframes } from 'uikit/components/Svg/Icons/Spinner'
 import useTotemWinnersModal from 'uikit/widgets/TotemWinnersModal/useTotemWinnersModal'
 import { RoundStatus, useElevationInteractionsLockedBreakdown, useElevationUserTotemAndCrowned, useUserTotemsAndCrowns } from 'state/hooksNew'
 import { pressableMixin } from 'uikit/util/styledMixins'
+import { FarmingTab, FarmHeaderTabSelector } from './FarmHeaderTabSelector'
 
 const HeaderButtonsRow = styled(Flex)`
   position: absolute;
-  top: -76px;
+  top: 0px;
+  width: 318px;
   gap: 12px;
 `
 
@@ -124,10 +126,9 @@ const StyledLock = styled(Lock)`
 const TotemHeaderButtonsRow: React.FC = () => {
   const elevationTab = useElevationFarmsTab()
   const elevation = elevationTabToElevation[elevationTab]
-  const userTotemsAndCrowns = useUserTotemsAndCrowns()
+  const [selectedTab, selectTab] = useState<FarmingTab>(FarmingTab.Farm)
   const { roundStatus } = useElevationInteractionsLockedBreakdown(elevation)
   const totemSwitchDisabled = roundStatus === RoundStatus.RolloverLockout || roundStatus === RoundStatus.RolloverAvailable
-  const totemSelectionPending = useTotemSelectionPending()
 
   const { onPresentTotemWinnersModal } = useTotemWinnersModal()
   const { onPresentSelectTotemModal } = useSelectTotemModal(elevation)
@@ -155,8 +156,13 @@ const TotemHeaderButtonsRow: React.FC = () => {
         </SummitIconButton>
       )} */}
 
+      <FarmHeaderTabSelector
+        selected={selectedTab}
+        onSelect={selectTab}
+      />
 
-      <HeaderTotemWrapper isLoading={totemSelectionPending}>
+
+      {/* <HeaderTotemWrapper isLoading={totemSelectionPending}>
         <TotemWrapper isLoading={totemSelectionPending} onClick={() => onPresentTotemWinnersModal({elevation: Elevation.OASIS})}>
           <ArtworkTotem
             elevation={Elevation.OASIS}
@@ -220,7 +226,7 @@ const TotemHeaderButtonsRow: React.FC = () => {
             <HighlightedText bold color='white' italic fontSize='20px' lineHeight='20px'>{Elevation.SUMMIT}</HighlightedText>
           </ElevationName>
         </TotemWrapper>
-      </HeaderTotemWrapper>
+      </HeaderTotemWrapper> */}
       {/* {isElevationFarm && userTotem != null && (
         <SummitIconButton elevation={elevation} onClick={onPresentTotemWinnersModal}>
           <CrownHistoryIcon />

@@ -1,11 +1,12 @@
 import { Elevation } from 'config/constants'
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { darken } from 'polished'
 import { Flex, HeaderInfoQuestion, Text, TooltipModalType, TriangleGrowIcon, useModal } from 'uikit'
 import { useSelectedElevation } from 'state/hooks'
 import TooltipModal from 'uikit/widgets/Modal/TooltipModal'
 import { MarkProp } from 'uikit/components/Svg/Icons/TriangleGrow'
+import { pressableMixin } from 'uikit/util/styledMixins'
 
 const EndMarkerHeight = 55
 
@@ -46,6 +47,7 @@ const MarkerText = styled(Text)`
     top: ${EndMarkerHeight - 18}px;
     bottom: 0px;
     background-color: ${({ theme }) => theme.colors.cardHover};
+    transition: background-color 250ms;
 `
 
 const MarkerBar = styled.div<{ elevation?: Elevation }>`
@@ -93,8 +95,9 @@ const StyledTriangleGrowIcon = styled(TriangleGrowIcon)<{ elevation?: Elevation 
     }
 `
 
-const HeaderInfoQuestionButton = styled(HeaderInfoQuestion)`
+const PressableFlex = styled(Flex)`
     cursor: pointer;
+    ${pressableMixin}    
 `
 
 interface Props {
@@ -127,7 +130,7 @@ const EndMarker: React.FC<EndMarkerProps> = ({title, displayPerc, positionPerc})
 
 const Marker: React.FC<MarkerProps> = ({displayPerc, positionPerc, elevation}) => {
     return <MarkerWrapper positionPerc={positionPerc}>
-        {displayPerc != null && <MarkerText monospace bold>{displayPerc}%</MarkerText>}
+        {displayPerc != null && <MarkerText className='marker-text' monospace bold>{displayPerc}%</MarkerText>}
         <MarkerBar elevation={elevation}/>
     </MarkerWrapper>
 }
@@ -141,14 +144,22 @@ const BoundedProgressBar: React.FC<Props> = ({title, marks, currDisplayPerc, cur
         <TooltipModal tooltipType={tooltipType}/>
     ) 
 
+    const handlePresentTooltipModal = useCallback(
+        (e) => {
+            e.stopPropagation()
+            onPresentTooltipModal()
+        },
+        [onPresentTooltipModal]
+    )
+
     return (
         <Wrapper single={single}>
-            <Flex alignItems='center' justifyContent='center' width='100%' pl='24px' pr='24px' gap='8px'>
+            <PressableFlex alignItems='center' justifyContent='center' width='100%' pl='24px' pr='24px' gap='8px' onClick={handlePresentTooltipModal}>
                 <Text bold monospace small textAlign='center' lineHeight='14px'>
                     {title}: {currDisplayPerc}%
                 </Text>
-                <HeaderInfoQuestionButton onClick={onPresentTooltipModal}/>
-            </Flex>
+                <HeaderInfoQuestion/>
+            </PressableFlex>
             <BarFlex flexDirection='row' alignItems='center' single={single}>
                 { !single && <StyledTriangleGrowIcon
                     width='100%'

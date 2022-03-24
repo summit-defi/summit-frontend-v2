@@ -82,7 +82,7 @@ const AccountPopUp: React.FC<Props> = ({ account, isDark, toggleTheme, logout, o
       <Divider/>
 
       <Flex width='100%' alignItems='center' justifyContent='space-between'>
-        <Text bold monospace>SITE THEME</Text>
+        <Text bold monospace>Site Theme</Text>
         <DarkModeToggle summitPalette={SummitPalette.BASE} isDark={isDark} toggleTheme={toggleTheme}/>
       </Flex>
 

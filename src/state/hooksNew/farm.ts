@@ -111,9 +111,11 @@ export const useSummitPrice = () => useSelector((state) => state.prices.pricesPe
 
 const selectSymbolElevateModalInfo = createSelector(
     stateToFarms,
+    stateToTokenInfos,
     (_: any, symbol: string) => symbol,
-    (farms, symbol) => {
+    (farms, tokenInfos, symbol) => {
         const farm = farms.find((f) => f.symbol === symbol)
+        const tokenInfo = tokenInfos.find((tI) => tI.symbol === symbol)
 
         const elevLaunched = {
             [Elevation.OASIS]: false,
@@ -144,6 +146,10 @@ const selectSymbolElevateModalInfo = createSelector(
             elevStaked,
             decimals: farm.decimals,
             farmToken: farm.farmToken,
+
+            // TOKEN INFO
+            farmAllowance: tokenInfo.farmAllowance,
+            walletBalance: tokenInfo.walletBalance,
         }
     }
 )

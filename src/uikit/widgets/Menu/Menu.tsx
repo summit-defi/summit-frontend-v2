@@ -15,6 +15,8 @@ import { darken } from "polished";
 import { SummitPalette } from "config/constants/types";
 import SummitButton from "uikit/components/Button/SummitButton";
 import SummitWinnings from "./components/SummitWinnings";
+import { Link } from "react-router-dom";
+import { NavSecondRow } from "./components/NavSecondRow";
 
 const Wrapper = styled.div`
   position: relative;
@@ -54,32 +56,7 @@ const StyledNav = styled.nav<{ showMenu: boolean }>`
 //   gap: 14px;
 // `
 
-const LowerNav = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-left: 16px;
-  padding-right: 16px;
-  width: 100vw;
-  max-width: 100vw;
-  height: ${SUB_MENU_HEIGHT}px;
-  background-color: ${({ theme }) => theme.colors.cardHover};
-  flex-direction: row;
-  gap: 14px;
-  box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
 
-  /* &:before {
-    content: ' ';
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    background-color: ${({ theme }) => theme.colors.background};
-    z-index: -1;
-  } */
-`
 
 const BodyWrapper = styled.div`
   position: relative;
@@ -178,17 +155,7 @@ const Menu: React.FC<NavProps> = ({
           />
         } */}
         <Inner isPushed={isPushed} screenshot={roadmapScreenshot} showMenu>
-          <LowerNav>
-            <Text>Test</Text>
-            <SummitButton
-              secondary
-              height='28px'
-              summitPalette={SummitPalette.BASE}
-              onClick={() => null}
-            >
-              <Text monospace small bold>MY PORTFOLIO</Text>
-            </SummitButton>
-          </LowerNav>
+          <NavSecondRow/>
           {children}
         </Inner>
         {/* <MobileOnlyOverlay show={isPushed} onClick={() => setIsPushed(false)} role="presentation" /> */}

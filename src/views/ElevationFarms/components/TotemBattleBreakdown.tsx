@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useMemo, useCallback } from 'react'
 import { Elevation, elevationUtils } from 'config/constants/types'
 import styled, { keyframes } from 'styled-components'
 import { elevationPalette } from 'theme/colors'
-import { Text, Flex, useMatchBreakpoints } from 'uikit'
+import { Text, Flex, useMatchBreakpoints, ArtworkTotem, HighlightedText, SpinnerKeyframes, Spinner } from 'uikit'
 import Totem from './Totem'
 import chroma from 'chroma-js'
 import { clamp, chunk } from 'lodash'
+import { pressableMixin } from 'uikit/util/styledMixins'
 
 const TotemHeight = 64;
 const GameAreaHeight = 150;
@@ -16,7 +17,7 @@ const TotemBattleAreaWrapper = styled(Flex)<{ fullWidth: boolean, secondRow: boo
   justify-content: center;
   position: relative;
   height: ${GameAreaHeight}px;
-  margin-top: ${({ secondRow }) => secondRow ? -31 : 0}px;
+  margin-top: ${({ secondRow }) => secondRow ? -7 : 0}px;
   width: ${({ fullWidth }) => fullWidth ? '100%' : 'auto'};
 `
 
@@ -96,7 +97,7 @@ const DashedLine = styled.div<{ leftClipped: boolean, rightClipped: boolean }>`
 
 const RuleLine = styled.div<{ index: number }>`
   position: absolute;
-  left: 0px;
+  left: -120px;
   right: 0px;
   top: ${({ index }) => (21.5 * index) + (TotemHeight / 2) - (21.5 * 1.5)}px;
   height: 21.5px;
@@ -110,19 +111,22 @@ const TotemScale = styled.div<{ scale: number }>`
   position: relative;
 `
 
-const TotemBreakdownWrapper = styled.div<{ fullWidth: boolean, multiElev: boolean }>`
+const TotemBreakdownWrapper = styled.div<{ fullWidth: boolean, multiElev: boolean, selectable?: boolean }>`
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   margin-bottom: ${({ multiElev }) => multiElev ? 0 : 24}px;
   width: ${({ fullWidth }) => fullWidth ? '100%' : 'auto'};
+
+  ${({ selectable, theme }) => selectable && pressableMixin({ theme })}
 `
 
-const TotemResultWrapper = styled(Flex)`
+const TotemResultWrapper = styled(Flex)<{ selected }>`
   flex-direction: column;
   position: relative;  
   height: 100%;
+  ${({ theme, selected }) => !selected && pressableMixin({ theme })}
 `
 
 const PulseKeyframes = keyframes`
@@ -138,7 +142,7 @@ const PulseKeyframes = keyframes`
 
 const ArenaPulse = styled.div<{ elevation: Elevation }>`
   position: absolute;
-  left: 0px;
+  left: -120px;
   right: 0px;
   height: 1px; 
   opacity: 0.5;
@@ -174,6 +178,43 @@ const RowCombinerMid = styled.div`
   left: 32px;
   right: 32px;
   top: -8px;
+`
+
+const HeaderTotemWrapper = styled.div<{ isLoading: boolean }>`
+  position: relative;
+  background-color: ${({ theme }) => theme.colors.background};
+  border-radius: 200px;
+  box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  opacity: ${({ isLoading}) => isLoading ? 0.75 : 1};
+  margin-right: 12px;
+  z-index: 10;
+
+  .spinner {
+    fill: white;
+    animation: ${SpinnerKeyframes} 1.4s infinite linear;
+  }
+
+  ${pressableMixin}
+`
+
+
+
+const ElevationName = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 16px;
+`
+
+const StyledSpinner = styled(Spinner)`
+  position: absolute;
+  align-self: center;
+  filter: drop-shadow(0px 0px 4px black);
 `
 
 const calcTopOffset = (mult, elevation: Elevation) => {
@@ -228,7 +269,6 @@ const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, seco
       { secondRow && <RowCombinerLeft/>}
       { secondRow && <RowCombinerMid/>}
       { elevation === Elevation.SUMMIT && !secondRow && isMobile && !multiElev && <RowCombinerRight/>}
-      { fullWidth && <ExpectedMultText invis={!secondRow} bold monospace>{expectedMultiplier}x</ExpectedMultText> }
     </TotemBattleAreaWrapper>
   )
 })
@@ -264,19 +304,33 @@ interface TotemInfo {
   mult: number
 }
 
+
+interface SelectTotemModalProps {
+  elevation: Elevation
+  preselectedTotem: number
+}
+
 interface TotemResultProps {
   totemInfo: TotemInfo
   elevation: Elevation
   color: string
   selected: boolean
+  onPresentSelectTotemModal?: (SelectTotemModalProps) => void
 }
 
-const TotemBattleResult: React.FC<TotemResultProps> = ({ totemInfo, elevation, color, selected }) => {
+const TotemBattleResult: React.FC<TotemResultProps> = ({ totemInfo, elevation, color, selected, onPresentSelectTotemModal }) => {
   const topOffset = calcTopOffset(totemInfo.mult, elevation)
   const totemScale = calcScale(totemInfo.mult, elevation)
 
+  const handlePresentSelectTotemModal = useCallback(() => {
+    if (selected || onPresentSelectTotemModal == null) return
+    onPresentSelectTotemModal({
+      elevation,
+      preselectedTotem: totemInfo.totem
+    })
+  }, [totemInfo, selected, elevation, onPresentSelectTotemModal])
   return (
-    <TotemResultWrapper>
+    <TotemResultWrapper selected={selected} onClick={handlePresentSelectTotemModal}>
       {selected && <SelectedTotemIndicator className='selected-totem-indicator' /> }
       <TotemPosition topOffset={topOffset}>
         <TotemMultText bold monospace>{totemInfo.mult == null ? '' : `${isFinite(totemInfo.mult) ? totemInfo.mult.toFixed(1) : 'INF '}x`}</TotemMultText>
@@ -302,10 +356,16 @@ interface Props {
   totemInfos: TotemInfo[]
   fullWidth?: boolean
   userTotem?: number
+  userTotemCrowned?: boolean
   multiElev?: boolean
+  selectable?: boolean
+  selectedElevation?: Elevation
+  onSelect?: (Elevation?) => void
+  onPresentTotemWinnersModal?: (any) => void
+  onPresentSelectTotemModal?: (SelectTotemModalProps) => void
 }
 
-const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, userTotem, fullWidth = true, multiElev = false }) => {
+const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, userTotem, userTotemCrowned=false, onPresentTotemWinnersModal, onPresentSelectTotemModal, fullWidth = true, multiElev = false, selectable=false, selectedElevation, onSelect }) => {
   const colorGradient = chroma
     .scale([elevationPalette[elevation][2], elevationPalette[elevation][4]])
     .mode('lch')
@@ -314,8 +374,13 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
   const { isXl } = useMatchBreakpoints();
   const isMobile = isXl === false;
 
+  const clickable = useMemo(
+    () => selectable ? { onClick: () => onSelect(elevation === selectedElevation ? undefined : elevation) } : null,
+    [selectable, elevation, selectedElevation, onSelect]
+  )
+
   if (totemInfos.length === 0) return (
-    <TotemBreakdownWrapper fullWidth={fullWidth} multiElev={multiElev}>
+    <TotemBreakdownWrapper fullWidth={fullWidth} multiElev={multiElev} selectable={selectable} {...clickable}>
       { title != null && <Text bold monospace>{title}</Text> }
       <TotemBattleArea
         fullWidth={fullWidth}
@@ -335,11 +400,28 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
   )
 
   const chunkedTotems = chunk(totemInfos, isMobile ? 5 : 10)
+
+  const totemSelectionPending = false
+
   return (
     <>
     { chunkedTotems.map((totems, chunkIndex) =>
-      <TotemBreakdownWrapper fullWidth={fullWidth} key={totems[0].totem} multiElev={multiElev}>
-        { title != null && chunkIndex === 0 && <Text bold monospace>{title}</Text> }
+      <TotemBreakdownWrapper fullWidth={fullWidth} key={totems[0].totem} multiElev={multiElev} selectable={selectable} {...clickable}>
+        <HeaderTotemWrapper isLoading={totemSelectionPending} onClick={() => onPresentTotemWinnersModal({elevation})}>
+            <ArtworkTotem
+              elevation={elevation}
+              totem={userTotem}
+              desktopSize="140"
+              mobileSize="140"
+              crowned={userTotemCrowned}
+            />
+            {totemSelectionPending && <StyledSpinner className="spinner" />}
+            <ElevationName className='elevation-name'>
+              <HighlightedText bold color='white' italic fontSize='14px' lineHeight='14px'>THE</HighlightedText>
+              <HighlightedText bold color='white' italic fontSize='20px' lineHeight='20px'>{elevation}</HighlightedText>
+            </ElevationName>
+        </HeaderTotemWrapper>
+        {/* { title != null && chunkIndex === 0 && <Text bold monospace>{title}</Text> } */}
         <TotemBattleArea
           fullWidth={fullWidth}
           elevation={elevation}
@@ -354,6 +436,7 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
               elevation={elevation}
               color={colorGradient[totemInfo.totem]}
               selected={totemInfo.totem === userTotem}
+              onPresentSelectTotemModal={onPresentSelectTotemModal}
             />
           ))}
         </TotemBattleArea>

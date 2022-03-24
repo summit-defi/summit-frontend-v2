@@ -1,23 +1,15 @@
-import { Elevation, elevationToUrl } from 'config/constants'
+import { Elevation } from 'config/constants'
 import React from 'react'
 import styled, { DefaultTheme } from 'styled-components'
-import { transparentize } from 'polished'
 import { Flex, Skeleton, Text } from 'uikit'
-import { Link } from 'react-router-dom'
-import { pressableMixin } from 'uikit/util/styledMixins'
 
 const BarHeight = 24
 
-const elevationBarBorder = ({ theme, elevation, focused }: { theme: DefaultTheme, elevation?: Elevation, focused?: Elevation }): string => {
+const elevationBarBorder = ({ theme, elevation }: { theme: DefaultTheme, elevation?: Elevation }): string => {
     if (elevation == null) return `
-        border: 1px dashed ${theme.colors.text};
         background-color: transparent;
     `
-    if (focused != null && elevation !== focused) return `
-        background-color: ${transparentize(0.4, theme.colors[elevation])};
-    `
     return `
-        border: none;
         background-color: ${theme.colors[elevation]};
     `
 }
@@ -36,26 +28,17 @@ const EmptyElevationBar = styled.div`
     background-color: transparent;
 `
 
-const ElevationBar = styled(Link)<{ elevation?: Elevation, perc: number, focused?: Elevation }>`
+const ElevationBar = styled.div<{ elevation?: Elevation, perc: number }>`
     position: relative;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     width: ${({ perc }) => `calc(${perc}% - 2px)`};
-    height: ${({ focused, elevation }) => focused != null && focused === elevation ? BarHeight + 4 : BarHeight}px;
+    height: ${BarHeight}px;
     margin-left: 1px;
     margin-right: 1px;
     ${elevationBarBorder}
-    /* transition: transform 200ms, box-shadow 200ms; */
-    ${pressableMixin}
-
-    :hover {
-        box-shadow: ${({ theme }) => `2px 2px 4px ${theme.colors.textShadow}`};
-    }
-    :active {
-        box-shadow: none;
-    }
 `
 
 const ElevationBarSkeleton = styled(Skeleton)`
@@ -64,10 +47,9 @@ const ElevationBarSkeleton = styled(Skeleton)`
     height: ${BarHeight}px;
 `
 
-const ElevationText = styled(Text)<{ elevation?: Elevation, focused?: Elevation }>`
+const ElevationText = styled(Text)`
     font-size: 13px;
     color: white;
-    /* display: ${({ elevation, focused }) => focused != null && elevation !== focused ? 'none' : 'default'}; */
     font-weight: bold;
 `
 
@@ -121,18 +103,12 @@ interface Contribution {
 }
 interface ContProps {
     symbol: string
-    focused?: Elevation
 }
 
-const ContributionComponent: React.FC<Contribution & ContProps> = ({symbol, elevation, val, perc, focused}) => {
-
-    const tabTarget = `/${elevationToUrl[elevation]}/${symbol.toLowerCase()}`
-
-    return <ElevationBar perc={perc} elevation={elevation} focused={focused} to={tabTarget} replace>
-        <ElevationText monospace small elevation={elevation} focused={focused}>{elevation}</ElevationText>
-        { (focused == null || focused === elevation) &&
-            <ValueText monospace bold>{val != null ? val : `${perc.toFixed(1)}%`}</ValueText>
-        }
+const ContributionComponent: React.FC<Contribution & ContProps> = ({symbol, elevation, val, perc}) => {
+    return <ElevationBar perc={perc} elevation={elevation}>
+        <ElevationText monospace small>{elevation}</ElevationText>
+        <ValueText monospace bold>{val != null ? val : `${perc.toFixed(1)}%`}</ValueText>
     </ElevationBar>
 }
 
@@ -140,12 +116,11 @@ interface Props {
     symbol: string
     loaded: boolean
     title?: string
-    focused?: Elevation
     contributions: Contribution[]
     center?: boolean
 }
 
-const ElevationContributionBreakdown: React.FC<Props> = ({ symbol, loaded, title, contributions, focused, center = false}) => {
+const ElevationContributionBreakdown: React.FC<Props> = ({ symbol, loaded, title, contributions, center = false}) => {
     return (
         <Wrapper>
             { title != null && <Text bold monospace>{title}</Text> }
@@ -155,7 +130,7 @@ const ElevationContributionBreakdown: React.FC<Props> = ({ symbol, loaded, title
                     contributions.length === 0 ?
                         <EmptyElevationBar/> :
                         contributions.map((contribution) => 
-                            <ContributionComponent key={contribution.key} {...contribution} focused={focused} symbol={symbol} />
+                            <ContributionComponent key={contribution.key} {...contribution} symbol={symbol} />
                         )
                 }
             </BarWrapper>

@@ -1,21 +1,23 @@
 import React, { useMemo, useState, useEffect, useRef } from 'react'
 import BigNumber from 'bignumber.js'
 import styled, { css } from 'styled-components'
-import { Flex, Text } from 'uikit'
+import { Flex, Text, useModal } from 'uikit'
 import { BN_ZERO, Elevation, ElevationFarmTab, elevationFarmTabToUrl, elevationUtils } from 'config/constants/types'
-import { useElevationFarmsTab, useSingleFarmSelected } from 'state/hooks'
+import { useElevationFarmsTab } from 'state/hooks'
 import { Link } from 'react-router-dom'
-import FarmCardUserSectionExpander from './FarmCardUserSectionExpander'
 import FarmIconAndAllocation from './FarmIconAndAllocation'
 import FarmStakingContribution, { ElevationsStaked } from './FarmStakingContribution'
 import { makeSelectFarmBySymbol, useSelector, useFarmsUserDataLoaded, useFarmFilters } from 'state/hooksNew'
 import { FarmAPYBreakdown, FarmTotalValue } from './FarmCardInfoItems'
 import { FarmRetiredSash } from './FarmRetiredSash'
-import { getFarmInteracting, getFarmType, getFullDisplayBalance } from 'utils'
+import { getFarmInteracting, getFarmType } from 'utils'
 import { FarmType } from 'state/types'
-import { TokenSymbol } from 'config/constants'
+import FarmCardTokenSection from './FarmCardTokenSection'
+import { NonInteractingInfoItems } from './NonInteractingInfoItems'
+import FarmInteractionModal from '../FarmInteractionModal'
 
-const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
+const FCard = styled(Flex)<{ $locked: boolean; interacting: boolean }>`
+  cursor: pointer;
   align-self: baseline;
   flex-direction: column;
   justify-content: space-around;
@@ -25,17 +27,17 @@ const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
   width: 100%;
   scroll-margin: 156px;
   background: ${({ theme }) => theme.colors.background};
-  border-bottom-width: 1px;
+  border-bottom-width: ${({ interacting }) => interacting ? 0 : 1}px;
   border-bottom-style: solid;
   border-bottom-color: ${({ theme }) => theme.colors.text};
 
-  ${({ $expanded }) =>
-    $expanded &&
+  .marker-text {
+    background-color: ${({ theme }) => theme.colors.background};
+  }
+
+  ${({ interacting }) =>
+    interacting &&
     css`
-      background: ${({ theme }) => theme.colors.cardHover};
-      box-shadow: 2px 2px 12px -4px rgba(25, 19, 38, 0.4), 2px 2px 8px rgba(25, 19, 38, 0.2);
-      z-index: 10;
-      margin-top: 24px;
       margin-bottom: 24px;
       border-bottom-width: 0px;
     `}
@@ -43,9 +45,24 @@ const FCard = styled(Flex)<{ $locked: boolean; $expanded: boolean }>`
   &:first-child {
     margin-top: 0px;
   }
+
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.cardHover};
+    box-shadow: 2px 2px 12px -4px rgba(25, 19, 38, 0.4), 2px 2px 8px rgba(25, 19, 38, 0.2);
+    z-index: 10;
+
+    .marker-text {
+      background-color: ${({ theme }) => theme.colors.cardHover};
+    }
+
+    .styledAccent {
+      filter: blur(12px);
+    }
+  }
 `
 
-const PressableFlex = styled.div<{ $expanded: boolean }>`
+const PressableFlex = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
@@ -54,18 +71,6 @@ const PressableFlex = styled.div<{ $expanded: boolean }>`
   padding: 16px 20px 16px 20px;
   transition: all 250ms;
   flex-wrap: wrap;
-  ${({ $expanded }) =>
-    !$expanded &&
-    css`
-      &:hover {
-        background: ${({ theme }) => theme.colors.cardHover};
-        box-shadow: 2px 2px 12px -4px rgba(25, 19, 38, 0.4), 2px 2px 8px rgba(25, 19, 38, 0.2);
-
-        .styledAccent {
-          filter: blur(12px);
-        }
-      }
-    `}
 `
 
 const PressableBackground = styled(Link)`
@@ -86,6 +91,22 @@ const FarmNumericalInfoFlex = styled(Flex)`
   width: 100%;
 `
 
+const Divider = styled.div`
+  background-color: ${({ theme }) => theme.colors.borderColor};
+  height: 1px;
+  margin-bottom: 12px;
+  width: 100%;
+`
+
+const PressableCapture = styled.div`
+  background-color: red;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+`
+
 
 
 interface FarmCardProps {
@@ -98,9 +119,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
   const farm = useSelector((state) => farmBySymbolSelector(state, symbol))
   const pricePerToken = useSelector((state) => state.prices.pricesPerToken != null ? (state.prices.pricesPerToken[symbol] || new BigNumber(1)) : new BigNumber(1))
   const elevationTab = useElevationFarmsTab()
-  const singleFarmSymbol = useSingleFarmSelected()
   const userDataLoaded = useFarmsUserDataLoaded()
-  const expanded = singleFarmSymbol === symbol
   const [currentElevTab, setCurrentElevTab] = useState(elevationTab)
   const cardRef = useRef(null)
 
@@ -114,6 +133,12 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     warning: farmWarning,
   } = farm
 
+  const [onPresentFarmInteractions] = useModal(
+    <FarmInteractionModal
+      symbol={symbol}
+    />,
+  )
+
   const {
     // comment: farmComment,
     // warning: farmWarning,
@@ -121,14 +146,14 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     live = true,
   } = farm.elevations[elevationTab] || {}
 
-  const isInteracting = useMemo(
+  const interacting = useMemo(
     () => getFarmInteracting(farm),
     [farm],
   )
 
   useEffect(
     () => {
-      if (expanded && currentElevTab !== elevationTab && cardRef.current != null) {
+      if (interacting && currentElevTab !== elevationTab && cardRef.current != null) {
         setCurrentElevTab(elevationTab)
         cardRef.current.scrollIntoView({
           behavior: 'smooth',
@@ -136,7 +161,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [elevationTab, expanded]
+    [elevationTab, interacting]
   )
 
   const farmElevationsStaked = useMemo(
@@ -195,10 +220,10 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     [elevationTab, elevations, pricePerToken, decimals]
   )
 
-  const targetUrl = `/${(elevationFarmTabToUrl[elevationTab] || 'elevations').toLowerCase()}${expanded ? '' : `/${symbol.toLowerCase()}`}`
+  const targetUrl = `/${(elevationFarmTabToUrl[elevationTab] || 'elevations').toLowerCase()}${interacting ? '' : `/${symbol.toLowerCase()}`}`
 
   const retired = (!live || allocation === 0 || symbol === 'BOO') // TODO: remove this
-  const liveFilterShow = (isInteracting && liveFarms) || (liveFarms !== retired)
+  const liveFilterShow = (interacting && liveFarms) || (liveFarms !== retired)
   if (!liveFilterShow) return null
 
   const farmTypeShow = farmType === FarmType.All || getFarmType(farm) === farmType
@@ -206,14 +231,17 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
 
 
   return (
-    <FCard $locked={false} ref={cardRef} $expanded={expanded}>
-      <PressableFlex $expanded={expanded}>
-        <PressableBackground to={targetUrl} replace/>
+    <FCard $locked={false} ref={cardRef} interacting={interacting} onClick={onPresentFarmInteractions}>
+      <PressableFlex>
+        {/* <PressableBackground to={targetUrl} replace/> */}
         { farmComment != null && <Text monospace bold italic fontSize='13px' mb='14px' textAlign='center'>* {farmComment}</Text> }
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }
         <FarmNumericalInfoFlex>
           <FarmIconAndAllocation symbol={symbol} lpSource={lpSource} name={name} allocation={allocation} live={live}/>
-          <FarmStakingContribution symbol={symbol} userDataLoaded={userDataLoaded} elevationsStaked={farmElevationsStaked} pricePerToken={pricePerToken} decimals={decimals}/>
+          { interacting ?
+            <FarmStakingContribution symbol={symbol} userDataLoaded={userDataLoaded} elevationsStaked={farmElevationsStaked} pricePerToken={pricePerToken} decimals={decimals}/> :
+            <NonInteractingInfoItems symbol={symbol}/>
+          }
           <FarmAPYBreakdown summitPerYear={summitPerYear} totalValue={aprTotalValue}/>
           <FarmTotalValue symbol={symbol} totalStaked={totalStaked} pricePerToken={pricePerToken} decimals={decimals}/>
         </FarmNumericalInfoFlex>
@@ -221,10 +249,19 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
 
       { retired && <FarmRetiredSash/> }
 
-      <FarmCardUserSectionExpander
-        isExpanded={expanded}
+      { interacting &&
+        <>
+          <Divider />
+          <FarmCardTokenSection
+            symbol={symbol}
+          />
+        </>
+      }
+
+      {/* <FarmCardUserSectionExpander
+        isinteracting={interacting}
         symbol={symbol}
-      />
+      /> */}
     </FCard>
   )
 }

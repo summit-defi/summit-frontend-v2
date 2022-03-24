@@ -7,7 +7,8 @@ interface Props {
     position: any
     contentPadding?: string
     popUpContent: JSX.Element
-    fixed?: boolean
+    open?: boolean
+    callOnDismiss?: () => void
 }
 
 const StyledPopup = styled(Popup)`
@@ -26,7 +27,7 @@ const PopUpCard = styled.div<{ contentPadding?: string }>`
     box-shadow: ${({ theme }) => `1px 1px 3px ${theme.colors.textShadow}`};
 `
 
-const SummitPopUp: React.FC<Props> = ({ button, position, contentPadding, popUpContent, fixed=false }) => {
+const SummitPopUp: React.FC<Props> = ({ button, position, contentPadding, popUpContent, open, callOnDismiss }) => {
     const ref = useRef();
     const onDismiss = useCallback(() => {
         if (ref.current != null) {
@@ -42,7 +43,9 @@ const SummitPopUp: React.FC<Props> = ({ button, position, contentPadding, popUpC
             ref={ref}
             offsetY={0}
             offsetX={10}
+            open={open}
             arrow={false}
+            onClose={callOnDismiss}
         >
             <PopUpCard contentPadding={contentPadding}>
                 {React.cloneElement(popUpContent, {

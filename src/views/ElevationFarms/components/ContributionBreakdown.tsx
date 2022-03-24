@@ -1,5 +1,5 @@
 import { Elevation } from 'config/constants'
-import React from 'react'
+import React, { useMemo } from 'react'
 import styled, { css } from 'styled-components'
 import { ElevationImage, Flex, Skeleton, Text, TokenSymbolImage } from 'uikit'
 import { pressableMixin } from 'uikit/util/styledMixins'
@@ -196,7 +196,10 @@ const TotemImage: React.FC<{ info: string }> = ({ info }) => {
 
 const ContributionComponent: React.FC<Contribution> = ({token = false, elevation = false, totem=false, title, val, bonusVal, perc, index, count, selectable, selectedIndex, onSelect}) => {
     const totemWin = totem && !!parseInt(title.split('_')[2])
-    const clickable = selectable ? { onClick: () => onSelect(title === selectedIndex ? undefined : title) } : null
+    const clickable = useMemo(
+        () => selectable ? { onClick: () => onSelect(title === selectedIndex ? undefined : title) } : null,
+        [selectable, title, selectedIndex, onSelect]
+    )
     return <ContributionWrapper perc={perc} index={index} selectable={selectable} {...clickable} >
         { totemWin && <ContributionGoldHighlight perc={perc}/>}
         { title === selectedIndex && <ContributionElevSelectedHighlight elevation={title} first={index === 0} last={index === count - 1} className='elev-highlight'/>}
@@ -238,7 +241,7 @@ const ContributionBreakdown: React.FC<Props> = ({loaded, breakingDownTitle, brea
                         <HorizontalBar noContributions={noContributions}/>
                         {noContributions ?
                             <>
-                                <NoBreakdownText monospace>NO {breakingDownTitle} TO BREAKDOWN</NoBreakdownText>
+                                <NoBreakdownText monospace>NOTHING TO BREAKDOWN</NoBreakdownText>
                                 <VerticalBar perc={100} noContributions/>
                             </> :
                             contributions.map((contribution, index) => 

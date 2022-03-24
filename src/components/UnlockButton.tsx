@@ -1,10 +1,14 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import SummitButton from 'uikit/components/Button/SummitButton'
-import useAuth from 'hooks/useAuth'
+import { useDispatch } from 'react-redux'
+import { setForceOpenConnectModal } from 'state/summitEcosystem'
 
 const UnlockButton = ({ summitPalette = null, ...props}) => {
-  const { login, logout } = useAuth()
-  const onPresentConnectModal = () => null
+  const dispatch = useDispatch()
+  const onPresentConnectModal = useCallback(
+    () => dispatch(setForceOpenConnectModal(true)),
+    [dispatch]
+  )
 
   return (
     <SummitButton onClick={onPresentConnectModal} summitPalette={summitPalette} {...props}>
@@ -13,4 +17,4 @@ const UnlockButton = ({ summitPalette = null, ...props}) => {
   )
 }
 
-export default UnlockButton
+export default React.memo(UnlockButton)

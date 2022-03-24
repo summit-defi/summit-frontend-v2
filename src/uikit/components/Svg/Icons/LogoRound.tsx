@@ -4,8 +4,8 @@ import { SvgProps } from '../types'
 
 const ShadowSvg = styled.svg`
   border-radius: 50px;
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
 
   ${({ theme }) => theme.mediaQueries.nav} {
     width: 32px;

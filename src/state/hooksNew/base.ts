@@ -53,6 +53,7 @@ export const stateToUserStrategyTitle = (state: State) => state.summitEcosystem.
 export const stateToUserStrategyOwner = (state: State) => state.summitEcosystem.userStrategyOwner
 export const stateToUserStrategyDescription = (state: State) => state.summitEcosystem.userStrategyDescription
 export const stateToSelectedPresetStrategy = (state: State) => state.summitEcosystem.selectedPresetStrategy
+export const stateToForceOpenConnectModal = (state: State) => state.summitEcosystem.forceOpenConnectModal
 
 // FARMS
 export const stateToFarmsElevationsData = (state: State) => state.farms.elevationData

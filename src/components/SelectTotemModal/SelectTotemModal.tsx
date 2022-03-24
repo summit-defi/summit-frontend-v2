@@ -8,11 +8,10 @@ import { RewardsWillBeClaimedType, useRewardsWillBeClaimedModal } from 'componen
 import InitialSelectionTotems from './InitialSelectionTotems'
 import { Flex, Modal, ArtworkTotem, HighlightedText, Text, SummitButton } from 'uikit'
 import FaithSlider from './FaithSlider'
-import { useUserElevationClaimable } from 'state/hooksNew'
+import { useElevationUserTotem, useUserElevationClaimable } from 'state/hooksNew'
 
 interface Props {
-  elevation: Elevation
-  userTotem: number | null
+  elevation?: Elevation
   preselectedTotem?: number
   alsoSelectFaith?: boolean
   existingFaith?: number
@@ -63,13 +62,13 @@ const FaithSliderWrapper = styled.div`
 `
 
 const SelectTotemModal: React.FC<Props> = ({
-  elevation,
-  userTotem,
+  elevation = Elevation.SUMMIT,
   preselectedTotem = null,
   alsoSelectFaith = false,
   existingFaith = null,
   onDismiss = () => null,
 }) => {
+  const userTotem = useElevationUserTotem(elevation)
   const claimable = useUserElevationClaimable(elevation)
   const presentRewardsWillBeClaimedModal = useRewardsWillBeClaimedModal(elevation, claimable || new BigNumber(0), 'Deposit', RewardsWillBeClaimedType.FullElevation)
 

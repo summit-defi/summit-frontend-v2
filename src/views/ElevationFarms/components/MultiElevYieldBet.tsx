@@ -20,6 +20,20 @@ const MultiElevYieldBet: React.FC = () => {
     <Flex width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
       <Flex flexDirection='column' alignItems='flex-start' mb='18px' justifyContent='flex-start' width='100%'>
         <Flex justifyContent='center' alignItems='center' height='20px' gap='4px'>
+          <Text bold monospace gold>POTENTIAL WINNINGS:</Text>
+          { userDataLoaded ?
+            <CardValue
+              value={rawPotentialWinnings}
+              decimals={3}
+              gold
+              fontSize="18"
+              postfix='SUMMIT'
+              postfixFontSize='14'
+            /> :
+            <Skeleton height={24} width={180}/>
+          }
+        </Flex>
+        <Flex justifyContent='center' alignItems='center' height='20px' gap='4px'>
           <Text bold monospace>ROUND CONTRIBUTION:</Text>
           { userDataLoaded ?
             <CardValue
@@ -33,17 +47,7 @@ const MultiElevYieldBet: React.FC = () => {
           }
         </Flex>
         <Flex justifyContent='center' alignItems='center' height='20px' gap='4px'>
-          <Text bold monospace>POTENTIAL WINNINGS:</Text>
-          { userDataLoaded ?
-            <CardValue
-              value={rawPotentialWinnings}
-              decimals={3}
-              fontSize="18"
-              postfix='SUMMIT'
-              postfixFontSize='14'
-            /> :
-            <Skeleton height={24} width={180}/>
-          }
+          <Text bold monospace>CONTRIBUTION BREAKDOWN:</Text>
         </Flex>
       </Flex>
 

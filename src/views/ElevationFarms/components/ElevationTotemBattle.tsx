@@ -1,10 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Elevation, ElevationFarmTab, elevationTabToElevation, elevationUtils } from 'config/constants/types'
 import { Flex, Text } from 'uikit'
 import { useElevationFarmsTab } from 'state/hooks'
 import TotemBattleBreakdown from './TotemBattleBreakdown'
 import styled from 'styled-components'
 import { useDashboardTotemBattleInfo, useElevationTotemBattleInfo } from 'state/hooksNew'
+import { useSelectTotemModal } from 'components/SelectTotemModal'
+import useTotemWinnersModal from 'uikit/widgets/TotemWinnersModal/useTotemWinnersModal'
 
 const GappedFlex = styled(Flex)`
   justify-content: center;
@@ -38,17 +40,35 @@ const DesktopOnlyBreak = styled.br`
   }
 `
 
-const AllElevationsTotemBattles: React.FC = () => {
-  const totemBattleInfo = useDashboardTotemBattleInfo()
+const SingleElevationTotemBattle: React.FC<{ elevation: Elevation }> = React.memo(({ elevation }) => {
+  const { userTotem, userTotemCrowned, totemInfos } = useElevationTotemBattleInfo(elevation)
+  const { onPresentTotemWinnersModal } = useTotemWinnersModal()
+  const { onPresentSelectTotemModal } = useSelectTotemModal()
 
   return (
-    <MobileVerticalFlex>
-      <MultiElevBattleText bold monospace>
+    <TotemBattleBreakdown
+      elevation={elevation}
+      totemInfos={totemInfos}
+      userTotem={userTotem}
+      userTotemCrowned={userTotemCrowned}
+      onPresentTotemWinnersModal={onPresentTotemWinnersModal}
+      onPresentSelectTotemModal={onPresentSelectTotemModal}
+    />
+  )
+})
+
+const MultiElevTotemBattles: React.FC = () => {
+  const totemBattleInfo = useDashboardTotemBattleInfo()
+  // const [elevToBreakdown, setElevToBreakdown] = useState<Elevation | undefined>(undefined)
+
+  return (
+    <Flex flexDirection='column' width='100%'>
+      {/* <MultiElevBattleText bold monospace>
         {'YOUR TOTEMS '}
         <DesktopOnlyBreak/>
         {'IN BATTLE '}
-      </MultiElevBattleText>
-      <GappedFlex>
+      </MultiElevBattleText> */}
+      {/* <GappedFlex>
         { elevationUtils.elevationOnly.map((elev, index) => (
           <TotemBattleBreakdown
             key={elev}
@@ -57,36 +77,27 @@ const AllElevationsTotemBattles: React.FC = () => {
             userTotem={-1}
             fullWidth={false}
             multiElev
+            selectable
+            selectedElevation={elevToBreakdown}
+            onSelect={setElevToBreakdown}
           />
         ))}
-      </GappedFlex>
-    </MobileVerticalFlex>
+      </GappedFlex> */}
+
+
+      {/* {elevToBreakdown != null && */}
+      <SingleElevationTotemBattle elevation={Elevation.PLAINS}/>
+      <SingleElevationTotemBattle elevation={Elevation.MESA}/>
+      <SingleElevationTotemBattle elevation={Elevation.SUMMIT}/>
+      {/* } */}
+    </Flex>
   )
+
+  // if (elevation === Elevation.OASIS) return null
+
+  // return (
+  //   <SingleElevationTotemBattle elevation={elevation}/>
+  // )
 }
 
-const SingleElevationTotemBattle: React.FC<{ elevation: Elevation }> = ({ elevation }) => {
-  const { userTotem, totemInfos } = useElevationTotemBattleInfo(elevation)
-
-  return (
-    <TotemBattleBreakdown
-      elevation={elevation}
-      totemInfos={totemInfos}
-      userTotem={userTotem}
-    />
-  )
-}
-
-const ElevationTotemBattle: React.FC<{ elevation?: Elevation }> = ({ elevation }) => {
-  if (elevation == null) return (
-    <AllElevationsTotemBattles/>
-  )
-
-  if (elevation === Elevation.OASIS) return null
-
-  return (
-    <SingleElevationTotemBattle elevation={elevation}/>
-  )
-  
-}
-
-export default React.memo(ElevationTotemBattle)
+export default React.memo(MultiElevTotemBattles)

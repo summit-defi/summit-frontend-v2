@@ -1,7 +1,10 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { BN_ZERO, elevationUtils, getPresetStrategy } from "config/constants";
-import { stateToSummitSwapMinimized, stateToElevationRolloversToShow, stateToFarmsUserDataLoaded, stateToRoadmapScreenshot, stateToUserStrategyTitle, stateToUserStrategyDescription, stateToUserStrategyOwner, stateToSelectedPresetStrategy, stateToFarmsElevationsData } from "./base";
+import { stateToSummitSwapMinimized, stateToElevationRolloversToShow, stateToFarmsUserDataLoaded, stateToRoadmapScreenshot, stateToUserStrategyTitle, stateToUserStrategyDescription, stateToUserStrategyOwner, stateToSelectedPresetStrategy, stateToFarmsElevationsData, stateToForceOpenConnectModal } from "./base";
 import { useSelector } from "./utils";
+
+
+export const useForceOpenConnectModal = () => useSelector(stateToForceOpenConnectModal)
 
 export const useSummitSwapMinimized = () => useSelector(stateToSummitSwapMinimized)
 

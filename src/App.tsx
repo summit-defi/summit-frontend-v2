@@ -89,7 +89,7 @@ const App: React.FC = () => {
               <BetaTokens />
             </Route>
             {/* } */}
-            <Route path='/travelers-roadmap' exact>
+            <Route path='/portfolio' exact>
               <Roadmap />
             </Route>
             <Route path={['/elevations', '/oasis', '/plains', '/mesa', '/summit']}>

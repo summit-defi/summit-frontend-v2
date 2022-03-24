@@ -61,6 +61,7 @@ const initialState: SummitEcosystemState = {
   pendingTotemSelection: false,
   roadmapScreenshot: false,
   selectedPresetStrategy: null,
+  forceOpenConnectModal: false,
 }
 
 export const SummitEcosystemSlice = createSlice({
@@ -186,7 +187,10 @@ export const SummitEcosystemSlice = createSlice({
     },
     selectPresetStrategy: (state, action) => {
       state.selectedPresetStrategy = action.payload
-    }
+    },
+    setForceOpenConnectModal: (state, action) => {
+      state.forceOpenConnectModal = action.payload
+    },
   },
 })
 
@@ -216,6 +220,7 @@ export const {
   updateStrategyOwner,
   updateStrategyDescription,
   selectPresetStrategy,
+  setForceOpenConnectModal,
 } = SummitEcosystemSlice.actions
 
 // Thunks

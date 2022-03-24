@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Flex, Text, Lock, ExternalLinkButton } from 'uikit'
 import FarmCardUserWithdraw from './FarmCardUserWithdraw'
 import FarmCardUserElevate from './FarmCardUserElevate'
-import FarmCardMobileDepositWithdrawSelector from './FarmCardMobileDepositWithdrawSelector'
+import FarmInteractionTypeSelector from './FarmInteractionTypeSelector'
 import { useMediaQuery, useSelectedElevation } from 'state/hooks'
 import { useWeb3React } from '@web3-react/core'
 import { roundStatusLockReason, useElevationInteractionsLockedBreakdown, useFarmAndUserTokenInteractionSectionInfo } from 'state/hooksNew'
@@ -92,13 +92,6 @@ const FarmCardUserInteractionSection: React.FC<Props> = ({ symbol }) => {
         </Flex>
       }
       <MobileVerticalFlex>
-        { isMobile &&
-          <FarmCardMobileDepositWithdrawSelector
-            isApproved={isApproved}
-            elevation={elevation}
-            setMobileDepositWithdraw={setMobileDepositWithdraw}
-          />
-        }
         { (!isMobile || mobileDepositWithdraw === 0) && (isApproved ?
           <FarmCardUserDeposit
             farmToken={farmToken}

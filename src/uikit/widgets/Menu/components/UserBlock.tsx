@@ -1,6 +1,6 @@
 import { Elevation } from 'config/constants/types'
 import { usePendingTxs } from 'hooks/usePendingTx'
-import React from 'react'
+import React, { useCallback } from 'react'
 import styled, { css } from 'styled-components'
 import { pressableMixin } from 'uikit/util/styledMixins'
 import { Text } from 'uikit/components/Text'
@@ -9,6 +9,9 @@ import { linearGradient } from 'polished'
 import { SummitPopUp } from 'uikit/widgets/Popup'
 import ConnectPopUp from 'uikit/widgets/WalletModal/ConnectPopUp'
 import AccountPopUp from 'uikit/widgets/WalletModal/AccountPopUp'
+import { useForceOpenConnectModal } from 'state/hooksNew'
+import { setForceOpenConnectModal } from 'state/summitEcosystem'
+import { useDispatch } from 'react-redux'
 
 const UserBlockFlex = styled.div`
   display: flex;
@@ -27,8 +30,8 @@ const DesktopOnlyText = styled(Text)`
 
 const AccountDot = styled.div<{ connected: boolean }>`
   position: relative;
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 20px;
   background: ${linearGradient({
     colorStops: [
@@ -69,8 +72,14 @@ interface Props {
 }
 
 const UserBlock: React.FC<Props> = ({ account, isDark, toggleTheme, login, logout }) => {
+  const dispatch = useDispatch()
   const pendingTxs = usePendingTxs()
   const accountEllipsis = account ? `${account.substring(0, 4)}...${account.substring(account.length - 4)}` : null
+  const forceOpenConnectModal = useForceOpenConnectModal()
+  const setForcedOpenFalse = useCallback(
+    () => dispatch(setForceOpenConnectModal(false)),
+    [dispatch]
+  )
 
   return (
     <SummitPopUp
@@ -84,8 +93,10 @@ const UserBlock: React.FC<Props> = ({ account, isDark, toggleTheme, login, logou
       popUpContent={
         account != null ?
           <AccountPopUp account={account} isDark={isDark} toggleTheme={toggleTheme} logout={logout}/> :
-          <ConnectPopUp login={login}/>
+          <ConnectPopUp login={login} isDark={isDark} toggleTheme={toggleTheme}/>
       }
+      open={forceOpenConnectModal || undefined}
+      callOnDismiss={setForcedOpenFalse}
     />
   )
 }

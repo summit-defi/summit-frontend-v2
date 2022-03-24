@@ -72,6 +72,7 @@ export const selectElevationTotemBattleInfo = createSelector(
     (_, elevation: Elevation) => elevation,
     (userTotem, crownedTotem, { totemMultipliers }, elevation) => ({
         userTotem,
+        userTotemCrowned: userTotem === crownedTotem,
         totemInfos: elevationUtils.totemsArray(elevation)
             .map((totem) => ({
                 totem,

@@ -91,7 +91,6 @@ const FarmStakingContribution: React.FC<Props> = ({ symbol, userDataLoaded, elev
                     symbol={symbol}
                     loaded={account == null || userDataLoaded}
                     contributions={stakingContributions}
-                    focused={elevation}
                     center
                 />
             </InfoItemValue>

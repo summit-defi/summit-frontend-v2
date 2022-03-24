@@ -11,8 +11,8 @@ const IconWrapper = styled.div`
   align-items: center;
   margin-right: 4px;
   
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
 
   ${({ theme }) => theme.mediaQueries.nav} {
     width: 32px;
@@ -28,8 +28,8 @@ const WinningsIcon = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  width: 72px;
-  height: 72px;
+  width: 66px;
+  height: 66px;
 
   ${({ theme }) => theme.mediaQueries.nav} {
     width: 61px;

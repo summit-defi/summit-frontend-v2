@@ -141,6 +141,7 @@ export interface SummitEcosystemState {
   userStrategyTitle: string
   userStrategyOwner: string
   userStrategyDescription: string
+  forceOpenConnectModal: boolean
 }
 
 // API Price State
