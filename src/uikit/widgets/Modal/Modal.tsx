@@ -21,6 +21,11 @@ interface Props extends InjectedProps {
   elevationCircleHeader?: string
 }
 
+const StyledElevationPuck = styled(ElevationPuck)`
+  z-index: 15;
+  position: relative;
+`
+
 const RainbowLight = keyframes`
   0% {
     background-position: 0% 50%;
@@ -131,12 +136,6 @@ const Modal: React.FC<Props> = ({
     const elevTitle = elevationUtils.modalTitle(elevationCircleHeader)
     return (
     <StyledModal elevationGlow={elevationGlow}>
-      <ElevationPuck elevation={elevationCircleHeader}>
-        { elevTitle != null && <Text fontSize="16px" color="inherit" mb="2px">
-          {elevTitle}
-        </Text> }
-        {title.split('|').map((text) => (text === 'br' ? <br key={text} /> : text))}
-      </ElevationPuck>
       {!headerless && (
         <ModalHeader>
           <ModalTitle>
@@ -163,6 +162,13 @@ const Modal: React.FC<Props> = ({
           </AbsoluteIconButton>
         )}
       </ScrollableContent>
+
+      <StyledElevationPuck elevation={elevationCircleHeader}>
+        { elevTitle != null && <Text fontSize="16px" color="inherit" mb="2px">
+          {elevTitle}
+        </Text> }
+        {title.split('|').map((text) => (text === 'br' ? <br key={text} /> : text))}
+      </StyledElevationPuck>
     </StyledModal>
   )
 }

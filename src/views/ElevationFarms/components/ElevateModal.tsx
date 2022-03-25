@@ -37,7 +37,6 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
 }) => {
   const {
     elevLaunched,
-    elevClaimable,
     elevStaked,
     decimals,
     farmToken,
@@ -60,8 +59,6 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
   const totem = useElevationUserTotem(selectedTargetElevation)
   const { onPresentSelectTotemModal } = useSelectTotemModal(selectedTargetElevation)
 
-  const [sourceClaimable, setSourceClaimable] = useState(null)
-  const [targetClaimable, setTargetClaimable] = useState(null)
   const [fullBalance, setFullBalance] = useState('0')
   const [val, setVal] = useState('')
   const [invalidVal, setValInvalid] = useState(true)
@@ -92,7 +89,6 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
     () => {
       if (selectedSourceElevation === null) return
 
-      setSourceClaimable(elevClaimable[selectedSourceElevation])
       const newFullBalance = getFullDisplayBalance(
         elevStaked[selectedSourceElevation],
         decimals,
@@ -110,10 +106,6 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
     [setSelectedTargetElevation],
   )
 
-  useEffect(() => {
-    setTargetClaimable(elevClaimable[selectedTargetElevation])
-  }, [selectedTargetElevation, elevClaimable, setTargetClaimable])
-
   const handlePresentSelectTotem = () => {
     onPresentSelectTotemModal()
   }
@@ -121,16 +113,8 @@ const ElevateModal: React.FC<ElevateModalProps> = ({
   // CONFIRM ELEVATE
   const handleConfirmElevate = useCallback(() => {
     onDismiss()
-    presentRewardsWillBeClaimedModal({
-      elevateInfo: {
-        sourceElevation: selectedSourceElevation,
-        targetElevation: selectedTargetElevation,
-        sourceClaimable,
-        targetClaimable,
-      },
-      transactionToConfirm: () => onConfirmElevate(symbol, farmToken, selectedSourceElevation, selectedTargetElevation, val, decimals),
-    })
-  }, [decimals, farmToken, selectedSourceElevation, selectedTargetElevation, sourceClaimable, symbol, targetClaimable, val, onDismiss, presentRewardsWillBeClaimedModal, onConfirmElevate])
+    onConfirmElevate(symbol, farmToken, selectedSourceElevation, selectedTargetElevation, val, decimals)
+  }, [decimals, farmToken, selectedSourceElevation, selectedTargetElevation, symbol, val, onDismiss, presentRewardsWillBeClaimedModal, onConfirmElevate])
 
   return (
     <Modal

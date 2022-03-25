@@ -123,12 +123,6 @@ const selectSymbolElevateModalInfo = createSelector(
             [Elevation.MESA]: false,
             [Elevation.SUMMIT]: false,
         }
-        const elevClaimable = {
-            [Elevation.OASIS]: BN_ZERO,
-            [Elevation.PLAINS]: BN_ZERO,
-            [Elevation.MESA]: BN_ZERO,
-            [Elevation.SUMMIT]: BN_ZERO,
-        }
         const elevStaked = {
             [Elevation.OASIS]: BN_ZERO,
             [Elevation.PLAINS]: BN_ZERO,
@@ -137,12 +131,10 @@ const selectSymbolElevateModalInfo = createSelector(
         }
         elevationUtils.all.forEach((elev) => {
             elevLaunched[elev] = elev === Elevation.OASIS || farm.elevations[elev]?.launched || false
-            elevClaimable[elev] = farm.elevations[elev]?.claimable || BN_ZERO
             elevStaked[elev] = farm.elevations[elev]?.stakedBalance || BN_ZERO
         })
         return {
             elevLaunched,
-            elevClaimable,
             elevStaked,
             decimals: farm.decimals,
             farmToken: farm.farmToken,

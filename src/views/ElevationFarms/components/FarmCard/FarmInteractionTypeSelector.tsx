@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Flex } from 'uikit'
 import { Elevation } from 'config/constants/types'
 import styled, { css } from 'styled-components'
@@ -6,19 +6,16 @@ import SummitButton from 'uikit/components/Button/SummitButton'
 import { pressableMixin } from 'uikit/util/styledMixins'
 import { SelectorWrapperBase } from 'uikit/widgets/Selector/styles'
 
-const buttonWidth = 117
+const buttonWidth = 110
 
 const MobileOnlyFlex = styled(Flex)`
   display: flex;
-  margin: 24px auto 12px auto;
+  margin: 0px auto 0px auto;
   flex-direction: row;
   align-items: center;
   height: 32px;
   width: ${buttonWidth * 3}px;
   justify-content: center;
-  ${({ theme }) => theme.mediaQueries.nav} {
-    display: none;
-  }
 `
 
 const SelectorWrapper = styled(SelectorWrapperBase)`
@@ -45,7 +42,7 @@ const TextButton = styled.div<{ disabled: boolean }>`
   color: ${({ theme }) => theme.colors.text};
   text-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`};
   font-family: Courier Prime, monospace;
-  font-size: 16px;
+  font-size: 14px;
   height: 32px;
   line-height: 32px;
   text-align: center;
@@ -81,21 +78,35 @@ const FarmInteractionTypeSelector: React.FC<Props> = ({
   farmInteractionType,
   setFarmInteractionType,
 }) => {
-  const approveOrDeposit = isApproved ? 'DEPOSIT' : 'APPROVE'
+  const approveOrDeposit = isApproved ? 'Deposit' : 'Approve'
   const selectedIndex = farmInteractionType === FarmInteractionType.Deposit ? 0 :
-    farmInteractionType === FarmInteractionType.Withdraw ? 1 : 2
+    farmInteractionType === FarmInteractionType.Elevate ? 1 : 2
 
   const summitButtonText = () => {
-    switch (farmInteractionType) {
-      case FarmInteractionType.Withdraw:
-        return 'WITHDRAW'
-      case FarmInteractionType.Elevate:
-        return 'ELEVATE'
-      default:
-      case FarmInteractionType.Deposit:
-        return approveOrDeposit
-    }
+    if (farmInteractionType === FarmInteractionType.Deposit) return approveOrDeposit
+    return farmInteractionType
   }
+
+  const handleDepositClick = useCallback(
+    () => {
+      setFarmInteractionType(FarmInteractionType.Deposit)
+    }, 
+    [setFarmInteractionType]
+  )
+  const handleWithdrawClick = useCallback(
+    () => {
+      if (!isApproved) return
+      setFarmInteractionType(FarmInteractionType.Withdraw)
+    }, 
+    [setFarmInteractionType, isApproved]
+  )
+  const handleElevateClick = useCallback(
+    () => {
+      if (!isApproved) return
+      setFarmInteractionType(FarmInteractionType.Elevate)
+    }, 
+    [setFarmInteractionType, isApproved]
+  )
 
   return (
     <MobileOnlyFlex>
@@ -103,14 +114,14 @@ const FarmInteractionTypeSelector: React.FC<Props> = ({
         <SelectedSummitButton elevation={elevation} selectedIndex={selectedIndex}>
           {summitButtonText()}
         </SelectedSummitButton>
-        <TextButton onClick={() => setFarmInteractionType(FarmInteractionType.Deposit)} disabled={false}>
+        <TextButton onClick={handleDepositClick} disabled={false}>
           {approveOrDeposit}
         </TextButton>
-        <TextButton onClick={() => setFarmInteractionType(FarmInteractionType.Withdraw)} disabled={!isApproved}>
-          WITHDRAW
+        <TextButton onClick={handleElevateClick} disabled={!isApproved}>
+          {FarmInteractionType.Elevate}
         </TextButton>
-        <TextButton onClick={() => setFarmInteractionType(FarmInteractionType.Elevate)} disabled={!isApproved}>
-          ELEVATE
+        <TextButton onClick={handleWithdrawClick} disabled={!isApproved}>
+          {FarmInteractionType.Withdraw}
         </TextButton>
       </SelectorWrapper>
     </MobileOnlyFlex>
