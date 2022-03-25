@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect, useRef } from 'react'
 import BigNumber from 'bignumber.js'
 import styled, { css } from 'styled-components'
 import { Flex, Text, useModal } from 'uikit'
-import { BN_ZERO, Elevation, ElevationFarmTab, elevationFarmTabToUrl, elevationUtils } from 'config/constants/types'
+import { BN_ZERO, Elevation, ElevationFarmTab, elevationUtils } from 'config/constants/types'
 import { useElevationFarmsTab } from 'state/hooks'
 import { Link } from 'react-router-dom'
 import FarmIconAndAllocation from './FarmIconAndAllocation'
@@ -98,15 +98,6 @@ const Divider = styled.div`
   width: 100%;
 `
 
-const PressableCapture = styled.div`
-  background-color: red;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-`
-
 
 
 interface FarmCardProps {
@@ -131,6 +122,9 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     elevations,
     comment: farmComment,
     warning: farmWarning,
+    depositFeeBP,
+    taxBP: maxWithdrawalFeeBP,
+    native,
   } = farm
 
   const [onPresentFarmInteractions] = useModal(
@@ -220,8 +214,6 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     [elevationTab, elevations, pricePerToken, decimals]
   )
 
-  const targetUrl = `/${(elevationFarmTabToUrl[elevationTab] || 'elevations').toLowerCase()}${interacting ? '' : `/${symbol.toLowerCase()}`}`
-
   const retired = (!live || allocation === 0 || symbol === 'BOO') // TODO: remove this
   const liveFilterShow = (interacting && liveFarms) || (liveFarms !== retired)
   if (!liveFilterShow) return null
@@ -240,7 +232,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
           <FarmIconAndAllocation symbol={symbol} lpSource={lpSource} name={name} allocation={allocation} live={live}/>
           { interacting ?
             <FarmStakingContribution symbol={symbol} userDataLoaded={userDataLoaded} elevationsStaked={farmElevationsStaked} pricePerToken={pricePerToken} decimals={decimals}/> :
-            <NonInteractingInfoItems symbol={symbol}/>
+            <NonInteractingInfoItems symbol={symbol} depositFeeBP={depositFeeBP} withdrawalFeeBP={maxWithdrawalFeeBP} minWithdrawalFeeBP={native ? 0 : 50}/>
           }
           <FarmAPYBreakdown summitPerYear={summitPerYear} totalValue={aprTotalValue}/>
           <FarmTotalValue symbol={symbol} totalStaked={totalStaked} pricePerToken={pricePerToken} decimals={decimals}/>

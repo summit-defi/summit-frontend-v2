@@ -1,13 +1,9 @@
-import BigNumber from 'bignumber.js'
-import { ElevationFarmTab, SummitPalette, TokenSymbol } from 'config/constants'
-import React, { memo, useMemo } from 'react'
-import { useElevationFarmsTab } from 'state/hooks'
-import { useSummitPrice } from 'state/hooksNew'
+import { TokenSymbol } from 'config/constants'
+import React, { memo } from 'react'
 import styled from 'styled-components'
-import { Skeleton, Text, Flex, useModal, HeaderInfoQuestion } from 'uikit'
+import { Text, Flex, useModal, HeaderInfoQuestion } from 'uikit'
 import { pressableMixin } from 'uikit/util/styledMixins'
 import TooltipModal, { TooltipModalType } from 'uikit/widgets/Modal/TooltipModal'
-import { capitalizeFirstLetter, nFormatter } from 'utils'
 import CardValue from 'views/Home/components/CardValue'
 
 const FlexInfoItem = styled.div<{ maxWidth?: number }>`
@@ -33,7 +29,7 @@ const PressableFlex = styled(Flex)`
     ${pressableMixin}
 `
 
-export const NonInteractingInfoItems: React.FC<{ symbol: string }> = memo(({ symbol }) => {
+export const NonInteractingInfoItems: React.FC<{ symbol: string, depositFeeBP: number, withdrawalFeeBP: number, minWithdrawalFeeBP: number }> = memo(({ symbol, depositFeeBP, withdrawalFeeBP, minWithdrawalFeeBP }) => {
     const isEverest = symbol === TokenSymbol.EVEREST
     const [onPresentTooltipModal] = useModal(
         <TooltipModal tooltipType={TooltipModalType.DecayingWithdrawalFee}/>
@@ -59,14 +55,14 @@ export const NonInteractingInfoItems: React.FC<{ symbol: string }> = memo(({ sym
                     <HeaderInfoQuestion/>
                 </PressableFlex>
                 <InfoItemValue>
-                    <Text bold monospace>7% to 1%</Text>
+                    <Text bold monospace>{withdrawalFeeBP / 100}% to {minWithdrawalFeeBP / 100}%</Text>
                     <Text bold monospace small>Over 7 Days</Text>
                 </InfoItemValue>
             </FlexInfoItem>
             <FlexInfoItem>
                 <Text small>Deposit Fee:</Text>
                 <InfoItemValue>
-                    <Text bold monospace>0%</Text>
+                    <Text bold monospace>{depositFeeBP / 100}%</Text>
                 </InfoItemValue>
             </FlexInfoItem>
         </>

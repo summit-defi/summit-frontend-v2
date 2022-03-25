@@ -60,9 +60,9 @@ const TextButton = styled.div<{ disabled: boolean }>`
 
 
 export enum FarmInteractionType {
-  Deposit = 'Deposit',
-  Withdraw = 'Withdraw',
-  Elevate = 'Elevate',
+  Deposit = 'DEPOSIT',
+  Withdraw = 'WITHDRAW',
+  Elevate = 'ELEVATE',
 }
 
 interface Props {
@@ -78,7 +78,7 @@ const FarmInteractionTypeSelector: React.FC<Props> = ({
   farmInteractionType,
   setFarmInteractionType,
 }) => {
-  const approveOrDeposit = isApproved ? 'Deposit' : 'Approve'
+  const approveOrDeposit = isApproved ? 'DEPOSIT' : 'APPROVE'
   const selectedIndex = farmInteractionType === FarmInteractionType.Deposit ? 0 :
     farmInteractionType === FarmInteractionType.Elevate ? 1 : 2
 
@@ -111,7 +111,7 @@ const FarmInteractionTypeSelector: React.FC<Props> = ({
   return (
     <MobileOnlyFlex>
       <SelectorWrapper>
-        <SelectedSummitButton elevation={elevation} selectedIndex={selectedIndex}>
+        <SelectedSummitButton summitPalette={elevation} selectedIndex={selectedIndex}>
           {summitButtonText()}
         </SelectedSummitButton>
         <TextButton onClick={handleDepositClick} disabled={false}>

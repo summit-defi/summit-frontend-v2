@@ -12,12 +12,14 @@ import SummitButton from 'uikit/components/Button/SummitButton'
 import { useAnyElevationInteractionsLocked, useElevationInteractionsLocked, useFarmsUserDataLoaded } from 'state/hooksNew'
 import { FreezeWithBonusesModal } from './FreezeWithBonusesModal'
 import ElevationWinnings from './ElevationWinnings'
+import ManageWinningsModal from '../../../uikit/widgets/Modals/ManageWinningsModal'
 
-const ButtonsRow = styled(Flex)`
-  gap: 32px;
-  margin-top: 18px;
-  justify-content: space-around;
-  flex-wrap: wrap;
+
+const StyledMobileColumnFlex = styled(MobileColumnFlex)`
+  gap: 6px;
+  ${({ theme }) => theme.mediaQueries.nav} {
+    gap: 24px;
+  }
 `
 
 
@@ -28,101 +30,29 @@ const NoTextShadowFlex = styled(Flex)`
   }
 `
 
-interface TheBigFreezeProps {
-  claimables: {
-    elevation: Elevation,
-    claimable: BigNumber,
-    claimableBonus: BigNumber
-  }[]
-}
-
-const TheBigFreezeButton: React.FC<TheBigFreezeProps> = React.memo(({claimables}) => {
-  const elevations = claimables.map((claimable) => claimable.elevation)
-  const anyElevationLocked = useAnyElevationInteractionsLocked(elevations)
-
-  const { onClaimElevation, claimPending } = useClaimElevation()
-
-  const [onPresentFreezeElev] = useModal(
-    <FreezeWithBonusesModal
-      elevations={elevations}
-      onFreezeWinnings={onClaimElevation}
-    />
-  )
-  const handlePresentFreezeElev = useCallback(() => {
-    if (claimPending || anyElevationLocked) return
-    onPresentFreezeElev()
-  }, [claimPending, anyElevationLocked, onPresentFreezeElev])
-
-  return (
-    <SummitButton
-      isLocked={anyElevationLocked}
-      isLoading={claimPending}
-      width='200px'
-      style={{padding: '0px'}}
-      freezeSummitButton
-      onClick={handlePresentFreezeElev}
-    >
-      <Text bold monospace fontSize='12px' color='white' textAlign='center' lineHeight='12px'>
-        THE BIG FREEZE
-        <br />
-        (FREEZE ALL ELEVATIONS)
-      </Text>
-    </SummitButton>
-  )
-})
-
-interface ElevProps {
-  elevation: Elevation
-  claimable: BigNumber
-}
-
-const ElevClaim: React.FC<ElevProps> = React.memo(({ elevation, claimable }) => {
-  const elevationLocked = useElevationInteractionsLocked(elevation)
-  const earningsOrWinnings = elevationUtils.winningsOrEarnings(elevation).toUpperCase()
-
-  const { onClaimElevation, claimPending } = useClaimElevation()
-  const nothingToClaim = !claimable || claimable.isEqualTo(0)
-
-  const [onPresentFreezeElev] = useModal(
-    <FreezeWithBonusesModal
-      elevations={[elevation]}
-      onFreezeWinnings={onClaimElevation}
-    />
-  )
-  const handlePresentFreezeElev = useCallback(() => {
-    if (claimPending || elevationLocked || nothingToClaim) return
-    onPresentFreezeElev()
-  }, [claimPending, elevationLocked, nothingToClaim, onPresentFreezeElev])
-
-  return (
-    <SummitButton
-      summitPalette={elevation}
-      isLocked={elevationLocked}
-      isLoading={claimPending}
-      disabled={nothingToClaim}
-      width='200px'
-      style={{padding: '0px'}}
-      freezeSummitButton
-      onClick={handlePresentFreezeElev}
-    >
-      FREEZE {elevation}
-      <br />
-      {earningsOrWinnings}
-    </SummitButton>
-  )
-})
-
 const MultiElevWinningsAndClaim: React.FC = () => {
-  const { totalClaimable, totalClaimableBonus, elevationsClaimable, claimableBreakdown } = useAllElevationsClaimable()
+  const { totalClaimable, totalClaimableBonus, claimableBreakdown } = useAllElevationsClaimable()
   const rawTotalClaimable = getBalanceNumber(totalClaimable)
   const rawTotalClaimableBonus = getBalanceNumber(totalClaimableBonus)
   const userDataLoaded = useFarmsUserDataLoaded()
   const nothingToClaim = totalClaimable.isEqualTo(0)
   const [elevToBreakdown, setElevToBreakdown] = useState<string | undefined>(undefined)
 
+  const [onPresentFreezeWinningsModal] = useModal(
+    <ManageWinningsModal/>
+  )
+
+  const handlePresentFreezeWinningsModal = useCallback(
+    () => {
+      if (nothingToClaim) return
+      onPresentFreezeWinningsModal()
+    },
+    [nothingToClaim, onPresentFreezeWinningsModal]
+  )
+
   return (
     <Flex width='100%' alignItems='center' justifyContent='center' flexDirection='column' mb='18px'>
-      <MobileColumnFlex alignItems='flex-start' mb='18px' justifyContent='flex-start' width='100%' gap='6px'>
+      <StyledMobileColumnFlex alignItems='flex-start' mb='18px' justifyContent='flex-start' width='100%'>
 
         <Flex flexDirection='column' alignItems='flex-start' justifyContent='flex-start'>
           <Flex justifyContent='center' alignItems='center' height='20px' gap='4px'>
@@ -156,14 +86,14 @@ const MultiElevWinningsAndClaim: React.FC = () => {
           </Flex>
         </Flex>
         <SummitButton
-          summitPalette={SummitPalette.BASE}
+          summitPalette={SummitPalette.GOLD}
           disabled={nothingToClaim}
           width='200px'
-          onClick={() => null}
+          onClick={handlePresentFreezeWinningsModal}
         >
-          MANAGE WINNINGS
+          FREEZE WINNINGS
         </SummitButton>
-      </MobileColumnFlex>
+      </StyledMobileColumnFlex>
 
       <ContributionBreakdown
         loaded={userDataLoaded}

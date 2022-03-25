@@ -8,7 +8,7 @@ import { useTransactionToasts } from './useToast'
 import { Elevation } from 'config/constants/types'
 import { fetchTokensUserDataAsync } from 'state/tokens'
 
-const useStake = (farmToken: string, elevation: Elevation) => {
+const useStake = () => {
   const dispatch = useDispatch()
   const [pending, setPending] = useState(false)
   const { toastSuccess, toastError } = useTransactionToasts()
@@ -16,7 +16,7 @@ const useStake = (farmToken: string, elevation: Elevation) => {
   const cartographer = useCartographer()
 
   const handleStake = useCallback(
-    async (symbol: string, amount: string, decimals: number) => {
+    async (symbol: string, farmToken: string, elevation: Elevation, amount: string, decimals: number, callback?: () => void) => {
       const filteredAmount = amount || '0'
       try {
         setPending(true)
@@ -28,9 +28,10 @@ const useStake = (farmToken: string, elevation: Elevation) => {
         setPending(false)
         dispatch(fetchFarmUserDataAsync(account))
         dispatch(fetchTokensUserDataAsync(account))
+        if (callback != null) callback()
       }
     },
-    [elevation, account, dispatch, cartographer, farmToken, setPending, toastSuccess, toastError],
+    [account, dispatch, cartographer, setPending, toastSuccess, toastError],
   )
 
   return { onStake: handleStake, pending }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Text } from 'uikit/components/Text/Text'
 import Flex, { MobileColumnFlex } from 'uikit/components/Box/Flex'
 import { SummitPalette } from 'config/constants'
@@ -9,6 +9,8 @@ import { Skeleton } from 'uikit/components/Skeleton'
 import { HighlightedText } from 'uikit/components/Text'
 import { SummitButton } from 'uikit/components/Button'
 import { Link } from 'react-router-dom'
+import { useModal } from 'uikit/widgets/Modal'
+import ManageWinningsModal from 'uikit/widgets/Modals/ManageWinningsModal'
 
 const InnerCard = styled.div`
   border-radius: 4px;
@@ -49,7 +51,21 @@ const SummitWinningsPopUp: React.FC<Props> = ({ onDismiss }) => {
   const rawLifetimeSummitWinnings = getFormattedBigNumber(lifetimeSummitWinnings)
   const rawLifetimeSummitBonuses = getFormattedBigNumber(lifetimeSummitBonuses)
   const rawPendingSummitWinnings = getFormattedBigNumber(pendingSummitWinnings)
+  const nothingToClaim = pendingSummitWinnings.isEqualTo(0)
   const rawFrozenSummit = getFormattedBigNumber(frozenSummit)
+
+
+  const [onPresentFreezeWinningsModal] = useModal(
+    <ManageWinningsModal/>
+  )
+
+  const handlePresentFreezeWinningsModal = useCallback(
+    () => {
+      if (nothingToClaim) return
+      onPresentFreezeWinningsModal()
+    },
+    [nothingToClaim, onPresentFreezeWinningsModal]
+  )
 
   return (
     <Flex flexDirection='column' alignItems='center' justifyContent='center' gap='12px'>
@@ -126,10 +142,10 @@ const SummitWinningsPopUp: React.FC<Props> = ({ onDismiss }) => {
             height='28px'
             width='100%'
             padding='0px'
-            summitPalette={SummitPalette.BASE}
-            onClick={() => null}
+            summitPalette={SummitPalette.GOLD}
+            onClick={handlePresentFreezeWinningsModal}
           >
-            <Text monospace small bold color='white'>MANAGE WINNINGS</Text>
+            <Text monospace small bold color='white'>FREEZE WINNINGS</Text>
           </SummitButton>
         </InnerCard>
         <InnerCard>

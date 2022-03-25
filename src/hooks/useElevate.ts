@@ -16,7 +16,7 @@ const useElevate = () => {
   const cartographer = useCartographer()
 
   const handleElevate = useCallback(
-    async (symbol: string, token: string, sourceElevation: Elevation, targetElevation: Elevation, amount: string, decimals: number) => {
+    async (symbol: string, token: string, sourceElevation: Elevation, targetElevation: Elevation, amount: string, decimals: number, callback?: () => void) => {
       try {
         setPending(true)
         await elevate(cartographer, token, sourceElevation, targetElevation, amount, decimals)
@@ -27,6 +27,7 @@ const useElevate = () => {
         setPending(false)
         dispatch(fetchFarmUserDataAsync(account))
         dispatch(fetchTokensUserDataAsync(account))
+        if (callback != null) callback()
       }
     },
     [account, dispatch, cartographer, setPending, toastSuccess, toastError],

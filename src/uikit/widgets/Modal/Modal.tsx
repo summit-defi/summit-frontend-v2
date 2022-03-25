@@ -95,7 +95,7 @@ const ScrollableContent = styled(Flex)<{ elevationCircleHeader: string }>`
   overflow: auto;
   height: 100%;
   width: 100%;
-  padding-top: ${({ elevationCircleHeader }) => (elevationCircleHeader != null ? 130 : 24)}px;
+  padding-top: ${({ elevationCircleHeader }) => (elevationCircleHeader != null ? 110 : 24)}px;
 `
 
 const StyledCloseIcon = styled(CloseIcon)`

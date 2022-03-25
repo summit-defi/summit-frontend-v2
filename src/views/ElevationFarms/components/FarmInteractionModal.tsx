@@ -13,6 +13,10 @@ import { useWeb3React } from '@web3-react/core'
 import FarmInteractionTypeSelector, { FarmInteractionType } from './FarmCard/FarmInteractionTypeSelector'
 import styled from 'styled-components'
 import { WalletIcon } from 'uikit/widgets/Menu/icons'
+import { useApprove } from 'hooks/useApprove'
+import useElevate from 'hooks/useElevate'
+import useStake from 'hooks/useStake'
+import useWithdraw from 'hooks/useWithdraw'
 
 const WalletIconWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.selectorBackground};
@@ -40,7 +44,6 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
   onDismiss,
 }) => {
   const { account } = useWeb3React()
-
   const {
     elevLaunched,
     elevStaked,
@@ -50,6 +53,11 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
     farmAllowance,
     walletBalance,
   } = useSymbolElevateModalInfo(symbol)
+  
+  const { onApprove, pending: approvalPending } = useApprove(farmToken, symbol)
+  const { onStake, pending: stakePending } = useStake()
+  const { onWithdraw, pending: withdrawPending } = useWithdraw()
+  const { onElevate, pending: elevatePending} = useElevate()
 
   const isApproved = account && farmAllowance && farmAllowance.isGreaterThan(0)
   const [farmInteractionType, setFarmInteractionType] = useState(FarmInteractionType.Deposit)
@@ -91,17 +99,15 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
 
   const [selectedSourceElevation, setSelectedSourceElevation] = useState<Elevation | null>(null)
   const [selectedTargetElevation, setSelectedTargetElevation] = useState<Elevation | null>(null)
-  const [invalidElevationErr, setInvalidElevationErr] = useState<string | null>(null)
   const uiElevation = selectedTargetElevation ?? selectedSourceElevation ?? Elevation.OASIS
 
   const handleSetFarmInteractionType = useCallback(
     (type: FarmInteractionType) => {
       setFarmInteractionType(type)
-      setInvalidElevationErr(null)
       if (type === FarmInteractionType.Deposit) setSelectedSourceElevation(null)
       if (type === FarmInteractionType.Withdraw) setSelectedTargetElevation(null)
     },
-    [setFarmInteractionType, setInvalidElevationErr, setSelectedSourceElevation, setSelectedTargetElevation]
+    [setFarmInteractionType, setSelectedSourceElevation, setSelectedTargetElevation]
   )
 
   const uiPalette = elevToPalette(uiElevation)
@@ -132,9 +138,8 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
   const handleSelectSourceElevation = useCallback(
     (newElevation: Elevation) => {
       setSelectedSourceElevation(newElevation)
-      setInvalidElevationErr(newElevation === selectedTargetElevation ? 'Elevations must be different' : null)
     },
-    [setSelectedSourceElevation, setInvalidElevationErr, selectedTargetElevation],
+    [setSelectedSourceElevation],
   )
 
   useEffect(
@@ -156,20 +161,36 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
   const handleSelectTargetElevation = useCallback(
     (newElevation: Elevation) => {
       setSelectedTargetElevation(newElevation)
-      setInvalidElevationErr(newElevation === selectedSourceElevation ? 'Elevations must be different' : null)
     },
-    [setSelectedTargetElevation, setInvalidElevationErr, selectedSourceElevation],
+    [setSelectedTargetElevation],
   )
 
   const handlePresentSelectTotem = () => {
     onPresentSelectTotemModal()
   }
 
-  // CONFIRM ELEVATE
-  const handleConfirmElevate = useCallback(() => {
-    onDismiss()
-    // TODO: Elevate
-  }, [onDismiss])
+
+  const invalidElevationErr = useMemo(
+    () => {
+      switch (farmInteractionType) {
+        case FarmInteractionType.Deposit:
+          if (isApproved) return selectedTargetElevation == null ? 'Must select an Elevation to Deposit into' : null
+          return null
+        case FarmInteractionType.Elevate:
+          if (selectedTargetElevation == null && selectedSourceElevation == null) return 'Select Elevations to transfer funds between'  
+          if (selectedSourceElevation == null) return 'Must select a source Elevation'
+          if (selectedTargetElevation == null) return 'Must select a target Elevation'
+          if (selectedSourceElevation === selectedTargetElevation) return 'Must Elevate between two different Elevations'
+          return null
+        case FarmInteractionType.Withdraw:
+          return selectedSourceElevation == null ? ' Must select an Elevation to Withdraw from' : null
+        default: return false
+      }
+    },
+    [isApproved, farmInteractionType, selectedSourceElevation, selectedTargetElevation]
+  )
+
+  // ACTION
 
 
   const actionDisabled = useMemo(
@@ -184,6 +205,50 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
       }
     },
     [isApproved, farmInteractionType, invalidElevationErr, totem, invalidVal, selectedTargetElevation, selectedSourceElevation]
+  )
+  const handleAction = useCallback(
+    () => {
+      if (actionDisabled) return
+      switch (farmInteractionType) {
+        case FarmInteractionType.Deposit:
+          if (isApproved) {
+            onStake(
+              symbol,
+              farmToken,
+              selectedTargetElevation,
+              val,
+              decimals,
+              onDismiss
+            )
+            break
+          }
+          onApprove()
+          break
+        case FarmInteractionType.Elevate:
+          onElevate(
+            symbol,
+            farmToken,
+            selectedSourceElevation,
+            selectedTargetElevation,
+            val,
+            decimals,
+            onDismiss
+          )
+          break
+        case FarmInteractionType.Withdraw:
+          onWithdraw(
+            symbol,
+            farmToken,
+            selectedSourceElevation,
+            val,
+            decimals,
+            onDismiss
+          )
+          break
+        default: break
+      }
+    },
+    [onDismiss, isApproved, farmInteractionType, symbol, farmToken, selectedTargetElevation, selectedSourceElevation, val, decimals, actionDisabled, onStake, onApprove, onWithdraw, onElevate]
   )
 
   return (
@@ -261,7 +326,7 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
         }
 
         { isApproved && selectedTargetElevation != null &&
-        <Flex flexDirection='column' alignItems='center' justifyContent='center' gap='8px'>
+        <Flex flexDirection='row' alignItems='center' justifyContent='center' gap='8px'>
           <Text bold monospace small>
             {selectedTargetElevation} TOTEM:
           </Text>
@@ -276,6 +341,8 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
               color={elevationPalette[selectedTargetElevation][2]}
               selected
               pressable={false}
+              size='40'
+              navSize='40'
             />
           )}
         </Flex>
@@ -306,7 +373,8 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
         <SummitButton
           summitPalette={uiPalette}
           disabled={actionDisabled}
-          onClick={handleConfirmElevate}
+          isLoading={approvalPending || stakePending || withdrawPending || elevatePending}
+          onClick={handleAction}
         >
           {interactionTypeText.toUpperCase()}
         </SummitButton>

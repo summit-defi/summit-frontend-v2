@@ -153,6 +153,23 @@ const selectSymbolElevateSelectorInfo = createSelector(
 )
 export const useSymbolElevateSelectorInfo = (symbol: string) => useSelector((state) => selectSymbolElevateSelectorInfo(state, symbol))
 
+
+
+const selectAllElevationsClaimable = createSelector(
+    stateToFarmsElevationsData,
+    (elevationsData) => {
+        return elevationUtils.all
+            .map((elevation) => ({
+                elevation,
+                claimable: (elevationsData[elevationUtils.toInt(elevation)]?.claimable || BN_ZERO) as BigNumber,
+                claimableBonus: (elevationsData[elevationUtils.toInt(elevation)]?.claimableBonus || BN_ZERO) as BigNumber
+            }))
+            .filter((rawClaimable) => rawClaimable.claimable.isGreaterThan(0))
+    }
+)
+export const useAllElevationsClaimable = () => useSelector(selectAllElevationsClaimable)
+
+
 const selectFarmsWithClaimable = createSelector(
     stateToFarms,
     (_, elevation: Elevation) => elevation,

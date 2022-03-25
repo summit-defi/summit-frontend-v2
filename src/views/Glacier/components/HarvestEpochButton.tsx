@@ -2,7 +2,7 @@ import React, { useMemo, useCallback } from 'react'
 import { useHarvestEpoch } from 'hooks/useHarvestEpoch'
 import { makeSelectEpochByIndex, useSelector } from 'state/hooksNew'
 import { useModal, SummitButton, Flex } from 'uikit'
-import HarvestEpochModal from './HarvestEpochModal'
+import HarvestEpochModal from '../../../uikit/widgets/Modals/HarvestEpochModal'
 import { SummitPalette } from 'config/constants'
 
 interface Props {
