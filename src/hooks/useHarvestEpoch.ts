@@ -18,9 +18,9 @@ export const useHarvestEpoch = (epochIndex: number) => {
       try {
         setHarvestEpochPending(true)
         await harvestEpoch(summitGlacier, epochIndex, amount, lockForEverest)
-        toastSuccess(`Epoch ${lockForEverest ? 'Locked For EVEREST' : 'Harvested'}`)
+        toastSuccess(`Winnings ${lockForEverest ? 'Locked For EVEREST' : 'Harvested'}`)
       } catch (error) {
-        toastError(`Error ${lockForEverest ? 'Locking Epoch For EVEREST' : 'Harvesting Epoch'}`, (error as Error).message)
+        toastError(`Error ${lockForEverest ? 'Locking Winnings For EVEREST' : 'Harvesting Winnings'}`, (error as Error).message)
       } finally {
         dispatch(fetchUserEpochsAsync(account))
         setHarvestEpochPending(false)

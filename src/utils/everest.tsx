@@ -23,13 +23,13 @@ export const lockDurationMultBP = (lockDuration: number): number => {
     return (((lockDuration - inflectionLockDuration) / (maxLockDuration - inflectionLockDuration)) * (maxLockMult - inflectionLockMult)) + inflectionLockMult
 }
 
-export const lockDurationSliderMarksMemoizable = (userLockDuration?: number) => {
+export const lockDurationSliderMarksMemoizable = (minLockDur = 0, userLockDuration?: number) => {
     const markLegend = (duration) => {
         const multBP = lockDurationMultBP(duration)
         const durationText = lockDurationText(duration)
         return {
             style: {
-                opacity: duration < userLockDuration ? 0.5 : 1,
+                opacity: (duration < userLockDuration || duration < minLockDur) ? 0.5 : 1,
                 fontWeight: (userLockDuration == null && duration === 30) || (duration === userLockDuration) ? '700' : '400'
             },
             label: <>

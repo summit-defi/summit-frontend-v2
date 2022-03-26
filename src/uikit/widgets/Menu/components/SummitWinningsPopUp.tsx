@@ -168,8 +168,9 @@ const SummitWinningsPopUp: React.FC<Props> = ({ onDismiss }) => {
             to='/glacier'
             replace
             summitPalette={SummitPalette.BASE}
-            insetColor='selectorBackground'
             onClick={onDismiss}
+            insetColor='selectorBackground'
+            external={false}
           >
             <Text monospace small bold color='white'>OPEN GLACIER</Text>
           </SummitButton>

@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from 'react'
-import { Flex } from 'uikit'
 import Slider from 'rc-slider'
 import styled from 'styled-components'
 import { linearGradient } from 'polished'
@@ -8,6 +7,7 @@ import { pressableMixin } from 'uikit/util/styledMixins'
 import { getPaletteGradientStops, lockDurationSliderMarks, lockDurationSliderPerc, sliderPercLockDuration } from 'utils'
 import { SummitPalette } from 'config/constants'
 import { selectorWrapperMixin } from 'uikit/widgets/Selector/styles'
+import { Flex } from 'uikit/components/Box'
 
 const ButtonHeight = 28
 
@@ -121,21 +121,23 @@ const FakeSliderHandle = styled.div<{ perc: number }>`
 `
 
 interface Props {
+    minLockDuration?: number
     existingLockDuration: number | null
     setLockDuration: (number) => void
 }
 
-const EverestLockDurationSlider: React.FC<Props> = ({ existingLockDuration, setLockDuration }) => {
+const EverestLockDurationSlider: React.FC<Props> = ({ minLockDuration = 0, existingLockDuration, setLockDuration }) => {
     const existingDurPerc = existingLockDuration != null ? lockDurationSliderPerc(existingLockDuration) : null
-    const marks = lockDurationSliderMarks(existingLockDuration)
+    const minDurLockPerc = lockDurationSliderPerc(minLockDuration)
+    const marks = lockDurationSliderMarks(minLockDuration, existingLockDuration)
     const [perc, setPerc] = useState(existingLockDuration != null ? existingDurPerc : lockDurationSliderPerc(30))
 
 
     const handleSetLockDuration = useCallback((markPerc) => {
-        const clampedPerc = Math.max(markPerc, existingDurPerc)
+        const clampedPerc = Math.max(markPerc, Math.max(minDurLockPerc, existingDurPerc))
         setPerc(clampedPerc)
         setLockDuration(sliderPercLockDuration(clampedPerc))
-    }, [existingDurPerc, setPerc, setLockDuration])
+    }, [existingDurPerc, minDurLockPerc, setPerc, setLockDuration])
 
     return (
         <SliderWrapper>
@@ -151,7 +153,7 @@ const EverestLockDurationSlider: React.FC<Props> = ({ existingLockDuration, setL
                 <FakeMarkDot
                     key={markPerc}
                     perc={parseFloat(markPerc)}
-                    disabled={parseFloat(markPerc) < existingDurPerc}
+                    disabled={parseFloat(markPerc) < Math.max(minDurLockPerc, existingDurPerc)}
                     onClick={() => handleSetLockDuration(markPerc)}
                 />
             )}

@@ -3,7 +3,7 @@ import { useCurrentTimestampOnce } from 'state/hooks'
 import { EverestUserData, LockSummitButtonType } from 'state/types'
 import { Flex, Text } from 'uikit'
 import { getAdditionalEverestAwardForLockDurationIncrease, lockDurationTextLong } from 'utils'
-import EverestLockDurationSlider from './EverestLockDurationSlider'
+import EverestLockDurationSlider from '../../../uikit/widgets/EverestLockDurationSlider'
 import { LockSummitInfoAndButton } from './LockSummitInfoAndButton'
 
 interface Props {

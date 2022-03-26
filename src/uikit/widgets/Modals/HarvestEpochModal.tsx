@@ -4,13 +4,15 @@ import TokenInput from '../../../components/TokenInput'
 import { getFormattedBigNumber, getFullDisplayBalance } from '../../../utils/formatBalance'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { isNumber } from 'lodash'
-import { Epoch } from 'state/types'
-import { SummitPalette } from 'config/constants'
+import { Epoch, LockSummitButtonType } from 'state/types'
+import { BN_ZERO, SummitPalette } from 'config/constants'
 import { useEverestUserInfo } from 'state/hooksNew'
 import styled from 'styled-components'
 import { getAdditionalEverestAwardForLockDurationIncrease, getExpectedEverestAward, timestampToDate, timestampToDateWithYear } from 'utils'
 import BigNumber from 'bignumber.js'
 import { useCurrentTimestampOnce } from 'state/hooks'
+import EverestLockDurationSlider from '../EverestLockDurationSlider'
+import { useLockSummit } from 'hooks/useLockSummit'
 
 
 const InfoText = styled(Text)`
@@ -22,7 +24,7 @@ const InfoText = styled(Text)`
 
 const StyledLock = styled(Lock)`
   transform: rotate(20deg);
-  fill: ${({ theme }) => theme.colors.textGold};
+  fill: red;
 `
 
 const LockForEverestInfoSection: React.FC<{ val: string }> = React.memo(({ val }) => {
@@ -34,7 +36,7 @@ const LockForEverestInfoSection: React.FC<{ val: string }> = React.memo(({ val }
   } = useEverestUserInfo()
   const currentTimestamp = useCurrentTimestampOnce()
 
-  const anyEverestOwned = everestOwned.isGreaterThan(0)
+  const anyEverestOwned = false && everestOwned.isGreaterThan(0)
 
   const minLockRelease = currentTimestamp + (30 * 24 * 3600)
   const newLockRelease = Math.max(minLockRelease, lockRelease)
@@ -51,14 +53,6 @@ const LockForEverestInfoSection: React.FC<{ val: string }> = React.memo(({ val }
 
   return (
     <>
-      { !anyEverestOwned && 
-        <Flex width='100%' alignItems='center' justifyContent='flex-start' gap='8px' mb='18px'>
-          <StyledLock width='18px'/>
-          <Text bold italic gold small monospace textAlign='left'>
-            You have to lock SUMMIT for the first time through the EVEREST tab.
-          </Text>
-        </Flex>
-      }
       <Text monospace bold small textAlign='center'>
         * If your current Lock Duration is less than 30 Days, it will be increased to 30 Days (this will add to your EVEREST award).
       </Text>
@@ -79,7 +73,71 @@ const LockForEverestInfoSection: React.FC<{ val: string }> = React.memo(({ val }
   )
 })
 
+
+
+
+interface LockDurationRequiredProps {
+  summitPalette: SummitPalette
+  onDismiss?: () => void
+}
+
+const LockDurationRequiredSection: React.FC<LockDurationRequiredProps> = ({
+  summitPalette,
+  onDismiss,
+}) => {
+  const [lockDuration, setLockDuration] = useState<number | null>(30)
+  const { onLockSummit, lockSummitPending } = useLockSummit(LockSummitButtonType.LockSummit, BN_ZERO, lockDuration)
+
+  const handleConfirmLockDuration = useCallback(
+    () => {
+      if (lockSummitPending) return
+      onLockSummit()
+    },
+    [lockSummitPending, onLockSummit]
+  )
+
+
+  return (
+    <Flex flexDirection='column' width='100%' alignItems='center' justifyContent='flex-start' gap='16px' mb='32px'>
+      <Text bold italic color='red' small monospace textAlign='center'>
+        (!) You dont have an EVEREST lock duration set, either open the EVEREST tab, or select a lock duration {`>=`} 30 days below.
+      </Text>
+      <SummitButton
+        summitPalette={summitPalette}
+        as='a'
+        href='/everest'
+        onClick={onDismiss}
+        height='28px'
+      >
+        OPEN EVEREST TAB
+      </SummitButton>
+
+      <Text italic small monospace>- OR -</Text> 
+      <Text bold small monospace style={{ width: '100%'}} textAlign='left' mb='-12px'>SELECT LOCK DURATION:</Text> 
+
+      <EverestLockDurationSlider
+        minLockDuration={30}
+        existingLockDuration={null}
+        setLockDuration={setLockDuration}
+      />
+      <Text bold italic color='red' small monospace textAlign='center'>
+        (!) This cannot be decreased until the selected lock period ends.
+      </Text>
+      <SummitButton
+        summitPalette={summitPalette}
+        onClick={handleConfirmLockDuration}
+        isLoading={lockSummitPending}
+        height='28px'
+      >
+        CONFIRM {lockDuration}D LOCK DURATION
+      </SummitButton>
+    </Flex>
+  )
+}
+
 interface HarvestEpochModalProps {
+  asComponentOfWinningsModal?: boolean
+  harvestEpochPending?: boolean
   epoch: Epoch
   lockForEverest?: boolean
   onHarvestEpoch: (
@@ -89,8 +147,10 @@ interface HarvestEpochModalProps {
   onDismiss?: () => void
 }
 
-const HarvestEpochModalContent: React.FC<HarvestEpochModalProps> = ({
+export const HarvestEpochModalContent: React.FC<HarvestEpochModalProps> = ({
   epoch,
+  asComponentOfWinningsModal = false,
+  harvestEpochPending = false,
   lockForEverest = false,
   onHarvestEpoch,
   onDismiss,
@@ -130,20 +190,32 @@ const HarvestEpochModalContent: React.FC<HarvestEpochModalProps> = ({
 
   const handleConfirmHarvestEpoch = useCallback(() => {
     if (invalidVal) return
-    onDismiss()
+    if (!asComponentOfWinningsModal) {
+      onDismiss()
+    } else
     onHarvestEpoch(val, lockForEverest)
-  }, [invalidVal, onDismiss, onHarvestEpoch, val, lockForEverest])
-
+  }, [invalidVal, asComponentOfWinningsModal, onDismiss, onHarvestEpoch, val, lockForEverest])
+  
 
   return (
     <Flex justifyContent="center" flexDirection="column" alignItems="center" maxWidth='400px'>
-      <Text bold monospace>
-        AMOUNT TO {lockForEverest ? 'LOCK' : 'HARVEST'}:
-      </Text>
+      { !asComponentOfWinningsModal &&
+        <Text bold monospace>
+          AMOUNT TO {lockForEverest ? 'LOCK' : 'HARVEST'}:
+        </Text>
+      }
+
+      { !anyEverestOwned &&
+        <LockDurationRequiredSection
+          summitPalette={summitPalette}
+        />
+      }
+
       <TokenInput
         value={val}
         summitPalette={summitPalette}
-        balanceText={`EPOCH ${isThawed ? 'THAWED' : 'FROZEN'}`}
+        disabled={!anyEverestOwned}
+        balanceText={asComponentOfWinningsModal ? 'FROZEN WINNINGS' : `EPOCH ${isThawed ? 'THAWED' : 'FROZEN'}`}
         onSelectMax={handleSelectMax}
         onChange={handleChange}
         max={fullHarvestableBalance}
@@ -152,7 +224,7 @@ const HarvestEpochModalContent: React.FC<HarvestEpochModalProps> = ({
 
       <InfoText monospace small textAlign='center' mt='24px'>
           { lockForEverest ?
-            <LockForEverestInfoSection val={val}/> :
+            (anyEverestOwned ? <LockForEverestInfoSection val={val}/> : null) :
             isThawed ?
                 <>
                     This locked SUMMIT has thawed,
@@ -181,12 +253,15 @@ const HarvestEpochModalContent: React.FC<HarvestEpochModalProps> = ({
       </InfoText>
 
       <ModalActions>
-        <SummitButton secondary onClick={onDismiss}>
-          CANCEL
-        </SummitButton>
+        { !asComponentOfWinningsModal &&
+          <SummitButton secondary onClick={onDismiss}>
+            CANCEL
+          </SummitButton>
+        }
         <SummitButton
           summitPalette={summitPalette}
           isLocked={lockForEverest && !anyEverestOwned}
+          isLoading={harvestEpochPending}
           disabled={invalidVal}
           onClick={handleConfirmHarvestEpoch}
         >

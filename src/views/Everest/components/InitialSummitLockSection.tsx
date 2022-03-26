@@ -8,7 +8,7 @@ import { useCurrentTimestampOnce } from 'state/hooks'
 import { LockSummitButtonType } from 'state/types'
 import { Flex, Text } from 'uikit'
 import { getExpectedEverestAward, getFullDisplayBalance, lockDurationTextLong } from 'utils'
-import EverestLockDurationSlider from './EverestLockDurationSlider'
+import EverestLockDurationSlider from '../../../uikit/widgets/EverestLockDurationSlider'
 import { ExpeditionAPRIndicator } from './ExpeditionAPRIndicator'
 import { LockSummitInfoAndButton } from './LockSummitInfoAndButton'
 
