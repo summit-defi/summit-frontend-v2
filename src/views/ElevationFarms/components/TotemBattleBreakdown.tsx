@@ -103,10 +103,6 @@ const RuleLine = styled.div<{ index: number }>`
   height: 21.5px;
   opacity: 0.16;
   border-radius: ${({ index }) => index === 0 ? '12px 12px 0px 0px' : index === 6 ? '0px 0px 12px 12px' : 'none'};
-
-  ${({ theme }) => theme.mediaQueries.nav} {
-    left: -120px;
-  }
 `
 
 const ElevationIndicator = styled(Text)<{ elevation: Elevation }>`
@@ -159,10 +155,6 @@ const ArenaPulse = styled.div<{ elevation: Elevation }>`
   opacity: 0.5;
   background-color: ${({ theme, elevation}) => theme.colors[elevation]};
   animation: ${PulseKeyframes} 4s infinite ease-out;
-
-  ${({ theme }) => theme.mediaQueries.nav} {
-    left: -120px;
-  }
 `
 
 const RowCombinerRight = styled.div`
@@ -412,29 +404,10 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
 
   const chunkedTotems = chunk(totemInfos, isMobile ? 5 : 10)
 
-  const totemSelectionPending = false
-
   return (
     <>
     { chunkedTotems.map((totems, chunkIndex) =>
       <TotemBreakdownWrapper fullWidth={fullWidth} key={totems[0].totem} multiElev={multiElev} selectable={selectable} {...clickable}>
-        { !isMobile &&
-          <HeaderTotemWrapper isLoading={totemSelectionPending} onClick={() => onPresentTotemWinnersModal({elevation})}>
-              <ArtworkTotem
-                elevation={elevation}
-                totem={userTotem}
-                desktopSize="140"
-                mobileSize="140"
-                crowned={userTotemCrowned}
-              />
-              {totemSelectionPending && <StyledSpinner className="spinner" />}
-              <ElevationName className='elevation-name'>
-                <HighlightedText bold color='white' italic fontSize='14px' lineHeight='14px'>THE</HighlightedText>
-                <HighlightedText bold color='white' italic fontSize='20px' lineHeight='20px'>{elevation}</HighlightedText>
-              </ElevationName>
-          </HeaderTotemWrapper>
-        }
-        {/* { title != null && chunkIndex === 0 && <Text bold monospace>{title}</Text> } */}
         <TotemBattleArea
           fullWidth={fullWidth}
           elevation={elevation}

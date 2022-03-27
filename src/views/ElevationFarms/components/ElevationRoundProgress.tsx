@@ -18,9 +18,8 @@ const RoundProgressBar = styled(Flex)`
     justify-content: center;
     margin-top: 36px;
     margin-bottom: 24px;
-    
-    /* desktop */
     flex: 1;
+    max-width: 600px;
 `
 
 const ProgressBarText = styled(Text)`

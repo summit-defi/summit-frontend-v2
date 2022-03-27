@@ -1,22 +1,15 @@
 import React, { memo, useState } from 'react'
 import styled from 'styled-components'
-import { ElevationFarmTab, elevationTabToElevation } from 'config/constants/types'
 import { Flex } from 'uikit'
 import {
   useElevationFarmsTab,
 } from 'state/hooks'
-import ElevationIntroduction from './ElevationIntroduction'
 import UnlockButton from 'components/UnlockButton'
-import ElevationWinnings from './ElevationWinnings'
 import MultiElevTotemBattles from './ElevationTotemBattle'
-import ElevationYieldBet from './ElevationYieldBet'
 import MultiElevStaked from './MultiElevStaked'
-import TotemHeaderButtonsRow from './TotemHeaderButtonsRow'
 import { useWeb3React } from '@web3-react/core'
 import MultiElevYieldBet from './MultiElevYieldBet'
 import MultiElevWinningsAndClaim from './MultiElevWinningsAndClaim'
-import { LifetimeSummitWinnings } from './LifetimeSummitWinnings'
-import { useElevationUserTotem } from 'state/hooksNew'
 import { FarmHeaderTabSelector, FarmingTab } from './FarmHeaderTabSelector'
 import ElevationRoundProgress from 'views/ElevationFarms/components/ElevationRoundProgress'
 import { RoadmapTotemRow } from 'views/TravelersRoadmap/components/RoadmapTotemRow'
@@ -58,19 +51,11 @@ const StyledUnlockButton = styled(UnlockButton)`
   margin: 32px auto 0px auto;
 `
 
-const MultiElevSection = memo(() => (
-  <>
-    <MultiElevStaked/>
-    <MultiElevWinningsAndClaim/>
-    <MultiElevYieldBet/>
-  </>
-))
-
 const TotemHeaderYieldWarsSection = memo(() => {
-
   return (
     <>
       <MultiElevTotemBattles/>
+      <MultiElevYieldBet/>
     </>
   )
 })
@@ -84,20 +69,22 @@ const TotemHeader: React.FC = () => {
     <HeaderCardsWrapper>
       <HeaderWrapper flexDirection="column" alignItems="center" justifyContent="center">
         <HeaderButtonsRow flexDirection="row" justifyContent="space-around" alignItems="center">
-          {/* <FarmHeaderTabSelector
-            selected={selectedTab}
-            onSelect={selectTab}
-          /> */}
           <RoadmapTotemRow />
         </HeaderButtonsRow>
+        
+        <FarmHeaderTabSelector
+          selected={selectedTab}
+          onSelect={selectTab}
+        />
         <ElevationRoundProgress/>
         {/* <ElevationIntroduction/> */}
         { account == null ?
           <StyledUnlockButton summitPalette={elevationTab} /> :
-          (selectedTab === FarmingTab.Farm ?
-            <MultiElevSection/> :
-            <TotemHeaderYieldWarsSection/>
-          )
+          <>
+            { selectedTab === FarmingTab.YieldWars && <TotemHeaderYieldWarsSection/> }
+            <MultiElevStaked/>
+            <MultiElevWinningsAndClaim/>
+          </>
         }
       </HeaderWrapper>
     </HeaderCardsWrapper>

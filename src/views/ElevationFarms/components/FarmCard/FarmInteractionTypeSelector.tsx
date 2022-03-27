@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { Flex } from 'uikit'
 import { Elevation } from 'config/constants/types'
 import styled, { css } from 'styled-components'
@@ -8,7 +8,7 @@ import { SelectorWrapperBase } from 'uikit/widgets/Selector/styles'
 
 const buttonWidth = 110
 
-const MobileOnlyFlex = styled(Flex)`
+const SelectorFlex = styled(Flex)`
   display: flex;
   margin: 0px auto 0px auto;
   flex-direction: row;
@@ -109,7 +109,7 @@ const FarmInteractionTypeSelector: React.FC<Props> = ({
   )
 
   return (
-    <MobileOnlyFlex>
+    <SelectorFlex>
       <SelectorWrapper>
         <SelectedSummitButton summitPalette={elevation} selectedIndex={selectedIndex}>
           {summitButtonText()}
@@ -124,7 +124,7 @@ const FarmInteractionTypeSelector: React.FC<Props> = ({
           {FarmInteractionType.Withdraw}
         </TextButton>
       </SelectorWrapper>
-    </MobileOnlyFlex>
+    </SelectorFlex>
   )
 }
 

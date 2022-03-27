@@ -1,75 +1,52 @@
 import React, { useCallback } from 'react'
-import { darken } from 'polished'
-import styled, { css } from 'styled-components'
-import { HeaderArtwork, HeaderElevationName } from 'uikit'
+import styled from 'styled-components'
+import { Flex, SummitButton } from 'uikit'
 import { pressableMixin } from 'uikit/util/styledMixins'
 import { SelectorWrapperBase } from 'uikit/widgets/Selector/styles'
-import { Elevation } from 'config/constants'
 
-const HeaderSelector = styled(SelectorWrapperBase)`
-  z-index: 3;
-  height: 192px;
-  width: 318px;
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  top: -96px;
+const buttonWidth = 180
+
+const SelectorFlex = styled(Flex)`
   display: flex;
+  margin: 0px auto 0px auto;
+  flex-direction: row;
   align-items: center;
-  border-radius: 192px;
+  height: 32px;
+  width: ${buttonWidth * 2}px;
   justify-content: center;
-  margin: auto;
 `
 
-const BaseTextButton = styled.div`
-  width: 120px;
-  height: 192px;
-  vertical-align: middle;
-  top: 0px;
-  padding-top: 83px;
-  padding-bottom: 83px;
-  margin: auto;
+const SelectorWrapper = styled(SelectorWrapperBase)`
+  display: flex;
+  justify-content: center;
+  margin: 4px 0px;
+  border-radius: 22px;
+  position: relative;
+`
+
+const SelectedSummitButton = styled(SummitButton)<{ selected: FarmingTab }>`
+  pointer-events: none;
   position: absolute;
-  color: ${({ theme }) => darken(0.2, theme.colors.text)};
-  text-shadow: 1px 1px 2px ${({ theme }) => darken(0.2, theme.colors.text)};
+  padding: 0px;
+  top: 2px;
+  height: 28px;
+  width: ${buttonWidth - 4}px;
+  left: ${({ selected }) => (selected === FarmingTab.Farm ? 0 : 1) * buttonWidth + 2}px;
+  z-index: 3;
+`
+
+const TextButton = styled.div`
+  width: ${buttonWidth}px;
+  cursor: pointer;
+  color: ${({ theme }) => theme.colors.text};
+  text-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`};
   font-family: Courier Prime, monospace;
-  font-size: 16px;
+  font-size: 14px;
+  height: 32px;
+  line-height: 32px;
   text-align: center;
 
   ${pressableMixin}
-`
-
-const LeftTextButton = styled(BaseTextButton)`
-  left: 0px;
-  border-top-left-radius: 100px;
-  border-bottom-left-radius: 100px;
-`
-const RightTextButton = styled(BaseTextButton)`
-  right: 0px;
-  border-top-right-radius: 100px;
-  border-bottom-right-radius: 100px;
-`
-
-const HeaderArtworkSlider = styled.div<{ selectedCard: FarmingTab }>`
-  position: absolute;
-  left: ${({ selectedCard }) => (selectedCard === FarmingTab.Farm ? 0 : 124)}px;
-  top: 0px;
-`
-
-const ElevationHeaderArtworkButton = styled(HeaderArtwork)<{ selected: boolean }>`
-  width: 184px;
-  height: 184px;
-  left: 4px;
-  top: 4px;
-  position: absolute;
-  opacity: ${({ selected }) => (selected ? 1 : 0)};
-`
-
-const ArtworkTotemHeaderButton = styled.div<{ selected: boolean }>`
-  position: absolute;
-  left: -2px;
-  top: -2px;
-  opacity: ${({ selected }) => (selected ? 1 : 0)};
 `
 
 interface Props {
@@ -78,8 +55,8 @@ interface Props {
 }
 
 export enum FarmingTab {
-  Farm = 'Farm',
-  YieldWars = 'YieldWars',
+  Farm = 'FARMING OVERVIEW',
+  YieldWars = 'YIELD WARS',
 }
 
 export const FarmHeaderTabSelector: React.FC<Props> = ({ selected, onSelect }) => {
@@ -92,41 +69,18 @@ export const FarmHeaderTabSelector: React.FC<Props> = ({ selected, onSelect }) =
   }, [onSelect])
 
   return (
-    <HeaderSelector>
-      <LeftTextButton onClick={selectElevationCard}>
-        FARMING
-        <br />
-        INFO
-      </LeftTextButton>
-      <RightTextButton onClick={selectYieldWarsCard}>
-        BATTLE
-        <br />
-        ARENA
-      </RightTextButton>
-
-      <HeaderArtworkSlider selectedCard={selected}>
-        <ElevationHeaderArtworkButton
-          elevation={Elevation.OASIS}
-          selected={selected === FarmingTab.Farm}
-        >
-          <HeaderElevationName header elevationName={Elevation.OASIS}>
-            FARMING
-            <br/>
-            INFO
-          </HeaderElevationName>
-        </ElevationHeaderArtworkButton>
-
-        <ElevationHeaderArtworkButton
-          elevation={Elevation.PLAINS}
-          selected={selected === FarmingTab.YieldWars}
-        >
-          <HeaderElevationName header elevationName={Elevation.PLAINS}>
-            BATTLE
-            <br/>
-            ARENA
-          </HeaderElevationName>
-        </ElevationHeaderArtworkButton>
-      </HeaderArtworkSlider>
-    </HeaderSelector>
+    <SelectorFlex>
+      <SelectorWrapper>
+        <SelectedSummitButton selected={selected}>
+          {selected}
+        </SelectedSummitButton>
+        <TextButton onClick={selectElevationCard}>
+          {FarmingTab.Farm}
+        </TextButton>
+        <TextButton onClick={selectYieldWarsCard}>
+          {FarmingTab.YieldWars}
+        </TextButton>
+      </SelectorWrapper>
+    </SelectorFlex>
   )
 }
