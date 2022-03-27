@@ -1,24 +1,21 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { Flex, Text, Modal, ChevronRightIcon, ModalActions, SummitButton, MobileColumnFlex } from 'uikit'
-import TokenInput from '../../../components/TokenInput'
-import { getFullDisplayBalance } from '../../../utils/formatBalance'
-import { Elevation, elevToPalette } from 'config/constants/types'
-import ElevationSelector from './ElevationSelector'
+import { Flex, Text, Modal, ChevronRightIcon, MobileColumnFlex } from 'uikit'
+import TokenInput from '../../../../components/TokenInput'
+import { getFullDisplayBalance } from '../../../../utils/formatBalance'
+import { BN_ZERO, Elevation, elevationUtils, elevToPalette } from 'config/constants/types'
+import ElevationSelector from '../ElevationSelector'
 import { isNumber } from 'lodash'
-import Totem from './Totem'
-import { elevationPalette } from 'theme/colors'
-import { useSelectTotemModal } from 'components/SelectTotemModal'
-import { useElevationUserTotem, useFarmUserTokenFairnessTaxBP, useSymbolElevateModalInfo } from 'state/hooksNew'
+import { useElevationUserTotem, useFarmsUserDataLoaded, useFarmUserTokenFairnessTaxBP, useSelector, useSymbolElevateModalInfo } from 'state/hooksNew'
 import { useWeb3React } from '@web3-react/core'
-import FarmInteractionTypeSelector, { FarmInteractionType } from './FarmCard/FarmInteractionTypeSelector'
+import FarmInteractionTypeSelector, { FarmInteractionType } from '../FarmCard/FarmInteractionTypeSelector'
 import styled from 'styled-components'
 import { WalletIcon } from 'uikit/widgets/Menu/icons'
-import { useApprove } from 'hooks/useApprove'
-import useElevate from 'hooks/useElevate'
-import useStake from 'hooks/useStake'
-import useWithdraw from 'hooks/useWithdraw'
 import { mix } from 'polished'
 import DesktopVerticalDivider from 'uikit/components/DesktopVerticalDivider'
+import FarmInteractionModalElevStats from './FarmInteractionModalElevStats'
+import FarmInteractionActionButton from './FarmInteractionActionButton'
+import FarmStakingContribution, { ElevationsStaked } from '../FarmCard/FarmStakingContribution'
+import BigNumber from 'bignumber.js'
 
 const WalletIconWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.selectorBackground};
@@ -29,22 +26,6 @@ const WalletIconWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`
-
-const ElevInfoSection = styled.div<{ elevation?: Elevation }>`
-  display: flex;
-  flex: 1;
-  flex-basis: 360px 100px;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row;
-  width: 100%;
-  padding: 16px;
-  border-radius: 16px;
-  background-color: ${({ theme, elevation }) => elevation ?
-    mix(0.85, theme.colors.background, theme.colors[elevation]) :
-    theme.colors.cardHover
-  };
 `
 
 const StyledWalletIcon = styled(WalletIcon)`
@@ -112,11 +93,8 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
     walletBalance,
   } = useSymbolElevateModalInfo(symbol)
   const userFairnessTaxBP = useFarmUserTokenFairnessTaxBP(symbol)
-  
-  const { onApprove, pending: approvalPending } = useApprove(farmToken, symbol)
-  const { onStake, pending: stakePending } = useStake()
-  const { onWithdraw, pending: withdrawPending } = useWithdraw()
-  const { onElevate, pending: elevatePending} = useElevate()
+  const pricePerToken = useSelector((state) => state.prices.pricesPerToken != null ? (state.prices.pricesPerToken[symbol] || new BigNumber(1)) : new BigNumber(1))
+  const userDataLoaded = useFarmsUserDataLoaded()
 
   const isApproved = account && farmAllowance && farmAllowance.isGreaterThan(0)
   const [farmInteractionType, setFarmInteractionType] = useState(FarmInteractionType.Deposit)
@@ -171,7 +149,6 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
 
   const uiPalette = elevToPalette(uiElevation)
   const totem = useElevationUserTotem(selectedTargetElevation)
-  const { onPresentSelectTotemModal } = useSelectTotemModal(selectedTargetElevation)
 
   const [fullBalance, setFullBalance] = useState('0')
   const [val, setVal] = useState('')
@@ -235,10 +212,6 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
     [setSelectedTargetElevation],
   )
 
-  const handlePresentSelectTotem = () => {
-    onPresentSelectTotemModal()
-  }
-
 
   const [tokenInputFeeText, tokenInputFeeBP] = useMemo(
     () => {
@@ -279,67 +252,6 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
       }
     },
     [isApproved, farmInteractionType, selectedSourceElevation, selectedTargetElevation]
-  )
-
-  // ACTION
-
-
-  const actionDisabled = useMemo(
-    () => {
-      switch (farmInteractionType) {
-        case FarmInteractionType.Deposit:
-          if (isApproved) return totem == null || invalidVal || selectedTargetElevation == null
-          return false
-        case FarmInteractionType.Elevate: return invalidElevationErr != null || totem == null || invalidVal || selectedSourceElevation == null || selectedTargetElevation == null
-        case FarmInteractionType.Withdraw: return invalidVal || selectedSourceElevation == null
-        default: return false
-      }
-    },
-    [isApproved, farmInteractionType, invalidElevationErr, totem, invalidVal, selectedTargetElevation, selectedSourceElevation]
-  )
-  const handleAction = useCallback(
-    () => {
-      if (actionDisabled) return
-      switch (farmInteractionType) {
-        case FarmInteractionType.Deposit:
-          if (isApproved) {
-            onStake(
-              symbol,
-              farmToken,
-              selectedTargetElevation,
-              val,
-              decimals,
-              onDismiss
-            )
-            break
-          }
-          onApprove()
-          break
-        case FarmInteractionType.Elevate:
-          onElevate(
-            symbol,
-            farmToken,
-            selectedSourceElevation,
-            selectedTargetElevation,
-            val,
-            decimals,
-            onDismiss
-          )
-          break
-        case FarmInteractionType.Withdraw:
-          onWithdraw(
-            symbol,
-            farmToken,
-            selectedSourceElevation,
-            val,
-            decimals,
-            onDismiss
-          )
-          break
-        default: break
-      }
-    },
-    [onDismiss, isApproved, farmInteractionType, symbol, farmToken, selectedTargetElevation, selectedSourceElevation, val, decimals, actionDisabled, onStake, onApprove, onWithdraw, onElevate]
   )
 
   return (
@@ -420,67 +332,7 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
             }
 
 
-            { isApproved &&
-            <ElevInfoSection elevation={uiElevation}>
-              {uiElevation != null &&
-              <Flex width='33%' flexDirection='column' alignItems='center' justifyContent='center'>
-                <Text bold monospace small>
-                  TOTEM:
-                </Text>
-                {(totem == null) ? (
-                  <Flex height='56px' alignItems='center' justifyContent='center' flexDirection='column'>
-                    <SummitButton width='112px' summitPalette={uiElevation} onClick={handlePresentSelectTotem}>
-                      SELECT
-                      <br/>
-                      TOTEM
-                    </SummitButton>
-                  </Flex>
-                ) : (
-                  <Totem
-                    elevation={uiElevation}
-                    totem={totem}
-                    color={elevationPalette[uiElevation][2]}
-                    selected
-                    pressable={false}
-                    size='40'
-                    navSize='40'
-                  />
-                )}
-              </Flex>
-              }
-              <Flex width='33%' flexDirection='column' alignItems='center' justifyContent='center'>
-                <Text bold monospace small>
-                  {uiElevation ?? 'BASE'} APY:
-                </Text>
-                <Flex height='56px' alignItems='center' justifyContent='center' flexDirection='column'>
-                  { uiElevation == null &&
-                    <Text bold monospace fontSize='11px' mb='-6px'>
-                      UP TO
-                    </Text>
-                  }
-                  <Text bold monospace>
-                    500%
-                  </Text>
-                  <Text bold monospace fontSize='11px'>
-                    DAILY APR
-                  </Text>
-                  <Text bold monospace fontSize='12px' mt='-6px'>
-                    500%
-                  </Text>
-                </Flex>
-              </Flex>
-              <Flex width='33%' flexDirection='column' alignItems='center' justifyContent='center'>
-                <Text bold monospace small>
-                {uiElevation ?? 'TOTAL'} TVL:
-                </Text>
-                <Flex height='56px' alignItems='center' justifyContent='center' flexDirection='column'>
-                  <Text bold monospace>
-                    $600,000
-                  </Text>
-                </Flex>
-              </Flex>
-            </ElevInfoSection>
-            }
+            { isApproved && <FarmInteractionModalElevStats symbol={symbol} elevation={uiElevation}/> }
 
 
 
@@ -491,9 +343,7 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
             }
           </Flex>
 
-
           <DesktopVerticalDivider/>
-
 
           <Flex width='360px' maxWidth='100%' justifyContent="center" flexDirection="column" alignItems="center" gap='18px'>
 
@@ -502,6 +352,11 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
                 <Text bold monospace small>
                 {interactionTypeText.toUpperCase()} AMOUNT:
                 </Text>
+
+                {/* <Flex width='100%'>
+                  <FarmStakingContribution symbol={symbol} elevation={selectedSourceElevation} userDataLoaded={userDataLoaded} elevationsStaked={elevStaked} pricePerToken={pricePerToken} decimals={decimals}/> :
+                </Flex> */}
+
                 <TokenInput
                   summitPalette={uiPalette}
                   balanceText={`${selectedSourceElevation ?? 'WALLET'} BALANCE`}
@@ -517,19 +372,21 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
               </Flex>
             }
 
-            <ModalActions>
-              <SummitButton summitPalette={uiPalette} secondary onClick={onDismiss}>
-                CANCEL
-              </SummitButton>
-              <SummitButton
-                summitPalette={uiPalette}
-                disabled={actionDisabled}
-                isLoading={approvalPending || stakePending || withdrawPending || elevatePending}
-                onClick={handleAction}
-              >
-                {interactionTypeText.toUpperCase()}
-              </SummitButton>
-            </ModalActions>
+            <FarmInteractionActionButton
+              symbol={symbol}
+              uiElevation={uiElevation}
+              sourceElevation={selectedSourceElevation}
+              targetElevation={selectedTargetElevation}
+              farmInteractionType={farmInteractionType}
+              decimals={decimals}
+              farmToken={farmToken}
+              isApproved={isApproved}
+              val={val}
+              invalidVal={invalidVal != null}
+              invalidElevationErr={invalidElevationErr != null}
+              totem={totem}
+              onDismiss={onDismiss}
+            />
           </Flex>
         </MobileColumnFlex>
       </Flex>

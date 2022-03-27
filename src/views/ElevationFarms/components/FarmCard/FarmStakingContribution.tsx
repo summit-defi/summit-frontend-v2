@@ -37,14 +37,14 @@ export interface ElevationsStaked {
 
 interface Props {
     symbol: string
+    elevation?: Elevation
     userDataLoaded: boolean
     elevationsStaked: ElevationsStaked
     pricePerToken: BigNumber
     decimals: number
 }
 
-const FarmStakingContribution: React.FC<Props> = ({ symbol, userDataLoaded, elevationsStaked, pricePerToken, decimals }) => {
-    const elevation = useSelectedElevation()
+const FarmStakingContribution: React.FC<Props> = ({ symbol, elevation, userDataLoaded, elevationsStaked, pricePerToken, decimals }) => {
     const { account } = useWeb3React()
     const isEverest = symbol === TokenSymbol.EVEREST
 

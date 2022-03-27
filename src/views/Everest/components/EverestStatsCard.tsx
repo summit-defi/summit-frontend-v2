@@ -5,7 +5,7 @@ import { useSummitPrice, useEverestStatsInfo } from "state/hooksNew"
 import styled from "styled-components"
 import { Flex, Text, HighlightedText, TokenSymbolImage, SummitButton, useModal } from "uikit"
 import { getBalanceNumber, getEverestTokenAddress } from "utils"
-import FarmInteractionModal from "views/ElevationFarms/components/FarmInteractionModal"
+import FarmInteractionModal from "views/ElevationFarms/components/FarmInteractionModal/FarmInteractionModal"
 import CardValue from "views/Home/components/CardValue"
 import EverestLockDurationIndicator from "./EverestLockDurationIndicator"
 import { Link } from 'react-router-dom'

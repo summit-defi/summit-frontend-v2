@@ -14,7 +14,7 @@ import { getFarmInteracting, getFarmType } from 'utils'
 import { FarmType } from 'state/types'
 import FarmCardTokenSection from './FarmCardTokenSection'
 import { NonInteractingInfoItems } from './NonInteractingInfoItems'
-import FarmInteractionModal from '../FarmInteractionModal'
+import FarmInteractionModal from '../FarmInteractionModal/FarmInteractionModal'
 
 const FCard = styled(Flex)<{ $locked: boolean; interacting: boolean }>`
   cursor: pointer;
