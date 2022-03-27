@@ -138,6 +138,7 @@ const selectSymbolElevateModalInfo = createSelector(
             elevStaked,
             decimals: farm.decimals,
             farmToken: farm.farmToken,
+            depositFeeBP: farm.depositFeeBP,
 
             // TOKEN INFO
             farmAllowance: tokenInfo.farmAllowance,

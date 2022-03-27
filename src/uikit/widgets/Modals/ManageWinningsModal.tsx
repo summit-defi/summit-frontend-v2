@@ -47,17 +47,22 @@ const TheBigFreezeButton: React.FC<TheBigFreezeProps> = React.memo(({ claimables
     }, [claimPending, anyElevationLocked, onClaimElevation, elevations])
 
     return (
-        <SummitButton
-            isLocked={anyElevationLocked}
-            isLoading={claimPending}
-            width='200px'
-            style={{ padding: '0px' }}
-            freezeSummitButton
-            summitPalette={SummitPalette.GOLD}
-            onClick={handlePresentFreezeElev}
-        >
-            THE BIG FREEZE
-        </SummitButton>
+        <Flex flexDirection='column' alignItems='center' justifyContent='center'>
+            <SummitButton
+                isLocked={anyElevationLocked}
+                isLoading={claimPending}
+                width='200px'
+                style={{ padding: '0px' }}
+                freezeSummitButton
+                summitPalette={SummitPalette.GOLD}
+                onClick={handlePresentFreezeElev}
+            >
+                THE BIG FREEZE
+            </SummitButton>
+            {anyElevationLocked &&
+                <Text mt='24px' bold monospace color='red' italic small textAlign='center'>One or more Elevations locked until Rollover</Text>
+            }
+        </Flex>
     )
 })
 
@@ -78,18 +83,27 @@ const ElevClaim: React.FC<ElevProps> = React.memo(({ elevation, claimable }) => 
     }, [claimPending, elevationLocked, nothingToClaim, onClaimElevation, elevation])
 
     return (
-        <SummitButton
-            summitPalette={elevation}
-            isLocked={elevationLocked}
-            isLoading={claimPending}
-            disabled={nothingToClaim}
-            width='160px'
-            height='28px'
-            style={{ padding: '0px' }}
-            onClick={handlePresentFreezeElev}
-        >
-            {elevation}
-        </SummitButton>
+        <Flex flexDirection='column' alignItems='center' justifyContent='center'>
+            <SummitButton
+                summitPalette={elevation}
+                isLocked={elevationLocked}
+                isLoading={claimPending}
+                disabled={nothingToClaim}
+                width='160px'
+                height='28px'
+                style={{ padding: '0px' }}
+                onClick={handlePresentFreezeElev}
+            >
+                {elevation}
+            </SummitButton>
+            {elevationLocked &&
+                <Text mt='6px' bold monospace color='red' italic small textAlign='center'>
+                    Locked until
+                    <br/>
+                    Rollover
+                </Text>
+            }
+        </Flex>
     )
 })
 

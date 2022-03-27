@@ -1,12 +1,14 @@
-import { BN_ZERO, SummitPalette } from "config/constants"
+import { BN_ZERO, SummitPalette, TokenSymbol } from "config/constants"
 import { useBurnedSummitBalance, useTotalSummitSupply } from "hooks/useTokenBalance"
 import React, { memo, useCallback } from "react"
 import { useSummitPrice, useEverestStatsInfo } from "state/hooksNew"
 import styled from "styled-components"
-import { Flex, Text, HighlightedText, TokenSymbolImage, SummitButton } from "uikit"
+import { Flex, Text, HighlightedText, TokenSymbolImage, SummitButton, useModal } from "uikit"
 import { getBalanceNumber, getEverestTokenAddress } from "utils"
+import FarmInteractionModal from "views/ElevationFarms/components/FarmInteractionModal"
 import CardValue from "views/Home/components/CardValue"
 import EverestLockDurationIndicator from "./EverestLockDurationIndicator"
+import { Link } from 'react-router-dom'
 
 
 export const EverestCard = styled(Flex)`
@@ -99,6 +101,13 @@ export const EverestStatsCard: React.FC = memo(() => {
         }
         }, [everestAddress])
 
+
+    const [onPresentFarmInteractions] = useModal(
+        <FarmInteractionModal
+            symbol={TokenSymbol.EVEREST}
+        />,
+    )
+
     return (
         <EverestCard gap='32px' alignItems='center' justifyContent='center'>
             <HeaderHighlightedText bold monospace textAlign='center'>
@@ -117,10 +126,28 @@ export const EverestStatsCard: React.FC = memo(() => {
                     + <img style={{ marginLeft: 8 }} width={16} src="/images/wallet/metamask.png" alt="metamask logo" />
                 </SummitButton>
             </TokenImageWrapper>
-
-            <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
-                <Text monospace small bold>YOUR EVEREST BALANCE:</Text>
-                <CardValue summitPalette={SummitPalette.EVEREST} value={rawUserEverestOwned} decimals={3} fontSize="22" />
+            
+            <Flex flexDirection='column' width='100%' alignItems='center' justifyContent='center'>
+                <Flex flexDirection='row' justifyContent='space-between' alignItems='center' width='100%'>
+                    <Text monospace small bold>YOUR EVEREST BALANCE:</Text>
+                    <CardValue summitPalette={SummitPalette.EVEREST} value={rawUserEverestOwned} decimals={3} fontSize="22" />
+                </Flex>
+                <Flex flexDirection='row' justifyContent='center' alignItems='center' width='100%' gap='18px'>
+                    <SummitButton
+                        summitPalette={SummitPalette.EVEREST}
+                        onClick={onPresentFarmInteractions}
+                    >
+                        STAKE EVEREST
+                    </SummitButton>
+                    <SummitButton
+                        summitPalette={SummitPalette.EXPEDITION}
+                        as={Link}
+                        to='/expedition'
+                        replace
+                    >
+                        OPEN EXPEDITION
+                    </SummitButton>
+                </Flex>
             </Flex>
 
             <Divider/>
