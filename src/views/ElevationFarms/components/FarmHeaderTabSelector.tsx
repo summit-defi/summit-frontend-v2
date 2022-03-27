@@ -99,9 +99,9 @@ export const FarmHeaderTabSelector: React.FC<Props> = ({ selected, onSelect }) =
         INFO
       </LeftTextButton>
       <RightTextButton onClick={selectYieldWarsCard}>
-        YIELD
+        BATTLE
         <br />
-        WARS
+        ARENA
       </RightTextButton>
 
       <HeaderArtworkSlider selectedCard={selected}>
@@ -121,9 +121,9 @@ export const FarmHeaderTabSelector: React.FC<Props> = ({ selected, onSelect }) =
           selected={selected === FarmingTab.YieldWars}
         >
           <HeaderElevationName header elevationName={Elevation.PLAINS}>
-            YIELD
+            BATTLE
             <br/>
-            WARS
+            ARENA
           </HeaderElevationName>
         </ElevationHeaderArtworkButton>
       </HeaderArtworkSlider>

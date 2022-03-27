@@ -73,15 +73,6 @@ const PressableFlex = styled.div`
   flex-wrap: wrap;
 `
 
-const PressableBackground = styled(Link)`
-  position: absolute;
-  left: 0px;
-  right: 0px;
-  top: 0px;
-  bottom: 0px;
-  cursor: pointer;
-`
-
 const FarmNumericalInfoFlex = styled(Flex)`
   justify-content: space-between;
   align-items: center;
@@ -225,7 +216,6 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
   return (
     <FCard $locked={false} ref={cardRef} interacting={interacting} onClick={onPresentFarmInteractions}>
       <PressableFlex>
-        {/* <PressableBackground to={targetUrl} replace/> */}
         { farmComment != null && <Text monospace bold italic fontSize='13px' mb='14px' textAlign='center'>* {farmComment}</Text> }
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }
         <FarmNumericalInfoFlex>

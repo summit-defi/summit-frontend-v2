@@ -73,7 +73,7 @@ const FarmStakingContribution: React.FC<Props> = ({ symbol, elevation, userDataL
     return (
         <StakingInfoItem style={{ flex: 3 }}>
             <Flex alignItems='center' height='18px'>
-                <Text small mr='4px'>{elevation != null ? `${capitalizeFirstLetter(elevation)} ` : ''}Deposited:</Text>
+                <Text small bold monospace mr='4px'>{elevation != null ? `${elevation} ` : ''}DEPOSITED:</Text>
                 <Flex mb='2px'>
                     <CardValue
                         value={stakedUSD.toNumber()}

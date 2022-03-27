@@ -1,11 +1,13 @@
+import { useSelectTotemModal } from "components/SelectTotemModal"
 import { Elevation, elevationUtils, SummitPalette } from "config/constants"
-import React from "react"
-import { useMediaQuery } from "state/hooks"
+import React, { useCallback } from "react"
+import { useMediaQuery, useTotemSelectionPending } from "state/hooks"
 import { useExpeditionRoadmapInfoWithPreset, useUserTotemCrownsLoyaltiesWithPreset } from "state/hooksNew"
 import styled, { css } from "styled-components"
 import { textGold } from "theme/colors"
 import { ArtworkTotem, BadgeRibbonIcon, ElevationImage, Flex, HighlightedText, Text } from "uikit"
-import { paletteLinearGradientBackground } from "uikit/util/styledMixins"
+import { paletteLinearGradientBackground, pressableMixin } from "uikit/util/styledMixins"
+import useTotemWinnersModal from "uikit/widgets/TotemWinnersModal/useTotemWinnersModal"
 import { InverseDeity } from "views/ElevationFarms/components/InverseDeity"
 
 const RoadmapTotemRowWrapper = styled.div`
@@ -20,6 +22,10 @@ const RoadmapTotemRowWrapper = styled.div`
     ${({ theme }) => theme.mediaQueries.nav} {
         margin-bottom: 0px;
     }
+`
+
+const PressableFlex = styled(Flex)`
+    ${pressableMixin}
 `
 
 
@@ -91,7 +97,9 @@ const getBadge = (totemIndex, loyalty, totemName) => {
     const badgeRaw = getBadgeRaw(totemIndex, loyalty, totemName)
     return badgeRaw != null ? badgeRaw.split(' ').join(' ') : null
 }
-const getLoyaltyText = (isMobile, loyalty) => {
+const getLoyaltyText = (totem, isMobile, loyalty, elevation) => {
+    if (totem == null) return <>NO TOTEM<br/>SELECTED</>
+    if (elevation === Elevation.OASIS) return 'FOREVER SAFE'
     if (isMobile) {
         if (loyalty === -2) return 'INF'
         if (loyalty === -1) return 'N/A'
@@ -174,6 +182,68 @@ const MobileSmallText = styled(Text)<{ hasBadge: boolean }>`
     }
 `
 
+const RoadmapTotem: React.FC<{ userTotem: number | null, crowned: boolean, loyalty: number, totemIndex: number, isMobile: boolean }> = React.memo(({ userTotem, crowned, loyalty, totemIndex, isMobile }) => {
+    const elevation = elevationUtils.fromInt(totemIndex)
+    const totemName = elevationUtils.getElevationTotemName(elevation, userTotem, false)
+
+    const loyaltyText = getLoyaltyText(userTotem, isMobile, loyalty, elevation)
+    const badge = getBadge(totemIndex, loyalty, totemName)
+    const isLetThereBeLight = loyalty === -2
+
+    const { onPresentTotemWinnersModal } = useTotemWinnersModal()
+
+    const handlePresentSelectTotemModal = useCallback(
+        () => onPresentTotemWinnersModal({ elevation }),
+        [onPresentTotemWinnersModal, elevation]
+    )
+
+    return (
+        <PressableFlex onClick={handlePresentSelectTotemModal} key={elevation} width='25%' position='relative' flexDirection='column' alignItems='center' justifyContent='center'>
+            <TotemAndElevWrapper>
+                <ElevationImagePosition>
+                    <ElevationImage elevation={elevation} size={128} mobileSize={76} />
+                </ElevationImagePosition>
+                <TotemPosition>
+                    <ArtworkTotem
+                        elevation={elevation}
+                        totem={userTotem}
+                        crowned={crowned}
+                        desktopSize="112"
+                        mobileSize="76"
+                    />
+                </TotemPosition>
+            </TotemAndElevWrapper>
+
+            <HighlightedText mt='-24px' fontSize="16px" gold={crowned} header summitPalette={elevation}>
+                {elevationUtils.getElevationTotemName(elevation, userTotem, false)}
+            </HighlightedText>
+
+            { userTotem != null &&
+                <TextBackground flexDirection='column' alignItems='column' justifyContent='center'>
+                        <LoyaltyText bold monospace hasBadge={badge != null}>
+                            LOYALTY
+                            {isMobile ? <br/> : ''}
+                            {isMobile ? 'ROUNDS' : ''}:
+                        </LoyaltyText>
+                    <MobileSmallText bold monospace hasBadge={badge != null}>
+                        {loyaltyText}
+                    </MobileSmallText>
+                    {badge != null &&
+                        <BadgeWrapper>
+                            <RibbonWrapper isLetThereBeLight={isLetThereBeLight}>
+                                <StyledBadgeRibbonIcon width='24px' height='24px' isLetThereBeLight={isLetThereBeLight}/>
+                            </RibbonWrapper>
+                            <BadgeText bold gold monospace textAlign='center'>
+                                {badge.split('|').map((text) => text === 'br' ? <br /> : text)}
+                            </BadgeText>
+                        </BadgeWrapper>
+                    }
+                </TextBackground>
+            }
+        </PressableFlex>
+    )
+})
+
 
 export const RoadmapTotemRow: React.FC = React.memo(() => {
     const {
@@ -183,56 +253,19 @@ export const RoadmapTotemRow: React.FC = React.memo(() => {
 
     return (
         <RoadmapTotemRowWrapper>
-            <TotemTitleText italic style={{ width: '100%' }} textAlign='left' bold monospace>TOTEMS:</TotemTitleText>
+            {/* <TotemTitleText italic style={{ width: '100%' }} textAlign='left' bold monospace>TOTEMS:</TotemTitleText> */}
             <Flex width='100%' alignItems='flex-start' justifyContent='space-around' maxWidth='850px'>
                 {totemsCrownsLoyalties.map(({ userTotem, crowned, loyalty }, totemIndex) => {
                     if (totemIndex === 4) return null
-                    const elevation = elevationUtils.fromInt(totemIndex)
-                    const totemName = elevationUtils.getElevationTotemName(elevation, userTotem, false)
-
-                    const loyaltyText = getLoyaltyText(isMobile, loyalty)
-                    const badge = getBadge(totemIndex, loyalty, totemName)
-                    const isLetThereBeLight = loyalty === -2
                     return (
-                        <Flex key={elevation} width='25%' position='relative' flexDirection='column' alignItems='center' justifyContent='center'>
-                            <TotemAndElevWrapper>
-                                <ElevationImagePosition>
-                                    <ElevationImage elevation={elevation} size={128} mobileSize={76} />
-                                </ElevationImagePosition>
-                                <TotemPosition>
-                                    <ArtworkTotem
-                                        withName
-                                        elevation={elevation}
-                                        totem={userTotem}
-                                        crowned={crowned}
-                                        desktopSize="112"
-                                        mobileSize="76"
-                                    />
-                                </TotemPosition>
-                            </TotemAndElevWrapper>
-
-                            <TextBackground flexDirection='column' alignItems='column' justifyContent='center'>
-                                <LoyaltyText bold monospace hasBadge={badge != null}>
-                                    {isMobile ? '' : `${totemName} `}
-                                    LOYALTY
-                                    {isMobile ? <br/> : ''}
-                                    {isMobile ? 'ROUNDS' : ''}
-                                </LoyaltyText>
-                                <MobileSmallText bold monospace hasBadge={badge != null}>
-                                    {loyaltyText}
-                                </MobileSmallText>
-                                {badge != null &&
-                                    <BadgeWrapper>
-                                        <RibbonWrapper isLetThereBeLight={isLetThereBeLight}>
-                                            <StyledBadgeRibbonIcon width='24px' height='24px' isLetThereBeLight={isLetThereBeLight}/>
-                                        </RibbonWrapper>
-                                        <BadgeText bold gold monospace textAlign='center'>
-                                            {badge.split('|').map((text) => text === 'br' ? <br /> : text)}
-                                        </BadgeText>
-                                    </BadgeWrapper>
-                                }
-                            </TextBackground>
-                        </Flex>
+                        <RoadmapTotem
+                            key={elevationUtils.fromInt(totemIndex)}
+                            userTotem={userTotem}
+                            crowned={crowned && totemIndex !== 0}
+                            loyalty={loyalty}
+                            totemIndex={totemIndex}
+                            isMobile={isMobile}
+                        />
                     )
                 })}
             </Flex>
@@ -304,7 +337,7 @@ const DeityText = styled(Text)`
 export const RoadmapExpedition: React.FC = React.memo(() => {
     const { deity, crowned, faith, loyalty } = useExpeditionRoadmapInfoWithPreset()
     const totemName = elevationUtils.getElevationTotemName(Elevation.EXPEDITION, deity, false)
-    const loyaltyText = getLoyaltyText(false, loyalty)
+    const loyaltyText = getLoyaltyText(deity, false, loyalty, Elevation.EXPEDITION)
     const isLetThereBeLight = loyalty === -2
     const badge = getBadge(4, loyalty, totemName)
     return (

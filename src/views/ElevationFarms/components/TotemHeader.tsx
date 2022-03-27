@@ -18,6 +18,8 @@ import MultiElevWinningsAndClaim from './MultiElevWinningsAndClaim'
 import { LifetimeSummitWinnings } from './LifetimeSummitWinnings'
 import { useElevationUserTotem } from 'state/hooksNew'
 import { FarmHeaderTabSelector, FarmingTab } from './FarmHeaderTabSelector'
+import ElevationRoundProgress from 'views/ElevationFarms/components/ElevationRoundProgress'
+import { RoadmapTotemRow } from 'views/TravelersRoadmap/components/RoadmapTotemRow'
 
 const HeaderCardsWrapper = styled(Flex)`
   justify-content: center;
@@ -32,7 +34,7 @@ const HeaderWrapper = styled(Flex)`
   position: relative;
   z-index: 10;
   padding: 16px;
-  padding-top: 112px;
+  padding-top: 220px;
   padding-bottom: 24px;
   margin-top: 64px;
   background-color: ${({ theme }) => theme.colors.background};
@@ -45,9 +47,10 @@ const HeaderWrapper = styled(Flex)`
 
 const HeaderButtonsRow = styled(Flex)`
   position: absolute;
-  top: 0px;
-  width: 318px;
-  gap: 12px;
+  top: -86px;
+  padding-left: 12px;
+  padding-right: 12px;
+  width: 100%;
 `
 
 
@@ -55,45 +58,19 @@ const StyledUnlockButton = styled(UnlockButton)`
   margin: 32px auto 0px auto;
 `
 
-const ElevSpecificSection = memo(() => {
-  const elevationTab = useElevationFarmsTab()
-
-
-  return (
-    <>
-      {/* { elevationTab !== ElevationFarmTab.OASIS && <ElevationYieldBet/> } */}
-      {/* <ElevationWinnings/> */}
-    </>
-  )
-})
-
 const MultiElevSection = memo(() => (
   <>
     <MultiElevStaked/>
     <MultiElevWinningsAndClaim/>
+    <MultiElevYieldBet/>
   </>
 ))
 
-const TotemHeaderUserFarmingSection = memo(() => {
-  const elevationTab = useElevationFarmsTab()
-  const userTotem = useElevationUserTotem(elevationTabToElevation[elevationTab])
-
-  return (
-    <>
-      { elevationTab !== ElevationFarmTab.DASH && userTotem != null && <ElevSpecificSection/> }
-      { elevationTab === ElevationFarmTab.DASH && <MultiElevSection/> }
-    </>
-  )
-})
-
 const TotemHeaderYieldWarsSection = memo(() => {
-  const elevationTab = useElevationFarmsTab()
-  const userTotem = useElevationUserTotem(elevationTabToElevation[elevationTab])
 
   return (
     <>
       <MultiElevTotemBattles/>
-      <MultiElevYieldBet/>
     </>
   )
 })
@@ -106,13 +83,15 @@ const TotemHeader: React.FC = () => {
   return (
     <HeaderCardsWrapper>
       <HeaderWrapper flexDirection="column" alignItems="center" justifyContent="center">
-        <HeaderButtonsRow flexDirection="row" justifyContent="center" alignItems="center">
-          <FarmHeaderTabSelector
+        <HeaderButtonsRow flexDirection="row" justifyContent="space-around" alignItems="center">
+          {/* <FarmHeaderTabSelector
             selected={selectedTab}
             onSelect={selectTab}
-          />
+          /> */}
+          <RoadmapTotemRow />
         </HeaderButtonsRow>
-        <ElevationIntroduction/>
+        <ElevationRoundProgress/>
+        {/* <ElevationIntroduction/> */}
         { account == null ?
           <StyledUnlockButton summitPalette={elevationTab} /> :
           (selectedTab === FarmingTab.Farm ?

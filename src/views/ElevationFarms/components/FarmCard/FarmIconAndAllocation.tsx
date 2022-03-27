@@ -48,7 +48,7 @@ const FarmIconAndAllocation: React.FC<Props> = ({ symbol, lpSource, name, alloca
         <Flex gap='8px' width='180px' justifyContent="flex-start" alignItems="center">
             <TokenSymbolImage symbol={symbol} width={52} height={52} />
             <Flex flexDirection="column" alignItems="flex-start">
-                <Text italic monospace bold fontSize="14px" lineHeight="14px" mb={lpSource != null ? '0px' : '4px'} textAlign="left">
+                <Text italic monospace bold fontSize="15px" lineHeight="14px" mb={lpSource != null ? '0px' : '4px'} textAlign="left">
                     {name || symbol}
                 </Text>
                 { lpSource != null && <Text monospace bold italic fontSize='10px' mb="4px">{lpSource}</Text> }

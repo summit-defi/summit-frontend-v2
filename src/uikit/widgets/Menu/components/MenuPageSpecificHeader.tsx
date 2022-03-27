@@ -3,7 +3,7 @@ import ElevationFarmsTabSelector from "./ElevationFarmsTabSelector"
 import { useMatchBreakpoints } from "../../../hooks";
 import { useCurrentSummitPalette } from "state/hooks";
 import Logo from "./Logo";
-import ElevationRoundProgress from "./ElevationRoundProgress";
+import ElevationRoundProgress from "../../../../views/ElevationFarms/components/ElevationRoundProgress";
 import Flex from 'uikit/components/Box/Flex'
 import styled from 'styled-components'
 import { MENU_HEIGHT } from '../config'

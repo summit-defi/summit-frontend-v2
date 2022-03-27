@@ -1,5 +1,5 @@
 import { TokenSymbol } from 'config/constants'
-import React, { memo } from 'react'
+import React, { memo, useCallback } from 'react'
 import styled from 'styled-components'
 import { Text, Flex, useModal, HeaderInfoQuestion } from 'uikit'
 import { pressableMixin } from 'uikit/util/styledMixins'
@@ -34,10 +34,19 @@ export const NonInteractingInfoItems: React.FC<{ symbol: string, depositFeeBP: n
     const [onPresentTooltipModal] = useModal(
         <TooltipModal tooltipType={TooltipModalType.DecayingWithdrawalFee}/>
     ) 
+
+    const handlePresentTooltipModal = useCallback(
+        (e) => {
+            e.stopPropagation()
+            onPresentTooltipModal()
+        },
+        [onPresentTooltipModal]
+    )
+    
     return (
         <>
             <FlexInfoItem>
-                <Text small>Deposited:</Text>
+                <Text small bold monospace>DEPOSITED:</Text>
                 <InfoItemValue>
                     <CardValue
                         value={0}
@@ -49,18 +58,26 @@ export const NonInteractingInfoItems: React.FC<{ symbol: string, depositFeeBP: n
                     />
                 </InfoItemValue>
             </FlexInfoItem>
-            <FlexInfoItem maxWidth={130}>
+            <FlexInfoItem maxWidth={120}>
                 <PressableFlex onClick={onPresentTooltipModal}>
-                    <Text small>Withdrawal Fee:</Text>
+                    <Text small bold monospace>WITHDRAWAL FEE:</Text>
                     <HeaderInfoQuestion/>
                 </PressableFlex>
                 <InfoItemValue>
-                    <Text bold monospace>{withdrawalFeeBP / 100}% to {minWithdrawalFeeBP / 100}%</Text>
-                    <Text bold monospace small>Over 7 Days</Text>
+                    <Flex alignItems='center' gap='4px'>
+                        <Text bold monospace>{withdrawalFeeBP / 100}%</Text>
+                        <Text bold monospace fontSize='11px'>{' TO '}</Text>
+                        <Text bold monospace>{minWithdrawalFeeBP / 100}%</Text>
+                    </Flex>
+                    <Flex alignItems='center' gap='4px'>
+                        <Text bold monospace fontSize='11px'>{'OVER '}</Text>
+                        <Text bold monospace>7</Text>
+                        <Text bold monospace fontSize='11px'>{' DAYS'}</Text>
+                    </Flex>
                 </InfoItemValue>
             </FlexInfoItem>
             <FlexInfoItem>
-                <Text small>Deposit Fee:</Text>
+                <Text small bold monospace>DEPOSIT FEE:</Text>
                 <InfoItemValue>
                     <Text bold monospace>{depositFeeBP / 100}%</Text>
                 </InfoItemValue>

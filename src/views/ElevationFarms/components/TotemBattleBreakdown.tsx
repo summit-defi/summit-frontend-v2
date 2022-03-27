@@ -65,7 +65,7 @@ const TotemResultsWrapper = styled(Flex)<{ elevation: Elevation, multiElev: bool
 
   ${({ theme }) => theme.mediaQueries.nav} {
     justify-content: center;
-    gap: ${({ elevation }) => elevation === Elevation.SUMMIT ? 5 : 20}px;
+    gap: ${({ elevation }) => elevation === Elevation.SUMMIT ? 0 : 20}px;
     padding-left: ${({ multiElev}) => multiElev ? 32 : 6}px;
     padding-right: ${({ multiElev}) => multiElev ? 32 : 6}px; 
   }
@@ -88,21 +88,32 @@ const TotemPosition = styled(Flex)<{ topOffset: number }>`
   position: relative;
 `
 
-const DashedLine = styled.div<{ leftClipped: boolean, rightClipped: boolean }>`
+const DashedLine = styled.div<{ rightClipped: boolean }>`
   position: absolute;
-  left: ${({ leftClipped }) => leftClipped ? 6 : 0}px;
-  right: ${({ rightClipped }) => rightClipped ? 6 : 0}px;
+  left: 0px;
+  right: ${({ rightClipped }) => rightClipped ? 28 : 0}px;
   border-top: 1px dashed ${({ theme }) => theme.colors.text};
 `
 
 const RuleLine = styled.div<{ index: number }>`
   position: absolute;
-  left: -120px;
+  left: 0px;
   right: 0px;
   top: ${({ index }) => (21.5 * index) + (TotemHeight / 2) - (21.5 * 1.5)}px;
   height: 21.5px;
   opacity: 0.16;
   border-radius: ${({ index }) => index === 0 ? '12px 12px 0px 0px' : index === 6 ? '0px 0px 12px 12px' : 'none'};
+
+  ${({ theme }) => theme.mediaQueries.nav} {
+    left: -120px;
+  }
+`
+
+const ElevationIndicator = styled(Text)<{ elevation: Elevation }>`
+  position: absolute;
+  top: 0px;
+  left: 12px;
+  color: ${({ theme, elevation }) => theme.colors[elevation]};
 `
 
 const TotemScale = styled.div<{ scale: number }>`
@@ -142,12 +153,16 @@ const PulseKeyframes = keyframes`
 
 const ArenaPulse = styled.div<{ elevation: Elevation }>`
   position: absolute;
-  left: -120px;
+  left: 0px;
   right: 0px;
   height: 1px; 
   opacity: 0.5;
   background-color: ${({ theme, elevation}) => theme.colors[elevation]};
   animation: ${PulseKeyframes} 4s infinite ease-out;
+
+  ${({ theme }) => theme.mediaQueries.nav} {
+    left: -120px;
+  }
 `
 
 const RowCombinerRight = styled.div`
@@ -165,7 +180,7 @@ const RowCombinerLeft = styled.div`
   border: 1px dashed ${({ theme }) => theme.colors.text};
   border-right: none;
   width: 32px;
-  height: 84px;
+  height: 83px;
   position: absolute;
   left: 0px;
   top: -8px;
@@ -247,6 +262,7 @@ const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, seco
     <TotemBattleAreaWrapper fullWidth={fullWidth} secondRow={secondRow} className='totem-arena'>
       { !multiElev && <ExpectedMultText invis={secondRow} bold monospace>{expectedMultiplier}x</ExpectedMultText> }
       <TotemResultsWrapper elevation={elevation} multiElev={multiElev}>
+        { !secondRow && <ElevationIndicator bold monospace elevation={elevation}>THE {elevation} BATTLE ARENA</ElevationIndicator> }
         <RulerLine i={0}/>
         <RulerLine i={1}/>
         <RulerLine i={2}/>
@@ -255,15 +271,10 @@ const TotemBattleArea: React.FC<{ elevation: Elevation, fullWidth: boolean, seco
         <RulerLine i={5}/>
         <RulerLine i={6}/>
         <ArenaPulse elevation={elevation}/>
-        { !multiElev && <BattleText viewBox="0 0 250 50" elevation={elevation}>
+        {/* { !multiElev && !isMobile && <BattleText viewBox="0 0 250 50" elevation={elevation}>
           <text x='50%' y='50%' className='battle-svg-text' textAnchor='middle' dominantBaseline='middle'>{elevation} BATTLE ARENA</text>
-        </BattleText> }
-        {/* <svg >
-          <text x="0" y="15">Fit Me</text>
-        </svg> */}
-        {/* <LeftFade/>
-        <RightFade/> */}
-        <DashedLine leftClipped={secondRow} rightClipped={elevation === Elevation.SUMMIT && !secondRow && isMobile && !multiElev}/>
+        </BattleText> } */}
+        <DashedLine rightClipped={elevation === Elevation.SUMMIT && !secondRow && isMobile && !multiElev}/>
         {children}
       </TotemResultsWrapper>
       { secondRow && <RowCombinerLeft/>}
@@ -407,20 +418,22 @@ const TotemBattleBreakdown: React.FC<Props> = ({ title, elevation, totemInfos, u
     <>
     { chunkedTotems.map((totems, chunkIndex) =>
       <TotemBreakdownWrapper fullWidth={fullWidth} key={totems[0].totem} multiElev={multiElev} selectable={selectable} {...clickable}>
-        <HeaderTotemWrapper isLoading={totemSelectionPending} onClick={() => onPresentTotemWinnersModal({elevation})}>
-            <ArtworkTotem
-              elevation={elevation}
-              totem={userTotem}
-              desktopSize="140"
-              mobileSize="140"
-              crowned={userTotemCrowned}
-            />
-            {totemSelectionPending && <StyledSpinner className="spinner" />}
-            <ElevationName className='elevation-name'>
-              <HighlightedText bold color='white' italic fontSize='14px' lineHeight='14px'>THE</HighlightedText>
-              <HighlightedText bold color='white' italic fontSize='20px' lineHeight='20px'>{elevation}</HighlightedText>
-            </ElevationName>
-        </HeaderTotemWrapper>
+        { !isMobile &&
+          <HeaderTotemWrapper isLoading={totemSelectionPending} onClick={() => onPresentTotemWinnersModal({elevation})}>
+              <ArtworkTotem
+                elevation={elevation}
+                totem={userTotem}
+                desktopSize="140"
+                mobileSize="140"
+                crowned={userTotemCrowned}
+              />
+              {totemSelectionPending && <StyledSpinner className="spinner" />}
+              <ElevationName className='elevation-name'>
+                <HighlightedText bold color='white' italic fontSize='14px' lineHeight='14px'>THE</HighlightedText>
+                <HighlightedText bold color='white' italic fontSize='20px' lineHeight='20px'>{elevation}</HighlightedText>
+              </ElevationName>
+          </HeaderTotemWrapper>
+        }
         {/* { title != null && chunkIndex === 0 && <Text bold monospace>{title}</Text> } */}
         <TotemBattleArea
           fullWidth={fullWidth}
