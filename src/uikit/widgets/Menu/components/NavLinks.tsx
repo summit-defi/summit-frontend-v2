@@ -35,6 +35,7 @@ const ItemFlex = styled.div<{ selected: boolean, index: number }>`
     height: 100%;
     ${({ theme, index }) => pressableMixin({
         theme,
+        $translate: false,
         hoverStyles: css`
             color: white;
             &::before {
@@ -86,6 +87,11 @@ const NavLinks: React.FC<Props> = ({ links, mobileNav }) => {
         <Container mobileNav={mobileNav}>
             {links.map((entry, index) => {
                 const selected = entry.keyPaths.includes(keyPath)
+                if (entry.external) return (
+                    <ItemFlex key={entry.href} rel="noreferrer noopener" target="_blank" selected={false} index={index} as='a' href={entry.href}>
+                        <Text className='item-label' monospace bold={selected}>{entry.label}</Text>
+                    </ItemFlex>
+                )
                 return (
                     <ItemFlex key={entry.href} selected={selected} index={index} as={Link} to={entry.href} replace>
                         <Text className='item-label' monospace bold={selected}>{entry.label}</Text>

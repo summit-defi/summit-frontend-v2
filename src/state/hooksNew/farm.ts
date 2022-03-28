@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { stateToFarms, stateToFarmTypeFilter, stateToFarmLiveFilter, stateToGlacierTotalFrozenSummit, stateToTokenInfos, stateToFarmsElevationData, stateToLifetimeSummitBonuses, stateToLifetimeSummitWinnings, stateToFarmsUserDataLoaded, stateToExpeditionSummitWinnings, stateToExpeditionUsdcWinnings, stateToFarmsElevationsData, stateToSummitPrice, stateToPricesPerToken } from "./base";
-import { getFarmInteracting, getFormattedBigNumber } from "utils"
+import { getFarmInteracting, getFormattedBigNumber, sumBigNumbersByKey } from "utils"
 import { BN_ZERO, Elevation, elevationUtils } from "config/constants";
 import { useSelector } from "./utils";
 import BigNumber from "bignumber.js";
@@ -409,11 +409,13 @@ export const useElevationsRolledOverInfo = () => useSelector(selectElevationsRol
 const selectFarmsWithStaked = createSelector(
     stateToFarms,
     stateToPricesPerToken,
-    (_, elevation: Elevation) => elevation,
+    (_, elevation: Elevation | null) => elevation,
     (farms, pricesPerToken, elevation) => farms
         .map((farm) => {
             const tokenPrice = pricesPerToken != null && pricesPerToken[farm.symbol] ? pricesPerToken[farm.symbol] : new BigNumber(1)
-            const stakedBalance = farm.elevations[elevation]?.stakedBalance
+            const stakedBalance = elevation == null ?
+                sumBigNumbersByKey(Object.values(farm.elevations), 'stakedBalance') :
+                farm.elevations[elevation]?.stakedBalance
             if (stakedBalance == null || stakedBalance.isEqualTo(0)) return null
             return {
                 symbol: farm.symbol,
@@ -444,5 +446,5 @@ const selectElevationStakedContributions = createSelector(
         })
     }
 )
-export const useElevationStakedContributions = (elevation: Elevation) => useSelector((state) => selectElevationStakedContributions(state, elevation))
+export const useElevationStakedContributions = (elevation?: Elevation) => useSelector((state) => selectElevationStakedContributions(state, elevation))
 

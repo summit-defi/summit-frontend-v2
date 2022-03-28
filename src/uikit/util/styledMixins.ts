@@ -6,7 +6,7 @@ import { getPaletteGradientStops } from 'utils'
 export const pressableMixin = ({
   theme,
   disabled = false,
-  $translate,
+  $translate = true,
   hoverStyles,
   disabledStyles,
   enabledStyles,

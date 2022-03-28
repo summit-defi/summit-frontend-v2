@@ -180,7 +180,10 @@ export const useElevationsInteractionsLocked = () => {
     const roundStatuses = useElevationsRoundStatuses()
 
     return useMemo(
-        () => elevationUtils.all.map((elev) => !roundStatusFarmAllowsInteraction(roundStatuses[elevationUtils.toInt(elev)])),
+        () => elevationUtils.allWithExpedition.map((elev) => {
+            if (elev === Elevation.OASIS) return false
+            return !roundStatusFarmAllowsInteraction(roundStatuses[elevationUtils.elevationToElevationDataIndex(elev)])
+        }),
         [roundStatuses]
     )
 }

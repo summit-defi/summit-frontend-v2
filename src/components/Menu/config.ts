@@ -31,9 +31,9 @@ export const getMenuItems = (): MenuEntry[] => [
     keyPaths: ['expedition'],
   },
   {
-    label: 'HELP',
-    href: '/help',
-    external: false,
+    label: 'DOCS',
+    href: 'https://docs.summitdefi.com',
+    external: true,
     keyPaths: ['help'],
   }
 ].filter((entry) => entry != null)

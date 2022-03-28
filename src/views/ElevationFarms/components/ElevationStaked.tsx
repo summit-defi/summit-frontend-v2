@@ -27,14 +27,16 @@ const BackgroundColor = styled.div<{ elevation: Elevation }>`
   border-radius: 20px 20px 0 0;
 `
 
-const ElevationStaked: React.FC<{ elevation: string }> = ({ elevation: elevString }) => {
-  const elevation = elevString as Elevation
+const ElevationStaked: React.FC<{ elevation?: string }> = ({ elevation: elevString }) => {
+  const elevation = elevString == null ? null : elevString as Elevation
   const userDataLoaded = useFarmsUserDataLoaded()
   const stakedContributions = useElevationStakedContributions(elevation)
 
   return (
     <ElevBreakdownWrapper>
-      <BackgroundColor elevation={elevation}/>
+      { elevation != null &&
+        <BackgroundColor elevation={elevation}/>
+      }
       <ContributionBreakdown
         loaded={userDataLoaded}
         contributions={stakedContributions}

@@ -1,13 +1,17 @@
 import { Elevation, elevationUtils, SummitPalette } from "config/constants"
 import React, { useCallback } from "react"
+import { Link } from "react-router-dom"
 import { useMediaQuery } from "state/hooks"
-import { useExpeditionRoadmapInfoWithPreset, useUserTotemCrownsLoyaltiesWithPreset } from "state/hooksNew"
+import { useExpeditionRoadmapInfoWithPreset, useExpeditionUserData, useUserTotemCrownsLoyaltiesWithPreset } from "state/hooksNew"
 import styled, { css } from "styled-components"
 import { textGold } from "theme/colors"
-import { ArtworkTotem, BadgeRibbonIcon, ElevationImage, Flex, HighlightedText, Text } from "uikit"
+import { ArtworkTotem, BadgeRibbonIcon, ElevationImage, Flex, HighlightedText, SummitButton, Text } from "uikit"
 import { paletteLinearGradientBackground, pressableMixin } from "uikit/util/styledMixins"
 import useTotemWinnersModal from "uikit/widgets/TotemWinnersModal/useTotemWinnersModal"
+import { getBalanceNumber, getFormattedBigNumber } from "utils"
 import { InverseDeity } from "views/ElevationFarms/components/InverseDeity"
+import { ExpeditionWinnings } from "views/Expeditions/components/ExpeditionWinnings"
+import CardValue from "views/Home/components/CardValue"
 
 const RoadmapTotemRowWrapper = styled.div`
     display: flex;
@@ -268,6 +272,38 @@ export const RoadmapTotemRow: React.FC = React.memo(() => {
 
 
 
+
+
+export const ExpeditionLifetimeWinnings: React.FC = React.memo(() => {
+    const {
+        entered,
+        summitLifetimeWinnings,
+        usdcLifetimeWinnings,
+    } = useExpeditionUserData()
+
+    const rawSummitLifetimeWinnings = getFormattedBigNumber(summitLifetimeWinnings, 3)
+    const rawUsdcLifetimeWinnings = getFormattedBigNumber(usdcLifetimeWinnings, 3, 6)
+
+    if (!entered) return null
+
+    return (
+        <Flex width='100%' gap='6px' flexDirection='column' alignItems='center' justifyContent='center'>
+            <Text mt='12px' style={{ width: '100%' }} textAlign='left' color='white' bold monospace small>LIFETIME WINNINGS:</Text>
+            <Flex width='100%' flexDirection='row' alignItems='center' justifyContent='space-around'>
+                <Flex flexDirection='column' alignItems='center' justifyContent='center'>
+                    <DeityText bold italic monospace fontSize='22px'>{rawSummitLifetimeWinnings}</DeityText>
+                    <Text color='white' bold italic monospace small>SUMMIT</Text>
+                </Flex>
+                <Flex flexDirection='column' alignItems='center' justifyContent='center'>
+                    <DeityText bold italic monospace fontSize='22px'>{rawUsdcLifetimeWinnings}</DeityText>
+                    <Text color='white' bold italic monospace small>USDC</Text>
+                </Flex>
+            </Flex>
+        </Flex>
+    )
+})
+
+
 const DeityWrapper = styled.div`
     position: relative;
     margin-top: -12px;
@@ -333,8 +369,7 @@ export const RoadmapExpedition: React.FC = React.memo(() => {
     const isLetThereBeLight = loyalty === -2
     const badge = getBadge(4, loyalty, totemName)
     return (
-        <Flex flex='2' flexDirection='column' alignItems='center' justifyContent='flex-start' height='100%'>
-            <DeityText italic textAlign='left' style={{ width: '100%', zIndex: 3 }} bold monospace>THE EXPEDITION:</DeityText>
+        <Flex width='100%' gap='24px' flexDirection='column' alignItems='center' justifyContent='flex-start' height='100%'>
             <DeityWrapper>
                 <InverseDeity deity={deity} selected inverted width={192} />
                 {crowned || true && <BearCrown />}
@@ -350,7 +385,7 @@ export const RoadmapExpedition: React.FC = React.memo(() => {
                     {loyaltyText}
                 </DeityText>
                 <DeityText italic bold monospace small textAlign='center'>
-                    FAITH: {faith}
+                    FAITH: {faith}%
                 </DeityText>
                 {badge != null &&
                     <BadgeWrapper>
@@ -363,6 +398,20 @@ export const RoadmapExpedition: React.FC = React.memo(() => {
                     </BadgeWrapper>
                 }
             </TextBackground>
+
+            <ExpeditionWinnings/>
+            <ExpeditionLifetimeWinnings/>
+
+
+            <SummitButton
+                summitPalette={SummitPalette.EXPEDITION}
+                as={Link}
+                to='/expedition'
+                replace
+                marginTop='18px'
+            >
+                OPEN EXPEDITION PAGE
+            </SummitButton>
         </Flex>
     )
 })

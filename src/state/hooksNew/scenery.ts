@@ -42,17 +42,10 @@ const selectUserElevationTVLs = createSelector(
 export const useAvgStakingLoyaltyDuration = () => useSelector(stateToAvgStakingLoyaltyDuration)
 
 const selectRoadmapEverestInfoWithPreset = createSelector(
-    stateToSelectedPresetStrategy,
     stateToEverestUserData,
     stateToGlacierTotalFrozenSummit,
     (state) => selectFarmBySymbol(state, TokenSymbol.SUMMIT),
-    (presetStrategy, everestUserData, totalFrozenSummit, summitFarmInfo) => {
-
-        if (presetStrategy != null) return {
-            isPreset: true,
-            ...getPresetStrategy(presetStrategy).everest
-        }
-
+    (everestUserData, totalFrozenSummit, summitFarmInfo) => {
         const totalSummitOwned = (everestUserData?.summitLocked || BN_ZERO)
             .plus(totalFrozenSummit || BN_ZERO)
             .plus(summitFarmInfo?.elevations?.OASIS?.stakedBalance || BN_ZERO)
@@ -66,7 +59,11 @@ const selectRoadmapEverestInfoWithPreset = createSelector(
 
         return {
             isPreset: false,
+            
+            everestOwned: everestUserData?.everestOwned,
+            summitLocked: everestUserData?.summitLocked,
             lockDuration: everestUserData?.lockDuration,
+            everestLockMult: everestUserData?.everestLockMult,
             lockPerc
         }
     }
