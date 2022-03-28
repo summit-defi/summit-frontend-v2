@@ -49,9 +49,9 @@ const MultiElevWinningsAndClaim: React.FC = () => {
 
   return (
     <Flex width='100%' alignItems='center' justifyContent='center' flexDirection='column' mb='18px'>
-      <StyledMobileColumnFlex alignItems='flex-start' mb='18px' justifyContent='flex-start' width='100%'>
+      <StyledMobileColumnFlex alignItems='center' mb='18px' justifyContent='center' width='100%'>
 
-        <Flex flexDirection='column' alignItems='flex-start' justifyContent='flex-start'>
+        <Flex flexDirection='column' alignItems='center' justifyContent='center'>
           <Flex justifyContent='center' alignItems='center' height='20px' gap='4px'>
             <Text bold monospace>WINNINGS:</Text>
             { userDataLoaded ?

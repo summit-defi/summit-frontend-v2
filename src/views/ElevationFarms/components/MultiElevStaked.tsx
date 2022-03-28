@@ -12,7 +12,7 @@ const MultiElevStaked: React.FC = () => {
 
   return (
     <Flex width='100%' alignItems='center' justifyContent='center' flexDirection='column'>
-      <Flex flexDirection='column' alignItems='flex-start' mb='18px' justifyContent='flex-start' width='100%'>
+      <Flex flexDirection='column' alignItems='center' mb='18px' justifyContent='flex-start' width='100%'>
         <Flex justifyContent='center' alignItems='center' height='20px' gap='4px'>
           <Text bold monospace>STAKED:</Text>
           { userDataLoaded ?

@@ -68,11 +68,13 @@ const TotemHeader: React.FC = () => {
           <RoadmapTotemRow />
         </HeaderButtonsRow>
         
-        <FarmHeaderTabSelector
-          selected={selectedTab}
-          onSelect={selectTab}
-        />
         <ElevationRoundProgress/>
+        <Flex width='100%' mt='12px' justifyContent='center' alignItems='center'>
+          <FarmHeaderTabSelector
+            selected={selectedTab}
+            onSelect={selectTab}
+          />
+        </Flex>
         { account == null ?
           <StyledUnlockButton /> :
           <>

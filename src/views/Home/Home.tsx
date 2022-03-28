@@ -25,28 +25,6 @@ const Hero = styled.div`
   text-align: center;
 `
 
-const SwapMinGrid = styled(BaseLayout)`
-  align-items: stretch;
-  justify-content: stretch;
-
-  & > div {
-    grid-column: span 12;
-    width: 100%;
-  }
-
-  ${({ theme }) => theme.mediaQueries.sm} {
-    & > div {
-      grid-column: span 12;
-    }
-  }
-
-  ${({ theme }) => theme.mediaQueries.lg} {
-    & > div {
-      grid-column: span 12;
-    }
-  }
-`
-
 const StyledHighlightedText = styled(HighlightedText)<{ fontSize: string; letterSpacing: string }>`
   letter-spacing: ${({ letterSpacing }) => letterSpacing};
   font-weight: 900;
@@ -110,15 +88,13 @@ const Home: React.FC = () => {
       </Flex>
 
       <Cards>
-        { summitSwapMinimized ?
-          <SwapMinGrid>
-            <SummitSwapMinimizedCard/>
-            <SummitStats/>
-          </SwapMinGrid> :
-          <SummitTokenSwapCard />
-        }
+        <SummitStats />
         <ExpeditionTreasuryCard />
-        { !summitSwapMinimized && <SummitStats /> }
+        {/* <SummitStats /> */}
+        { summitSwapMinimized ?
+            <SummitSwapMinimizedCard/> :
+            <SummitTokenSwapCard />
+        }
       </Cards>
     </StyledPage>
   )

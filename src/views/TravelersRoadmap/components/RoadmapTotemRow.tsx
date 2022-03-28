@@ -8,10 +8,9 @@ import { textGold } from "theme/colors"
 import { ArtworkTotem, BadgeRibbonIcon, ElevationImage, Flex, HighlightedText, SummitButton, Text } from "uikit"
 import { paletteLinearGradientBackground, pressableMixin } from "uikit/util/styledMixins"
 import useTotemWinnersModal from "uikit/widgets/TotemWinnersModal/useTotemWinnersModal"
-import { getBalanceNumber, getFormattedBigNumber } from "utils"
+import { getFormattedBigNumber } from "utils"
 import { InverseDeity } from "views/ElevationFarms/components/InverseDeity"
 import { ExpeditionWinnings } from "views/Expeditions/components/ExpeditionWinnings"
-import CardValue from "views/Home/components/CardValue"
 
 const RoadmapTotemRowWrapper = styled.div`
     display: flex;

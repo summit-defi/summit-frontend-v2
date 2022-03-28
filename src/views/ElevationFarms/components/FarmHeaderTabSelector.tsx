@@ -8,7 +8,6 @@ const buttonWidth = 180
 
 const SelectorFlex = styled(Flex)`
   display: flex;
-  margin: 0px auto 0px auto;
   flex-direction: row;
   align-items: center;
   height: 32px;
