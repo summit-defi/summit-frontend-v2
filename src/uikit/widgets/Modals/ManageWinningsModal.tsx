@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import BigNumber from 'bignumber.js'
 import { Elevation, SummitPalette } from 'config/constants/types'
-import { useAllElevationsClaimable, useAnyElevationInteractionsLocked, useCurrentEpoch, useElevationInteractionsLocked, useElevationUserTotem, useUserElevationClaimable } from 'state/hooksNew'
+import { useAllElevationsClaimable, useAnyElevationInteractionsLocked, useCurrentEpoch, useElevationInteractionsLocked } from 'state/hooksNew'
 import { useClaimElevation } from 'hooks/useClaim'
 import DesktopVerticalDivider from 'uikit/components/DesktopVerticalDivider'
 import SummitButton from 'uikit/components/Button/SummitButton'

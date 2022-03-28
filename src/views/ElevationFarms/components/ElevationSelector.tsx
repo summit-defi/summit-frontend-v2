@@ -3,7 +3,7 @@ import styled, { css } from 'styled-components'
 import { Flex, Lock } from 'uikit'
 import SummitButton from 'uikit/components/Button/SummitButton'
 import { darken } from 'polished'
-import { Elevation } from 'config/constants/types'
+import { Elevation, elevationUtils } from 'config/constants/types'
 import { pressableMixin } from 'uikit/util/styledMixins'
 import { SelectorWrapperBase } from 'uikit/widgets/Selector/styles'
 
@@ -15,15 +15,6 @@ const SelectorFlex = styled(Flex)`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-`
-
-const StyledLock = styled(Lock)`
-  position: absolute;
-  align-self: center;
-  transform: rotate(20deg);
-  fill: white;
-  filter: drop-shadow(0px 0px 4px black);
-  z-index: 4;
 `
 
 const SelectorWrapper = styled(SelectorWrapperBase)<{
@@ -56,13 +47,6 @@ const SelectorWrapper = styled(SelectorWrapperBase)<{
         width: ${buttonWidthVertical}px;
       }
     `}
-
-  ${({ isLocked }) =>
-    isLocked &&
-    css`
-      filter: grayscale(1);
-      opacity: 0.5;
-    `}
 `
 
 const SelectedSummitButton = styled(SummitButton)<{
@@ -78,6 +62,11 @@ const SelectedSummitButton = styled(SummitButton)<{
   left: ${({ selectedIndex }) => selectedIndex * buttonWidth + 2}px;
   top: 2px;
   z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: 4px;
 
   ${({ vertical, selectedIndex }) =>
     vertical &&
@@ -98,27 +87,33 @@ const SelectedSummitButton = styled(SummitButton)<{
     `}
 `
 
+
+
+const StyledLock = styled(Lock)<{ elevation?: Elevation }>`
+  transform: rotate(20deg);
+  fill: ${({ theme, elevation }) => elevation == null ? 'white' : darken(0.2, theme.colors[elevation])};
+  width: 16px;
+  height: 16px;
+  margin-left: 4px;
+`
+
 const TextButton = styled.div<{
   elevation: Elevation
   disabled: boolean
-  strikethrough: boolean
   vertical: boolean
   desktopOnlyVertical: boolean
 }>`
   width: ${buttonWidth}px;
   color: ${({ theme, elevation }) => darken(0.2, theme.colors[elevation])};
-  text-shadow: 1px 1px 2px ${({ theme, elevation }) => darken(0.2, theme.colors[elevation])};
   font-family: Courier Prime, monospace;
   font-size: 14px;
   height: ${buttonHeight}px;
   line-height: 32px;
   text-align: center;
-
-  ${({ strikethrough }) =>
-    strikethrough &&
-    css`
-      text-decoration: line-through;
-    `}
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
 
   ${({ theme, disabled }) =>
     pressableMixin({
@@ -126,6 +121,7 @@ const TextButton = styled.div<{
       disabled,
       disabledStyles: css`
         text-shadow: none;
+        text-decoration: line-through;
       `,
     })}
 
@@ -150,8 +146,7 @@ interface Props {
   desktopOnlyVertical?: boolean
   disabled?: boolean
   elevations: Elevation[]
-  isLocked?: boolean
-  disabledElevations?: Elevation[]
+  lockedElevations: boolean[]
   selectElevation: (elevation: Elevation) => void
 }
 
@@ -159,23 +154,21 @@ const FarmTypeSelector: React.FC<Props> = ({
   selected,
   vertical = false,
   desktopOnlyVertical = false,
-  isLocked = false,
   disabled = false,
   elevations,
-  disabledElevations = [],
+  lockedElevations = [],
   selectElevation,
 }) => {
   const selectedIndex = elevations.findIndex((elevation) => elevation === selected)
   const handleSelectElevation = useCallback((elevation) => {
-    if (isLocked || disabled || disabledElevations.includes(elevation)) return
+    if (disabled) return
     selectElevation(elevation)
-  }, [isLocked, disabled, disabledElevations, selectElevation])
+  }, [disabled, selectElevation])
 
   return (
     <SelectorFlex>
       <SelectorWrapper
         elevationsCount={elevations.length}
-        isLocked={isLocked}
         disabled={disabled}
         vertical={vertical}
         desktopOnlyVertical={desktopOnlyVertical}
@@ -185,30 +178,29 @@ const FarmTypeSelector: React.FC<Props> = ({
             summitPalette={selected}
             selectedIndex={selectedIndex}
             vertical={vertical}
-            disabled={disabled || isLocked}
+            disabled={disabled}
             desktopOnlyVertical={desktopOnlyVertical}
             padding="0px"
           >
             {selected}
+            { lockedElevations[elevationUtils.toInt(selected)] && <StyledLock/> }
           </SelectedSummitButton>
         )}
         {elevations.map((elevation) => {
-          const strikethrough = disabledElevations.includes(elevation)
           return (
             <TextButton
               key={elevation}
               elevation={elevation}
-              disabled={disabled || isLocked || strikethrough}
-              strikethrough={strikethrough}
+              disabled={disabled}
               vertical={vertical}
               desktopOnlyVertical={desktopOnlyVertical}
               onClick={() => handleSelectElevation(elevation)}
             >
               {elevation}
+              { lockedElevations[elevationUtils.toInt(elevation)] && <StyledLock elevation={elevation}/> }
             </TextButton>
           )
         })}
-        {isLocked && <StyledLock width="28px" />}
       </SelectorWrapper>
     </SelectorFlex>
   )

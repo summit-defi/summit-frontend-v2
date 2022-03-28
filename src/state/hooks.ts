@@ -9,7 +9,7 @@ import {
   fetchExpeditionPublicDataAsync,
 } from './actions'
 import { State, Farm, ElevationInfo } from './types'
-import { BN_ZERO, Elevation, ElevationFarmTab, elevationUtils, SummitPalette } from '../config/constants/types'
+import { BN_ZERO, Elevation, elevationUtils, SummitPalette } from '../config/constants/types'
 import { fetchPricesAsync } from './prices'
 import {
   fetchElevationHelperInfoAsync,
@@ -322,28 +322,6 @@ export const useSingleFarmSelected = (): string | null => {
 
     return singleFarm != null ? singleFarm.symbol : null
   }, [location, farmConfigs])
-}
-
-export const useElevationFarmsTab = (): ElevationFarmTab | null => {
-  const location = useLocation()
-
-  return useMemo(() => {
-    const keyPath = location.pathname.split('/')[1]
-    switch (keyPath) {
-      case 'elevations': 
-        return ElevationFarmTab.DASH
-      case 'oasis':
-        return ElevationFarmTab.OASIS
-      case 'plains':
-        return ElevationFarmTab.PLAINS
-      case 'mesa':
-        return ElevationFarmTab.MESA
-      case 'summit':
-        return ElevationFarmTab.SUMMIT
-      default:
-        return null
-    }
-  }, [location])
 }
 
 export const useSelectedElevation = (): Elevation | null => {

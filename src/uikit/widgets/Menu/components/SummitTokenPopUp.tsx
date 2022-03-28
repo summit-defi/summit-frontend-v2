@@ -3,11 +3,9 @@ import { Text } from 'uikit/components/Text/Text'
 import Flex, { MobileColumnFlex } from 'uikit/components/Box/Flex'
 import ExternalLinkButton from 'uikit/components/Link/ExternalLinkButton'
 import { BN_ZERO, getLinks } from 'config/constants'
-import { linearGradient } from 'polished'
 import styled from 'styled-components'
 import { getFormattedBigNumber, getSummitTokenAddress } from 'utils'
 import { useTotalSummitSupply, useBurnedSummitBalance } from 'hooks/useTokenBalance'
-import { useEverestSummitLocked } from 'state/hooksNew'
 import BigNumber from 'bignumber.js'
 
 const InnerCard = styled.div`

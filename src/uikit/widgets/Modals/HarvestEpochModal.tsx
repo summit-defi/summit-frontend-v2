@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Flex, Text, Modal, ModalActions, Lock } from 'uikit'
+import { Flex, Text, Modal, ModalActions } from 'uikit'
 import TokenInput from '../../../components/TokenInput'
 import { getFormattedBigNumber, getFullDisplayBalance } from '../../../utils/formatBalance'
 import SummitButton from 'uikit/components/Button/SummitButton'
@@ -21,11 +21,6 @@ const InfoText = styled(Text)`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-`
-
-const StyledLock = styled(Lock)`
-  transform: rotate(20deg);
-  fill: red;
 `
 
 const LockForEverestInfoSection: React.FC<{ val: string }> = React.memo(({ val }) => {
@@ -200,7 +195,7 @@ export const HarvestEpochModalContent: React.FC<HarvestEpochModalProps> = ({
   const { summitAllowance, everestOwned } = useEverestUserInfo()
   const summitApproved = summitAllowance.isGreaterThan(0)
 
-  const anyEverestOwned = everestOwned.isGreaterThan(0)
+  const anyEverestOwned = false && everestOwned.isGreaterThan(0)
 
   const fullHarvestableBalance = getFullDisplayBalance(frozenSummit, 18)
 

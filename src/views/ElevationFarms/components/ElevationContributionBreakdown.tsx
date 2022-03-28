@@ -101,11 +101,8 @@ interface Contribution {
     key: number
     perc: number
 }
-interface ContProps {
-    symbol: string
-}
 
-const ContributionComponent: React.FC<Contribution & ContProps> = ({symbol, elevation, val, perc}) => {
+const ContributionComponent: React.FC<Contribution> = ({elevation, val, perc}) => {
     return <ElevationBar perc={perc} elevation={elevation}>
         <ElevationText monospace small>{elevation}</ElevationText>
         <ValueText monospace bold>{val != null ? val : `${perc.toFixed(1)}%`}</ValueText>
@@ -113,14 +110,13 @@ const ContributionComponent: React.FC<Contribution & ContProps> = ({symbol, elev
 }
 
 interface Props {
-    symbol: string
     loaded: boolean
     title?: string
     contributions: Contribution[]
     center?: boolean
 }
 
-const ElevationContributionBreakdown: React.FC<Props> = ({ symbol, loaded, title, contributions, center = false}) => {
+const ElevationContributionBreakdown: React.FC<Props> = ({ loaded, title, contributions, center = false}) => {
     return (
         <Wrapper>
             { title != null && <Text bold monospace>{title}</Text> }
@@ -130,7 +126,7 @@ const ElevationContributionBreakdown: React.FC<Props> = ({ symbol, loaded, title
                     contributions.length === 0 ?
                         <EmptyElevationBar/> :
                         contributions.map((contribution) => 
-                            <ContributionComponent key={contribution.key} {...contribution} symbol={symbol} />
+                            <ContributionComponent key={contribution.key} {...contribution} />
                         )
                 }
             </BarWrapper>

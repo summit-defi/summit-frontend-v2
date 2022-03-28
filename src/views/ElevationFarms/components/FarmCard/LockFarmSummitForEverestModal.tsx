@@ -148,7 +148,8 @@ const LockFarmSummitForEverestModal: React.FC<LockFarmSummitForEverestProps> = (
             <ElevationSelector
               selected={selectedSourceElevation}
               elevations={sourceElevations}
-              disabledElevations={disabledElevations}
+              // disabledElevations={disabledElevations}
+              lockedElevations={[]}
               disabled={!anyEverestOwned}
               selectElevation={handleSelectSourceElevation}
               vertical

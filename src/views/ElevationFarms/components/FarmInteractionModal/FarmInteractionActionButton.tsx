@@ -63,10 +63,17 @@ const FarmInteractionActionButton: React.FC<FarmInteractionActionButtonProps> = 
     () => {
       switch (farmInteractionType) {
         case FarmInteractionType.Deposit:
-          if (isApproved) return totem == null || invalidVal || targetElevation == null
+          console.log({
+            isApproved,
+            totem,
+            invalidElevationErr,
+            invalidVal,
+            targetElevation
+          })
+          if (isApproved) return totem == null || invalidElevationErr || invalidVal || targetElevation == null
           return false
-        case FarmInteractionType.Elevate: return invalidElevationErr != null || totem == null || invalidVal || sourceElevation == null || targetElevation == null
-        case FarmInteractionType.Withdraw: return invalidVal || sourceElevation == null
+        case FarmInteractionType.Elevate: return invalidElevationErr || totem == null || invalidVal || sourceElevation == null || targetElevation == null
+        case FarmInteractionType.Withdraw: return invalidVal || invalidElevationErr || sourceElevation == null
         default: return false
       }
     },

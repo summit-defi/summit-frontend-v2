@@ -1,21 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import Flex from "../../components/Box/Flex";
-import { useMatchBreakpoints } from "../../hooks";
 import UserBlock from "./components/UserBlock";
 import { NavProps } from "./types";
-import { MENU_HEIGHT, SUB_MENU_HEIGHT } from "./config";
+import { MENU_HEIGHT } from "./config";
 import SummitPrice from "./components/SummitPrice";
 import { useCurrentSummitPalette } from "state/hooks";
 import { useRoadmapScreenshot } from "state/hooksNew";
 import Logo from "./components/Logo";
 import NavLinks from "./components/NavLinks";
-import { Text } from "uikit/components/Text";
-import { darken } from "polished";
-import { SummitPalette } from "config/constants/types";
-import SummitButton from "uikit/components/Button/SummitButton";
 import SummitWinnings from "./components/SummitWinnings";
-import { Link } from "react-router-dom";
 import { NavSecondRow } from "./components/NavSecondRow";
 
 const Wrapper = styled.div`
@@ -42,20 +36,6 @@ const StyledNav = styled.nav<{ showMenu: boolean }>`
   flex-direction: row;
 `;
 
-// const UpperNav = styled.div`
-//   display: flex;
-//   justify-content: space-between;
-//   align-items: center;
-//   padding-left: 16px;
-//   padding-right: 16px;
-//   width: 100vw;
-//   max-width: 100vw;
-//   height: ${MENU_HEIGHT}px;
-//   background-color: ${({ theme }) => theme.colors.background};
-//   flex-direction: row;
-//   gap: 14px;
-// `
-
 
 
 const BodyWrapper = styled.div`
@@ -63,7 +43,7 @@ const BodyWrapper = styled.div`
   display: flex;
 `;
 
-const Inner = styled.div<{ isPushed: boolean; showMenu: boolean, screenshot: boolean }>`
+const Inner = styled.div<{ showMenu: boolean, screenshot: boolean }>`
   flex-grow: 1;
   margin-top: ${MENU_HEIGHT}px;
   transform: translate3d(0, 0, 0);
@@ -80,7 +60,7 @@ const MobileOnlyFooter = styled.div`
   align-items: center;
   flex-direction: row;
   justify-content: center;
-  height: 65px;
+  height: 56px;
   background-color: ${({ theme }) => theme.colors.background};
   box-shadow: 0px 0px 4px ${({ theme }) => theme.colors.textShadow};
 
@@ -96,15 +76,10 @@ const Menu: React.FC<NavProps> = ({
   logout,
   isDark,
   toggleTheme,
-  currentLang,
   summitPriceUsd,
   links,
   children,
-  additionals,
 }) => {
-  const { isXl } = useMatchBreakpoints();
-  const isMobile = isXl === false;
-  const [isPushed, setIsPushed] = useState(!isMobile);
   const summitPalette = useCurrentSummitPalette()
   const roadmapScreenshot = useRoadmapScreenshot()
 
@@ -112,17 +87,7 @@ const Menu: React.FC<NavProps> = ({
     <Wrapper>
       { !roadmapScreenshot &&
         <StyledNav showMenu id='popup-root'>
-          {/* <UpperNav> */}
-          {/* <MobileHamburgerWrapper>
-            <MenuButton aria-label="Toggle menu" onClick={() => setIsPushed((prevState: boolean) => !prevState)} mr="6px">
-              {isPushed ? (
-                <HamburgerCloseIcon width="24px" color="textSubtle"/>
-              ) : (
-                <HamburgerIcon width="24px" color="textSubtle"/>
-              )}
-            </MenuButton>
-          </MobileHamburgerWrapper> */}
-            <Flex alignItems='center' justifyContent='center' gap='10px'>
+            <Flex height='100%' alignItems='center' justifyContent='center' gap='10px'>
               <Logo isDark={isDark} href="/" summitPalette={summitPalette}/>
               <NavLinks links={links} mobileNav={false}/>
             </Flex>
@@ -131,39 +96,16 @@ const Menu: React.FC<NavProps> = ({
               <SummitPrice summitPriceUsd={summitPriceUsd} />
               <UserBlock account={account} login={login} logout={logout} isDark={isDark} toggleTheme={toggleTheme} />
             </Flex>
-          {/* </UpperNav> */}
-
-          {/* <MenuPageSpecificHeader isDark={isDark} isPushed={isPushed}/> */}
-
-          {/* <MobileExcludedHeaderElements>
-            <Flex justifyContent='flex-end' flex='1'>
-                <DarkModeToggle summitPalette={summitPalette} isDark={isDark} toggleTheme={toggleTheme}/>
-            </Flex>
-          </MobileExcludedHeaderElements> */}
         </StyledNav>
       }
       <BodyWrapper>
-        {/* {!roadmapScreenshot &&
-          <Panel
-            isPushed={isPushed}
-            isMobile={isMobile}
-            currentLang={currentLang}
-            pushNav={setIsPushed}
-            links={links}
-            additionals={additionals}
-            summitPriceUsd={summitPriceUsd}
-          />
-        } */}
-        <Inner isPushed={isPushed} screenshot={roadmapScreenshot} showMenu>
+        <Inner screenshot={roadmapScreenshot} showMenu>
           <NavSecondRow/>
           {children}
         </Inner>
-        {/* <MobileOnlyOverlay show={isPushed} onClick={() => setIsPushed(false)} role="presentation" /> */}
         <MobileOnlyFooter>
-          <Flex>
+          <Flex height='100%'>
             <NavLinks links={links} mobileNav/>
-            {/* <DarkModeToggle summitPalette={summitPalette} isDark={isDark} toggleTheme={toggleTheme}/> */}
-            {/* <UserBlock account={account} login={login} logout={logout} isDark={isDark} /> */}
           </Flex>
         </MobileOnlyFooter>
       </BodyWrapper>

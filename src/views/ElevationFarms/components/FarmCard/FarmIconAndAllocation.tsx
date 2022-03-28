@@ -1,36 +1,21 @@
 import React, { memo } from "react";
-import { ElevationFarmTab, TokenLpSource } from "config/constants";
-import { useElevationFarmsTab } from "state/hooks";
+import { TokenLpSource } from "config/constants";
 import styled from "styled-components";
 import { Flex, Tag, Text, TokenSymbolImage } from "uikit";
-import memoize from "fast-memoize";
 
-const MultiplierTagItem = styled(Tag)<{ elevationTab: ElevationFarmTab }>`
+const MultiplierTagItem = styled(Tag)`
     font-family: Courier Prime, monospace;
     font-size: 11px;
     min-width: 42px;
     justify-content: center;
-    background-color: ${({ theme, elevationTab }) => theme.colors[elevationTab]};
-    border-color: ${({ theme, elevationTab }) => theme.colors[elevationTab]};
+    background-color: ${({ theme }) => theme.colors.OASIS};
+    border-color: ${({ theme }) => theme.colors.OASIS};
 `
 
-const elevationMultiplier = memoize((tab) => {
-    switch(tab) {
-        case ElevationFarmTab.PLAINS: return 110
-        case ElevationFarmTab.MESA: return 125
-        case ElevationFarmTab.SUMMIT: return 150
-        default:
-        case ElevationFarmTab.DASH:
-        case ElevationFarmTab.OASIS: return 100
-    }
-})
-
 const MultiplierTag: React.FC<{ allocation: number }> = memo(({ allocation }) => {
-    const elevationTab = useElevationFarmsTab()
-    const elevMult = elevationMultiplier(elevationTab)
     return (
-        <MultiplierTagItem elevationTab={elevationTab} variant="secondary">
-            {((allocation * elevMult) / 10000)}X
+        <MultiplierTagItem variant="secondary">
+            {((allocation) / 10000)}X
         </MultiplierTagItem>
     )
 })

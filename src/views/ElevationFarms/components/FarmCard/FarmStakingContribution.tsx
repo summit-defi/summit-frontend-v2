@@ -2,10 +2,9 @@ import React, { useMemo } from 'react'
 import { BN_ZERO, Elevation, elevationUtils, TokenSymbol } from 'config/constants'
 import styled from 'styled-components'
 import { Flex, Text } from 'uikit'
-import { capitalizeFirstLetter, getFarmTotalStakedBalance } from 'utils'
+import { getFarmTotalStakedBalance } from 'utils'
 import CardValue from 'views/Home/components/CardValue'
 import ElevationContributionBreakdown from '../ElevationContributionBreakdown'
-import { useSelectedElevation } from 'state/hooks'
 import BigNumber from 'bignumber.js'
 import { useWeb3React } from '@web3-react/core'
 
@@ -88,7 +87,6 @@ const FarmStakingContribution: React.FC<Props> = ({ symbol, elevation, userDataL
             </Flex>
             <InfoItemValue width='100%'>
                 <ElevationContributionBreakdown
-                    symbol={symbol}
                     loaded={account == null || userDataLoaded}
                     contributions={stakingContributions}
                     center

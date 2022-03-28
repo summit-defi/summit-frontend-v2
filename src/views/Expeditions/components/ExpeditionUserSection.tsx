@@ -202,7 +202,7 @@ const UserFaithSection: React.FC = memo(() => {
                     setFaith={debouncedSetUpdatedFaith}
                 />
 
-                <Flex gap='18px' alignItems='center' justifyContent='center'>
+                <Flex flexWrap='wrap' gap='18px' alignItems='center' justifyContent='center'>
                     <ObservingDeitySelector
                         observingDeity={observingDeity}
                         toggleObservingDeity={handleToggleObservingDeity}

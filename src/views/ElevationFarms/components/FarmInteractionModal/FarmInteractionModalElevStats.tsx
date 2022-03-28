@@ -82,8 +82,9 @@ const FarmInteractionModalElevStats: React.FC<Props> = ({ symbol, elevation }) =
         }
         
       } else {
-        supply = elevations[elevation].supply
-        sumPerYear = elevations[elevation].summitPerYear
+        const { supply: tmpSupply, summitPerYear: tmpSumPerYear } = elevations[elevation]
+        supply = tmpSupply
+        sumPerYear = tmpSumPerYear
       }
 
       return [

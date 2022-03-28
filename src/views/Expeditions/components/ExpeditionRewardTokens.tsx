@@ -9,7 +9,7 @@ const RewardTokensGrid = styled.div<{ tokenCount: number }>`
     z-index: 10;
     grid-gap: 12px;
     margin-top: 24px;
-    margin-bottom: 12px;
+    margin-bottom: 36px;
     grid-template-columns: 60px 60px;
     animation: rewardTokenFloat 4s ease-in-out infinite;
 
@@ -26,8 +26,8 @@ const RewardTokensGrid = styled.div<{ tokenCount: number }>`
     }
 
     ${({ theme }) => theme.mediaQueries.nav} {
-        margin-top: -158px;
-        margin-bottom: 126px;
+        margin-top: -208px;
+        margin-bottom: 114px;
     }
 `
 

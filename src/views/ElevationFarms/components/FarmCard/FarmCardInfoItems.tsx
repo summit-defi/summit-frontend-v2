@@ -4,7 +4,7 @@ import React, { memo, useMemo } from 'react'
 import { useSummitPrice } from 'state/hooksNew'
 import styled from 'styled-components'
 import { Skeleton, Text } from 'uikit'
-import { capitalizeFirstLetter, nFormatter } from 'utils'
+import { nFormatter } from 'utils'
 
 const FlexInfoItem = styled.div`
     display: flex;

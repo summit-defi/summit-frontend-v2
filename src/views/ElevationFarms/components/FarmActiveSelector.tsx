@@ -43,7 +43,6 @@ const TextButton = styled.div`
   width: ${buttonWidth}px;
   cursor: pointer;
   color: ${({ theme }) => theme.colors.text};
-  text-shadow: ${({ theme }) => `1px 1px 2px ${theme.colors.textShadow}`};
   font-family: Courier Prime, monospace;
   font-size: 14px;
   height: ${buttonHeight}px;

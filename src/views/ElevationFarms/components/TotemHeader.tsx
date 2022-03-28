@@ -1,9 +1,6 @@
 import React, { memo, useState } from 'react'
 import styled from 'styled-components'
 import { Flex } from 'uikit'
-import {
-  useElevationFarmsTab,
-} from 'state/hooks'
 import UnlockButton from 'components/UnlockButton'
 import MultiElevTotemBattles from './ElevationTotemBattle'
 import MultiElevStaked from './MultiElevStaked'
@@ -61,7 +58,6 @@ const TotemHeaderYieldWarsSection = memo(() => {
 })
 
 const TotemHeader: React.FC = () => {
-  const elevationTab = useElevationFarmsTab()
   const { account } = useWeb3React()
   const [selectedTab, selectTab] = useState<FarmingTab>(FarmingTab.Farm)
 
@@ -77,9 +73,8 @@ const TotemHeader: React.FC = () => {
           onSelect={selectTab}
         />
         <ElevationRoundProgress/>
-        {/* <ElevationIntroduction/> */}
         { account == null ?
-          <StyledUnlockButton summitPalette={elevationTab} /> :
+          <StyledUnlockButton /> :
           <>
             { selectedTab === FarmingTab.YieldWars && <TotemHeaderYieldWarsSection/> }
             <MultiElevStaked/>

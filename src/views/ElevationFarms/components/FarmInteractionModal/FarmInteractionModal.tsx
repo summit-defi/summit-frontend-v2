@@ -2,20 +2,17 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { Flex, Text, Modal, ChevronRightIcon, MobileColumnFlex } from 'uikit'
 import TokenInput from '../../../../components/TokenInput'
 import { getFullDisplayBalance } from '../../../../utils/formatBalance'
-import { BN_ZERO, Elevation, elevationUtils, elevToPalette } from 'config/constants/types'
+import { Elevation, elevationUtils, elevToPalette } from 'config/constants/types'
 import ElevationSelector from '../ElevationSelector'
 import { isNumber } from 'lodash'
-import { useElevationUserTotem, useFarmsUserDataLoaded, useFarmUserTokenFairnessTaxBP, useSelector, useSymbolElevateModalInfo } from 'state/hooksNew'
+import { useElevationsInteractionsLocked, useElevationUserTotem, useFarmUserTokenFairnessTaxBP, useSymbolElevateModalInfo } from 'state/hooksNew'
 import { useWeb3React } from '@web3-react/core'
 import FarmInteractionTypeSelector, { FarmInteractionType } from '../FarmCard/FarmInteractionTypeSelector'
 import styled from 'styled-components'
 import { WalletIcon } from 'uikit/widgets/Menu/icons'
-import { mix } from 'polished'
 import DesktopVerticalDivider from 'uikit/components/DesktopVerticalDivider'
 import FarmInteractionModalElevStats from './FarmInteractionModalElevStats'
 import FarmInteractionActionButton from './FarmInteractionActionButton'
-import FarmStakingContribution, { ElevationsStaked } from '../FarmCard/FarmStakingContribution'
-import BigNumber from 'bignumber.js'
 
 const WalletIconWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.selectorBackground};
@@ -83,7 +80,6 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
 }) => {
   const { account } = useWeb3React()
   const {
-    elevLaunched,
     elevStaked,
     decimals,
     farmToken,
@@ -93,8 +89,7 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
     walletBalance,
   } = useSymbolElevateModalInfo(symbol)
   const userFairnessTaxBP = useFarmUserTokenFairnessTaxBP(symbol)
-  const pricePerToken = useSelector((state) => state.prices.pricesPerToken != null ? (state.prices.pricesPerToken[symbol] || new BigNumber(1)) : new BigNumber(1))
-  const userDataLoaded = useFarmsUserDataLoaded()
+  const elevationsInteractionsLocked = useElevationsInteractionsLocked()
 
   const isApproved = account && farmAllowance && farmAllowance.isGreaterThan(0)
   const [farmInteractionType, setFarmInteractionType] = useState(FarmInteractionType.Deposit)
@@ -129,7 +124,6 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
 
 
   const sisterElevations = [Elevation.OASIS, Elevation.PLAINS, Elevation.MESA, Elevation.SUMMIT]
-  const disabledElevations = sisterElevations.filter((elevToDisable) => !elevLaunched[elevToDisable])
 
   const sourceElevations = sisterElevations
   const targetElevations = sisterElevations
@@ -238,20 +232,26 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
     () => {
       switch (farmInteractionType) {
         case FarmInteractionType.Deposit:
-          if (isApproved) return selectedTargetElevation == null ? 'Must select an Elevation to Deposit into' : null
+          if (!isApproved) return null
+          if (selectedTargetElevation == null) return 'Must select an Elevation to Deposit into'
+          if (elevationsInteractionsLocked[elevationUtils.toInt(selectedTargetElevation)]) return `The ${selectedTargetElevation} is locked until the Round Ends`
           return null
         case FarmInteractionType.Elevate:
           if (selectedTargetElevation == null && selectedSourceElevation == null) return 'Select Elevations to transfer funds between'  
           if (selectedSourceElevation == null) return 'Must select a source Elevation'
+          if (elevationsInteractionsLocked[elevationUtils.toInt(selectedSourceElevation)]) return `The ${selectedSourceElevation} is locked until the Round Ends`
           if (selectedTargetElevation == null) return 'Must select a target Elevation'
+          if (elevationsInteractionsLocked[elevationUtils.toInt(selectedTargetElevation)]) return `The ${selectedTargetElevation} is locked until the Round Ends`
           if (selectedSourceElevation === selectedTargetElevation) return 'Must Elevate between two different Elevations'
           return null
         case FarmInteractionType.Withdraw:
-          return selectedSourceElevation == null ? ' Must select an Elevation to Withdraw from' : null
-        default: return false
+          if (selectedSourceElevation == null) return 'Must select an Elevation to Withdraw from'
+          if (elevationsInteractionsLocked[elevationUtils.toInt(selectedSourceElevation)]) return `The ${selectedSourceElevation} is locked until the Round Ends`
+          return null
+        default: return null
       }
     },
-    [isApproved, farmInteractionType, selectedSourceElevation, selectedTargetElevation]
+    [isApproved, elevationsInteractionsLocked, farmInteractionType, selectedSourceElevation, selectedTargetElevation]
   )
 
   return (
@@ -278,9 +278,9 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
 
         <MobileColumnFlex gap='24px' alignItems='flex-start' justifyContent='space-between'>
 
-          <Flex width='360px' maxWidth='100%' justifyContent="center" flexDirection="column" alignItems="center" gap='18px'>
+          { isApproved &&
+            <Flex width='360px' maxWidth='100%' justifyContent="center" flexDirection="column" alignItems="center" gap='18px'>
 
-            { isApproved &&
               <Flex justifyContent="space-between" alignItems="center" width="100%">
                 <Flex position='relative' flexDirection="column" alignItems="center">
                   <Text bold monospace small>
@@ -294,7 +294,7 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
                     <ElevationSelector
                       selected={selectedSourceElevation}
                       elevations={sourceElevations}
-                      disabledElevations={disabledElevations}
+                      lockedElevations={elevationsInteractionsLocked}
                       selectElevation={handleSelectSourceElevation}
                       vertical
                     />
@@ -321,7 +321,7 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
                     <ElevationSelector
                       selected={selectedTargetElevation}
                       elevations={targetElevations}
-                      disabledElevations={disabledElevations}
+                      lockedElevations={elevationsInteractionsLocked}
                       selectElevation={handleSelectTargetElevation}
                       vertical
                     />
@@ -329,21 +329,21 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
                   { selectedTargetElevation != null && <TargetElevFlare elevation={selectedTargetElevation}/>}
                 </Flex>
               </Flex>
-            }
+
+              <FarmInteractionModalElevStats symbol={symbol} elevation={uiElevation}/>
 
 
-            { isApproved && <FarmInteractionModalElevStats symbol={symbol} elevation={uiElevation}/> }
+              <Flex height='30px'>
+                { invalidElevationErr != null &&
+                  <Text bold monospace small textAlign='center' color='red'>
+                    {invalidElevationErr}
+                  </Text>
+                }
+              </Flex>
+            </Flex>
+          }
 
-
-
-            { invalidElevationErr != null &&
-              <Text bold monospace small textAlign='center' color='red'>
-                {invalidElevationErr}
-              </Text>
-            }
-          </Flex>
-
-          <DesktopVerticalDivider/>
+          { isApproved && <DesktopVerticalDivider/> }
 
           <Flex width='360px' maxWidth='100%' justifyContent="center" flexDirection="column" alignItems="center" gap='18px'>
 
@@ -382,7 +382,7 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
               farmToken={farmToken}
               isApproved={isApproved}
               val={val}
-              invalidVal={invalidVal != null}
+              invalidVal={invalidVal}
               invalidElevationErr={invalidElevationErr != null}
               totem={totem}
               onDismiss={onDismiss}

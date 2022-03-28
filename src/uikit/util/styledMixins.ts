@@ -6,12 +6,14 @@ import { getPaletteGradientStops } from 'utils'
 export const pressableMixin = ({
   theme,
   disabled = false,
+  $translate,
   hoverStyles,
   disabledStyles,
   enabledStyles,
 }: {
   theme: DefaultTheme
   disabled?: boolean
+  $translate?: boolean
   hoverStyles?: FlattenSimpleInterpolation
   disabledStyles?: FlattenSimpleInterpolation
   enabledStyles?: FlattenSimpleInterpolation
@@ -30,7 +32,7 @@ export const pressableMixin = ({
 
     ${theme.mediaQueries.nav} {
       &:hover {
-        transform: translateY(-2px);
+        ${$translate === true && 'transform: translateY(-2px)'};
         ${hoverStyles}
       }
     }
@@ -38,7 +40,7 @@ export const pressableMixin = ({
 
     ${theme.mediaQueries.nav} {
       &:active {
-        transform: translateY(0px);
+        ${$translate === true && 'transform: translateY(0px)'};
         opacity: 0.5;
       }
     }

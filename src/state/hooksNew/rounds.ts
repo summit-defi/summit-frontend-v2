@@ -176,6 +176,15 @@ export const useElevationInteractionsLocked = (elevation: Elevation) => {
     )
 }
 
+export const useElevationsInteractionsLocked = () => {
+    const roundStatuses = useElevationsRoundStatuses()
+
+    return useMemo(
+        () => elevationUtils.all.map((elev) => !roundStatusFarmAllowsInteraction(roundStatuses[elevationUtils.toInt(elev)])),
+        [roundStatuses]
+    )
+}
+
 export const useElevationInteractionsLockedBreakdown = (elevation: Elevation) => {
     const roundStatus = useElevationRoundStatus(elevation)
     const userTotem = useSelector((state) => stateToElevationUserTotem(state, elevation))

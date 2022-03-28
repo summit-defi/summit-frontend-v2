@@ -35,9 +35,6 @@ const ExpeditionFarms: React.FC = () => {
           <ExpeditionCard/>
         </>
       }
-      {/* <ExpeditionInfo/> */}
-      {/* {totem != null && (
-      )} */}
     </StyledPage>
   )
 }

@@ -40,36 +40,6 @@ export const elevToPalette = (elevation?: Elevation): SummitPalette => {
   }
 }
 
-export enum ElevationFarmTab {
-  DASH = 'DASH',
-  OASIS = 'OASIS',
-  PLAINS = 'PLAINS',
-  MESA = 'MESA',
-  SUMMIT = 'SUMMIT',
-}
-
-export const elevationFarmTabToUrl = {
-  [ElevationFarmTab.DASH]: 'elevations',
-  [ElevationFarmTab.OASIS]: 'oasis',
-  [ElevationFarmTab.PLAINS]: 'plains',
-  [ElevationFarmTab.MESA]: 'mesa',
-  [ElevationFarmTab.SUMMIT]: 'summit'
-}
-export const elevationToUrl = {
-  [Elevation.OASIS]: 'oasis',
-  [Elevation.PLAINS]: 'plains',
-  [Elevation.MESA]: 'mesa',
-  [Elevation.SUMMIT]: 'summit'
-}
-
-export const elevationTabToElevation = {
-  [ElevationFarmTab.DASH]: null,
-  [ElevationFarmTab.OASIS]: Elevation.OASIS,
-  [ElevationFarmTab.PLAINS]: Elevation.PLAINS,
-  [ElevationFarmTab.MESA]: Elevation.MESA,
-  [ElevationFarmTab.SUMMIT]: Elevation.SUMMIT,
-}
-
 export const ZEROADD = '0x0000000000000000000000000000000000000000'
 
 export const ElevationUnlockRound = {
@@ -210,10 +180,6 @@ export const elevationUtils = {
   subHeader: (elevation: Elevation) => ElevationSubHeader[elevation],
   helpLink: (elevation: Elevation) => ElevationHelpLink[elevation],
   totemsArray: (elevation: Elevation) => ElevationTotems[elevation],
-  getTabTotemName: (tab: ElevationFarmTab, totem: number, asset = true) => {
-    if (totem == null) return 'UNSELECTED'
-    return ElevationTotemNames[elevationTabToElevation[tab]][totem].split(' ').join(asset ? '_' : ' ')
-  },
   getElevationTotemName: (elevation: Elevation, totem: number | null, asset = true) => {
     if (totem == null) return 'UNSELECTED'
     return ElevationTotemNames[elevation][totem].split(' ').join(asset ? '_' : ' ')
@@ -222,7 +188,6 @@ export const elevationUtils = {
     return elevation === Elevation.OASIS ? 'Earnings' : 'Winnings'
   },
   toInt: (elevation: Elevation) => ElevationInt[elevation] || 0,
-  tabToInt: (elevationTab: ElevationFarmTab) => ElevationInt[elevationTabToElevation[elevationTab]],
   fromInt: (int): Elevation => {
     switch (int) {
       case 4:

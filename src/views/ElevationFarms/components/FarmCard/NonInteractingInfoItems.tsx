@@ -1,5 +1,5 @@
 import { TokenSymbol } from 'config/constants'
-import React, { memo, useCallback } from 'react'
+import React, { memo } from 'react'
 import styled from 'styled-components'
 import { Text, Flex, useModal, HeaderInfoQuestion } from 'uikit'
 import { pressableMixin } from 'uikit/util/styledMixins'
@@ -33,14 +33,6 @@ export const NonInteractingInfoItems: React.FC<{ symbol: string, depositFeeBP: n
     const isEverest = symbol === TokenSymbol.EVEREST
     const [onPresentTooltipModal] = useModal(
         <TooltipModal tooltipType={TooltipModalType.DecayingWithdrawalFee}/>
-    ) 
-
-    const handlePresentTooltipModal = useCallback(
-        (e) => {
-            e.stopPropagation()
-            onPresentTooltipModal()
-        },
-        [onPresentTooltipModal]
     )
     
     return (

@@ -10,7 +10,7 @@ import {
 } from 'utils/'
 import { BN_ZERO, Elevation, elevationUtils } from '../../config/constants/types'
 import { SECONDS_PER_YEAR } from 'config'
-import { getFarmConfigs, TokenSymbol } from 'config/constants'
+import { getFarmConfigs } from 'config/constants'
 import { Farm } from 'state/types'
 import { merge } from 'lodash'
 

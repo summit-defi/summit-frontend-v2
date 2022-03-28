@@ -1,7 +1,6 @@
-import { useSelectTotemModal } from "components/SelectTotemModal"
 import { Elevation, elevationUtils, SummitPalette } from "config/constants"
 import React, { useCallback } from "react"
-import { useMediaQuery, useTotemSelectionPending } from "state/hooks"
+import { useMediaQuery } from "state/hooks"
 import { useExpeditionRoadmapInfoWithPreset, useUserTotemCrownsLoyaltiesWithPreset } from "state/hooksNew"
 import styled, { css } from "styled-components"
 import { textGold } from "theme/colors"
@@ -140,12 +139,6 @@ const TotemPosition = styled.div`
     top: 40px;
 `
 
-const TotemTitleText = styled(Text)`
-    ${({ theme }) => theme.mediaQueries.nav} {
-        margin-bottom: -12px;
-    }
-`
-
 const TextBackground = styled(Flex)`
     max-width: 100%;
     /* background: linear-gradient(to right, transparent -50%, white, white, transparent); */
@@ -234,7 +227,7 @@ const RoadmapTotem: React.FC<{ userTotem: number | null, crowned: boolean, loyal
                                 <StyledBadgeRibbonIcon width='24px' height='24px' isLetThereBeLight={isLetThereBeLight}/>
                             </RibbonWrapper>
                             <BadgeText bold gold monospace textAlign='center'>
-                                {badge.split('|').map((text) => text === 'br' ? <br /> : text)}
+                                {badge.split('|').map((text) => text === 'br' ? <br key='br' /> : text)}
                             </BadgeText>
                         </BadgeWrapper>
                     }
@@ -253,17 +246,16 @@ export const RoadmapTotemRow: React.FC = React.memo(() => {
 
     return (
         <RoadmapTotemRowWrapper>
-            {/* <TotemTitleText italic style={{ width: '100%' }} textAlign='left' bold monospace>TOTEMS:</TotemTitleText> */}
             <Flex width='100%' alignItems='flex-start' justifyContent='space-around' maxWidth='850px'>
-                {totemsCrownsLoyalties.map(({ userTotem, crowned, loyalty }, totemIndex) => {
-                    if (totemIndex === 4) return null
+                {elevationUtils.all.map((elevation, elevIndex) => {
+                    const { userTotem, crowned, loyalty } = totemsCrownsLoyalties[elevIndex]
                     return (
                         <RoadmapTotem
-                            key={elevationUtils.fromInt(totemIndex)}
+                            key={elevation}
                             userTotem={userTotem}
-                            crowned={crowned && totemIndex !== 0}
+                            crowned={crowned && elevation !== Elevation.OASIS}
                             loyalty={loyalty}
-                            totemIndex={totemIndex}
+                            totemIndex={elevIndex}
                             isMobile={isMobile}
                         />
                     )

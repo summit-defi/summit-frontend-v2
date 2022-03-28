@@ -1,10 +1,8 @@
-import React, { useMemo, useState, useEffect, useRef } from 'react'
+import React, { useMemo, useRef } from 'react'
 import BigNumber from 'bignumber.js'
 import styled, { css } from 'styled-components'
 import { Flex, Text, useModal } from 'uikit'
-import { BN_ZERO, Elevation, ElevationFarmTab, elevationUtils } from 'config/constants/types'
-import { useElevationFarmsTab } from 'state/hooks'
-import { Link } from 'react-router-dom'
+import { BN_ZERO, Elevation, elevationUtils } from 'config/constants/types'
 import FarmIconAndAllocation from './FarmIconAndAllocation'
 import FarmStakingContribution, { ElevationsStaked } from './FarmStakingContribution'
 import { makeSelectFarmBySymbol, useSelector, useFarmsUserDataLoaded, useFarmFilters } from 'state/hooksNew'
@@ -100,9 +98,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
   const farmBySymbolSelector = useMemo(makeSelectFarmBySymbol, [])
   const farm = useSelector((state) => farmBySymbolSelector(state, symbol))
   const pricePerToken = useSelector((state) => state.prices.pricesPerToken != null ? (state.prices.pricesPerToken[symbol] || new BigNumber(1)) : new BigNumber(1))
-  const elevationTab = useElevationFarmsTab()
   const userDataLoaded = useFarmsUserDataLoaded()
-  const [currentElevTab, setCurrentElevTab] = useState(elevationTab)
   const cardRef = useRef(null)
 
   const {
@@ -124,29 +120,9 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
     />,
   )
 
-  const {
-    // comment: farmComment,
-    // warning: farmWarning,
-    supply: lpSupply,
-    live = true,
-  } = farm.elevations[elevationTab] || {}
-
   const interacting = useMemo(
     () => getFarmInteracting(farm),
     [farm],
-  )
-
-  useEffect(
-    () => {
-      if (interacting && currentElevTab !== elevationTab && cardRef.current != null) {
-        setCurrentElevTab(elevationTab)
-        cardRef.current.scrollIntoView({
-          behavior: 'smooth',
-        })
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [elevationTab, interacting]
   )
 
   const farmElevationsStaked = useMemo(
@@ -165,36 +141,27 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
   const totalStaked: BigNumber = useMemo(
     () => {
       let supply = BN_ZERO
-      if (elevationTab === ElevationFarmTab.DASH) {
-        elevationUtils.all.forEach((elev) => {
-          supply = supply.plus(elevations[elev].supply || BN_ZERO)
-        })
-      } else {
-        supply = lpSupply
-      }
+      elevationUtils.all.forEach((elev) => {
+        supply = supply.plus(elevations[elev].supply || BN_ZERO)
+      })
       return supply
     },
-    [lpSupply, elevationTab, elevations]
+    [elevations]
   )
 
   const [aprTotalValue, summitPerYear]: [BigNumber, BigNumber] = useMemo(
     () => {
       let supply = BN_ZERO
       let sumPerYear = BN_ZERO
-      if (elevationTab === ElevationFarmTab.DASH) {
-        // Highest elevation with non-zero staked & non-zero summitPerYear
-        const [highestElev] = (Object.entries(elevations)
-          .reverse()
-          .find(([_, info]) => (info.supply || BN_ZERO).isGreaterThan(0) && (info.summitPerYear || BN_ZERO).isGreaterThan(0))) || [Elevation.PLAINS]
 
-        if (highestElev != null) {
-          supply = elevations[highestElev].supply || BN_ZERO
-          sumPerYear = elevations[highestElev].summitPerYear || BN_ZERO
-        }
-        
-      } else {
-        supply = elevations[elevationTab].supply
-        sumPerYear = elevations[elevationTab].summitPerYear
+      // Highest elevation with non-zero staked & non-zero summitPerYear
+      const [highestElev] = (Object.entries(elevations)
+        .reverse()
+        .find(([_, info]) => (info.supply || BN_ZERO).isGreaterThan(0) && (info.summitPerYear || BN_ZERO).isGreaterThan(0))) || [Elevation.PLAINS]
+
+      if (highestElev != null) {
+        supply = elevations[highestElev].supply || BN_ZERO
+        sumPerYear = elevations[highestElev].summitPerYear || BN_ZERO
       }
 
       return [
@@ -202,10 +169,10 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
         sumPerYear,
       ]
     },
-    [elevationTab, elevations, pricePerToken, decimals]
+    [elevations, pricePerToken, decimals]
   )
 
-  const retired = (!live || allocation === 0 || symbol === 'BOO') // TODO: remove this
+  const retired = (allocation === 0 || symbol === 'BOO') // TODO: remove this
   const liveFilterShow = (interacting && liveFarms) || (liveFarms !== retired)
   if (!liveFilterShow) return null
 
@@ -219,7 +186,7 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
         { farmComment != null && <Text monospace bold italic fontSize='13px' mb='14px' textAlign='center'>* {farmComment}</Text> }
         { farmWarning != null && <Text monospace bold italic fontSize='13px' color='red' mb='14px' textAlign='center'>* {farmWarning}</Text> }
         <FarmNumericalInfoFlex>
-          <FarmIconAndAllocation symbol={symbol} lpSource={lpSource} name={name} allocation={allocation} live={live}/>
+          <FarmIconAndAllocation symbol={symbol} lpSource={lpSource} name={name} allocation={allocation} live={allocation > 0}/>
           { interacting ?
             <FarmStakingContribution symbol={symbol} userDataLoaded={userDataLoaded} elevationsStaked={farmElevationsStaked} pricePerToken={pricePerToken} decimals={decimals}/> :
             <NonInteractingInfoItems symbol={symbol} depositFeeBP={depositFeeBP} withdrawalFeeBP={maxWithdrawalFeeBP} minWithdrawalFeeBP={native ? 0 : 50}/>
@@ -239,11 +206,6 @@ const FarmCard: React.FC<FarmCardProps> = ({ symbol }) => {
           />
         </>
       }
-
-      {/* <FarmCardUserSectionExpander
-        isinteracting={interacting}
-        symbol={symbol}
-      /> */}
     </FCard>
   )
 }

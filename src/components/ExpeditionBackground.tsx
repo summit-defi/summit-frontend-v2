@@ -19,8 +19,7 @@ const BackgroundImage = styled.div<{ elevation?: Elevation }>`
   opacity: ${({ elevation }) => (elevation === Elevation.EXPEDITION ? 1 : 0)};
 
   ${({ theme }) => theme.mediaQueries.nav} {
-    background-position: center center;
-    transform: translateY(-70px) translateX(100px) scale(1.16);
+    background-position: center bottom;
   }
 `
 

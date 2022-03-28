@@ -32,6 +32,7 @@ const ItemFlex = styled.div<{ selected: boolean, index: number }>`
     align-items: center;
     justify-content: center;
     position: relative;
+    height: 100%;
     ${({ theme, index }) => pressableMixin({
         theme,
         hoverStyles: css`
@@ -39,38 +40,39 @@ const ItemFlex = styled.div<{ selected: boolean, index: number }>`
             &::before {
                 content: ' ';
                 position: absolute;
-                height: 2px;
-                bottom: -4px;
-                right: -12px;
-                left: -12px;
-                background-color: ${theme.isDark ? theme.colors.text : elevationPalette.BASE[index + 1]};
+                top: 0px;
+                bottom: 0px;
+                right: -13px;
+                left: -13px;
+                background-color: ${elevationPalette.BASE[index + 1]};
                 z-index: -1;
                 opacity: 1;
-                transform: translateY(2px);
+                transform: skew(-15deg);
             }
 
             .item-label {
-                color: ${theme.isDark ? theme.colors.text : elevationPalette.BASE[index + 1]};
+                color: white;
                 font-weight: bold;
             }
         `
     })}
 
-    ${({ selected, theme, index }) => selected && css`
+    ${({ selected, index }) => selected && css`
         &::before {
             content: ' ';
             position: absolute;
-            height: 2px;
-            bottom: -4px;
-            right: -12px;
-            left: -12px;
-            background-color: ${theme.isDark ? theme.colors.text : elevationPalette.BASE[index + 1]};
+            bottom: 0px;
+            top: 0px;
+            transform: skew(-15deg);
+            right: -13px;
+            left: -13px;
+            background-color: ${elevationPalette.BASE[index + 1]};
             z-index: -1;
             opacity: 1;
         }
 
         .item-label {
-            color: ${theme.isDark ? theme.colors.text : elevationPalette.BASE[index + 1]};
+            color: white;
             font-weight: bold;
         }
     `}
@@ -85,7 +87,7 @@ const NavLinks: React.FC<Props> = ({ links, mobileNav }) => {
             {links.map((entry, index) => {
                 const selected = entry.keyPaths.includes(keyPath)
                 return (
-                    <ItemFlex selected={selected} index={index} as={Link} to={entry.href} replace>
+                    <ItemFlex key={entry.href} selected={selected} index={index} as={Link} to={entry.href} replace>
                         <Text className='item-label' monospace bold={selected}>{entry.label}</Text>
                     </ItemFlex>
                 )
@@ -94,4 +96,4 @@ const NavLinks: React.FC<Props> = ({ links, mobileNav }) => {
     )
 }
 
-export default NavLinks
+export default React.memo(NavLinks)

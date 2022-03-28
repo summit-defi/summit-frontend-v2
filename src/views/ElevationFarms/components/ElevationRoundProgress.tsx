@@ -1,16 +1,14 @@
 import React, { useCallback } from 'react'
 import styled from 'styled-components'
-import { linearGradient, transparentize } from 'polished'
+import { linearGradient } from 'polished'
 import Flex from 'uikit/components/Box/Flex'
 import { Text } from 'uikit/components/Text'
-import { useElevationFarmsTab, useSelectedElevation } from 'state/hooks'
-import { Elevation, ElevationFarmTab, RoundLockTime, SummitPalette } from 'config/constants'
+import { useSelectedElevation } from 'state/hooks'
+import { Elevation, RoundLockTime, SummitPalette } from 'config/constants'
 import { getPaletteGradientStops, getTimeRemainingText } from 'utils'
 import { clamp } from 'lodash'
-import Totem from './Totem'
 import { Spinner, SpinnerKeyframes } from 'uikit/components/Svg/Icons/Spinner'
 import { RoundStatus, useElevationRoundStatusAndProgress } from 'state/hooksNew'
-import TotemsDesktopCondensed from './TotemsDesktopCondensed'
 
 const RoundProgressBar = styled(Flex)`
     position: relative;
@@ -174,9 +172,10 @@ const ElevationRoundProgress: React.FC = () => {
 
     return (
         <Flex alignItems='flex-start' justifyContent='center' width='100%' gap='48px' pl='8px' pr='8px'>
-            {/* <TotemsDesktopCondensed/> */}
             <RoundProgressBar>
-                <ProgressBarText bold monospace>YIELD WARS TIMER:</ProgressBarText>
+                <ProgressBarText bold monospace>
+                    { isExpedition ? 'EXPEDITION TIMER' : 'YIELD WARS TIMER'}:
+                </ProgressBarText>
                 <HorizontalBar />
                 <VerticalBar isExpedition={isExpedition} isUnlockBar={isUnlockBar} />
                 <VerticalBar isExpedition={isExpedition} isUnlockBar={isUnlockBar} right />

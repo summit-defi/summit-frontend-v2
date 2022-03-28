@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from 'react'
 import { ElevOrPalette } from 'config/constants/types'
 import styled from 'styled-components'
@@ -6,7 +7,6 @@ import { Text, ThemedProps } from './Text'
 
 const getColor = ({ color, gold, theme }: ThemedProps) => {
   if (gold) return theme.colors.textGold
-  // return theme.colors[color]
   return getThemeValue(`colors.${color}`, color)(theme)
 }
 
