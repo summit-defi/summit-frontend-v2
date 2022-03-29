@@ -1,4 +1,3 @@
-import { ElevOrPalette } from 'config/constants/types'
 import styled, { css } from 'styled-components'
 import { paletteLinearGradientBackground } from 'uikit/util/styledMixins'
 import { SpinnerKeyframes } from '../Svg/Icons/Spinner'
@@ -8,7 +7,7 @@ const SummitStyledButton = styled(StyledButton)<{
   height?: number
   padding?: number
   $secondary: boolean
-  $summitPalette?: ElevOrPalette
+  $summitPalette?: string
   $isLocked: boolean
   $freezeSummitButton?: boolean
 }>`

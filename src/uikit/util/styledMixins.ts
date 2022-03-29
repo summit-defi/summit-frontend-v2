@@ -1,4 +1,3 @@
-import { ElevOrPalette } from 'config/constants'
 import { linearGradient } from 'polished'
 import { css, DefaultTheme, FlattenSimpleInterpolation } from 'styled-components'
 import { getPaletteGradientStops } from 'utils'
@@ -56,7 +55,7 @@ export const paletteLinearGradientBackground = ({
 }: {
   theme: DefaultTheme,
   secondary: boolean,
-  summitPalette?: ElevOrPalette,
+  summitPalette?: string,
 }) => {
   if (secondary && summitPalette == null) return css`
     background: ${theme.colors.text};

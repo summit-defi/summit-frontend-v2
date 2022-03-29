@@ -1,14 +1,22 @@
-import { ElevOrPalette, SummitPalette } from 'config/constants/types'
+import { SummitPalette } from 'config/constants/types'
 import { elevationPalette } from 'theme/colors'
 
-export const getPaletteGradientColors = (summitPalette: ElevOrPalette | null): string[] => {
+export const getPaletteGradientColors = (summitPalette: string | null): string[] => {
   return elevationPalette[summitPalette || SummitPalette.BASE]
 }
 
-export const getPaletteGradientStops = (summitPalette: ElevOrPalette | null, asPx?: boolean): string[] => {
+export const getPaletteGradientStops = (summitPalette: string | null, asPx?: boolean): string[] => {
   const colors = getPaletteGradientColors(summitPalette)
 
   const pxOrPerc = asPx === true ? 'px' : '%'
+
+  if (summitPalette === 'PROFILE') {
+    return [
+      '#154463',
+      '#017B88',
+      '#90B7B4',
+    ]
+  }
 
   if (summitPalette === 'EXPEDITION') {
     return [
@@ -40,7 +48,7 @@ export const getPaletteGradientStops = (summitPalette: ElevOrPalette | null, asP
   ]
 }
 
-export const getPaletteGradientFarmCardBackground = (elevation: ElevOrPalette | null): string => {
+export const getPaletteGradientFarmCardBackground = (elevation: string | null): string => {
   const colors = getPaletteGradientColors(elevation)
   return `
     linear-gradient(

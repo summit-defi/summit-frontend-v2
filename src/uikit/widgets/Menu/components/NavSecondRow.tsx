@@ -1,5 +1,5 @@
 import React from 'react'
-import { Elevation, SummitPalette } from "config/constants"
+import { Elevation } from "config/constants"
 import { Link } from "react-router-dom"
 import styled from "styled-components"
 import { Flex } from "uikit/components/Box"
@@ -66,15 +66,14 @@ export const NavSecondRow: React.FC = () => {
                 </DesktopOnlyFlex>
             </Flex>
             <SummitButton
-                secondary
                 height='28px'
-                summitPalette={SummitPalette.BASE}
+                summitPalette='PROFILE'
                 as={Link}
                 to='/portfolio'
                 padding='0'
-                width='140px'
+                width='135px'
             >
-                <Text monospace bold>MY PORTFOLIO</Text>
+                PORTFOLIO
             </SummitButton>
         </LowerNav>
     )

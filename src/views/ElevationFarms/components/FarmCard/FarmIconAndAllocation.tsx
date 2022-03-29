@@ -15,7 +15,7 @@ const MultiplierTagItem = styled(Tag)`
 const MultiplierTag: React.FC<{ allocation: number }> = memo(({ allocation }) => {
     return (
         <MultiplierTagItem variant="secondary">
-            {((allocation) / 10000)}X
+            {((allocation) / 100)}X
         </MultiplierTagItem>
     )
 })

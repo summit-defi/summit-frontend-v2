@@ -195,7 +195,7 @@ export const HarvestEpochModalContent: React.FC<HarvestEpochModalProps> = ({
   const { summitAllowance, everestOwned } = useEverestUserInfo()
   const summitApproved = summitAllowance.isGreaterThan(0)
 
-  const anyEverestOwned = false && everestOwned.isGreaterThan(0)
+  const anyEverestOwned = everestOwned.isGreaterThan(0)
 
   const fullHarvestableBalance = getFullDisplayBalance(frozenSummit, 18)
 
