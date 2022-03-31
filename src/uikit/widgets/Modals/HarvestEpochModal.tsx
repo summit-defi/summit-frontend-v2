@@ -225,10 +225,8 @@ export const HarvestEpochModalContent: React.FC<HarvestEpochModalProps> = ({
 
   const handleConfirmHarvestEpoch = useCallback(() => {
     if (invalidVal) return
-    if (!asComponentOfWinningsModal) {
-      onDismiss()
-    } else
     onHarvestEpoch(val, lockForEverest)
+    if (!asComponentOfWinningsModal) onDismiss()
   }, [invalidVal, asComponentOfWinningsModal, onDismiss, onHarvestEpoch, val, lockForEverest])
   
 

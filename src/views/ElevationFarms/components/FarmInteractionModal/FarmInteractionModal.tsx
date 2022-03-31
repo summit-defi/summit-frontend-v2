@@ -14,8 +14,8 @@ import DesktopVerticalDivider from 'uikit/components/DesktopVerticalDivider'
 import FarmInteractionModalElevStats from './FarmInteractionModalElevStats'
 import FarmInteractionActionButton from './FarmInteractionActionButton'
 
-const WalletIconWrapper = styled.div`
-  background-color: ${({ theme }) => theme.colors.selectorBackground};
+const WalletIconWrapper = styled.div<{ noBackground?: boolean }>`
+  background-color: ${({ theme, noBackground }) => noBackground === true ? 'none' : theme.colors.selectorBackground};
   width: 140px;
   height: 116px;
   border-radius: 16px;
@@ -56,17 +56,46 @@ const TargetElevFlare = styled(BaseElevFlare)`
   left: -20px;
 
   &:after {
-      left: 0px;
-      border-radius: 0 0 20px 0;
+    left: 0px;
+    border-radius: 0 0 20px 0;
   }
 `
 const SourceElevFlare = styled(BaseElevFlare)`
   right: -20px;
 
   &:after {
-      right: 0px;
-      border-radius: 0 0 0 20px;
+    right: 0px;
+    border-radius: 0 0 0 20px;
   }
+`
+const ExploreElevFlare = styled(BaseElevFlare)`
+  left: -20px;
+  right: -20px;
+
+  &:before {
+    content: ' ';
+    border: 0;
+    position: absolute;
+    width: 20px;
+    bottom: 20px;
+    top: 0px;
+    left: 0px;
+    border-radius: 0 0 20px 0;
+    background: ${({ theme }) => theme.colors.background};
+  }
+
+  &:after {
+    right: 0px;
+    border-radius: 0 0 0 20px;
+  }
+`
+
+const Divider = styled.div`
+  background-color: ${({ theme }) => theme.colors.textSubtle};
+  height: 1px;
+  margin-top: 18px;
+  margin-bottom: 12px;
+  width: 100%;
 `
 
 interface FarmInteractionModalProps {
@@ -130,6 +159,7 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
 
   const [selectedSourceElevation, setSelectedSourceElevation] = useState<Elevation | null>(null)
   const [selectedTargetElevation, setSelectedTargetElevation] = useState<Elevation | null>(null)
+  const [exploreElevation, setExploreElevation] = useState<Elevation | null>(null)
   const uiElevation = selectedTargetElevation ?? selectedSourceElevation
 
   const handleSetFarmInteractionType = useCallback(
@@ -387,6 +417,33 @@ const FarmInteractionModal: React.FC<FarmInteractionModalProps> = ({
               totem={totem}
               onDismiss={onDismiss}
             />
+
+            {!isApproved &&
+              <>
+                <Divider/>
+                <Flex justifyContent="center" alignItems="center" width="100%">
+                  <Flex position='relative' flexDirection="column" alignItems="center">
+                    <WalletIconWrapper noBackground>
+                      <Text bold monospace textAlign='center' small>Explore the Elevations:</Text>
+                    </WalletIconWrapper>
+                  </Flex>
+
+                  {/* <Flex mt='24px' width='24px'/> */}
+
+                  <Flex position='relative' flexDirection="column" alignItems="center">
+                    <ElevationSelector
+                      selected={exploreElevation}
+                      lockedElevations={[]}
+                      elevations={targetElevations}
+                      selectElevation={setExploreElevation}
+                      vertical
+                    />
+                    { exploreElevation != null && <ExploreElevFlare elevation={exploreElevation}/>}
+                  </Flex>
+                </Flex>
+                <FarmInteractionModalElevStats symbol={symbol} elevation={exploreElevation}/>
+              </>
+            }
           </Flex>
         </MobileColumnFlex>
       </Flex>
