@@ -6,6 +6,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "start:ftm": "dotenv -e .env.ftm react-scripts start",
     "start:beta": "dotenv -e .env.beta react-scripts start",
+    "start:polygon": "dotenv -e .env.polygon react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -13,8 +14,10 @@
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx}'",
     "predeploy:ftm": "dotenv -e .env.ftm yarn build",
     "predeploy:beta": "dotenv -e .env.beta yarn build",
+    "predeploy:polygon": "dotenv -e .env.polygon yarn build",
     "deploy:ftm": "yarn predeploy:ftm && firebase deploy --only hosting:ftm",
-    "deploy:beta": "yarn predeploy:beta && firebase deploy --only hosting:beta"
+    "deploy:beta": "yarn predeploy:beta && firebase deploy --only hosting:beta",
+    "deploy:polygon": "yarn predeploy:polygon && firebase deploy --only hosting:polygon"
   },
   "husky": {
     "hooks": {

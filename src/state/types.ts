@@ -6,7 +6,8 @@ import { FarmConfig, Elevation, FarmElevationConfig } from 'config/constants/typ
 export const NamedChainId = {
   FTM: '250',
   BSC_TESTNET: '97',
-  BSC: '56'
+  BSC: '56',
+  POLYGON: '137',
 }
 
 export interface FarmElevation extends FarmElevationConfig {

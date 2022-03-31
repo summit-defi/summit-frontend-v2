@@ -1,5 +1,4 @@
 export * from './farms'
-export * from './summitToken'
 export * from './nativeToken'
 export * from './links'
 export * from './tokens'

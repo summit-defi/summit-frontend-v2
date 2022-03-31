@@ -368,7 +368,9 @@ export enum TokenLpSource {
   BeethovenX = 'BeethovenX',
   SpookySwap = 'SpookySwap',
   SolidlyStable = 'Solidly (Stable)',
-  SolidlyVolatile = 'Solidly (Volatile)'
+  SolidlyVolatile = 'Solidly (Volatile)',
+  Quickswap = 'Quickswap',
+  Curve = 'Curve',
 }
 
 export interface Token {
