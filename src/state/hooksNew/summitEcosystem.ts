@@ -1,12 +1,10 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { BN_ZERO, elevationUtils, getPresetStrategy } from "config/constants";
-import { stateToSummitSwapMinimized, stateToElevationRolloversToShow, stateToFarmsUserDataLoaded, stateToRoadmapScreenshot, stateToUserStrategyTitle, stateToUserStrategyDescription, stateToUserStrategyOwner, stateToSelectedPresetStrategy, stateToFarmsElevationsData, stateToForceOpenConnectModal } from "./base";
+import { BN_ZERO, elevationUtils } from "config/constants";
+import { stateToElevationRolloversToShow, stateToFarmsUserDataLoaded, stateToFarmsElevationsData, stateToForceOpenConnectModal } from "./base";
 import { useSelector } from "./utils";
 
 
 export const useForceOpenConnectModal = () => useSelector(stateToForceOpenConnectModal)
-
-export const useSummitSwapMinimized = () => useSelector(stateToSummitSwapMinimized)
 
 const selectClaimableElevations = createSelector(
     stateToFarmsElevationsData,
@@ -26,26 +24,3 @@ const selectElevationRolloversToShow = createSelector(
     }
 )
 export const useElevationRolloversToShow = () => useSelector(selectElevationRolloversToShow)
-
-export const useRoadmapScreenshot = () => useSelector(stateToRoadmapScreenshot)
-
-const selectUserStrategyTitleOwnerDesc = createSelector(
-    stateToUserStrategyTitle,
-    stateToUserStrategyOwner,
-    stateToUserStrategyDescription,
-    (title, owner, description) => {
-        return { title, owner, description }
-    }
-)
-export const useUserStrategyTitleOwnerDesc = () => useSelector(selectUserStrategyTitleOwnerDesc)
-export const useSelectedPresetStrategy = () => useSelector(stateToSelectedPresetStrategy)
-
-const selectUserStrategyTitleOwnerDescWithPreset = createSelector(
-    stateToSelectedPresetStrategy,
-    selectUserStrategyTitleOwnerDesc,
-    (presetStrategy, {title, owner, description}) => {
-        if (presetStrategy != null) return { isPreset: true, ...getPresetStrategy(presetStrategy).titleOwnerDesc }
-        return { isPreset: false, title, owner, description }
-    }
-)
-export const useUserStrategyTitleOwnerDescWithPreset = () => useSelector(selectUserStrategyTitleOwnerDescWithPreset)

@@ -1,16 +1,15 @@
 import { Elevation, elevationUtils } from 'config/constants'
 import { linearGradient } from 'polished'
 import React from 'react'
-import { useRoadmapScreenshot } from 'state/hooksNew'
 import styled from 'styled-components'
 import { Flex, Skeleton, Text } from 'uikit'
 import { getPaletteGradientStops } from 'utils'
 
-const ContributionWrapper = styled.div<{ screenshot: boolean }>`
+const ContributionWrapper = styled.div`
     display: flex;
     width: 100%;
     gap: 6px;
-    height: ${({ screenshot }) => screenshot ? 32 : 24}px;
+    height: 24px;
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
@@ -67,14 +66,14 @@ interface Contribution {
     index?: number
 }
 
-const ContributionComponent: React.FC<Contribution & { screenshot: boolean, maxPerc?: number }> = ({title, screenshot, val, perc, maxPerc}) => {
-    return <ContributionWrapper screenshot={screenshot}>
+const ContributionComponent: React.FC<Contribution & { maxPerc?: number }> = ({title, val, perc, maxPerc}) => {
+    return <ContributionWrapper>
         <HorizontalBar elevation={title} perc={perc} maxPerc={maxPerc}/>
-        <Text monospace bold lineHeight='14px'>{(val != null && !screenshot) ? val : `${perc.toFixed(1)}%`}</Text>
+        <Text monospace bold lineHeight='14px'>{(val != null) ? val : `${perc.toFixed(1)}%`}</Text>
     </ContributionWrapper>
 }
-const EmptyContributionComponent: React.FC<{ elevation: Elevation, screenshot: boolean, loaded: boolean }> = ({elevation, screenshot, loaded}) => {
-    return <ContributionWrapper screenshot={screenshot}>
+const EmptyContributionComponent: React.FC<{ elevation: Elevation, loaded: boolean }> = ({elevation, loaded}) => {
+    return <ContributionWrapper>
         { loaded ?
             <>
                 <EmptyHorizontalBar/>
@@ -91,7 +90,6 @@ interface Props {
 }
 
 const StakingBreakdown: React.FC<Props> = ({loaded, contributions}) => {
-    const screenshot = useRoadmapScreenshot()
     const maxPerc = contributions.reduce((max, contrib) => Math.max(max, contrib.perc), 0)
 
     return (
@@ -102,9 +100,9 @@ const StakingBreakdown: React.FC<Props> = ({loaded, contributions}) => {
                     elevationUtils.all.map((elev) => {
                         const contribution = contributions.find((contrib) => contrib.title === elev)
                         if (contribution != null) {
-                            return (<ContributionComponent key={elev} maxPerc={maxPerc} screenshot={screenshot} {...contribution} />)
+                            return (<ContributionComponent key={elev} maxPerc={maxPerc} {...contribution} />)
                         }
-                        return <EmptyContributionComponent elevation={elev} key={elev} screenshot={screenshot} loaded={loaded}/>
+                        return <EmptyContributionComponent elevation={elev} key={elev} loaded={loaded}/>
                     })
                 }
             </BarWrapper>

@@ -53,7 +53,9 @@ const useCurrentTimestamp = (): number => {
 
 export const selectElevationsRoundNumbers = createSelector(
     stateToElevationsInfos,
-    (elevationInfos) => elevationInfos.map((elevationInfo) => elevationInfo.roundNumber)
+    (elevationInfos) => {
+        return elevationInfos.map((elevationInfo) => elevationInfo?.roundNumber)
+    }
 )
 
 const selectElevationRoundEndTimestamps = createSelector(

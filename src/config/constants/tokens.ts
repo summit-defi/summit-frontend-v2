@@ -51,5 +51,9 @@ const replaceTokensSummitAddresses = (chainId, tokens: PriceableTokenMap): Price
 }
 
 export const getPriceableTokens = memoize((): PriceableTokenMap => {
+  console.log({
+    CHAIN_ID,
+    tokens: chainTokens[CHAIN_ID]
+  })
   return replaceTokensSummitAddresses(CHAIN_ID, chainTokens[CHAIN_ID])
 })

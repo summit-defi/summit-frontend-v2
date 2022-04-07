@@ -153,10 +153,17 @@ const twOmbFtmFarm: MultiElevFarmConfig = {
   getUrl: 'https://spookyswap.finance/add/FTM/0x7a6e4E3CC2ac9924605DCa4bA31d1831c84b44aE',
   beefyVaultApiName: '2omb-2omb-ftm'
 }
+const lqdrFtmFarm: MultiElevFarmConfig = {
+  symbol: TokenSymbol.LQDR_FTM,
+  ...farmConfigs[TokenSymbol.LQDR_FTM],
+  ...ftmTokens[TokenSymbol.LQDR_FTM],
+  getUrl: 'https://swap.spiritswap.finance/#/add/0x10b620b2dbAC4Faa7D7FFD71Da486f5D44cd86f9/0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83',
+}
 
 const farms = [
   summitFarm,
   everestFarm,
+  lqdrFtmFarm,
   ftmBshareFarm,
   tombBasedFarm,
   booXBooFarm,

@@ -10,6 +10,9 @@
         ],
         "beta": [
           "summit-beta"
+        ],
+        "polygon": [
+          "summit-polygon"
         ]
       }
     }

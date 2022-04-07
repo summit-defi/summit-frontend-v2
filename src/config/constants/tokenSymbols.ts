@@ -50,6 +50,7 @@ export enum TokenSymbol {
     TOMB_BASED = 'TOMB-BASED',
     BSHARE = 'BSHARE',
     BASED = 'BASED',
+    LQDR_FTM = 'LQDR-FTM',
 
 
     // POLYGON
@@ -58,11 +59,11 @@ export enum TokenSymbol {
     SUMMIT_MATIC = 'SUMMIT-MATIC',
     MAI_USDC = 'MAI-USDC',
     aTriCrypto = 'aTriCrypto',
-    QI_MATIC = 'QI_MATIC',
+    QI_MATIC = 'QI-MATIC',
     BIFI_MAXI = 'BIFI MAXI',
     QUICK = 'QUICK',
-    MATIC_USDC = 'MATIC_USDC',
-    ETH_MATIC = 'ETH_MATIC',
+    MATIC_USDC = 'MATIC-USDC',
+    ETH_MATIC = 'ETH-MATIC',
     EURt_DAI_USDC_USDT = 'EURt-DAI-USDC-USDT',
 }
 
@@ -118,7 +119,7 @@ export const TokensWithCustomArtwork = {
 
 
 
-    [TokenSymbol.BIFI_MAXI]: false,
-    [TokenSymbol.aTriCrypto]: false,
-    [TokenSymbol.EURt_DAI_USDC_USDT]: false,
+    [TokenSymbol.BIFI_MAXI]: true,
+    [TokenSymbol.aTriCrypto]: true,
+    [TokenSymbol.EURt_DAI_USDC_USDT]: true,
 }

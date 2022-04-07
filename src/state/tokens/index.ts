@@ -3,18 +3,24 @@ import { createSlice } from '@reduxjs/toolkit'
 import { getFarmTokens } from 'config/constants'
 import { sum } from 'lodash'
 import { TokensState } from 'state/types'
-import { parseJSON } from 'utils'
+import { LocalStorageKey, readFromLocalStorage, writeToLocalStorage } from 'utils'
 import { fetchTokensUserData } from './fetchTokensData'
 
 const getAvgStakingLoyaltyDuration = () => {
-  const localStorageAvg = localStorage.getItem('AvgStakingLoyaltyDuration')
-  if (localStorageAvg == null || isNaN(parseFloat(localStorageAvg))) return 0
-  return parseJSON(localStorageAvg, 0)
+  const localStorageAvg = readFromLocalStorage({
+    key: LocalStorageKey.AVG_STAKING_LOYALTY_DURATION,
+    withChain: true,
+    readDefault: 0
+  })
+  if (isNaN(parseFloat(localStorageAvg))) return 0
+  return localStorageAvg
 }
 const getSymbolAprs = () => {
-  const localStorageSymbolAprs = localStorage.getItem('SymbolAPRs')
-  if (localStorageSymbolAprs == null) return {}
-  return parseJSON(localStorageSymbolAprs, {})
+  return readFromLocalStorage({
+    key: LocalStorageKey.FARM_APRS,
+    withChain: true,
+    readDefault: {}
+  })
 }
 
 const initialState: TokensState = {
@@ -34,12 +40,20 @@ export const TokensSlice = createSlice({
         ...tokensUserData[token.symbol]
       }))
       state.avgStakingLoyaltyDuration = avgStakingLoyaltyDuration
-      localStorage.setItem('AvgStakingLoyaltyDuration', avgStakingLoyaltyDuration)
+      writeToLocalStorage({
+        key: LocalStorageKey.AVG_STAKING_LOYALTY_DURATION,
+        withChain: true,
+        value: avgStakingLoyaltyDuration
+      })
     },
     setSymbolAPRs: (state, action) => {
       const symbolAprs = action.payload
       state.aprs = symbolAprs
-      localStorage.setItem('SymbolAPRs', JSON.stringify(symbolAprs))
+      writeToLocalStorage({
+        key: LocalStorageKey.FARM_APRS,
+        withChain: true,
+        value: JSON.stringify(symbolAprs)
+      })
     }
   },
 })

@@ -6,7 +6,6 @@ import { NavProps } from "./types";
 import { MENU_HEIGHT } from "./config";
 import SummitPrice from "./components/SummitPrice";
 import { useCurrentSummitPalette } from "state/hooks";
-import { useRoadmapScreenshot } from "state/hooksNew";
 import Logo from "./components/Logo";
 import NavLinks from "./components/NavLinks";
 import SummitWinnings from "./components/SummitWinnings";
@@ -43,7 +42,7 @@ const BodyWrapper = styled.div`
   display: flex;
 `;
 
-const Inner = styled.div<{ showMenu: boolean, screenshot: boolean }>`
+const Inner = styled.div<{ showMenu: boolean }>`
   flex-grow: 1;
   margin-top: ${MENU_HEIGHT}px;
   transform: translate3d(0, 0, 0);
@@ -81,25 +80,22 @@ const Menu: React.FC<NavProps> = ({
   children,
 }) => {
   const summitPalette = useCurrentSummitPalette()
-  const roadmapScreenshot = useRoadmapScreenshot()
 
   return (
     <Wrapper>
-      { !roadmapScreenshot &&
-        <StyledNav showMenu id='popup-root'>
-            <Flex height='100%' alignItems='center' justifyContent='center' gap='10px'>
-              <Logo isDark={isDark} href="/" summitPalette={summitPalette}/>
-              <NavLinks links={links} mobileNav={false}/>
-            </Flex>
-            <Flex alignItems='center' justifyContent='center' gap='10px'>
-              <SummitWinnings/>
-              <SummitPrice summitPriceUsd={summitPriceUsd} />
-              <UserBlock account={account} login={login} logout={logout} isDark={isDark} toggleTheme={toggleTheme} />
-            </Flex>
-        </StyledNav>
-      }
+      <StyledNav showMenu id='popup-root'>
+          <Flex height='100%' alignItems='center' justifyContent='center' gap='10px'>
+            <Logo isDark={isDark} href="/" summitPalette={summitPalette}/>
+            <NavLinks links={links} mobileNav={false}/>
+          </Flex>
+          <Flex alignItems='center' justifyContent='center' gap='10px'>
+            <SummitWinnings/>
+            <SummitPrice summitPriceUsd={summitPriceUsd} />
+            <UserBlock account={account} login={login} logout={logout} isDark={isDark} toggleTheme={toggleTheme} />
+          </Flex>
+      </StyledNav>
       <BodyWrapper>
-        <Inner screenshot={roadmapScreenshot} showMenu>
+        <Inner showMenu>
           <NavSecondRow/>
           {children}
         </Inner>

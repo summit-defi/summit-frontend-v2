@@ -42,17 +42,11 @@ export const stateToFarmTypeFilter = (state: State) => state.summitEcosystem.far
 export const stateToFarmLiveFilter = (state: State) => state.summitEcosystem.liveFarms
 export const stateToElevationInfo = (state: State, elevation: Elevation) => state.summitEcosystem.elevationsInfo[elevationUtils.elevationToElevationDataIndex(elevation)] || null
 export const stateToElevationsInfos = (state: State) => state.summitEcosystem.elevationsInfo
-export const stateToSummitSwapMinimized = (state: State) => state.summitEcosystem.summitSwapMinimized
 export const stateToElevationRolloversToShow = (state: State) => state.summitEcosystem.elevationRolloversToShow
 export const stateToExpeditionAPR = (state: State) => state.summitEcosystem.expeditionAPR
 export const stateToTotemSelectionRounds = (state: State) => state.summitEcosystem.totemSelectionRounds
 export const stateToDeitySelectionRound = (state: State) => state.summitEcosystem.totemSelectionRounds[elevationUtils.toInt(Elevation.EXPEDITION)] || null
 export const stateToDebankExpeditionTreasury = (state: State) => state.summitEcosystem.expeditionPotTotalValue
-export const stateToRoadmapScreenshot = (state: State) => state.summitEcosystem.roadmapScreenshot
-export const stateToUserStrategyTitle = (state: State) => state.summitEcosystem.userStrategyTitle
-export const stateToUserStrategyOwner = (state: State) => state.summitEcosystem.userStrategyOwner
-export const stateToUserStrategyDescription = (state: State) => state.summitEcosystem.userStrategyDescription
-export const stateToSelectedPresetStrategy = (state: State) => state.summitEcosystem.selectedPresetStrategy
 export const stateToForceOpenConnectModal = (state: State) => state.summitEcosystem.forceOpenConnectModal
 
 // FARMS

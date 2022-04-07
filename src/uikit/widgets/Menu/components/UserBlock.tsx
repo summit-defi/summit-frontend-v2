@@ -12,6 +12,8 @@ import AccountPopUp from 'uikit/widgets/WalletModal/AccountPopUp'
 import { useForceOpenConnectModal } from 'state/hooksNew'
 import { setForceOpenConnectModal } from 'state/summitEcosystem'
 import { useDispatch } from 'react-redux'
+import { ChainIcon } from 'uikit/components/Svg'
+import { CHAIN_ID } from 'utils'
 
 const UserBlockFlex = styled.div`
   display: flex;
@@ -42,6 +44,10 @@ const AccountDot = styled.div<{ connected: boolean }>`
     toDirection: '120deg',
   })};
 
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
 
   ${({ theme }) => theme.mediaQueries.nav} {
     width: 32px;
@@ -62,6 +68,11 @@ const AccountDot = styled.div<{ connected: boolean }>`
   `}
 `
 
+const StyledChainIcon = styled(ChainIcon)`
+  width: 18px;
+  height: 18px;
+`
+
 interface Props {
   account?: string
   isDark: boolean
@@ -72,6 +83,7 @@ interface Props {
 }
 
 const UserBlock: React.FC<Props> = ({ account, isDark, toggleTheme, login, logout }) => {
+  const chain = parseInt(CHAIN_ID)
   const dispatch = useDispatch()
   const pendingTxs = usePendingTxs()
   const accountEllipsis = account ? `${account.substring(0, 4)}...${account.substring(account.length - 4)}` : null
@@ -86,7 +98,9 @@ const UserBlock: React.FC<Props> = ({ account, isDark, toggleTheme, login, logou
       position='bottom right'
       button={
         <UserBlockFlex>
-          <AccountDot connected={account != null}/>
+          <AccountDot connected={account != null}>
+            { account != null && <StyledChainIcon white chain={chain}/> }
+          </AccountDot>
           <DesktopOnlyText bold monospace>{account ? `${accountEllipsis}${pendingTxs.length > 0 ? ` | ${pendingTxs.length} TX` : ''}` : 'CONNECT'}</DesktopOnlyText>
         </UserBlockFlex>
       }

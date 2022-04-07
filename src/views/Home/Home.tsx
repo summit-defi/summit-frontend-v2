@@ -6,10 +6,7 @@ import SummitStats from './components/SummitStats'
 import { useTotalValue } from 'state/hooks'
 import CardValue from './components/CardValue'
 import { Elevation } from 'config/constants/types'
-import SummitTokenSwapCard from './components/SummitTokenSwapCard'
 import ExpeditionTreasuryCard from './components/ExpeditionTreasuryCard'
-import { useSummitSwapMinimized } from 'state/hooksNew'
-import SummitSwapMinimizedCard from './components/SummitSwapMinimizedCard'
 
 const StyledPage = styled(Page)`
   max-width: 950px;
@@ -57,7 +54,6 @@ const Cards = styled(BaseLayout)`
 
 const Home: React.FC = () => {
   const totalValue = useTotalValue()
-  const summitSwapMinimized = useSummitSwapMinimized()
 
   return (
     <StyledPage>
@@ -90,11 +86,6 @@ const Home: React.FC = () => {
       <Cards>
         <SummitStats />
         <ExpeditionTreasuryCard />
-        {/* <SummitStats /> */}
-        { summitSwapMinimized ?
-            <SummitSwapMinimizedCard/> :
-            <SummitTokenSwapCard />
-        }
       </Cards>
     </StyledPage>
   )

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { groupByAndMap, parseJSON } from 'utils'
+import { groupByAndMap, LocalStorageKey, readFromLocalStorage } from 'utils'
 import useRefresh from 'hooks/useRefresh'
 import { createSelector } from '@reduxjs/toolkit'
 import { useDispatch, useSelector } from 'react-redux'
@@ -137,7 +137,12 @@ export const useFarmsTotalVolumes = () => useSelector(selectFarmsTotalVolumes)
 
 export const useFetchFarmBeefyAprs = () => {
     const farmConfigs = getFarmConfigs()
-    const initAprs = parseJSON(localStorage.getItem('FarmAprs'), {})
+
+    const initAprs = readFromLocalStorage({
+        key: LocalStorageKey.FARM_APRS,
+        withChain: true,
+        readDefault: {}
+    })
     const dispatch = useDispatch()
     const [aprs, setAprs] = useState(initAprs)
     const { slowRefresh } = useRefresh()

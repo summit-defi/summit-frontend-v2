@@ -190,6 +190,13 @@ export const ftmTokens: { [key: string]: PriceableToken } = {
     lpAddress: '0xaB2ddCBB346327bBDF97120b0dD5eE172a9c8f9E',
     decimals: 18,
   },
+  [TokenSymbol.LQDR_FTM]: {
+    assetType: TokenAssetType.LP,
+    symbol: TokenSymbol.LQDR_FTM,
+    lpSource: TokenLpSource.SpiritSwap,
+    lpAddress: '0x4Fe6f19031239F105F753D1DF8A0d24857D0cAA2',
+    decimals: 18,
+  },
   
 
 

@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Flex, MobileColumnFlex, Text } from 'uikit'
-import { useRoadmapScreenshot } from 'state/hooksNew'
 import {RoadmapTotemRow, RoadmapExpedition} from './components/RoadmapTotemRow'
 import RoadmapEverest from './components/RoadmapEverest'
 import MultiElevWinningsAndClaim from 'views/ElevationFarms/components/MultiElevWinningsAndClaim'
@@ -29,7 +28,7 @@ const DeityText = styled(Text)`
     color: white;
 `
 
-const RoadmapWrapper = styled.div<{ screenshot: boolean }>`
+const RoadmapWrapper = styled.div`
     min-height: calc(100vh - 90px);
     padding-left: 8px;
     padding-right: 8px;
@@ -44,10 +43,8 @@ const RoadmapWrapper = styled.div<{ screenshot: boolean }>`
 `
 
 const TravelersRoadmap: React.FC = () => {
-    const screenshot = useRoadmapScreenshot()
-
     return (
-        <RoadmapWrapper screenshot={screenshot}>
+        <RoadmapWrapper>
             <Card>
                 <Text bold monospace style={{ width: '100%' }} textAlign='left'>TOTEMS:</Text>
                 <RoadmapTotemRow />

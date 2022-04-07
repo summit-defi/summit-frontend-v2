@@ -1,51 +1,88 @@
 /* eslint-disable no-param-reassign */
 import { createSlice } from '@reduxjs/toolkit'
 import { BN_ZERO, Elevation, elevationUtils } from 'config/constants/types'
-import { parseJSON } from 'utils'
+import { getLocalStorageAccount, LocalStorageKey, readFromLocalStorage, writeToLocalStorage } from 'utils'
 import { FarmType, SummitEcosystemState } from '../types'
 import { fetchElevationsData, fetchDeityDivider } from './fetchElevationInfo'
 import { fetchUsersTotems } from './fetchUsersTotems'
 
 const getLocalStorageVariables = () => {
-  const activeAccount = parseJSON(localStorage.getItem('ActiveAccount'), null)
+  const activeAccount = getLocalStorageAccount()
   return {
     activeAccount,
-    summitEnabled: parseJSON(localStorage.getItem('SummitEnabled'), false),
+    summitEnabled: readFromLocalStorage({
+      key: LocalStorageKey.SUMMIT_ENABLED,
+      withChain: true,
+      readDefault: false
+    }),
     totems: elevationUtils.all.map((elevation): number =>
       elevation === Elevation.OASIS ?
         0 :
-        parseJSON(localStorage.getItem(`${activeAccount}/${elevation}_totem`), null),
+        readFromLocalStorage({
+          key: LocalStorageKey.TOTEM,
+          elevation,
+          withChain: true,
+          withAccount: true,
+          readDefault: null
+        })
     ),
     winningTotems: elevationUtils.allWithExpedition.map((elevation): number =>
       elevation === Elevation.OASIS ?
         0 :
-        parseJSON(localStorage.getItem(`${elevation}_winning_totem`), null)
+        readFromLocalStorage({
+          key: LocalStorageKey.WINNING_TOTEM,
+          elevation,
+          withChain: true,
+          readDefault: null
+        })
     ),
     winningNumbersDrawn: elevationUtils.allWithExpedition.map((elevation): number =>
       elevation === Elevation.OASIS ?
         0 :
-        parseJSON(localStorage.getItem(`${elevation}_winning_number_drawn`), null)
+        readFromLocalStorage({
+          key: LocalStorageKey.WINNING_NUMBER_DRAWN,
+          elevation,
+          withChain: true,
+          readDefault: null
+        })
     ),
     elevMarkedWinningRound: elevationUtils.allWithExpedition.map((elevation): number =>
       elevation === Elevation.OASIS ?
         0 :
-        parseJSON(localStorage.getItem(`${elevation}_marked_winning_round`), 0)
+        readFromLocalStorage({
+          key: LocalStorageKey.MARKED_WINNING_ROUND,
+          elevation,
+          withChain: true,
+          readDefault: 0
+        })    
     ),
     totemSelectionRounds: elevationUtils.all.map((elevation): number =>
       elevation === Elevation.OASIS ?
         0 :
-        parseJSON(localStorage.getItem(`${activeAccount}/${elevation}_totem_selection_round`), null),
+        readFromLocalStorage({
+          key: LocalStorageKey.TOTEM_SELECTION_ROUND,
+          elevation,
+          withChain: true,
+          readDefault: null
+        }) 
     ),
-    farmType: (localStorage.getItem('FarmType') || FarmType.All) as FarmType,
-    // elevationsInfo: [],
-    elevationsInfo: elevationUtils.elevationExpedition.map((elev) => {
-      return parseJSON(localStorage.getItem(`${elev}_ecosystem_info`), null)
+    farmType: readFromLocalStorage({
+      key: LocalStorageKey.FARM_TYPE,
+      readDefault: FarmType.All
+    }) as FarmType,
+    elevationsInfo: elevationUtils.elevationExpedition.map((elevation) => {
+      return readFromLocalStorage({
+        key: LocalStorageKey.ELEVATION_INFO,
+        elevation,
+        withChain: true,
+        readDefault: null
+      })
     }),
-    summitSwapMinimized: parseJSON(localStorage.getItem('SummitSwapMinimized'), false),
-    expeditionAPR: parseFloat(parseJSON(localStorage.getItem('ExpeditionAPR'), 0)),
-    userStrategyTitle: parseJSON(localStorage.getItem('UserStrategyTitle'), ''),
-    userStrategyOwner: parseJSON(localStorage.getItem('UserStrategyOwner'), ''),
-    userStrategyDescription: parseJSON(localStorage.getItem('UserStrategyDescription'), ''),
+    expeditionAPR: parseFloat(readFromLocalStorage({
+      key: LocalStorageKey.EXPEDITION_APR,
+      withChain: true,
+      readDefault: 0,
+    })),
   }
 }
 
@@ -59,8 +96,6 @@ const initialState: SummitEcosystemState = {
   expeditionPotTotalValue: 0,
   pendingExpeditionTx: false,
   pendingTotemSelection: false,
-  roadmapScreenshot: false,
-  selectedPresetStrategy: null,
   forceOpenConnectModal: false,
 }
 
@@ -70,15 +105,25 @@ export const SummitEcosystemSlice = createSlice({
   reducers: {
     setActiveAccount: (state, action) => {
       state.activeAccount = action.payload
-      localStorage.setItem('ActiveAccount', JSON.stringify(action.payload))
+      writeToLocalStorage({
+        key: LocalStorageKey.ACTIVE_ACCOUNT,
+        value: JSON.stringify(action.payload),
+      })
     },
     clearActiveAccount: (state) => {
       state.activeAccount = null
-      localStorage.setItem('ActiveAccount', JSON.stringify(undefined))
+      writeToLocalStorage({
+        key: LocalStorageKey.ACTIVE_ACCOUNT,
+        value: JSON.stringify(undefined),
+      })
     },
     setSummitEnabled: (state, action) => {
       state.summitEnabled = action.payload
-      localStorage.setItem('SummitEnabled', JSON.stringify(action.payload))
+      writeToLocalStorage({
+        key: LocalStorageKey.SUMMIT_ENABLED,
+        withChain: true,
+        value: JSON.stringify(action.payload),
+      })
     },
     setDeityDivider: (state, action) => {
       const expeditionDivider = action.payload
@@ -90,11 +135,26 @@ export const SummitEcosystemSlice = createSlice({
         const elevInt = elevationUtils.toInt(elevation)
         const {roundNumber} = elevationsData[elevation]
 
-        localStorage.setItem(`${elevation}_winning_totem`, `${elevationsData[elevation].winningTotem}`)
+        writeToLocalStorage({
+          key: LocalStorageKey.WINNING_TOTEM,
+          elevation,
+          value: `${elevationsData[elevation].winningTotem}`,
+          withChain: true
+        })
         state.winningTotems[elevInt] = elevationsData[elevation].winningTotem
-        localStorage.setItem(`${elevation}_winning_number_drawn`, `${elevationsData[elevation].winningNumberDrawn}`)
+        writeToLocalStorage({
+          key: LocalStorageKey.WINNING_NUMBER_DRAWN,
+          elevation,
+          value: `${elevationsData[elevation].winningNumberDrawn}`,
+          withChain: true
+        })
         state.winningNumbersDrawn[elevInt] = elevationsData[elevation].winningNumberDrawn
-        localStorage.setItem(`${elevation}_ecosystem_info`, JSON.stringify(elevationsData[elevation], null, 2))
+        writeToLocalStorage({
+          key: LocalStorageKey.ELEVATION_INFO,
+          elevation,
+          value: JSON.stringify(elevationsData[elevation], null, 2),
+          withChain: true
+        })
 
         if (
           (state.totems[elevInt] != null) &&
@@ -105,7 +165,12 @@ export const SummitEcosystemSlice = createSlice({
         }
 
         state.elevMarkedWinningRound[elevInt] = roundNumber
-        localStorage.setItem(`${elevation}_marked_winning_round`, JSON.stringify(roundNumber, null, 2))
+        writeToLocalStorage({
+          key: LocalStorageKey.MARKED_WINNING_ROUND,
+          elevation,
+          value: JSON.stringify(roundNumber, null, 2),
+          withChain: true
+        })
 
         return elevationsData[elevation]
       })
@@ -115,25 +180,52 @@ export const SummitEcosystemSlice = createSlice({
       elevationUtils.allWithExpedition.forEach((elevation) => {
         state.totems[elevationUtils.toInt(elevation)] = totemsData[elevation].totem
         state.totemSelectionRounds[elevationUtils.toInt(elevation)] = totemsData[elevation].totemSelectionRound
-        localStorage.setItem(`${state.activeAccount}/${elevation}_totem`, `${totemsData[elevation].totem}`)
-        localStorage.setItem(`${state.activeAccount}/${elevation}_totem_selection_round`, `${totemsData[elevation].totemSelectionRound}`)
+        writeToLocalStorage({
+          key: LocalStorageKey.TOTEM,
+          elevation,
+          value: `${totemsData[elevation].totem}`,
+          withChain: true,
+          withAccount: true
+        })
+        writeToLocalStorage({
+          key: LocalStorageKey.TOTEM_SELECTION_ROUND,
+          elevation,
+          value: `${totemsData[elevation].totemSelectionRound}`,
+          withChain: true,
+          withAccount: true
+        })
       })
     },
     updateElevationInfo: (state, action) => {
       const { elevation, elevationInfo } = action.payload
       state.elevationsInfo[elevationUtils.elevationToElevationDataIndex(elevation)] = elevationInfo
       state.winningTotems[elevationUtils.toInt(elevation)] = elevationInfo.winningTotem
-      localStorage.setItem(`${elevation}_winning_totem`, `${elevationInfo.winningTotem}`)
+      writeToLocalStorage({
+        key: LocalStorageKey.WINNING_TOTEM,
+        elevation,
+        value: `${elevationInfo.winningTotem}`,
+        withChain: true,
+      })
     },
     updateElevationTotem: (state, action) => {
       const { elevation, totem } = action.payload
-      localStorage.setItem(`${state.activeAccount}/${elevation}_totem`, `${totem}`)
       state.totems[elevationUtils.toInt(elevation)] = totem
+      writeToLocalStorage({
+        key: LocalStorageKey.TOTEM,
+        elevation,
+        value: `${totem}`,
+        withChain: true,
+        withAccount: true,
+      })
     },
     setFarmType: (state, action) => {
       const farmType = action.payload
       state.farmType = farmType
-      localStorage.setItem('FarmType', farmType)
+      writeToLocalStorage({
+        key: LocalStorageKey.FARM_TYPE,
+        value: farmType,
+        withChain: true,
+      })
     },
     setLiveFarms: (state, action) => {
       const live = action.payload
@@ -162,31 +254,13 @@ export const SummitEcosystemSlice = createSlice({
     setPendingTotemSelection: (state, action) => {
       state.pendingTotemSelection = action.payload
     },
-    setSummitSwapMinimized: (state, action) => {
-      state.summitSwapMinimized = action.payload
-      localStorage.setItem('SummitSwapMinimized', JSON.stringify(action.payload))
-    },
     setExpeditionApr: (state, action) => {
       state.expeditionAPR = action.payload
-      localStorage.setItem('ExpeditionAPR', JSON.stringify(action.payload))
-    },
-    toggleRoadmapScreenshot: (state) => {
-      state.roadmapScreenshot = !state.roadmapScreenshot
-    },
-    updateStrategyTitle: (state, action) => {
-      state.userStrategyTitle = action.payload
-      localStorage.setItem('UserStrategyTitle', JSON.stringify(action.payload))
-    },
-    updateStrategyOwner: (state, action) => {
-      state.userStrategyOwner = action.payload
-      localStorage.setItem('UserStrategyOwner', JSON.stringify(action.payload))
-    },
-    updateStrategyDescription: (state, action) => {
-      state.userStrategyDescription = action.payload
-      localStorage.setItem('UserStrategyDescription', JSON.stringify(action.payload))
-    },
-    selectPresetStrategy: (state, action) => {
-      state.selectedPresetStrategy = action.payload
+      writeToLocalStorage({
+        key: LocalStorageKey.EXPEDITION_APR,
+        value: JSON.stringify(action.payload),
+        withChain: true,
+      })
     },
     setForceOpenConnectModal: (state, action) => {
       state.forceOpenConnectModal = action.payload
@@ -212,14 +286,8 @@ export const {
   setRolloverRewardInNativeToken,
   setExpeditionPot,
   setPendingExpeditionTx,
-  setSummitSwapMinimized,
   setPendingTotemSelection,
   setExpeditionApr,
-  toggleRoadmapScreenshot,
-  updateStrategyTitle,
-  updateStrategyOwner,
-  updateStrategyDescription,
-  selectPresetStrategy,
   setForceOpenConnectModal,
 } = SummitEcosystemSlice.actions
 
@@ -258,9 +326,6 @@ export const removePendingTx = (hash: string) => async (dispatch) => {
 }
 export const updatePendingTotemSelection = (pending) => async (dispatch) => {
   dispatch(setPendingTotemSelection(pending))
-}
-export const updateSummitSwapMinimized = (minimized) => async (dispatch) => {
-  dispatch(setSummitSwapMinimized(minimized))
 }
 
 export default SummitEcosystemSlice.reducer

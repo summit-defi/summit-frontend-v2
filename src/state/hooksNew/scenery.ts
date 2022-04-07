@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { BN_ZERO, Elevation, elevationUtils, getPresetStrategy, RoadmapStrategy, TokenSymbol } from "config/constants";
+import { BN_ZERO, Elevation, elevationUtils, RoadmapStrategy, TokenSymbol } from "config/constants";
 import { useSelector } from "./utils";
-import { stateToAvgStakingLoyaltyDuration, stateToEverestUserData, stateToExpeditionDeity, stateToExpeditionFaith, stateToFarms, stateToFarmsUserDataLoaded, stateToGlacierTotalFrozenSummit, stateToPricesPerToken, stateToSelectedPresetStrategy, stateToTotemSelectionRounds, stateToWinningDeity } from "./base";
+import { stateToAvgStakingLoyaltyDuration, stateToEverestUserData, stateToExpeditionDeity, stateToExpeditionFaith, stateToFarms, stateToFarmsUserDataLoaded, stateToGlacierTotalFrozenSummit, stateToPricesPerToken, stateToTotemSelectionRounds, stateToWinningDeity } from "./base";
 import { selectFarmBySymbol } from "./farm";
 import { selectUserTotemsAndCrowns } from "./totem";
 import { selectElevationsRoundNumbers } from "./rounds";
@@ -140,17 +140,11 @@ export const useUserTotemLoyalties = () => useSelector(selectUserTotemLoyalties)
 
 
 const selectExpeditionRoadmapInfoWithPreset = createSelector(
-    stateToSelectedPresetStrategy,
     stateToExpeditionDeity,
     stateToExpeditionFaith,
     stateToWinningDeity,
     selectUserTotemLoyalties,
-    (presetStrategy, deity, faith, winningDeity, totemLoyalties) => {
-        if (presetStrategy != null) return {
-            isPreset: true,
-            crowned: false,
-            ...getPresetStrategy(presetStrategy).expedition,
-        }
+    (deity, faith, winningDeity, totemLoyalties) => {
         return {
             isPreset: false,
             deity,
@@ -165,20 +159,9 @@ export const useExpeditionRoadmapInfoWithPreset = () => useSelector(selectExpedi
 
 
 const selectUserTotemCrownsLoyaltiesWithPreset = createSelector(
-    stateToSelectedPresetStrategy,
     selectUserTotemsAndCrowns,
     selectUserTotemLoyalties,
-    (presetStrategy, totemsAndCrowns, loyalties) => {
-        if (presetStrategy != null) return {
-            isPreset: true,
-            totemsCrownsLoyalties: Object.values(getPresetStrategy(presetStrategy).totems)
-                .map(({ totem, crowned, loyalty}) => ({
-                    userTotem: totem,
-                    crowned,
-                    loyalty
-                }))
-        }
-
+    (totemsAndCrowns, loyalties) => {
         return {
             isPreset: false,
             totemsCrownsLoyalties: totemsAndCrowns.map(({ userTotem, crowned }, index) => ({
@@ -190,30 +173,3 @@ const selectUserTotemCrownsLoyaltiesWithPreset = createSelector(
     }
 )
 export const useUserTotemCrownsLoyaltiesWithPreset = () => useSelector(selectUserTotemCrownsLoyaltiesWithPreset)
-
-const selectPresetStrategyTVLContributions = createSelector(
-    stateToSelectedPresetStrategy,
-    (presetStrategy) => {
-        if (presetStrategy == null) return {
-            isPreset: false,
-            avgStakingDuration: null,
-            contributions: null
-        }
-
-        const { farming: { avgStakingDuration, contributions } } = getPresetStrategy(presetStrategy)
-
-        return {
-            isPreset: true,
-            avgStakingDuration,
-            contributions: elevationUtils.all
-                .map((elev, elevIndex) => ({
-                    title: elev,
-                    elevation: true,
-                    key: elevIndex,
-                    perc: contributions[elev] as number,
-                }))
-                .filter((contrib) => contrib.perc > 0)
-        }
-    }
-)
-export const usePresetStrategyTVLContributions = () => useSelector(selectPresetStrategyTVLContributions)

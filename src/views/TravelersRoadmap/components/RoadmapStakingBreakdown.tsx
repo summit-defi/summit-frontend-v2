@@ -1,7 +1,7 @@
 import { BN_ZERO } from "config/constants"
 import React from "react"
 import { useMultiElevStaked } from "state/hooks"
-import { useAvgStakingLoyaltyDuration, useFarmsUserDataLoaded, usePresetStrategyTVLContributions, useRoadmapScreenshot } from "state/hooksNew"
+import { useAvgStakingLoyaltyDuration, useFarmsUserDataLoaded } from "state/hooksNew"
 import styled from "styled-components"
 import { Text } from "uikit"
 import { stakeDurationToText } from "utils"
@@ -41,12 +41,10 @@ const InfoItemWrapper = styled.div`
 
 
 const RoadmapStakingBreakdown: React.FC = () => {
-    const screenshot = useRoadmapScreenshot()
     const { totalTVL, tvlContributions } = useMultiElevStaked()
-    const { isPreset, avgStakingDuration: presetAvgStakingDuration, contributions: presetContributions } = usePresetStrategyTVLContributions()
     const userDataLoaded = useFarmsUserDataLoaded()
     const avgStakingDuration = useAvgStakingLoyaltyDuration()
-    const stakingDurationText = stakeDurationToText(presetAvgStakingDuration || avgStakingDuration)
+    const stakingDurationText = stakeDurationToText(avgStakingDuration)
     const rawTotalTVL = (totalTVL || BN_ZERO).toNumber().toFixed(2)
 
     return (
@@ -56,15 +54,13 @@ const RoadmapStakingBreakdown: React.FC = () => {
                 <Text monospace>Avg Stake Duration:</Text>
                 <Text bold monospace>{stakingDurationText}</Text>
             </InfoItemWrapper>
-            { !screenshot &&
                 <InfoItemWrapper>
                     <Text monospace>Staked Amount</Text>
-                    <Text bold monospace>{isPreset ? '-' : `$${rawTotalTVL}`}</Text>
+                    <Text bold monospace>{`$${rawTotalTVL}`}</Text>
                 </InfoItemWrapper>
-            }
             <StakingBreakdown
-                loaded={isPreset || userDataLoaded}
-                contributions={presetContributions || tvlContributions}
+                loaded={userDataLoaded}
+                contributions={tvlContributions}
             />
         </StakingBreakdownWrapper>
     )

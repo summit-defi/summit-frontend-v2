@@ -10,6 +10,9 @@ import { linearGradient } from 'polished'
 import styled from 'styled-components'
 import Divider from 'uikit/components/Divider'
 import DarkModeToggle from '../Menu/components/DarkModeToggle'
+import ChainSelector from './ChainSelector'
+import { CHAIN_ID } from 'utils'
+import { ChainIcon } from 'uikit/components/Svg'
 
 const AccountDot = styled.div`
   width: 42px;
@@ -24,6 +27,14 @@ const AccountDot = styled.div`
     ],
     toDirection: '120deg',
   })};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const StyledChainIcon = styled(ChainIcon)`
+    width: 22px;
+    height: 22px;
 `
 
 interface Props {
@@ -35,6 +46,7 @@ interface Props {
 }
 
 const AccountPopUp: React.FC<Props> = ({ account, isDark, toggleTheme, logout, onDismiss = () => null }) => {
+  const chain = parseInt(CHAIN_ID)
   const { etherscan } = getLinks()
   const accountEtherscanLink = `${etherscan}address/${account}`
   const accountEllipsis = account ? `${account.substring(0, 4)}...${account.substring(account.length - 4)}` : null
@@ -61,7 +73,9 @@ const AccountPopUp: React.FC<Props> = ({ account, isDark, toggleTheme, logout, o
 
       <Flex width='100%' alignItems='center' justifyContent='space-between'>
         <Flex>
-          <AccountDot/>
+          <AccountDot>
+            <StyledChainIcon white chain={chain}/>
+          </AccountDot>
           <Flex flexDirection='column' alignItems='flex-start' justifyContent='center'>
             <Text
               fontSize="16px"
@@ -70,6 +84,14 @@ const AccountPopUp: React.FC<Props> = ({ account, isDark, toggleTheme, logout, o
             >
               {accountEllipsis}
             </Text>
+            <Text
+              small
+              mt='-6px'
+              bold
+              monospace
+            >
+              POLYGON
+            </Text>
           </Flex>
         </Flex>
         <Flex gap='8px'>
@@ -77,6 +99,13 @@ const AccountPopUp: React.FC<Props> = ({ account, isDark, toggleTheme, logout, o
           <CopyToClipboard toCopy={account}/>
         </Flex>
 
+      </Flex>
+
+      <Divider/>
+
+      <Flex width='100%' alignItems='center' justifyContent='space-between'>
+        <Text bold monospace>Chain</Text>
+        <ChainSelector/>
       </Flex>
 
       <Divider/>

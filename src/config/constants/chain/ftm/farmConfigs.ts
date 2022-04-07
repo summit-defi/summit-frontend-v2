@@ -135,4 +135,11 @@ export const farmConfigs: { [key: string]: MultiElevAllocationConfig } = {
     native: false,
     elevations: baseElevations,
   },
+  [TokenSymbol.LQDR_FTM]: {
+    allocation: 300,
+    taxBP: 700,
+    depositFeeBP: 0,
+    native: false,
+    elevations: baseElevations,
+  },
 }

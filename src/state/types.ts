@@ -135,13 +135,7 @@ export interface SummitEcosystemState {
   expeditionPotTotalValue: number
   pendingExpeditionTx: boolean
   pendingTotemSelection: boolean
-  summitSwapMinimized: boolean
   expeditionAPR: number
-  roadmapScreenshot: boolean
-  selectedPresetStrategy: PresetStrategyName | null
-  userStrategyTitle: string
-  userStrategyOwner: string
-  userStrategyDescription: string
   forceOpenConnectModal: boolean
 }
 

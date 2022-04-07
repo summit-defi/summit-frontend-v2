@@ -97,12 +97,12 @@ export const capitalizeFirstLetter = (str: string) => {
 export const parseJSON = (inputString, fallback) => {
   if (inputString) {
     try {
-      return JSON.parse(inputString);
+      return JSON.parse(inputString) || fallback
     } catch (e) {
-      return fallback;
+      return fallback
     }
   }
-  return null
+  return fallback
 }
 
 

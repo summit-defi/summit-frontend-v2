@@ -2,14 +2,18 @@
 import { createSlice } from '@reduxjs/toolkit'
 import BigNumber from 'bignumber.js'
 import { PriceState } from 'state/types'
-import { mapValues, parseJSON } from 'utils'
-import { fetchPricesV2 } from './fetchPricesV2'
+import { LocalStorageKey, mapValues, readFromLocalStorage } from 'utils'
+import { fetchPrices } from './fetchPrices'
 
 const getLocalStoragePrices = () => {
-  const localStoragePrices = localStorage.getItem('PricesPerToken')
-  if (localStoragePrices == null || localStoragePrices === 'null' || localStoragePrices === 'undefined' || localStoragePrices === '{}') return { pricesPerToken: {} }
+  const localStoragePrices = readFromLocalStorage({
+    key: LocalStorageKey.PRICES_PER_TOKEN,
+    withChain: true,
+    readDefault: {}
+  })
+  if (localStoragePrices == null) return { pricesPerToken: {} }
   const pricesPerToken = mapValues<string, BigNumber, boolean>(
-    parseJSON(localStorage.getItem('PricesPerToken'), {}),
+    localStoragePrices,
     (price) => new BigNumber(price),
   ) as unknown as { [key: string]: BigNumber }
   return { pricesPerToken }
@@ -34,9 +38,13 @@ export const { setPricesPerToken } = PricesSlice.actions
 
 // Thunks
 export const fetchPricesAsync = () => async (dispatch) => {
-  const pricesPerToken = await fetchPricesV2()
+  const pricesPerToken = await fetchPrices()
   if (pricesPerToken == null) return
-  localStorage.setItem('PricesPerToken', JSON.stringify(pricesPerToken))
+  readFromLocalStorage({
+    key: LocalStorageKey.PRICES_PER_TOKEN,
+    withChain: true,
+    value: JSON.stringify(pricesPerToken)
+  })
   dispatch(setPricesPerToken(pricesPerToken))
 }
 

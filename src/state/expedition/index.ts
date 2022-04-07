@@ -7,14 +7,28 @@ import {
 } from './fetchExpeditionUserInfo'
 import { ExpeditionState } from '../types'
 import BigNumber from 'bignumber.js'
-import { parseJSON } from 'utils'
+import { getLocalStorageAccount, LocalStorageKey, readFromLocalStorage, writeToLocalStorage } from 'utils'
 
 const getUserLocalStorageVariables = () => {
-  const activeAccount = parseJSON(localStorage.getItem('ActiveAccount'), null)
   return {
-    deity: parseJSON(localStorage.getItem(`${activeAccount}/EXPEDITION_deity`), null),
-    faith: parseJSON(localStorage.getItem(`${activeAccount}/EXPEDITION_faith`), null),
-    entered: parseJSON(localStorage.getItem(`${activeAccount}/EXPEDITION_entered`), false),
+    deity: readFromLocalStorage({
+      key: LocalStorageKey.EXPEDITION_DEITY,
+      withChain: true,
+      withAccount: true,
+      readDefault: null
+    }),
+    faith: readFromLocalStorage({
+      key: LocalStorageKey.EXPEDITION_FAITH,
+      withChain: true,
+      withAccount: true,
+      readDefault: null
+    }),
+    entered: readFromLocalStorage({
+      key: LocalStorageKey.EXPEDITION_ENTERED,
+      withChain: true,
+      withAccount: true,
+      readDefault: null
+    }),
   }
 }
 
@@ -75,11 +89,26 @@ export const ExpeditionSlice = createSlice({
         ...action.payload,
       }
       state.userDataLoaded = true
-      const activeAccount = parseJSON(localStorage.getItem('ActiveAccount'), null)
+      const activeAccount = getLocalStorageAccount()
       if (activeAccount != null) {
-        localStorage.setItem(`${activeAccount}/EXPEDITION_deity`, action.payload.deity)
-        localStorage.setItem(`${activeAccount}/EXPEDITION_faith`, action.payload.faith)
-        localStorage.setItem(`${activeAccount}/EXPEDITION_entered`, action.payload.entered)
+        writeToLocalStorage({
+          key: LocalStorageKey.EXPEDITION_DEITY,
+          withChain: true,
+          withAccount: true,
+          value: action.payload.deity
+        })
+        writeToLocalStorage({
+          key: LocalStorageKey.EXPEDITION_FAITH,
+          withChain: true,
+          withAccount: true,
+          value: action.payload.faith
+        })
+        writeToLocalStorage({
+          key: LocalStorageKey.EXPEDITION_ENTERED,
+          withChain: true,
+          withAccount: true,
+          value: action.payload.entered
+        })
       }
     },
     updateExpeditionUserWinnings: (state, action) => {

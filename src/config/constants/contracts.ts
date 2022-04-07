@@ -69,7 +69,8 @@ export default {
   "multicall": {
     "56": "0x1ee38d535d541c55c9dae27b12edf090c608e6fb",
     "97": "0x67ADCB4dF3931b0C5Da724058ADC2174a9844412",
-    "250": "0xb828c456600857abd4ed6c32facc607bd0464f4f"
+    "137": "0x11ce4B23bD875D7F5C6a31084f55fDe1e9A87507",
+    "250": "0xb828c456600857abd4ed6c32facc607bd0464f4f",
   },
   "ammFactory": {
     "56": "0xcA143Ce32Fe78f1f7019d7d551a6402fC5350c73",
@@ -93,7 +94,8 @@ export default {
     "250": "0x33365E1B22BbeF5766419e19f77c15fD3E0a8Ae5"
   },
   "beethovenMultiPoolOracle": {
-    "97": "0xdDE494d67e6d343AC1460135df84b7BCa9448B54"
+    "97": "0xdDE494d67e6d343AC1460135df84b7BCa9448B54",
+    '250': '0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce'
   },
   "peggedToken": {
     "56": "0xe9e7cea3dedca5984780bafc599bd69add087d56",

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ThemeProvider as SCThemeProvider } from 'styled-components'
 import { dark, light } from 'theme'
-import { parseJSON } from 'utils'
+import { LocalStorageKey, readFromLocalStorage, writeToLocalStorage } from 'utils'
 
 const CACHE_KEY = 'IS_DARK'
 
@@ -13,11 +13,11 @@ const ThemeContext = React.createContext({
 
 const ThemeContextProvider = ({ children }) => {
   const [pageForcedDark, setForcedDark] = useState(false)
-  const [isDark, setIsDark] = useState(() => parseJSON(localStorage.getItem(CACHE_KEY), false))
+  const [isDark, setIsDark] = useState(() => readFromLocalStorage({ key: LocalStorageKey.IS_DARK, readDefault: false }))
 
   const toggleTheme = () => {
     setIsDark((prevState) => {
-      localStorage.setItem(CACHE_KEY, JSON.stringify(!prevState))
+      writeToLocalStorage({ key: LocalStorageKey.IS_DARK, value: JSON.stringify(!prevState) })
       return !prevState
     })
   }

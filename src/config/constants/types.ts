@@ -367,6 +367,7 @@ export enum TokenAssetType {
 export enum TokenLpSource {
   BeethovenX = 'BeethovenX',
   SpookySwap = 'SpookySwap',
+  SpiritSwap = 'SpiritSwap',
   SolidlyStable = 'Solidly (Stable)',
   SolidlyVolatile = 'Solidly (Volatile)',
   Quickswap = 'Quickswap',

@@ -1,7 +1,6 @@
 import React from 'react'
 import { Elevation, elevationUtils, elevToPalette } from 'config/constants/types'
 import { Modal, Flex, Text, HighlightedText, ExternalLinkButton, SummitButton, ModalActions } from 'uikit'
-import { getSummitLpSymbol } from 'config/constants'
 
 interface Props {
   elevation?: Elevation
@@ -83,7 +82,7 @@ const ElevationExtendedDescription = {
       <br />
       Choose your Deity,
       <br />
-      and deposit your SUMMIT and/or {getSummitLpSymbol()} in fealty.
+      and deposit your SUMMIT and/or LP in fealty.
       <br />
       <br />
       <br />
